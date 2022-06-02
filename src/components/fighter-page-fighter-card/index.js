@@ -1,0 +1,1 @@
+export * from './fighters-page-fighter-card'
