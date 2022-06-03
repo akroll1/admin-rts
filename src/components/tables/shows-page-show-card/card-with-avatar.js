@@ -5,8 +5,12 @@ export const CardWithAvatar = props => {
   const { children, avatarProps, ...rest } = props;
   return (
     <Flex
-      minHeight="20rem"
-      flex="1 0 40%"
+      maxW={["80%", "40%", "30%"]}
+      m="4"
+      mt="2"
+      justifyContent="space-between"
+      minHeight="10rem"
+      flex="1 0 35%"
       direction="column"
       alignItems="center"
       rounded="md"

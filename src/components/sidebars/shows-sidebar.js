@@ -27,6 +27,10 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
             setSearchedShows(searchedShows)
         }
     }
+    const selectShow = target => {
+        const { name, id } = target;
+        handleShowSelect(id, name);
+    }
     const { recent, upcoming } = shows?.length > 0 ? separateShowsByTime(shows) : [];
     const historicalShows = [
         'Ali vs Frazier I', 'Ali vs Foreman', 'Hagler vs Hearns'
@@ -38,18 +42,18 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
                 <NavGroup label="Upcoming Shows">
                     {upcoming?.length > 0 && upcoming.map( show => {
                         const { showId, showName } = show;
-                        return <UpcomingNavItem showId={showId} handleShowSelect={handleShowSelect} icon={<FaTicketAlt />} label={showName} key={showId} />
+                        return <UpcomingNavItem name={'PREDICTION'} showId={showId} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={showName} key={showId} />
                     })}
                 </NavGroup>
                 <NavGroup label="Recent Shows">
                     {recent?.length > 0 && recent.map( show => {
                         const { showId, showName } = show;
-                        return <UpcomingNavItem icon={<FaTicketAlt /> } handleShowSelect={handleShowSelect} showId={showId} label={showName} key={showId} />
+                        return <UpcomingNavItem name={'REVIEW'} icon={<FaTicketAlt /> } selectShow={e => selectShow(e.currentTarget)} showId={showId} label={showName} key={showId} />
                     })}
                 </NavGroup>
                 <NavGroup label="Historical Fights">
                     {historicalShows && historicalShows.length > 0 && historicalShows.map( (show,i) => {
-                        return <UpcomingNavItem showId={'historical'} handleShowSelect={handleShowSelect} icon={<FaTicketAlt />} label={show} key={i} />
+                        return <UpcomingNavItem name={'REVIEW'} showId={'historical'} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={show} key={i} />
                     })}
                 </NavGroup>
             </Stack>
