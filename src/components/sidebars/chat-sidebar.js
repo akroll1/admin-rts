@@ -414,7 +414,9 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
                     <div ref={messagesEndRef} />
                 </Flex>
                 <Flex w="100%" minH="2.2rem" flexDir="column">
+                    {/* chatRef is undefined because of the chakra input, it's not native. */}
                     <Input
+                        // as="input"
                         w="100%"
                         m="1"
                         p="1"
