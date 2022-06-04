@@ -17,10 +17,10 @@ import {ExternalLinkIcon} from '@chakra-ui/icons'
         return <TableUser gsDisplayName={data} />
       },
     },
-    {
-      Header: 'Scorecard Owner',
-      accessor: 'ownerDisplayName'
-    },
+    // {
+    //   Header: 'Scorecard Owner',
+    //   accessor: 'ownerDisplayName'
+    // },
     {
       Header: 'Red Corner',
       accessor: 'fighterA',
@@ -34,7 +34,7 @@ import {ExternalLinkIcon} from '@chakra-ui/icons'
 export const MyScorecardsTableContent = ({ scorecardData }) => {
   console.log('screwcardData: ',scorecardData)
   return (
-    <Table my="8" borderWidth="1px" fontSize="sm">
+    <Table my="8" borderWidth="1px" fontSize="sm" size={['sm', 'md']}>
       <Thead bg={mode('gray.50', 'gray.800')}>
         <Tr>
           {columns.map((column, index) => (

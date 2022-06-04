@@ -447,7 +447,7 @@ const Scoring = props => {
                         w={["90%","40%"]}>
                             Submit Round {currentRound} Scores
                         </Button>
-                    {/* <ScoringTable fightResult={fightResult} prediction={prediction} fighterA={fighterA} fighterB={fighterB} totalRounds={totalRounds} currentRound={currentRound} scorecards={scorecards} /> */}
+                    <ScoringTable fightResult={fightResult} prediction={prediction} fighterA={fighterA} fighterB={fighterB} totalRounds={totalRounds} currentRound={currentRound} scorecards={scorecards} />
                 </Flex>  
                 <Flex flex="1 0 20%" w="100%" minH={["40vh", "50vh", "80vh"]} maxH={["40vh","50vh","80vh"]} overflow="scroll">    
                     <ChatSidebar 

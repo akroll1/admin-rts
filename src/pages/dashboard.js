@@ -58,7 +58,7 @@ const Dashboard = props => {
 
   const isSuperAdminFormLinks = () => {
     const isSuperAdminFormOptions = [
-      { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaRegChartBar, link: '/dashboard/scorecards' },
+      { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaEdit, link: '/dashboard/scorecards' },
       // { value: "UPCOMING-FIGHTS", label:"Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
       { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound' },
       { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaEdit, link: '/dashboard/create-scorecard' },
@@ -76,10 +76,10 @@ const Dashboard = props => {
   }
   const userFormLinks = () => {
     const userFormOptions = [
-        { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaRegChartBar, link: '/dashboard/scorecards' },
+        { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaEdit, link: '/dashboard/scorecards' },
         // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
         { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound-list' },
-        { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
+        // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
         { value: "USER", label:"Account Settings", type: 'User', icon: FaUser, link: '/dashboard/user' },
     ];
     return userFormOptions.map((option,i) => {
