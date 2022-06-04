@@ -7,14 +7,14 @@ import { ReviewPostStars } from '../../stars'
 export const ReviewItem = ({ reviewItem }) => {
   const { displayName, id, rating, review, title, updatedAt } = reviewItem;
   return (
-    <Stack spacing="2.5">
+    <Stack py="8" flex="1 0 40%" spacing="2.5" textAlign="left" m="4" mb="8">
       <Stack direction="row" spacing="3">
         <ReviewPostStars rating={rating} size="sm" />
         <Heading size="sm" fontWeight="medium" color={useColorModeValue('black', 'white')}>
           {title}
         </Heading>
       </Stack>
-      <Text>{review}</Text>
+      <Text noOfLines={3}>{review}</Text>
       <Text color={useColorModeValue('gray.600', 'gray.400')} fontSize="sm">
         - {displayName} on {parseEpoch(updatedAt,'reviews')}
       </Text>

@@ -18,7 +18,6 @@ import Shows from './shows'
 import theme from '../theme'
 
 const App = () => {
-  console.log('theme: ', theme)
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') == 'true');
   return (
     <ChakraProvider theme={theme}>

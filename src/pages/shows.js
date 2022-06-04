@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Divider, Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react'
+import { Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { useParams } from 'react-router'
@@ -9,10 +9,10 @@ import { capFirstLetters } from '../utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { validateEmail, removeBadEmails } from './helpers'
 import { v4 as uuidv4 } from 'uuid'
-import { ShowsCountdownTimer } from '../components/timers'
 import { ReviewForm } from '../components/forms'
-import { ShowReviews } from '../components/shows-components'
+import { PredictionsReviews } from '../components/shows-components'
 import { ShowsCreateGroupScorecard, ShowsMetadata, ShowStoryline } from '../components/shows-components'
+import { DividerWithText } from '../chakra'
 
 const Shows = props => {
     const navigate = useNavigate();
@@ -42,8 +42,10 @@ const Shows = props => {
         
     const [shows, setShows] = useState([]);
     const [showTheReviewForm, setShowTheReviewForm] = useState(false);
+    const [showThePredictionForm, setShowThePredictionForm] = useState(false);
     const [userReview, setUserReview] = useState({});
-    const [showReviews, setShowReviews] = useState([]);
+    const [predictionsAndReviews, setPredictionsAndReviews] = useState([]);
+    const [reviewType, setReviewType] = useState('PREDICTION');
     const [selectedReview, setSelectedReview] = useState({})
     const [selectedShow, setSelectedShow] = useState({
         showId: '',
@@ -159,10 +161,10 @@ const Shows = props => {
         return setGroupScorecard({...groupScorecard, members: tempMembersArr});
     }
 
-    const handleShowSelect = e => {
-        const { id } = e.currentTarget;
+    const handleShowSelect = (id, reviewType) => {
         if(id === 'reminder' || id === 'historical') return
         const showSelected = shows.filter( show => show.showId === id)
+        setReviewType(reviewType);
         return parseShowData(showSelected[0]);
     };
 
@@ -177,7 +179,7 @@ const Shows = props => {
         showReviewForm.displayName = decodedIdToken['cognito:username'];
         showReviewForm.owner = decodedIdToken.sub;
         showReviewForm.showId = selectedShow.showId; 
-        showReviewForm.reviewType = selectedShow.showTime > Date.now() ? 'PREFIGHT' : 'POSTFIGHT';
+        showReviewForm.type = selectedShow.showTime > Date.now() ? 'REVIEW' : 'PREDICTION';
         if(!userReview){
             showReviewForm.createdAt = Date.now();
             showReviewForm.upvotes = 0;
@@ -204,8 +206,27 @@ const Shows = props => {
         const getSelectedShowReviews = async () => {
             const url = process.env.REACT_APP_REVIEWS + `${selectedShow.fights[0].fightId}`;
             return axios.get(url, accessTokenConfig)
-                .then(res => setShowReviews(res.data))
-                .catch(err => console.log(err))
+                .then(res => {
+                    const reviewsArr = [];
+                    const predictionsArr = [];
+                    let reviewsObj = {
+                        PREDICTION: predictionsArr, 
+                        REVIEW: reviewsArr
+                    };
+                    if(res?.data.length === 0){
+                        return setPredictionsAndReviews(reviewsObj);
+                    }
+                    const [getReviews] = res?.data?.length > 0 && res?.data?.map( content => {
+                        const { type } = content;
+                        if(type === 'REVIEW'){
+                            reviewsArr.push(content);
+                        } else {
+                            predictionsArr.push(content);
+                        }
+                        return ({ PREDICTION: predictionsArr, REVIEW: reviewsArr });
+                    });
+                    setPredictionsAndReviews(getReviews);
+                }).catch(err => console.log(err))
         } 
         if(selectedShow.fights.length > 0){
             getSelectedShowReviews();
@@ -265,31 +286,50 @@ const Shows = props => {
     const odds = fightOdds ? transformedOdds(fightOdds) : null;
     const displayTime = showTime > Date.now();
     console.log('selectedShow: ', selectedShow);
-    // console.log('userReview: ',userReview);
-    // console.log('showTheReviewForm: ', showTheReviewForm);
-    console.log('showReviews: ', showReviews);
+
     return (
         <Flex w="100%" flexWrap="wrap" height="auto" flexDirection={["column",'column','row']} color="white" alignItems="flex-start" justifyContent="center" mb={6} pb={8}>    
             { showTheReviewForm && <ReviewForm userReview={userReview} handleReviewFormSubmit={handleReviewFormSubmit} showTheReviewForm={showTheReviewForm} setShowTheReviewForm={setShowTheReviewForm}/>}
             <Flex flex="1 0 23%" padding="3" width="100%" height="75%" overflow="scroll" position="relative">
-                <ShowsSidebar showReviews={showReviews} shows={ shows } handleShowSelect={ handleShowSelect } />
+                <ShowsSidebar 
+                    shows={shows} 
+                    handleShowSelect={handleShowSelect} 
+                />
             </Flex>            
-            <Flex bg={mode('gray.900', 'white.500')} w="100%" flexDirection="column" boxSizing="border-box" flex="1 0 70%" mb={3} borderRadius="md">
+            <Flex textAlign="center" w="100%" flex="1 0 70%" bg={mode('gray.900', 'white.500')} flexDirection="column" boxSizing="border-box" mb={3} borderRadius="md">
                 <ShowsMetadata
                     fighterAName={fighterAName} 
                     fighterBName={fighterBName}
                     promoter={promoter}
                     location={location}
                     showTime={showTime} 
+                    displayTime={displayTime}
                 />
                 
                 <Flex mt="3" w="100%" flexDirection="column" justifyContent="space-between" alignItems="center">
-                    <ShowCard fighters={fighters} showTime={showTime} />
-                    { displayTime && <ShowsCountdownTimer showTime={showTime} /> }
-                    { displayTime && <ShowStoryline showStoryline={showStoryline} fightOdds={fightOdds} odds={odds} /> }
+                    <ShowCard 
+                        showTime={showTime} 
+                        displayTime={displayTime} 
+                        fighters={fighters} 
+                    />
+                    { displayTime && 
+                        <ShowStoryline 
+                            showTime={showTime} 
+                            displayTime={displayTime} 
+                            showStoryline={showStoryline} 
+                            fightOdds={fightOdds} 
+                            odds={odds}
+                        /> 
+                    }
                 </Flex>
-                {   !displayTime && <ShowReviews showReviews={showReviews} userReview={userReview} showTheReviewForm={showTheReviewForm} setShowTheReviewForm={setShowTheReviewForm} /> }
-                <Divider />
+                <DividerWithText text={reviewType === 'REVIEW' ? 'Reviews' : 'Predictions'} />
+                <PredictionsReviews 
+                    reviewType={reviewType}
+                    predictionsAndReviews={predictionsAndReviews}
+                    userReview={userReview} 
+                    showTheReviewForm={showTheReviewForm} 
+                    setShowTheReviewForm={setShowTheReviewForm} 
+                />
                 {   displayTime && <ShowsCreateGroupScorecard deleteMember={deleteMember} emailValue={emailValue} handleEmailSubmit={handleEmailSubmit} handleFormChange={handleFormChange} handleScorecardSubmit={handleScorecardSubmit} members={members} /> }
             </Flex>    
         </Flex>

@@ -3,11 +3,12 @@ import * as React from 'react'
 import { BsCaretRightFill } from 'react-icons/bs'
 
 export const UpcomingNavItem = (props) => {
-  const { showId, handleShowSelect, active, subtle, icon, children, label, endElement, href } = props;
+  const { name, showId, selectShow, active, subtle, icon, children, label, endElement, href } = props;
   return (
     <HStack
+      name={name}
       id={showId}
-      onClick={e => handleShowSelect(e)}
+      onClick={e => selectShow(e)}
       as="a"
       href={href}
       w="full"
