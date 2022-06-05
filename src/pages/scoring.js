@@ -324,14 +324,13 @@ const Scoring = props => {
             return () => clearTimeout(timer);
         }
     },[notificationTimeout])
-    // manually close notifications.
+
     const handleCloseNotification = e => {
         const { id } = e.currentTarget;
         const temp = notifications
         const filtered = temp.filter( ({ notification }) => notification !== id);
         setNotifications(filtered)
     };
-////////////////////////////////////////////////
     const submitRoundScores = () => {
         console.log('submitRoundScores, 340');
         console.log('userScorecard: ', userScorecard)
@@ -381,7 +380,7 @@ const Scoring = props => {
     return (
         <Flex flexDir="column" position="relative">
             <SliderHeading fighterA={fighterA} fighterB={fighterB} />
-            <Flex position="absolute" right="0" flexDir="column" zIndex="1000">
+            <Flex position="fixed" right="0" top="2rem" flexDir="column" zIndex="1000">
                 {notifications.length > 0 && notifications.map( ({notification, displayName}) => {
                     return (
                         <Notification
@@ -406,7 +405,7 @@ const Scoring = props => {
                 px={6} 
                 py={8
             }>    
-                <Flex flex="1 0 20%" w="100%" minH={["40vh", "50vh", "80vh"]} maxH={["40vh","50vh","80vh"]} overflow="scroll">    
+            <Flex flex="1 0 20%" w="100%" minH={["40vh", "50vh", "80vh"]} maxH={["40vh","50vh","80vh"]} overflow="scroll">    
                     <ScoringSidebar 
                         show={show}
                         members={members}
@@ -438,18 +437,17 @@ const Scoring = props => {
                             )
                         })
                     }
-                    </Flex>
-                    <Button
-                        onClick={submitRoundScores} 
-                        variant="outline" 
-                        colorScheme="red" 
-                        margin="auto" 
-                        w={["90%","40%"]}>
-                            Submit Round {currentRound} Scores
-                        </Button>
-                    <ScoringTable fightResult={fightResult} prediction={prediction} fighterA={fighterA} fighterB={fighterB} totalRounds={totalRounds} currentRound={currentRound} scorecards={scorecards} />
+                </Flex>
+                <Button
+                    onClick={submitRoundScores} 
+                    variant="outline" 
+                    colorScheme="red" 
+                    margin="auto" 
+                    w={["90%","40%"]}>
+                        Submit Round {currentRound} Scores
+                    </Button>
                 </Flex>  
-                <Flex flex="1 0 20%" w="100%" minH={["40vh", "50vh", "80vh"]} maxH={["40vh","50vh","80vh"]} overflow="scroll">    
+                {/* <Flex >     */}
                     <ChatSidebar 
                         config={config}
                         chatKey={chatKey}
@@ -458,8 +456,9 @@ const Scoring = props => {
                         setNotifications={setNotifications}
                         setNotificationTimeout={setNotificationTimeout}
                     />
-                </Flex>  
+                {/* </Flex>   */}
             </Flex>   
+            <ScoringTable fightResult={fightResult} prediction={prediction} fighterA={fighterA} fighterB={fighterB} totalRounds={totalRounds} currentRound={currentRound} scorecards={scorecards} />
         </Flex>
     )
 }

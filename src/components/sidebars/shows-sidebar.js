@@ -39,19 +39,24 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
         <Flex w="100%" borderRadius="5px" flexDir="column" bg="gray.900" color="white" fontSize="sm" h="auto" maxH="80%" id="scoring-sidebar" alignItems="flex-start" justifyContent="center">
             <SearchField style={{width: '100%'}} handleSearch={handleSearch} />
             <Stack w="100%" spacing="4" flex="1" overflow="auto" pt="8">
-                <NavGroup label="Upcoming Shows">
+                <NavGroup label="Upcoming">
                     {upcoming?.length > 0 && upcoming.map( show => {
                         const { showId, showName } = show;
                         return <UpcomingNavItem name={'PREDICTION'} showId={showId} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={showName} key={showId} />
                     })}
                 </NavGroup>
-                <NavGroup label="Recent Shows">
+                <NavGroup label="Recent">
                     {recent?.length > 0 && recent.map( show => {
                         const { showId, showName } = show;
                         return <UpcomingNavItem name={'REVIEW'} icon={<FaTicketAlt /> } selectShow={e => selectShow(e.currentTarget)} showId={showId} label={showName} key={showId} />
                     })}
                 </NavGroup>
-                <NavGroup label="Historical Fights">
+                <NavGroup label="Historical">
+                    {historicalShows && historicalShows.length > 0 && historicalShows.map( (show,i) => {
+                        return <UpcomingNavItem name={'REVIEW'} showId={'historical'} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={show} key={i} />
+                    })}
+                </NavGroup>
+                <NavGroup label="Fantasy">
                     {historicalShows && historicalShows.length > 0 && historicalShows.map( (show,i) => {
                         return <UpcomingNavItem name={'REVIEW'} showId={'historical'} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={show} key={i} />
                     })}

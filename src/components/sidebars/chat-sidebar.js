@@ -1,5 +1,5 @@
 import React, { useState, createRef, useRef, useEffect } from 'react'
-import { Button, Flex, Input, Text } from '@chakra-ui/react'
+import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { parseUrls, stickers } from '../../utils'
@@ -72,7 +72,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
         const { UserId } = Sender;
         const message = Content === 'CHAT' ? Attributes.chat : Attributes.prediction;
         if(Content === 'CHAT'){
-            setChatMessages(prev => [...prev, { message, displayName: UserId, type: Type }]);
+            setChatMessages(prev => [{ message, displayName: UserId, type: Type }, ...prev ]);
         } else {
             setNotifications(prev => [ ...prev, {notification: message, displayName: UserId} ]);
             setNotificationTimeout(prev => !prev);
@@ -154,48 +154,6 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
             }
         }
     };
-    // const handleSticker = (data) => {
-    //     const username = data["Sender"]["Attributes"]["username"];
-    //     const userId = data["Sender"]["UserId"];
-    //     const avatar = data["Sender"]["Attributes"]["avatar"];
-    //     const message = sanitize(data["Content"]);
-    //     const sticker = data["Attributes"]["sticker_src"];
-    //     const messageId = data["Id"];
-    //     const timestamp = data["SendTime"];
-
-    //     const newMessage = {
-    //         type: "STICKER",
-    //         timestamp,
-    //         username,
-    //         userId,
-    //         avatar,
-    //         message,
-    //         messageId,
-    //         sticker,
-    //     };
-
-    //     setMessages((prevState) => {
-    //         return [...prevState, newMessage];
-    //     });
-    // };
-
-    const handleRequestToken = () => {
-        requestToken(displayName, true);
-    };
-
-    // const handleStickerSend = (sticker) => {
-    //     const uuid = uuidv4();
-    //     const data = `{
-    //         "requestId": "${uuid}",
-    //         "action": "SEND_MESSAGE",
-    //         "content": "Sticker: ${sticker.name}",
-    //         "attributes": {
-    //         "message_type": "STICKER",
-    //         "sticker_src": "${sticker.src}"
-    //         }
-    //     }`;
-    //     connection.send(data);
-    // };
     
     const sendChatMessage = () => {
         const sanitizedMessage = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
@@ -209,13 +167,12 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
             }
         });
         connection.send(data);
+        setChatMessage('');
     };
 
-    const sendPredictionMessage = () => {
-        const sanitizedPrediction = prediction.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-        const update = `{
-            prediction: ${prediction}
-        }`;
+    const handleSendPredictionMessage = () => {
+        console.log('lk;lkj;')
+        const sanitizedPrediction = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
         const uuid = uuidv4();
         const data = JSON.stringify({
             requestId: uuid,
@@ -226,24 +183,23 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
             }
         });
         connection.send(data);
+        setChatMessage('');
     };
-    
-    // const sendEvent = (data) => {
-    //     const formattedData = {
-    //         arn: process.env.CHAT_ROOM_ID,
-    //         eventName: `${data.eventName}`,
-    //         eventAttributes: data.eventAttributes,
-    //     };
-    //     axios.post(`${process.env.API_URL}/event`, formattedData)
-    //         .then( res => console.log(res) ).catch( err => console.error(err));
-    // };
 
     const socketActive = () => {
         return connection?.readyState === 1;
     };
     
-      // Renderers
-        
+    const handleRequestToken = () => {
+        requestToken(displayName, true);
+    };
+    const handleSendChatMessage = () => {
+        if(chatMessage){
+            sendChatMessage(chatMessage)
+        } 
+        return;
+    }
+    // Renderers
     const renderErrorMessage = (errorMessage) => {
         return (
         <div className="error-line" key={errorMessage.timestamp}>
@@ -252,31 +208,12 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
         );
     };
 
-   
-    // const renderStickerMessage = (message) => (
-    //     <div className="chat-line-sticker-wrapper" key={message.timestamp}>
-    //     <div className="chat-line chat-line--sticker" key={message.timestamp}>
-    //         <img
-    //         className="chat-line-img"
-    //         src={message.avatar}
-    //         alt={`Avatar for ${message.username}`}
-    //         />
-    //         <p>
-    //         <span className="username">{message.username}</span>
-    //         </p>
-    //         <img className="chat-sticker" src={message.sticker} alt={`sticker`} />
-    //     </div>
-    //         {moderator ? renderChatLineActions(message) : ""}
-    //     </div>
-    // );
-    
-
     const renderChatMessage = (message, i) => {
-        const sender = message.message.userId;
+        // const sender = message.message.userId;
         const { displayName } = message;
         const formattedMessage = parseUrls(message.message);
         return (
-            <Flex key={i} display="flex">
+            <Flex key={i} display="flex" m="2" mb="0" mt="1">
                 <Text key={i}>{`${displayName}: ${formattedMessage}`}</Text>
             </Flex>
         );
@@ -357,103 +294,101 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
         setChatMessages(prevState => [...prevState, status]);
     };
 
-    // console.log('chatToken: ', chatToken)
-
     return (
         <Flex 
-            flexDir="column"
-            id="chat-sidebar" 
-            overflow="scroll" 
-            position="relative" 
+            flexDir="column" 
+            flex="1 0 20%" 
             w="100%" 
-            alignItems="center" 
-            justifyContent="center"
-            borderRadius="md"
+            maxH={["25vh","25vh","80vh"]} 
+            minH={["12rem", "20rem", "80vh"]} 
+            p="2" 
             bg="gray.900" 
-            p="4"
+            borderRadius="md" 
+            overflowY="scroll"
         >
-            <Input 
+            <Text p="2" pb="1" textAlign="center">FightSync Chat</Text>
+            <Input
+                as="input"
                 m="1"
-                p="1"
-                w="100%"
+                p="2"
                 size="sm"
-                ref={predictionRef}
+                ref={chatRef}
                 type="text"
                 color="whiteAlpha.800"
                 _placeholder={{color: 'whiteAlpha.400'}}
-                placeholder={"Prediction"}
-                maxLength={100}
-                disabled={!socketActive()}
-                value={prediction}
-                onChange={e => setPrediction(e.currentTarget.value)} 
+                placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
+                isDisabled={!socketActive()}
+                value={chatMessage}
+                maxLength={150}
+                onChange={handleChatChange}
+                onKeyDown={handleChatKeydown}
             />
-            <Button 
-                variant="outline" 
-                colorScheme={socketActive() ? "teal" : ''}
-                w="100%" 
-                p="2" 
-                mb="2" 
-                disabled={!socketActive()} 
-                onClick={sendPredictionMessage}>
-                    Send a Prediction
-            </Button>
-            <Flex 
-                alignItems="flex-start"
-                justifyContent="flex-end"
-                h="full" 
-                minH="60vh" 
-                direction="column" 
-                w="100%" 
-                bg="gray.900" 
-                color="white" 
-                fontSize="sm"
-                overflow="scroll"
-            >   
-                <Flex flexDirection="column" className="messages">
-                    {renderMessages()}
-                    <div ref={messagesEndRef} />
-                </Flex>
-                <Flex w="100%" minH="2.2rem" flexDir="column">
-                    {/* chatRef is undefined because of the chakra input, it's not native. */}
-                    <Input
-                        // as="input"
-                        w="100%"
-                        m="1"
-                        p="1"
-                        size="sm"
-                        ref={chatRef}
-                        type="text"
-                        color="whiteAlpha.800"
-                        _placeholder={{color: 'whiteAlpha.400'}}
-                        placeholder={socketActive() ? "Say something" : "Waiting to connect..."}
-                        isDisabled={!socketActive()}
-                        value={chatMessage}
-                        maxLength={150}
-                        onChange={handleChatChange}
-                        onKeyDown={handleChatKeydown}
-                    />
-                    {socketActive() 
-                        ? 
-                            <Text textAlign="center">Connected!</Text>
-                        : 
-                            <Button     
-                                w="100%"
-                                minH="1.5rem"
-                                m="1"
-                                p="1"
-                                size="sm"
-                                isLoading={isSubmitting} 
-                                loadingText="Joining..." 
-                                onClick={handleRequestToken} 
-                                variant="solid"
-                                colorScheme="teal"
-                            >
-                                {socketActive() ? 'Send Message' : 'Join the Chat'}
-                            </Button>
-                    }
-                </Flex>
+            <ButtonGroup p="2" pt="0" pb="0">
+                { socketActive() 
+                    ?
+                        <Button     
+                            w="100%"
+                            minH="1.5rem"
+                            m="1"
+                            p="1"
+                            size="sm"
+                            isLoading={isSubmitting} 
+                            loadingText="Joining..." 
+                            onClick={handleSendChatMessage} 
+                            variant="solid"
+                            colorScheme="teal"
+                        >
+                            Send
+                        </Button>
+                    :
+                        <Button     
+                            w="100%"
+                            minH="1.5rem"
+                            m="1"
+                            p="1"
+                            size="sm"
+                            isLoading={isSubmitting} 
+                            loadingText="Joining..." 
+                            onClick={handleRequestToken} 
+                            variant="solid"
+                            colorScheme="teal"
+                        >
+                            Join Chat
+                        </Button>
+                }
+                <Button     
+                    w="100%"
+                    minH="1.5rem"
+                    m="1"
+                    p="1"
+                    size="sm"
+                    disabled={!socketActive()}
+                    loadingText="Joining..." 
+                    onClick={handleSendPredictionMessage} 
+                    variant="outline"
+                    colorScheme="red"
+                >
+                    PowerShot
+                </Button>
+            </ButtonGroup>
+            <Divider p="1" w="50%" marginX="auto"/>
 
-            </Flex>
+            { chatMessages && 
+                <Flex
+                    id="test"
+                    maxW="100%"
+                    flexDir="column" 
+                    borderRadius="md"
+                    bg="gray.900" 
+                    p="4"
+                    color="white" 
+                    fontSize="sm"
+                    overflow="scroll"
+                    wordBreak="break-all"
+                >    
+                    {renderMessages()}                    
+                </Flex>
+            }
         </Flex>
     )
 }

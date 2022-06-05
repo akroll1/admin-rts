@@ -23,9 +23,6 @@ export const TableActions = ({ options, create }) => {
         </Select>
       </HStack>
       <ButtonGroup size="sm" variant="outline">
-        <Button as="a" href="/dashboard/create-scorecard" iconSpacing="1" leftIcon={<RiAddFill fontSize="1.25em" />}>
-          New Scorecard
-        </Button>
         {!create &&
           <Button iconSpacing="1" leftIcon={<RiArrowRightUpLine fontSize="1.25em" />}>
             Export CSV

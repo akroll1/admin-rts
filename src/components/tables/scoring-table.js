@@ -65,7 +65,7 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
     const rounds = new Array(totalRounds).fill('Round');
     return (      
         <Flex id="table" overflow="auto" w="100%">      
-            <Table style={{tableLayout:'fixed', width: '100%'}} overflowX="scroll" overflowY="scroll" size="md" variant="striped" my="8" borderWidth="1px" fontSize="sm">
+            <Table style={{tableLayout:'auto', width: '100%'}} overflowX="scroll" overflowY="scroll" size="lg" variant="striped" my="8" borderWidth="1px" fontSize="sm">
                 { fightResult && <caption style={{margin: '1rem auto',width: '100%', captionSide:"top"}}>Official: {fightResult} </caption> }
                 <Thead bg={mode('gray.50', 'gray.800')}>
                     <Tr>

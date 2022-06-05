@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { Button, Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { Badge } from '@chakra-ui/react'
 import { TableUser } from './table-user'
 import {ExternalLinkIcon} from '@chakra-ui/icons'
@@ -34,6 +34,7 @@ import {ExternalLinkIcon} from '@chakra-ui/icons'
 export const MyScorecardsTableContent = ({ scorecardData }) => {
   console.log('screwcardData: ',scorecardData)
   return (
+    <Flex overflow="scroll" w="100%">
     <Table my="8" borderWidth="1px" fontSize="sm" size={['sm', 'md']}>
       <Thead bg={mode('gray.50', 'gray.800')}>
         <Tr>
@@ -68,5 +69,6 @@ export const MyScorecardsTableContent = ({ scorecardData }) => {
         )})}
       </Tbody>
     </Table>
+    </Flex>
   )
 }

@@ -47,7 +47,7 @@ export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, han
                 <Stack spacing="6" flex="1" overflow="auto" pt="8">
                     <NavGroup active={true} label="Guest Scorers">
                         { myGuestScorers && myGuestScorers.length > 0 && myGuestScorers.map( (guestScorer,i) => <NavItem id={guestScorer.guestScorerId} icon={<BiUserCircle />} label={guestScorer.displayName} key={guestScorer.guestScorerId} />) }
-                        <NavItem subtle icon={<FaPlusCircle />} label={<Button disabled={!show} _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm" onClick={() => setShowGuests(!showGuests)}>Add More Guest Scorers</Button>} />
+                        <NavItem subtle icon={<FaPlusCircle />} label={<Button disabled={!show} _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm" onClick={() => setShowGuests(!showGuests)}>Add Guest Scorers</Button>} />
                         { showGuests && showGuestScorers && showGuestScorers.length > 0 && showGuestScorers.map( (guestScorer,i) => <NavItem id={guestScorer.guestScorerId} handleClick={handleAddGuestScorer} icon={<BiPlusCircle />} label={guestScorer.displayName} key={i} />)}
                     </NavGroup>
                     <NavGroup label="Show">

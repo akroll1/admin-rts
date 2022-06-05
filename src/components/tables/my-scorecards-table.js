@@ -19,7 +19,7 @@ export const MyScorecardsTable = ({ scorecardData }) => {
     },
   ];
   return (
-    <Box w="100%" overflowX="scroll" overflowY="scroll" as="section" py="12" maxW={{base: 'container.xl', md: '7xl', lg: 'xl'}} mx="auto" px={{base: '6', md: '8'}}>
+    <Box w="100%" as="section" py="12" maxW={{base: 'container.xl', md: 'container.xl', lg: 'container.xl'}} mx="auto" px={{base: '6', md: '8'}}>
       <TableActions options={options} />
       <MyScorecardsTableContent scorecardData={scorecardData} />
       <ScorecardsTablePagination total={scorecardData && scorecardData.length ? scorecardData.length : '0'} />
