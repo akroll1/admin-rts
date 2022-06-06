@@ -1,6 +1,6 @@
 import React from 'react'
 import { Avatar, Box, Flex, Img, Stack, useColorModeValue as mode} from '@chakra-ui/react'
-import { capFirstLetters } from '../utils/utils'
+import { capFirstLetters } from '../../../utils'
 
 export const ScoringTableInfo = ({ data, fighterA, fighterB }) => {
     // console.log('scoringTableInfo: ', data);
@@ -28,10 +28,6 @@ export const ScoringTableInfo = ({ data, fighterA, fighterB }) => {
           src={image}
           alt=""
         /> */}
-      </Flex>
-      <Flex flexDirection="column">
-        <Flex mt="1" borderBottom="1px dotted gray" fontSize="xs" fontWeight="bold" color="gray.400" flexDirection="column" alignItems="flex-end" justifyContent="flex-end" w="100%">{fighterA.split(' ')[1]}</Flex>
-        <Flex mt="1" borderBottom="1px dotted gray" fontSize="xs" fontWeight="bold" color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterB.split(' ')[1]}</Flex>
       </Flex>
     </Stack>
   )

@@ -16,6 +16,7 @@ import Fighters from './fighters'
 import Discussion from './discussions'
 import Shows from './shows'
 import theme from '../theme'
+import { PoundList } from '../components/lists'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') == 'true');
@@ -40,6 +41,11 @@ const App = () => {
             <Route exact path="/discussions/:id" element={<Discussion />} />
             <Route exact path="/shows/:id" element={<Shows />} />
             <Route exact path="/shows" element={<Shows />} />
+            <Route exact path="/pound" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <PoundList />
+              </PrivateRoute>
+            }/>
             <Route exact path="/dashboard/:type" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Dashboard /> 

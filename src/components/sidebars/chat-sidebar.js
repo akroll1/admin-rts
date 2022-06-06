@@ -171,7 +171,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
     };
 
     const handleSendPredictionMessage = () => {
-        console.log('lk;lkj;')
+        console.log('handleSendPredictionMessage')
         const sanitizedPrediction = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
         const uuid = uuidv4();
         const data = JSON.stringify({
@@ -183,7 +183,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
             }
         });
         connection.send(data);
-        setChatMessage('');
+        sendChatMessage();
     };
 
     const socketActive = () => {
@@ -232,22 +232,21 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
         return chatMessages.map( (message, i) => {
             switch (message.type) {
                 case "ERROR":
-                const errorMessage = renderErrorMessage(message);
-                return errorMessage;
+                    const errorMessage = renderErrorMessage(message);
+                    return errorMessage;
                 case "SUCCESS":
-                return;
+                    return;
                 case "STICKER":
                 // const stickerMessage = renderStickerMessage(message);
                 // return stickerMessage;
                 return;
                 case 'PREDICTION':
+                    renderChatMessage(message, i)
                     return renderPredictionMessage(message, i);
                 case "MESSAGE":
-                const textMessage = renderChatMessage(message, i);
-                return textMessage;
+                    return renderChatMessage(message, i);
                 default:
-                console.info("Received unsupported message:", message);
-                return <></>;
+                    return console.info("Received unsupported message:", message);
             }
         });
     };
@@ -296,6 +295,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
 
     return (
         <Flex 
+            id="chat-sidebar"
             flexDir="column" 
             flex="1 0 20%" 
             w="100%" 
@@ -375,7 +375,6 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
 
             { chatMessages && 
                 <Flex
-                    id="test"
                     maxW="100%"
                     flexDir="column" 
                     borderRadius="md"

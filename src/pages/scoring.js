@@ -7,11 +7,10 @@ import { ScoringModal, ExpiredTokenModal, PredictionModal } from '../components/
 import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils';
 import { useNavigate } from 'react-router-dom'
-import { FighterSlider } from '../components/fighter-slider/fighter-slider'
 import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { capFirstLetters } from '../utils'
-
+import { ScoringMain } from '../components/scoring-main'
 
 const Scoring = props => {
     const navigate = useNavigate();
@@ -380,7 +379,7 @@ const Scoring = props => {
     return (
         <Flex flexDir="column" position="relative">
             <SliderHeading fighterA={fighterA} fighterB={fighterB} />
-            <Flex position="fixed" right="0" top="2rem" flexDir="column" zIndex="1000">
+            <Flex position="fixed" right="0" top="2rem" flexDir="column" zIndex="1000" w="100%">
                 {notifications.length > 0 && notifications.map( ({notification, displayName}) => {
                     return (
                         <Notification
@@ -405,58 +404,35 @@ const Scoring = props => {
                 px={6} 
                 py={8
             }>    
-            <Flex flex="1 0 20%" w="100%" minH={["40vh", "50vh", "80vh"]} maxH={["40vh","50vh","80vh"]} overflow="scroll">    
-                    <ScoringSidebar 
-                        show={show}
-                        members={members}
-                        showGuestScorers={showGuestScorers}
-                        myGuestScorers={myGuestScorers}
-                        prediction={prediction}
-                        finalScore={finalScore}
-                        groupScorecard={groupScorecard}
-                        handleAddGuestScorer={handleAddGuestScorer}
-                        setShowGuestScorers={setShowGuestScorers}
-                        setTogglePredictionModal={setTogglePredictionModal}
-                    />
-                </Flex>
-                <Flex p="1" m="1" mb="3rem" flex="1 0 50%" flexDir="column" w="100%">
-                    <Heading textAlign="center">Round {currentRound}</Heading> 
-                    <Flex flexDir={["column", "column", "row"]} flex="1 0 40%">
-                    {
-                        groupScorecard?.fighterA && [fighterA, fighterB].map( (fighter,i) => {
-                            return (
-                                <FighterSlider
-                                    key={i}
-                                    fighter={fighter}
-                                    sliderScores={sliderScores}
-                                    setSliderScores={setSliderScores}
-                                    groupScorecard={groupScorecard} 
-                                    toggleScoringModal={toggleScoringModal}
-                                    scoringModal={scoringModal}
-                                />
-                            )
-                        })
-                    }
-                </Flex>
-                <Button
-                    onClick={submitRoundScores} 
-                    variant="outline" 
-                    colorScheme="red" 
-                    margin="auto" 
-                    w={["90%","40%"]}>
-                        Submit Round {currentRound} Scores
-                    </Button>
-                </Flex>  
-                {/* <Flex >     */}
-                    <ChatSidebar 
-                        config={config}
-                        chatKey={chatKey}
-                        displayName={ownerDisplayName}
-                        notifications={notifications}
-                        setNotifications={setNotifications}
-                        setNotificationTimeout={setNotificationTimeout}
-                    />
-                {/* </Flex>   */}
+                <ScoringSidebar 
+                    show={show}
+                    members={members}
+                    showGuestScorers={showGuestScorers}
+                    myGuestScorers={myGuestScorers}
+                    prediction={prediction}
+                    finalScore={finalScore}
+                    groupScorecard={groupScorecard}
+                    handleAddGuestScorer={handleAddGuestScorer}
+                    setShowGuestScorers={setShowGuestScorers}
+                    setTogglePredictionModal={setTogglePredictionModal}
+                />
+                <ScoringMain 
+                    scoringModa={scoringModal} 
+                    toggleScoringModal={toggleScoringModal} 
+                    currentRound={currentRound} 
+                    sliderScores={sliderScores} 
+                    setSliderScores={setSliderScores} 
+                    groupScorecard={groupScorecard}
+                    submitRoundScores={submitRoundScores}
+                />
+                <ChatSidebar 
+                    config={config}
+                    chatKey={chatKey}
+                    displayName={ownerDisplayName}
+                    notifications={notifications}
+                    setNotifications={setNotifications}
+                    setNotificationTimeout={setNotificationTimeout}
+                />
             </Flex>   
             <ScoringTable fightResult={fightResult} prediction={prediction} fighterA={fighterA} fighterB={fighterB} totalRounds={totalRounds} currentRound={currentRound} scorecards={scorecards} />
         </Flex>

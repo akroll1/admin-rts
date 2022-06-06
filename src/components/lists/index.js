@@ -1,1 +1,1 @@
-export * from './my-pound-list'
+export * from './pound-list'

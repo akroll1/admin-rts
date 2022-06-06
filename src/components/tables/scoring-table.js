@@ -1,7 +1,7 @@
 
 import React, {useEffect} from 'react'
 import { Flex, Table, Th, Tr, Td, Thead,Tbody, useColorModeValue as mode } from '@chakra-ui/react'
-import { ScoringTableInfo } from '../../chakra'
+import { ScoringTableInfo } from './scoring-table-els'
 // import { scoringTablePrediction } from '../../utils'
 
 export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scorecards, totalRounds, currentRound }) => {
@@ -64,8 +64,22 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
     const rows = scorecards && scorecards.length > 0 ? scorecards.length : 0;
     const rounds = new Array(totalRounds).fill('Round');
     return (      
-        <Flex id="table" overflow="auto" w="100%">      
-            <Table style={{tableLayout:'auto', width: '100%'}} overflowX="scroll" overflowY="scroll" size="lg" variant="striped" my="8" borderWidth="1px" fontSize="sm">
+        <Flex 
+            id="score_table" 
+            overflow="auto" 
+            w="50%" 
+            m="auto"
+        >      
+            <Table 
+                style={{tableLayout:'auto', width: '100%'}} 
+                overflowX="scroll" 
+                overflowY="scroll" 
+                size={["sm", "md"]} 
+                variant="striped" 
+                my="4" 
+                borderWidth="1px" 
+                fontSize="sm"
+            >
                 { fightResult && <caption style={{margin: '1rem auto',width: '100%', captionSide:"top"}}>Official: {fightResult} </caption> }
                 <Thead bg={mode('gray.50', 'gray.800')}>
                     <Tr>
@@ -100,7 +114,7 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
                                     
                                     if(i === 0){
                                         return (
-                                            <Td>
+                                            <Td p="0">
                                                 {element}
                                             </Td>
                                         )
@@ -115,21 +129,20 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
                                             // console.log('koRound: ',koRound)
                                             const { fighterAScore, fighterBScore } = scoreRow;
                                             return (
-                                                <Td p="0" key={ind}>
-                                                    <Flex  p="1" m="1" flexDirection="column" alignItems="center" justifyContent="space-between">
-                                                        <Flex style={ind == koRound  ? {border:'1px solid red', fontSize: '1.2rem'} : null} borderRadius="3px" bg="gray.500" color="black" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterAScore}</Flex>
-                                                        <Flex style={ind == koRound && whichFighter === String(fighterBScore) ? {border:'1px solid red', fontSize: '1.2rem'} : null} color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBScore}</Flex>
+                                                <Td key={ind} p="0">
+                                                    <Flex  p="0" flexDirection="column" alignItems="center" justifyContent="space-between">
+                                                        <Flex p="0" style={ind == koRound  ? {border:'1px solid red', fontSize: '1.2rem'} : null} borderRadius="3px" bg="gray.500" color="black" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterAScore}</Flex>
+                                                        <Flex p="0" style={ind == koRound && whichFighter === String(fighterBScore) ? {border:'1px solid red', fontSize: '1.2rem'} : null} color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBScore}</Flex>
                                                     </Flex>
-
                                                 </Td>
                                         )
                                     })}
                                     if(i === 2){
                                         return (
                                             <Td p="0">
-                                                <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                                                    <Flex fontWeight="bold" fontSize="md" color="gray.400" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterATotal}</Flex>
-                                                    <Flex fontWeight="bold" fontSize="md" color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBTotal}</Flex>
+                                                <Flex p="0" flexDirection="column" alignItems="center" justifyContent="center">
+                                                    <Flex p="0" fontWeight="bold" fontSize="md" color="gray.400" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterATotal}</Flex>
+                                                    <Flex p="0" fontWeight="bold" fontSize="md" color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBTotal}</Flex>
                                                 </Flex>
                                             </Td>
                                         )

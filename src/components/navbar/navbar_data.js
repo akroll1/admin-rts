@@ -4,7 +4,7 @@ import { MdWeb } from 'react-icons/md'
 
 export const links = [
   { label: 'Shows', href: '/shows' },
-  { label: 'P4P', href: '/fighters' },
+  { label: 'P4P', href: '/pound' },
   { label: 'My Scorecards', href: '/dashboard/scorecards' },
   {
     label: 'FightCloud',

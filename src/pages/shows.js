@@ -13,6 +13,7 @@ import { ReviewForm } from '../components/forms'
 import { PredictionsReviews } from '../components/shows-components'
 import { ShowsCreateGroupScorecard, ShowsMetadata, ShowStoryline } from '../components/shows-components'
 import { DividerWithText } from '../chakra'
+import { REVIEW_TYPE } from '../utils'
 
 const Shows = props => {
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ const Shows = props => {
     const [showThePredictionForm, setShowThePredictionForm] = useState(false);
     const [userReview, setUserReview] = useState({});
     const [predictionsAndReviews, setPredictionsAndReviews] = useState([]);
-    const [reviewType, setReviewType] = useState('PREDICTION');
+    const [reviewType, setReviewType] = useState('');
     const [selectedReview, setSelectedReview] = useState({})
     const [selectedShow, setSelectedShow] = useState({
         showId: '',
@@ -290,12 +291,12 @@ const Shows = props => {
     return (
         <Flex w="100%" flexWrap="wrap" height="auto" flexDirection={["column",'column','row']} color="white" alignItems="flex-start" justifyContent="center" mb={6} pb={8}>    
             { showTheReviewForm && <ReviewForm userReview={userReview} handleReviewFormSubmit={handleReviewFormSubmit} showTheReviewForm={showTheReviewForm} setShowTheReviewForm={setShowTheReviewForm}/>}
-            <Flex flex="1 0 23%" padding="3" width="100%" height="75%" overflow="scroll" position="relative">
-                <ShowsSidebar 
-                    shows={shows} 
-                    handleShowSelect={handleShowSelect} 
-                />
-            </Flex>            
+
+            <ShowsSidebar 
+                shows={shows} 
+                handleShowSelect={handleShowSelect} 
+                setReviewType={setReviewType}
+            />  
             <Flex textAlign="center" w="100%" flex="1 0 70%" bg={mode('gray.900', 'white.500')} flexDirection="column" boxSizing="border-box" mb={3} borderRadius="md">
                 <ShowsMetadata
                     fighterAName={fighterAName} 

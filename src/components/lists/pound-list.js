@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, Button, Flex, Heading, Box, UnorderedList, ListItem, useToast } from '@chakra-ui/react'
-import { PoundFighterCard, TableCard } from '../pound-list-fighter-card'
+import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { capFirstLetters } from '../../utils/utils'
 
@@ -11,7 +10,7 @@ const initialDnDState = {
   originalOrder: [],
   updatedOrder: []
 }
-export const MyPoundList = ({ user, accessTokenConfig }) => {
+export const PoundList = ({ user, accessTokenConfig }) => {
   const toast = useToast();
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
@@ -129,44 +128,46 @@ export const MyPoundList = ({ user, accessTokenConfig }) => {
 
   return (
     <Flex w="100%" boxSizing="border-box" flexDir="column" alignItems="center" justifyContent="center">
-      <Heading as="h2" size="lg" my="5">My Pound-4-Pound List</Heading>
-      <Flex flexWrap="wrap-reverse" w="100%" flexDirection="row" alignItems="flex-end" justifyContent="center">
+      <Heading as="h2" size="lg" my="5">Pound-4-Pound List</Heading>
        
-        <Flex flex='1 0 40%' boxSizing="border-box" p="3" m="1rem" flexDir="column" alignItems="flex-end" justifyContent="center">
-          <Flex w="100%" flexDir="row" justifyContent="center" alignItems="center">
-            <Button m="0.5rem" onClick={submitMyList} type="button" colorScheme="blue">
+      <Flex flex='1 0 40%' boxSizing="border-box" p="3" m="1rem" flexDir="column" alignItems="flex-end" justifyContent="center">
+          <ButtonGroup>
+            <Button m="4" onClick={submitMyList} type="button" colorScheme="blue">
               Save My List
             </Button>
-            <Button m="0.5rem" variant="outline">Cancel</Button>
-          </Flex>
-          <UnorderedList overflow="scroll" h="30rem" ml="0" boxSizing="border-box" w="100%" listStyleType="none">
-              {combinedList && combinedList.length > 0 && combinedList.map((item, index) => {
-                // console.log('item: ',item)
-                if(!item) return;
-                return (
-                  <ListItem
-                    onClick={() => setFighterProfile(item.fighterId)}
-                    display="flex" alignItems="center" justifyContent="flex-start"
-                    m="3" ml="0" p="2" pl="3" borderRadius="5px"
-                    bg="whiteAlpha.400"
-                    height='2.5rem'
-                    w="100%"
-                    key={index}
-                    data-position={index}
-                    draggable
-                    onDragStart={onDragStart}
-                    onDragOver={onDragOver}
-                    onDrop={onDrop}
-                    onDragLeave={onDragLeave}
-                    _hover={{ cursor: 'pointer' }}>
-                  <Text as="p" style={index > 4 ? myListStyles : officialListStyles}>{index < 5 ? (index + 1) + '.' : ''} </Text>&nbsp;&nbsp;{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)}
-                </ListItem>
-              )})}
-          </UnorderedList>
-        </Flex>
-        <Flex flex='1 0 40%' p="3" pt="1rem" m="1rem" mt="3rem">
-          <PoundFighterCard handleViewProfile={handleViewProfile} selectedFighter={selectedFighter} />
-        </Flex>
+            <Button m="4" variant="outline">Cancel</Button>
+          </ButtonGroup>
+        <UnorderedList overflow="scroll" h="30rem" ml="0" boxSizing="border-box" w="100%" listStyleType="none">
+            {combinedList && combinedList.length > 0 && combinedList.map((item, index) => {
+              // console.log('item: ',item)
+              if(!item) return;
+              return (
+                <ListItem
+                  onClick={() => setFighterProfile(item.fighterId)}
+                  display="flex" alignItems="center" justifyContent="flex-start"
+                  m="3" ml="0" p="2" pl="3" borderRadius="5px"
+                  bg="whiteAlpha.400"
+                  height='2.5rem'
+                  w="100%"
+                  key={index}
+                  data-position={index}
+                  draggable
+                  onDragStart={onDragStart}
+                  onDragOver={onDragOver}
+                  onDrop={onDrop}
+                  onDragLeave={onDragLeave}
+                  _hover={{ cursor: 'pointer' }}>
+                <Text as="p" style={index > 4 ? myListStyles : officialListStyles}>{index < 5 ? (index + 1) + '.' : ''} </Text>&nbsp;&nbsp;{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)}
+              </ListItem>
+            )})}
+        </UnorderedList>
+      </Flex>
+      <Flex 
+        flex='1 0 40%' 
+        p="6" 
+        m="6"
+      >
+        
       </Flex>
     </Flex>
   )
