@@ -5,7 +5,6 @@ import axios from 'axios'
 
 export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect, toggleState }) => {
     const [scorecardData, setScorecardData] = useState([]);
-    console.log('user: ', user);
     useEffect(() => {
         if(user && user.sub){
             const getUserScorecards = async () => {

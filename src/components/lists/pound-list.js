@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
 import axios from 'axios'
+
 import { capFirstLetters } from '../../utils/utils'
+import { useUserStore } from '../../store'
+import { Navigate, useLocation } from 'react-router'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -10,40 +13,51 @@ const initialDnDState = {
   originalOrder: [],
   updatedOrder: []
 }
-export const PoundList = ({ user, accessTokenConfig }) => {
-  const toast = useToast();
+export const PoundList = ({ accessTokenConfig }) => {
+  const location = useLocation();
+  const toast = useToast();  
+  const user = useUserStore( store => store.user);
+
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
   const [combinedList, setCombinedList] = useState([]);
   const [selectedFighter, setSelectedFighter] = useState({});
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   const baseUrl = process.env.REACT_APP_POUND_LIST;
-
+  
+  console.log('user, 23: ', user);
+  let config;
+  const { username } = user;
+  const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
+  if(username && accessToken){
+    config = {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    };        
+  } else {
+    <Navigate to="/signin" replace state={{ path: location.pathname }} />
+  }
+  ////////////////////////////////////////////////////////
   useEffect(() => {
-    if(user){
       const getLists = async () => {
         const url = baseUrl + `/${user.sub}`;
-        return await axios.get(url, accessTokenConfig)
-        .then(res => {
-          // console.log('res 30:  ', res.data)
-          const { usersList, officialList } = res.data;
-          
-          const bothLists = res.data.usersList.concat(res.data.officialList);
-
-          const usersListIds = usersList.map( fighter => fighter.fighterId);
-
-          const filtered = officialList.filter( fighterObj => {
-            return !usersListIds.includes(fighterObj.fighterId)
-          });
-          setCombinedList([...usersList, ...filtered])
-          setSelectedFighter(res.data.usersList[0])
-        })
-        .catch(err => console.log(err));
+        return await axios.get(url, config)
+          .then(res => {
+            // console.log('res 30:  ', res.data)
+            const { usersList, officialList } = res.data;
+            const bothLists = res.data.usersList.concat(res.data.officialList);
+            const usersListIds = usersList.map( fighter => fighter.fighterId);
+            const filtered = officialList.filter( fighterObj => {
+              return !usersListIds.includes(fighterObj.fighterId)
+            });
+            setCombinedList([...usersList, ...filtered])
+            setOfficialPoundList(officialList)
+            setSelectedFighter(res.data.usersList[0])
+          })
+          .catch(err => console.log(err));
       }
-      getLists()
-    }
-      
-  }, [user]);
+      getLists();
+  }, []);
+
   const onDragStart = e => {
     const initialPosition = Number(e.currentTarget.dataset.position);
     setDragAndDrop({
@@ -100,7 +114,7 @@ export const PoundList = ({ user, accessTokenConfig }) => {
       owner: `${user.sub}`
     }
     const url = baseUrl + `/${user.sub}`;
-    return axios.put(url, poundObj, accessTokenConfig)
+    return axios.put(url, poundObj, config)
       .then(res => {
         if(res.status === 200){
           toast({ title: 'Updated P4P List!',
@@ -111,63 +125,93 @@ export const PoundList = ({ user, accessTokenConfig }) => {
       .catch(err => console.log(err))
   }
 
-  const setFighterProfile = fighterId => {
-    const thisFighter = combinedList.filter(fighter => fighterId === fighter.fighterId);
-    setSelectedFighter(thisFighter[0]);
-  }
-  const handleViewProfile = e => {
-    const { id } = e.currentTarget;
-    console.log('id: ',id)
-    //this will go to the fighter page when a user clicks on the fighter card, not the list...
-    // console.log('handleViewProfile');
-    // console.log('clicked fighter id: ',selectedFighter.fighterId);
-  }
-
-  const officialListStyles = { fontWeight: 'bold', color: 'rgb(197, 48, 48)'};
-  const myListStyles = { marginLeft: '1rem'};
+  const officialListStyles = { fontWeight: 'bold', color: '#e80000'};
+  const myListStyles = { };
 
   return (
-    <Flex w="100%" boxSizing="border-box" flexDir="column" alignItems="center" justifyContent="center">
-      <Heading as="h2" size="lg" my="5">Pound-4-Pound List</Heading>
-       
-      <Flex flex='1 0 40%' boxSizing="border-box" p="3" m="1rem" flexDir="column" alignItems="flex-end" justifyContent="center">
-          <ButtonGroup>
-            <Button m="4" onClick={submitMyList} type="button" colorScheme="blue">
+    <Flex id="pound_lists" boxSizing="border-box" flexDir="column" alignItems="center" justifyContent="center">
+      <Heading as="h2" size={["sm", "md", "lg"]} p="4" m="1">Pound-4-Pound Lists</Heading>
+      <Flex p="4" m="4" mt="0" w={["100%", "90%", "80%"]} flexDir={["column", "row"]} alignItems="flex-start" justifyContent="space-evenly">
+        <Flex 
+          as="section" 
+          flex="1 0 40%" 
+          flexDir="column" 
+          alignItems="center" 
+          justifyContent="center"
+          p="4"
+          pt="0"
+          m="4"
+          mt="0"
+        >
+          <ButtonGroup mb="1rem">
+            <Button onClick={submitMyList} type="button" colorScheme="blue">
               Save My List
             </Button>
-            <Button m="4" variant="outline">Cancel</Button>
+            <Button variant="outline">Cancel</Button>
           </ButtonGroup>
-        <UnorderedList overflow="scroll" h="30rem" ml="0" boxSizing="border-box" w="100%" listStyleType="none">
-            {combinedList && combinedList.length > 0 && combinedList.map((item, index) => {
-              // console.log('item: ',item)
-              if(!item) return;
-              return (
-                <ListItem
-                  onClick={() => setFighterProfile(item.fighterId)}
-                  display="flex" alignItems="center" justifyContent="flex-start"
-                  m="3" ml="0" p="2" pl="3" borderRadius="5px"
-                  bg="whiteAlpha.400"
-                  height='2.5rem'
-                  w="100%"
-                  key={index}
-                  data-position={index}
-                  draggable
-                  onDragStart={onDragStart}
-                  onDragOver={onDragOver}
-                  onDrop={onDrop}
-                  onDragLeave={onDragLeave}
-                  _hover={{ cursor: 'pointer' }}>
-                <Text as="p" style={index > 4 ? myListStyles : officialListStyles}>{index < 5 ? (index + 1) + '.' : ''} </Text>&nbsp;&nbsp;{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)}
-              </ListItem>
-            )})}
-        </UnorderedList>
-      </Flex>
-      <Flex 
-        flex='1 0 40%' 
-        p="6" 
-        m="6"
-      >
-        
+
+          <UnorderedList overflow="scroll" h="30rem" ml="0" boxSizing="border-box" w="100%" listStyleType="none">
+              { combinedList?.length > 0 && combinedList.map((item, i) => {
+                // console.log('item: ',item)
+                if(!item) return;
+                return (
+                  <ListItem
+                    display="flex" 
+                    alignItems="center" 
+                    justifyContent="flex-start"
+                    p="4"
+                    m="2"
+                    borderRadius="5px"
+                    bg={i > 4 ? "whiteAlpha.200" : "whiteAlpha.400"}
+                    height='2.5rem'
+                    // w="100%"
+                    key={i}
+                    data-position={i}
+                    draggable
+                    onDragStart={onDragStart}
+                    onDragOver={onDragOver}
+                    onDrop={onDrop}
+                    onDragLeave={onDragLeave}
+                    _hover={{ cursor: 'pointer' }}>
+                  <Text as="p" style={i > 4 ? myListStyles : officialListStyles}>{i + 1} </Text>&nbsp;&nbsp;{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)}
+                </ListItem>
+              )})}
+          </UnorderedList>
+        </Flex>
+        <Flex 
+          as="section" 
+          flex="1 0 40%" 
+          flexDir="column" 
+          alignItems="center" 
+          justifyContent="center"
+          p="4"
+          pt="0"
+          m="4"
+          mt="0"
+        >
+          <Heading as="h3" p="4" pt="0" size={["sm", "md", "lg"]}>The FightSync List</Heading> 
+          <UnorderedList  h="30rem" boxSizing="border-box" w="100%" listStyleType="none">
+              {officialPoundList?.length > 0 && officialPoundList.slice(0,10).map((item, i) => {
+                // console.log('item: ',item)
+                if(!item) return;
+                return (
+                  <ListItem
+                    borderTopRadius={i === 0 ? "md" : "0"}
+                    display="flex" 
+                    alignItems="center" 
+                    justifyContent="flex-start"
+                    p="4"
+                    bg={"whiteAlpha.200"}
+                    height='2.5rem'
+                    w="100%"
+                    key={i}
+                    _hover={{ cursor: 'pointer' }}
+                  >
+                  <Text as="p" style={officialListStyles}>{i + 1} </Text>&nbsp;&nbsp;{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)}
+                </ListItem>
+              )})}
+          </UnorderedList>
+        </Flex>
       </Flex>
     </Flex>
   )
