@@ -8,7 +8,14 @@ import { parseUrls, stickers } from '../../utils'
 // import { sanitize } from '../../utils'
 // import { IoNotifications } from 'react-icons/io'
 
-export const ChatSidebar = ({ accessTokenConfig, chatKey, displayName, notifications, setNotifications, setNotificationTimeout }) => {
+export const ChatSidebar = ({ 
+    accessTokenConfig, 
+    chatKey, 
+    displayName, 
+    notifications, 
+    setNotifications, 
+    setNotificationTimeout 
+}) => {
     // chatKey is room key for room ARN, required for chat metadata.
     const [moderator, setModerator] = useState(false);
     const [avatar, setAvatar] = useState({});
@@ -16,7 +23,6 @@ export const ChatSidebar = ({ accessTokenConfig, chatKey, displayName, notificat
     const [refreshTimer, setRefreshTimer] = useState({});
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
-    const [connection, setConnection] = useState(null);
     //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [prediction, setPrediction] = useState('');
@@ -24,6 +30,8 @@ export const ChatSidebar = ({ accessTokenConfig, chatKey, displayName, notificat
     const chatRef = createRef();
     const predictionRef = createRef();
     const messagesEndRef = createRef();
+    
+    const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
     

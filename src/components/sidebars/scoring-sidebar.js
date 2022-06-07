@@ -7,7 +7,7 @@ import { NavItem } from './scoring-sidebar/nav-item'
 import { PredictionPopover } from '../../components/prediction-popover'
 import { FaTv, FaRegMoneyBillAlt, FaMapMarkerAlt, FaRegClock, FaLock, FaLockOpen, FaPlusCircle, FaTrophy } from 'react-icons/fa'
 import { parseEpoch, predictionIsLocked } from '../../utils/utils'
-import { FaWeight } from 'react-icons/fa'
+import { IoScaleOutline } from 'react-icons/io5'
 export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, handleAddGuestScorer, members, showGuestScorers, myGuestScorers, prediction, groupScorecard }) => {
     // console.log('scoring sidebar, show: ',show)
     // console.log('myGuestScorers: ',myGuestScorers)
@@ -64,7 +64,7 @@ export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, han
                 </NavGroup>
                 <NavGroup label="Fight">
                     <NavItem icon={<BiChevronRightCircle />} label={totalRounds + ' Rounds'} />
-                    <NavItem icon={<FaWeight />} label={transformedWeightclass} />
+                    <NavItem icon={<IoScaleOutline />} label={transformedWeightclass} />
                     { show && <NavItem icon={<FaRegMoneyBillAlt />} label={'Moneyline: ' + odds } /> }
                 </NavGroup>
                 <NavGroup label="Prediction">

@@ -106,7 +106,7 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
                         // console.log('row: ',row)
                         const { scores, fighterATotal, fighterBTotal } = row
                         return (
-                            <Tr key={idx}>
+                            <Tr key={idx} p="0">
                                 {columns.map( (column, i) => {
                                     // console.log('column: ',column)
                                     const cell = row[column.accessor];
@@ -129,10 +129,10 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
                                             // console.log('koRound: ',koRound)
                                             const { fighterAScore, fighterBScore } = scoreRow;
                                             return (
-                                                <Td key={ind} p="0">
-                                                    <Flex  p="0" flexDirection="column" alignItems="center" justifyContent="space-between">
-                                                        <Flex p="0" style={ind == koRound  ? {border:'1px solid red', fontSize: '1.2rem'} : null} borderRadius="3px" bg="gray.500" color="black" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterAScore}</Flex>
-                                                        <Flex p="0" style={ind == koRound && whichFighter === String(fighterBScore) ? {border:'1px solid red', fontSize: '1.2rem'} : null} color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBScore}</Flex>
+                                                <Td minW="100%" key={ind} p="1px">
+                                                    <Flex p="1px" flexDirection="column" alignItems="center" justifyContent="space-between">
+                                                        <Flex style={ind == koRound  ? {border:'1px solid red', fontSize: '1.2rem'} : null} borderRadius="3px" bg="gray.500" color="black" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterAScore}</Flex>
+                                                        <Flex style={ind == koRound && whichFighter === String(fighterBScore) ? {border:'1px solid red', fontSize: '1.2rem'} : null} color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBScore}</Flex>
                                                     </Flex>
                                                 </Td>
                                         )
@@ -141,8 +141,8 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
                                         return (
                                             <Td p="0">
                                                 <Flex p="0" flexDirection="column" alignItems="center" justifyContent="center">
-                                                    <Flex p="0" fontWeight="bold" fontSize="md" color="gray.400" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterATotal}</Flex>
-                                                    <Flex p="0" fontWeight="bold" fontSize="md" color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBTotal}</Flex>
+                                                    <Flex fontWeight="bold" fontSize="md" color="gray.400" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterATotal}</Flex>
+                                                    <Flex fontWeight="bold" fontSize="md" color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBTotal}</Flex>
                                                 </Flex>
                                             </Td>
                                         )

@@ -378,7 +378,7 @@ const Scoring = () => {
     return (
         <Flex flexDir="column" position="relative">
             <SliderHeading fighterA={fighterA} fighterB={fighterB} />
-            <Flex position="fixed" right="0" top="2rem" flexDir="column" zIndex="1000" w="100%">
+            <Flex w={["100%","auto"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="10000">
                 {notifications.length > 0 && notifications.map( ({notification, displayName}) => {
                     return (
                         <Notification
