@@ -1,39 +1,24 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react'
+import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
-import jwt_decode from 'jwt-decode'
 import { ScoringTable } from '../components/tables'
 import { ScoringModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
 import { ScoringSidebar } from '../components/sidebars'
-import { predictionIsLocked } from '../utils/utils';
-import { useNavigate } from 'react-router-dom'
+import { predictionIsLocked } from '../utils/utils'
+import { Navigate, useLocation } from 'react-router'
 import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
+import { useUserStore } from '../store'
 
-const Scoring = props => {
-    const navigate = useNavigate();
+const Scoring = () => {
+    const location = useLocation();
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
-    const username = sessionStorage.getItem('username');
-    const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
-    let accessToken, idToken, decodedIdToken, sub, config, tokenIsGood;
-    if(username && localStorageString){
-        accessToken = localStorage.getItem(localStorageString + '.accessToken');
-        idToken = localStorage.getItem(localStorageString + '.idToken');
-        decodedIdToken = jwt_decode(idToken);
-        sub = decodedIdToken.sub;
-        config = {
-            headers: { Authorization: `Bearer ${idToken}` }
-        };        
-        tokenIsGood = Date.now() < (decodedIdToken.exp * 1000) ? true : false;
-    } else { 
-        navigate('/signin', {page: '/scoring/' + groupscorecard_id});
-    }
 
     //////////////////  SCORE STATE /////////////////////////
-
+    const user = useUserStore( store => store);
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
         fighterA: '', 
@@ -77,13 +62,26 @@ const Scoring = props => {
     ]);
     
     //////////////////  URL'S /////////////////////////
-    ////////////////////////////////////////////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
     const userScorecardUrl = process.env.REACT_APP_USER_SCORECARDS + `/${groupscorecard_id}`;
     const guestScorersUrl = process.env.REACT_APP_GUEST_SCORERS;
-
+    
+    //////////////////  TOKEN /////////////////////////
+    let accessTokenConfig;
+    const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}`;
+    if(user.username && localStorageString){
+      const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
+      accessTokenConfig = {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      };        
+      const tokenIsGood = Date.now() < (accessToken.exp * 1000) ? true : false;
+      if(!tokenIsGood){
+        <Navigate to="/signin" replace state={{ path: location.pathname }} />;
+      } 
+    }
+    
     useEffect(() => {
-        if(tokenIsGood && groupscorecard_id){
+        if(user?.sub && groupscorecard_id){
             /**
              * 1. fetch groupScorecard.
              * 2. Check if admin === current user email
@@ -99,7 +97,8 @@ const Scoring = props => {
 
             // 1. Fetch Group Scorecard.
             const fetchGroupScorecard = async () => {
-                const res = await axios.get(groupScorecardsUrl, config);
+                const { sub, email, username } = user;
+                const res = await axios.get(groupScorecardsUrl, accessTokenConfig);
                 // console.log('res: ', res.data);
                 if(res.data.scorecards === 'No scorecard found.'){
                     alert('No Scorecard Found');
@@ -110,7 +109,7 @@ const Scoring = props => {
                 setScorecards(res.data.scorecards);
                 
                 // 3. Get THIS USER'S scorecard.
-                const [thisUserScorecard] = await res.data.scorecards.filter(scorecard => scorecard.member === decodedIdToken.email);
+                const [thisUserScorecard] = await res.data.scorecards.filter(scorecard => scorecard.member === email);
                 // console.log('thisUserScorecard', thisUserScorecard)
                 const needsOwnerId = !thisUserScorecard.ownerId || thisUserScorecard.ownerId !== sub || !thisUserScorecard.ownerDisplayName;
                 // 4. If a featured show, set in state.
@@ -122,11 +121,11 @@ const Scoring = props => {
                 }
                 // 5. set user data in DB if not there already
                 if(needsOwnerId){
-                    axios.patch(userScorecardUrl, {ownerId: sub}, config);
+                    axios.patch(userScorecardUrl, {ownerId: sub}, accessTokenConfig);
                     thisUserScorecard.ownerId = sub;
                 }
                 // 6. Check if user is GROUP ADMIN
-                if(res.data.groupScorecard.admin === decodedIdToken.email){
+                if(res.data.groupScorecard.admin === email){
                     setIsAdmin(true);
                 }                
                 // 7. Check for CHAT KEY. if !chatKey, get it in useEffect.
@@ -151,7 +150,7 @@ const Scoring = props => {
             }
             fetchGroupScorecard();
         } 
-    }, [tokenIsGood, dBCall, groupscorecard_id, onlyShowToCurrentRound]);
+    }, [user, dBCall, groupscorecard_id, onlyShowToCurrentRound]);
 
     // check if chatKey, get sig4 token.
     useEffect(() => {
@@ -160,7 +159,7 @@ const Scoring = props => {
         if( groupScorecardId && !chatKey ){
             const getChatKey = async () => {
                 const url = process.env.REACT_APP_CHAT_ROOM_SERVICE + `/${groupScorecardId}`;
-                return axios.put(url, {}, config)
+                return axios.put(url, {}, accessTokenConfig)
                     .then( res => setChatKey(res.data.chatArnKey)).catch( err => console.log(err));
             } 
             getChatKey();
@@ -207,7 +206,7 @@ const Scoring = props => {
     useEffect(() => {
         if(showGuestScorerIds && showGuestScorerIds.length > 0){
             const getShowGuestScorers = () => {
-                return axios.post(guestScorersUrl, showGuestScorerIds, config)
+                return axios.post(guestScorersUrl, showGuestScorerIds, accessTokenConfig)
                     .then(res => setShowGuestScorers(res.data))
                     .catch(err => console.log(err))
             }
@@ -218,7 +217,7 @@ const Scoring = props => {
     useEffect(() => {
         if(myGuestScorerIds && myGuestScorerIds.length > 0){
             const getMyGuestScorers = () => {
-                return axios.post(guestScorersUrl, myGuestScorerIds, config)
+                return axios.post(guestScorersUrl, myGuestScorerIds, accessTokenConfig)
                     .then(res => setMyGuestScorers(res.data))
                     .catch(err => console.log(err))
             }
@@ -237,7 +236,7 @@ const Scoring = props => {
         } else {
             const updatedGuestScorerArr = guestScorerIds.concat(id);
             // console.log('updatedGuestScorerArr: ',updatedGuestScorerArr);
-            return axios.patch(userScorecardUrl, { updatedGuestScorerArr }, config)
+            return axios.patch(userScorecardUrl, { updatedGuestScorerArr }, accessTokenConfig)
                 .then(res => {
                     console.log('res: ',res);
                     if(res.status === 200){
@@ -293,7 +292,7 @@ const Scoring = props => {
                 setPredictionLock(true);
                 return alert('Predictions are now locked!');
             }
-            return axios.patch(userScorecardUrl, {prediction: value}, config)
+            return axios.patch(userScorecardUrl, {prediction: value}, accessTokenConfig)
             .then(res => {
                 // console.log('res: ',res)
                 if(res.data === 'Updated prediction'){
@@ -426,7 +425,7 @@ const Scoring = props => {
                     submitRoundScores={submitRoundScores}
                 />
                 <ChatSidebar 
-                    config={config}
+                    accessTokenConfig={accessTokenConfig}
                     chatKey={chatKey}
                     displayName={ownerDisplayName}
                     notifications={notifications}

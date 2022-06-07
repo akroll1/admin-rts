@@ -92,7 +92,6 @@ export const SignIn = props => {
       const { attributes } = user;
       setUser({ ...attributes, username });
       sessionStorage.setItem('isLoggedIn',true);
-      sessionStorage.setItem('username', username);
       return navigate('/dashboard/scorecards', { username });
     })
     .catch((err) => {

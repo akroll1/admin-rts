@@ -3,7 +3,7 @@ import { Button, Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mod
 import { Badge } from '@chakra-ui/react'
 import { TableUser } from './table-user'
 import {ExternalLinkIcon} from '@chakra-ui/icons'
-  
+import { useNavigate } from 'react-router'
   const badgeEnum = {
     completed: 'green',
     active: 'orange',
@@ -32,6 +32,7 @@ import {ExternalLinkIcon} from '@chakra-ui/icons'
   ];
 
 export const MyScorecardsTableContent = ({ scorecardData }) => {
+  const navigate = useNavigate();
   console.log('screwcardData: ',scorecardData)
   return (
     <Flex overflow="scroll" w="100%">
@@ -43,14 +44,13 @@ export const MyScorecardsTableContent = ({ scorecardData }) => {
               {column.Header}
             </Th>
           ))}
-          <Th />
         </Tr>
       </Thead>
       <Tbody>
         { scorecardData?.length > 0 && scorecardData.map((row, index) => {
           const { groupScorecardId } = row;
           return (
-            <Tr style={{textAlign: 'center'}} key={index}>
+            <Tr onClick={() => navigate(`/scoring/${groupScorecardId}`)} _hover={{cursor: 'pointer', bg: 'blue.700'}} style={{textAlign: 'center'}} key={index}>
               {columns.map((column, index) => {
                 const cell = row[column.accessor];
                 const element = column.Cell?.(cell) ?? cell;
@@ -60,11 +60,6 @@ export const MyScorecardsTableContent = ({ scorecardData }) => {
                   </Td>
                 )
               })}
-              <Td textAlign="right">
-                <Button as="a" href={`/scoring/${groupScorecardId}`} variant="link" colorScheme="blue">
-                Go <ExternalLinkIcon style={{marginBottom: '0.2rem',marginLeft: '0.5rem',fontSize: '1rem'}} /> 
-                </Button>
-              </Td>
             </Tr>
         )})}
       </Tbody>

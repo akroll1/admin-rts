@@ -3,8 +3,14 @@ import { Footer } from './footer'
 import { Navbar } from './navbar'
 import { Box, Flex } from '@chakra-ui/react'
 import { Notification } from '../notifications'
+import { useBroadcastStore, useUserStore } from '../../store'
 
 export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
+    const broadcast = useBroadcastStore( ({ broadcast }) => broadcast);
+    const user = useUserStore( user => user);
+
+    console.log('broadcast: ', broadcast)
+    console.log('username: layout: ', user)
     const [broadcasts, setBroadcasts] = useState([
         {
             notification: 'notification',
@@ -78,7 +84,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Box as="main">
                 <Flex w={["100%","auto"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="1000">
-                    {broadcasts.length > 0 && broadcasts.map( ({ notification, displayName }) => {
+                    {broadcasts?.length > 0 && broadcasts?.map( ({ notification, displayName }) => {
                         return (
                             <Notification
                                 key={notification}

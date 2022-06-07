@@ -3,12 +3,12 @@ import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/reac
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { parseUrls, stickers } from '../../utils'
-import { StickerPicker } from './chat-sidebar-components'
-import { FaRProject } from 'react-icons/fa'
-import { sanitize } from '../../utils'
-import { IoNotifications } from 'react-icons/io'
+// import { StickerPicker } from './chat-sidebar-components'
+// import { FaRProject } from 'react-icons/fa'
+// import { sanitize } from '../../utils'
+// import { IoNotifications } from 'react-icons/io'
 
-export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNotifications, setNotificationTimeout }) => {
+export const ChatSidebar = ({ accessTokenConfig, chatKey, displayName, notifications, setNotifications, setNotificationTimeout }) => {
     // chatKey is room key for room ARN, required for chat metadata.
     const [moderator, setModerator] = useState(false);
     const [avatar, setAvatar] = useState({});
@@ -51,7 +51,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
             userId: `${displayName}`,
         };
     
-        axios.post(`${process.env.REACT_APP_CHAT_SERVICE}`, data, config)
+        axios.post(`${process.env.REACT_APP_CHAT_SERVICE}`, data, accessTokenConfig)
             .then( res => {
                 // console.log('res, 58: ', res)
                 setChatToken(res.data);
@@ -171,7 +171,6 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
     };
 
     const handleSendPredictionMessage = () => {
-        console.log('handleSendPredictionMessage')
         const sanitizedPrediction = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
         const uuid = uuidv4();
         const data = JSON.stringify({

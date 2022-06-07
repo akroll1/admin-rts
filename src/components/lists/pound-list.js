@@ -16,8 +16,7 @@ const initialDnDState = {
 export const PoundList = ({ accessTokenConfig }) => {
   const location = useLocation();
   const toast = useToast();  
-  const user = useUserStore( store => store.user);
-
+  const user = useUserStore( user => user);
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
   const [combinedList, setCombinedList] = useState([]);
@@ -25,7 +24,6 @@ export const PoundList = ({ accessTokenConfig }) => {
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   const baseUrl = process.env.REACT_APP_POUND_LIST;
   
-  console.log('user, 23: ', user);
   let config;
   const { username } = user;
   const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
@@ -42,7 +40,6 @@ export const PoundList = ({ accessTokenConfig }) => {
         const url = baseUrl + `/${user.sub}`;
         return await axios.get(url, config)
           .then(res => {
-            // console.log('res 30:  ', res.data)
             const { usersList, officialList } = res.data;
             const bothLists = res.data.usersList.concat(res.data.officialList);
             const usersListIds = usersList.map( fighter => fighter.fighterId);

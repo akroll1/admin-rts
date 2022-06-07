@@ -19,6 +19,7 @@ import theme from '../theme'
 import { PoundList } from '../components/lists'
 
 const App = () => {
+  
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') == 'true');
   return (
     <ChakraProvider theme={theme}>

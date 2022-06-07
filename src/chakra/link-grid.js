@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Box, SimpleGrid, SimpleGridProps, Stack } from '@chakra-ui/react'
+import { Link, Box, SimpleGrid, Stack } from '@chakra-ui/react'
 import {FooterHeading} from './footer-heading'
 
 export const LinkGrid = (props) => (
@@ -8,7 +8,7 @@ export const LinkGrid = (props) => (
       <FooterHeading mb="4">Product</FooterHeading>
       <Stack>
         <Link href='/about'>About</Link>
-        <Link href='#'>Local Gyms</Link>
+        <Link href='#'>API</Link>
         <Link href='#'>Use Cases</Link>
       </Stack>
     </Box>

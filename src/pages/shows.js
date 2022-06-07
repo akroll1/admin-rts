@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import { Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react'
-import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { useParams } from 'react-router'
 import { ShowCard } from '../components/tables/shows-page-show-card'
@@ -13,31 +12,23 @@ import { ReviewForm } from '../components/forms'
 import { PredictionsReviews } from '../components/shows-components'
 import { ShowsCreateGroupScorecard, ShowsMetadata, ShowStoryline } from '../components/shows-components'
 import { DividerWithText } from '../chakra'
-import { REVIEW_TYPE } from '../utils'
+import { useUserStore } from '../store'
+import { Navigate } from 'react-router'
 
 const Shows = props => {
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
-    const username = sessionStorage.getItem('username');
-    const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
-    let accessToken, idToken, decodedAccessToken, decodedIdToken, sub, idTokenConfig, accessTokenConfig, tokenIsGood;
-    if(username && localStorageString){
-        accessToken = localStorage.getItem(localStorageString + '.accessToken');
-        idToken = localStorage.getItem(localStorageString + '.idToken');
-        decodedAccessToken = jwt_decode(accessToken);
-        decodedIdToken = jwt_decode(idToken);
-        sub = decodedIdToken.sub;
-        idTokenConfig = {
-            headers: { Authorization: `Bearer ${idToken}` }
-        };        
+    const user = useUserStore( user => user);
+    const { email, sub, username } = user;
+    let accessTokenConfig;
+    const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
+    if(username && accessToken){
         accessTokenConfig = {
             headers: { Authorization: `Bearer ${accessToken}` }
-        }
-        tokenIsGood = Date.now() < (decodedIdToken.exp * 1000) ? true : false;
-
-    } else { 
-        navigate('/signin', {page: '/scoring'});
+        };        
+    } else {
+        <Navigate to="/signin" replace state={{ path: location.pathname }} />
     }
     const baseUrl = process.env.REACT_APP_SHOWS;
         
@@ -68,7 +59,7 @@ const Shows = props => {
     const [fighters, setFighters] = useState([]);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
-        admin: decodedIdToken?.sub ? decodedIdToken.email : '',
+        admin: sub,
         featuredShowId: '',
         fightDateTime: '',
         fighterA: '',
@@ -82,16 +73,16 @@ const Shows = props => {
         groupScorecardName: '',
         groupScorecardNotes: '',
         location: '',
-        members: decodedIdToken?.sub ? [decodedIdToken.email] : [],
-        ownerDisplayName: decodedIdToken?.sub ? decodedIdToken['cognito:username'] : '',
-        ownerId: decodedIdToken?.sub ? decodedIdToken.sub : '', 
+        members: [email],
+        ownerDisplayName: username,
+        ownerId: sub, 
         showId: '',
         totalRounds: 0,
         weightclass: '',
     })
 
     useEffect(() => {
-        if(id){ 
+        if(id && sub){ 
             const getShow = id => {
                 const url = baseUrl + `/${id}`;
                 axios.get(url, accessTokenConfig)
@@ -103,7 +94,7 @@ const Shows = props => {
             }
             getShow(id);
         }
-        if(tokenIsGood){
+        if(sub){
             const getAllShows = () => {
                 return axios.get(baseUrl, accessTokenConfig)
                     .then(res => {
@@ -114,7 +105,7 @@ const Shows = props => {
             }
             getAllShows();
         }
-    },[tokenIsGood, id])
+    },[id, sub])
     
     useEffect(() => {
         // this checks for if a user has written a previous review of the fight...
@@ -177,8 +168,8 @@ const Shows = props => {
   
     const handleReviewFormSubmit = showReviewForm => {
         showReviewForm.id = selectedShow.fights[0].fightId;
-        showReviewForm.displayName = decodedIdToken['cognito:username'];
-        showReviewForm.owner = decodedIdToken.sub;
+        showReviewForm.displayName = username;
+        showReviewForm.owner = sub;
         showReviewForm.showId = selectedShow.showId; 
         showReviewForm.type = selectedShow.showTime > Date.now() ? 'REVIEW' : 'PREDICTION';
         if(!userReview){
@@ -236,7 +227,7 @@ const Shows = props => {
 
     const handleScorecardSubmit = () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
-        const tempMembersArr = members.concat(decodedIdToken.email);
+        const tempMembersArr = members.concat(email);
         const goodEmails = removeBadEmails(tempMembersArr);
         const dedupedEmails = [...new Set(goodEmails)];
         const { showId, showName, location, showTime } = selectedShow;
@@ -245,9 +236,9 @@ const Shows = props => {
             groupScorecardId: uuidv4(),
             fightId,
             showId,
-            admin: decodedAccessToken.sub,
-            ownerId: decodedAccessToken.sub,
-            ownerDisplayName: decodedAccessToken.username,
+            admin: sub,
+            ownerId: sub,
+            ownerDisplayName: username,
             groupScorecardName: showName,
             fighterA: fighters[0].firstName + ' ' + fighters[0].lastName,
             fighterB: fighters[1].firstName + ' ' + fighters[1].lastName,
