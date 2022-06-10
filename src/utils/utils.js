@@ -1,3 +1,5 @@
+import parseISO from 'date-fns/parseISO'
+
 // export const scoringTablePrediction = (prediction, fighterA) => {
 //     prediction = prediction.toLowerCase();
 //     console.log('prediction: ',prediction);
@@ -63,5 +65,22 @@ export const weightclasses = [
     {value:'Middleweight,160', label:'Middleweight (160 pounds)'},
     {value:'Light heavyweight,178', label:'Light heavyweight (178 pounds)'},
     {value:'Cruiserweight,201', label:'Cruiserweight (201 pounds)'},
-    {value:'Heavyweight,201+', label:'Heavyweight (201+ pounds)'}
+    {value:'Heavyweight,201+', label:'Heavyweight (201+ pounds)'},    
 ];
+/**
+ * @param {number} epoch
+ * @returns {number} epoch/1000
+ */
+export const createTimestamp = epoch => {
+    return parseInt(Math.round(new Date(epoch)/1000));
+};
+
+/**
+ * @param {number} epoch/1000
+ * @returns {string} ISO string
+ */
+export const createISOString = timestamp => {
+
+    timestamp *= 1000;
+    const time = parseISO(new Date(timestamp).toISOString());
+}

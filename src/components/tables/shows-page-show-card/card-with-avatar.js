@@ -5,7 +5,7 @@ export const CardWithAvatar = props => {
   const { children, avatarProps, ...rest } = props;
   return (
     <Flex
-      maxW={["80%", "40%", "30%"]}
+      maxW={["70%", "40%", "25%"]}
       m="4"
       mt="2"
       justifyContent="space-between"

@@ -51,7 +51,7 @@ export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, han
             fontSize="sm"
         >
             <AccountSwitcher fightResult={fightResult} fighterA={fighterA} fighterB={fighterB} scorecardName={scorecardName} groupScorecard={groupScorecardId} />
-            <Stack w="full" spacing="6" flex="1" overflow="auto" pt="8" p="2">
+            <Stack w="full" spacing="4" flex="1" overflow="auto" pt="8" p="2">
                 <NavGroup active={true} label="Official Judges">
                     { myGuestScorers && myGuestScorers.length > 0 && myGuestScorers.map( (guestScorer,i) => <NavItem id={guestScorer.guestScorerId} icon={<BiUserCircle />} label={guestScorer.displayName} key={guestScorer.guestScorerId} />) }
                     <NavItem subtle icon={<FaPlusCircle />} label={<Button disabled={!show} _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm" onClick={() => setShowGuests(!showGuests)}>Add Judge</Button>} />

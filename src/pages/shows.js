@@ -12,7 +12,7 @@ import { ReviewForm } from '../components/forms'
 import { PredictionsReviews } from '../components/shows-components'
 import { ShowsCreateGroupScorecard, ShowsMetadata, ShowStoryline } from '../components/shows-components'
 import { DividerWithText } from '../chakra'
-import { useUserStore } from '../store'
+import { useUserStore } from '../stores'
 import { Navigate } from 'react-router'
 
 const Shows = props => {

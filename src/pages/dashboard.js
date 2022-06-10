@@ -5,11 +5,11 @@ import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
 import { MyScorecards } from './my-scorecards'
 import { CreateGroupScorecard } from './create-scorecard'
-import { BroadcastForm, GuestScorerForm, DiscussionsForm, PoundForm, FightersForm, ShowForm, AccountSettingsForm } from '../components/forms'
+import { AccountSettingsForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
 import { PoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
 import { Navigate, useLocation } from 'react-router'
-import { useUserStore } from '../store'
+import { useUserStore } from '../stores'
 import jwt_decode from 'jwt-decode'
 
 const Dashboard = props => {
@@ -43,7 +43,7 @@ const Dashboard = props => {
     if(isSuperAdmin){
       setUser({ ...user, isSuperAdmin })
       setIsSuperAdmin(true);
-      setFormLinks( prev => [...prev, ...isSuperAdminFormOptions]);
+      setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
     }
     setToggleState(!toggleState)
   },[])
@@ -60,6 +60,7 @@ const Dashboard = props => {
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "GUEST-SCORERS", label:"Guest Scorers Form", type: 'Guest Scorers', icon: FaEdit, link: '/dashboard/guest-scorers' },
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
+    { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
   ];
 
   const userFormLinks = () => {
@@ -102,6 +103,7 @@ const Dashboard = props => {
         { form === 'DISCUSSIONS' && <DiscussionsForm accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'GUEST-SCORERS' && <GuestScorerForm accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'BROADCAST' && <BroadcastForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'FIGHT-FORM' && <FightForm accessTokenConfig={accessTokenConfig} user={user} /> }
       </Box>
     </Flex>
   )

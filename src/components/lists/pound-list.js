@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useT
 import axios from 'axios'
 
 import { capFirstLetters } from '../../utils/utils'
-import { useUserStore } from '../../store'
+import { useUserStore } from '../../stores'
 import { Navigate, useLocation } from 'react-router'
 
 const initialDnDState = {

@@ -10,7 +10,7 @@ import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import { useUserStore } from '../store'
+import { useUserStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();
@@ -56,10 +56,7 @@ const Scoring = () => {
 
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
-    const [notifications, setNotifications] = useState([
-        { notification: 'Thurman is on fire!', displayName: 'sarah'}, 
-        { notification: 'Thurman will get KO\'d this round!', displayName: 'andrew1'}
-    ]);
+    const [notifications, setNotifications] = useState([]);
     
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;

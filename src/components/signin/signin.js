@@ -6,7 +6,7 @@ import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate } from 'react-router-dom'
-import { useUserStore } from '../../store'
+import { useUserStore } from '../../stores'
 
 export const SignIn = props => {
   const navigate = useNavigate();

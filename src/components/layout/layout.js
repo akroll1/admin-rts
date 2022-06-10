@@ -3,7 +3,7 @@ import { Footer } from './footer'
 import { Navbar } from './navbar'
 import { Box, Flex } from '@chakra-ui/react'
 import { Notification } from '../notifications'
-import { useBroadcastStore, useUserStore } from '../../store'
+import { useBroadcastStore, useUserStore } from '../../stores'
 
 export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     // set broadcasts back to an empty string, here or in broadcast form...
@@ -50,6 +50,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
                 displayName: 'FightSync.live'
             };
             setBroadcasts([update]);
+            setNotificationTimeout(true)
         };
     };
 

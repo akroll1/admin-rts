@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Rating } from './rating'
-import { Button, Flex, Heading, HStack, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
 
 export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowTheReviewForm, showTheReviewForm }) => {
@@ -36,12 +36,14 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
                   </Stack>
                 </Stack>
               <HStack spacing="4">
-                <Button size="lg" variant="outline" alignSelf="center">
-                  See all {type}s
-                </Button>
-                <Button onClick={() => setShowTheReviewForm(!showTheReviewForm)} size="lg" colorScheme="blue">
-                  Write a {type}
-                </Button>
+                <ButtonGroup size={["sm", "md", "lg"]}>
+                  <Button variant="outline">
+                    See all {type}s
+                  </Button>
+                  <Button onClick={() => setShowTheReviewForm(!showTheReviewForm)} colorScheme="blue">
+                    Write a {type}
+                  </Button>
+                </ButtonGroup>
               </HStack>
             </Stack>
           : 
