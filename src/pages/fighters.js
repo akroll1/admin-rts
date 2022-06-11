@@ -1,35 +1,26 @@
 import React, {useState, useEffect} from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Box, Flex, Heading } from '@chakra-ui/react'
-import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { useParams } from 'react-router'
 import { FightersPageFightersTable } from '../components/tables'
 import { FighterStats } from '../components/fighter-stats'
 import { FightersSidebar } from '../components/sidebars'
 import { FightersPageFighterProfile } from '../components/sidebars'
+import { useUserStore } from '../stores'
 
 const Fighters = () => {
-    const navigate = useNavigate();
-    const username = sessionStorage.getItem('username');
-    const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
-    let accessToken, idToken, decodedIdToken, sub, idTokenConfig, accessTokenConfig, tokenIsGood;
-    if(username && localStorageString){
-        accessToken = localStorage.getItem(localStorageString + '.accessToken');
-        idToken = localStorage.getItem(localStorageString + '.idToken');
-        // decodedAccessToken = jwt_decode(accessToken);
-        decodedIdToken = jwt_decode(idToken);
-        sub = decodedIdToken.sub;
-        idTokenConfig = {
-            headers: { Authorization: `Bearer ${idToken}` }
-        };        
+    const location = useLocation();
+    const user = useUserStore( user => user);
+    const { email, sub, username } = user;
+    let accessTokenConfig;
+    const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
+    if(username && accessToken){
         accessTokenConfig = {
             headers: { Authorization: `Bearer ${accessToken}` }
-        }
-        tokenIsGood = Date.now() < (decodedIdToken.exp * 1000) ? true : false;
-
-    } else { 
-        navigate('/signin', {page: '/scoring'});
+        };        
+    } else {
+        <Navigate to="/signin" replace state={{ path: location.pathname }} />
     }
     const baseUrl = process.env.REACT_APP_FIGHTERS;
     const { id } = useParams();         

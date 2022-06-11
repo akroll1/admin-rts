@@ -9,8 +9,9 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
   return (
     <>
       <Flex 
-        flexDir="row"
-        id="reviews"
+        flexDir='column'
+        flexWrap="wrap"
+        id="reviews_predictions"
         as="section"
         maxH="20%" 
         maxW="100%" 
@@ -18,7 +19,7 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
         m="auto"
         p={{base: '4', md: '6',lg: '8'}} 
       >
-        <Stack spacing="12" m="unset">
+        <Stack spacing="12" m="auto">
           { renderType?.length > 0 
           ? <Stack spacing={{base: '8'}}>
               <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
@@ -35,12 +36,12 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
                     </Text>
                   </Stack>
                 </Stack>
-              <HStack spacing="4">
-                <ButtonGroup size={["sm", "md", "lg"]}>
+              <HStack m="auto" maxW="100%" spacing="4">
+                <ButtonGroup m="auto" flexDir={['column', 'row']} size={["sm", "md", "lg"]}>
                   <Button variant="outline">
                     See all {type}s
                   </Button>
-                  <Button onClick={() => setShowTheReviewForm(!showTheReviewForm)} colorScheme="blue">
+                  <Button mt={["2", "0"]} onClick={() => setShowTheReviewForm(!showTheReviewForm)} colorScheme="blue">
                     Write a {type}
                   </Button>
                 </ButtonGroup>
@@ -57,9 +58,10 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
             </Flex> 
           }
         </Stack>
-      </Flex>
-      <Flex flexDir="row" flexWrap="wrap" ml="0">
-        {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
+        <Flex w="100%" flexDir="row" flexWrap="wrap" alignItems="center">
+          {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
+          {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
+        </Flex>
       </Flex>
     </>
   )

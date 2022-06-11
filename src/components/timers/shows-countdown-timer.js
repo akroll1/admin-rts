@@ -9,19 +9,16 @@ export const ShowsCountdownTimer = ({ showTime }) => {
   }
   return (
     <Flex 
-      as="section" 
       id="countdown-timer" 
       flexDirection="row" 
-      borderRadius="md" 
+      borderRadius="2px" 
       bg={useColorModeValue('black', 'gray.700')} 
       color="white" 
       maxW="100%" 
       w="100%"
-      mx="auto" 
-      px={{base: '4', md: '4', lg: '6'}} 
+      mt="4"
+      px={{base: '4', md: '4', lg: '4'}} 
       py={{base: '3', md: '2.5'}}
-      mb="2"
-      mt="-4"
       justifyContent="space-evenly"
     >
       <Stack 

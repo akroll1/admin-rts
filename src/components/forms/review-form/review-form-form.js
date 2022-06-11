@@ -3,39 +3,39 @@ import { Button, Flex, FormControl, FormLabel, Input, Stack, Textarea, useColorM
 import { ReviewFormStars } from '../../stars';
 
 export const ReviewFormForm = ({ userReview, handleReviewFormSubmit, setShowTheReviewForm }) => {
-  const [showReviewForm, setShowReviewForm] = useState({
+  const [form, setForm] = useState({
     rating: 0,
     review: '',
     title: ''
   });
-  const handleReviewFormChange = e => {
+  const handleForm = e => {
       const { id, value } = e.currentTarget;
-      setShowReviewForm({ ...showReviewForm, [id]: value });
+      setForm({ ...form, [id]: value });
   };
   const submitReview = () => {
       setTimeout(() => {
         setShowTheReviewForm(false);
       },1000)
-      handleReviewFormSubmit(showReviewForm);
+      handleReviewFormSubmit(form);
   }
 
   const handleStarsClick = rating => {
-    setShowReviewForm({...showReviewForm, rating})
+    setForm({...form, rating})
   }
   useEffect(() => {
     if(userReview){
-      setShowReviewForm({...userReview});
+      setForm({...userReview});
     }
   },[userReview]);
 
-  const { rating, review, title } = showReviewForm;
+  const { rating, review, title } = form;
   return (
     <form>
       <Stack spacing="6">
         <FormControl id="title">
           <FormLabel htmlFor="title" color={useColorModeValue('gray.700', 'gray.200')}>Title</FormLabel>
           <Input
-            onChange={handleReviewFormChange}
+            onChange={handleForm}
             value={title}
             name="title"
             placeholder="Review title"
@@ -50,7 +50,7 @@ export const ReviewFormForm = ({ userReview, handleReviewFormSubmit, setShowTheR
         <FormControl id="review">
           <FormLabel htmlFor="review" color={useColorModeValue('gray.700', 'gray.200')}>Review</FormLabel>
           <Textarea
-            onChange={handleReviewFormChange}
+            onChange={handleForm}
             value={review}
             name="review"
             placeholder="Your Review..."

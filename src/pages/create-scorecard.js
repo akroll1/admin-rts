@@ -3,13 +3,10 @@ import { Avatar, Box, Button, Checkbox, Divider, Flex, FormControl, FormHelperTe
 import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons'
 import { FieldGroup } from '../chakra/field-group'
 import Datepicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css"
-import '../stylesheets/datepicker.css'
 import parseISO from 'date-fns/parseISO'
 import axios from 'axios'
-import { validateEmail, removeBadEmails } from './helpers'
-import { useNavigate } from 'react-router-dom';
-import { roundLengthOptions, weightclasses } from '../utils/utils'
+import { useNavigate } from 'react-router';
+import { removeBadEmails, roundLengthOptions, validateEmail, weightclasses } from '../utils/utils'
 import { v4 as uuidv4 } from 'uuid'
 
 export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {

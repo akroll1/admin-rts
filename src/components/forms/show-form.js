@@ -35,7 +35,6 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
             return axios.get(url, accessTokenConfig)
                 .then( res => {
                     let { showTime } = res.data;
-                    showTime *= 1000;
                     const time = parseISO(new Date(showTime).toISOString());
                     setForm({ ...res.data, showTime: time })
                 })
@@ -63,7 +62,6 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
         .finally(() => setIsSubmitting(false))
     }
     const handlePutShow = () => {
-        console.log('putShow')
         setIsSubmitting(true);
         const url = process.env.REACT_APP_SHOWS + `/${showId}`;
         const { guestScorerIds, location, showName, network, promoter, showStoryline, showStatus } = form;
@@ -136,7 +134,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
                                 <Input value={showId} onChange={ ({ currentTarget: {value} }) => setShowId(value.length == 36 ? value : '')} type="text" maxLength={36} />
                             </FormControl>
                             <HStack justifyContent="center" width="full">
-                                <Button  minW="33%" isLoading={isSubmitting} loadingText="Searching..." onClick={searchForShow} type="button" colorScheme="blue">
+                                <Button disabled={!showId}  minW="33%" isLoading={isSubmitting} loadingText="Searching..." onClick={searchForShow} type="button" colorScheme="blue">
                                     Search
                                 </Button>
                             </HStack>
@@ -166,7 +164,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
 
                             <FormControl id="network">
                                 <FormLabel htmlFor="network">Network</FormLabel>
-                                <Select placeholder="Network" onChange={handleFormChange}>
+                                <Select placeholder={form.network || 'Network'} onChange={handleFormChange}>
                                     {networkEnums.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                 </Select>                            
                             </FormControl>

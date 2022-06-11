@@ -7,11 +7,11 @@ export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmai
     return ( 
         <>
             <DividerWithText text={'Create a Group Scorecard'} />
-            <Stack w="80%" m="auto" spacing="4" divider={<StackDivider />}>
-                <FieldGroup title="Create a Scorecard">
+            <Stack w="80%" m="auto" spacing="4">
+                <FieldGroup title="Score with Friends">
                     <Stack m="auto" w="70%" spacing="4">
                     <FormControl id="membersArr">
-                        <FormLabel>Invite Friends</FormLabel>
+                        <FormLabel></FormLabel>
                         { members.map((member, i) => {
                             return (
                                 <InputGroup m="1" key={i}>

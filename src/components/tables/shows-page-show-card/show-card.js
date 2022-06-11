@@ -4,9 +4,8 @@ import { Button, Flex } from '@chakra-ui/react'
 import { CardWithAvatar } from './card-with-avatar'
 import { FollowerCount } from './follower-count'
 import { FighterInfoCard } from './fighter-info-card'
-import { ShowsCountdownTimer } from '../../timers'
-
-export const ShowCard = ({ fighters, displayTime, showTime }) => {
+import axios from 'axios'
+export const ShowCard = ({ fighters }) => {
     const navigate = useNavigate();
     return (
         <Flex 
@@ -19,9 +18,8 @@ export const ShowCard = ({ fighters, displayTime, showTime }) => {
             alignItems="center" 
             justifyContent="space-between"
         >
-            { displayTime && <ShowsCountdownTimer showTime={showTime} /> }
             <Flex flexDir="row" flexWrap="wrap" w="100%" justifyContent="space-evenly">
-                {fighters.length > 0 && fighters.map( (fighter,i) => {
+                {fighters?.length > 0 && fighters.map( (fighter,i) => {
                     const { fighterId, firstName, lastName, ringname} = fighter;
                     return (
                         <CardWithAvatar key={fighterId} avatarProps={{ lastName, firstName }}>

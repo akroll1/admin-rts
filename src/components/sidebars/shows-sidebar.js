@@ -6,14 +6,11 @@ import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { FaTicketAlt } from 'react-icons/fa'
 import { REVIEW_TYPE } from '../../utils'
 
-export const ShowsSidebar = ({ shows, handleShowSelect, setReviewType }) => {
-    const [searchedShows, setSearchedShows] = useState(shows);
+export const ShowsSidebar = ({ shows, handleShowSelect }) => { 
+    const [searchedShows, setSearchedShows] = useState(shows); // why???
     const separateShowsByType = shows => {
-        const upcoming = shows.filter( ({showTime}) => showTime > Date.now()).reverse();
-        if(upcoming.length === 0){
-            setReviewType(REVIEW_TYPE.REVIEW);
-        }
-        const recent = shows.filter( ({showTime}) => showTime < Date.now());
+        const upcoming = shows.filter( ({ showTime }) => showTime > Date.now()).reverse();
+        const recent = shows.filter( ({ showTime }) => showTime < Date.now());
         return ({
             recent,
             upcoming
@@ -44,7 +41,8 @@ export const ShowsSidebar = ({ shows, handleShowSelect, setReviewType }) => {
     return (
         <Flex 
             id="scoring-sidebar" 
-            flex="1 0 20%" 
+            as="aside"
+            flex="1 0 25%" 
             w="100%" 
             minH={["40vh", "50vh", "80vh"]} 
             maxH={["40vh","40vh","100%"]}
@@ -64,14 +62,14 @@ export const ShowsSidebar = ({ shows, handleShowSelect, setReviewType }) => {
             <Stack w="100%" spacing="4" flex="1" overflow="auto" pt="8">
                 <NavGroup label="Upcoming">
                     {upcoming?.length > 0 && upcoming.map( show => {
-                        const { showId, showName } = show;
-                        return <UpcomingNavItem name={REVIEW_TYPE.PREDICTION} showId={showId} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={showName} key={showId} />
+                        const { showId, fight: { fightQuickTitle } } = show;
+                        return <UpcomingNavItem name={REVIEW_TYPE.PREDICTION} showId={showId} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={fightQuickTitle} key={showId} />
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">
                     {recent?.length > 0 && recent.map( show => {
-                        const { showId, showName } = show;
-                        return <UpcomingNavItem name={REVIEW_TYPE.REVIEW} icon={<FaTicketAlt /> } selectShow={e => selectShow(e.currentTarget)} showId={showId} label={showName} key={showId} />
+                        const { showId, fight: { fightQuickTitle } } = show;
+                        return <UpcomingNavItem name={REVIEW_TYPE.REVIEW} icon={<FaTicketAlt /> } selectShow={e => selectShow(e.currentTarget)} showId={showId} label={fightQuickTitle} key={showId} />
                     })}
                 </NavGroup>
                 <NavGroup label="Historical">
