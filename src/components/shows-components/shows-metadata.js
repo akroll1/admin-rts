@@ -3,7 +3,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import { parseEpoch } from '../../utils/utils'
 import { ShowsCountdownTimer } from '../timers'
 
-export const ShowsMetadata = ({ displayTime, selectedShow, selectedShowFight }) => {
+export const ShowsMetadata = ({ selectedShow, selectedShowFight }) => {
     const { fightQuickTitle } = selectedShowFight
     const { promoter, location, showTime } = selectedShow;
     return (
@@ -22,7 +22,7 @@ export const ShowsMetadata = ({ displayTime, selectedShow, selectedShowFight }) 
             <Heading mt="1" p="1" letterSpacing="1px" as="h3" size="md">{ parseEpoch(showTime) }</Heading>
             <Heading p="1" letterSpacing="1px" as="h3" size="sm">{ promoter }</Heading>
             <Heading mb="0" p="1" letterSpacing="1px" as="h3" size="sm">{ location }</Heading>
-            { displayTime && <ShowsCountdownTimer showTime={showTime} /> }
+            { showTime > Date.now() && <ShowsCountdownTimer showTime={showTime} /> }
 
         </Flex>
     )

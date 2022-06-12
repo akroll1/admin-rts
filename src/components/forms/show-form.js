@@ -4,8 +4,8 @@ import { FieldGroup } from '../../chakra'
 import axios from 'axios'
 import { ShowFormFightersTable, ShowFormShowsTable } from '../tables'
 import Datepicker from 'react-datepicker'
-// import "react-datepicker/dist/react-datepicker.css"
-// import '../../stylesheets/datepicker.css'
+import "react-datepicker/dist/react-datepicker.css"
+import '../../stylesheets/datepicker.css'
 import '../../stylesheets/datepicker.css'
 import { networkEnums, showStatusEnums, createTimestamp } from '../../utils'
 import parseISO from 'date-fns/parseISO'

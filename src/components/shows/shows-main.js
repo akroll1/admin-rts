@@ -6,25 +6,24 @@ import { DividerWithText } from '../../chakra'
 
 export const ShowsMain = ({
     fighters,
-    accessTokenConfig,
-    userReview, 
+    selectedShowFight, 
     predictionsAndReviews,
+    userReview, 
     showTheReviewForm, 
     setShowTheReviewForm, 
     selectedShow, 
-    selectedShowFight, 
-    handleEmailSubmit, 
-    emailValue,
     reviewType,
-    members,
+    handleEmailSubmit, 
     deleteMember,
+    members,
+    emailValue,
     handleFormChange,
-    handleScorecardSubmit
+    handleScorecardSubmit,
+    accessTokenConfig,
 }) => {
     const { showTime } = selectedShow;
-    console.log('selectedShowFight: ', selectedShowFight);
-    const displayTime = showTime > Date.now();
-    const { fighterIds, fightQuickTitle, fightStoryline, odds } = selectedShowFight;
+    const UPCOMING = showTime > Date.now() ? true : false; 
+    // console.log('selectedShowFight: ', selectedShowFight);
     return (
         <Flex 
             as="section"
@@ -39,23 +38,17 @@ export const ShowsMain = ({
             boxSizing="border-box" 
         >
             <ShowsMetadata
-                displayTime={displayTime}
                 selectedShow={selectedShow}
                 selectedShowFight={selectedShowFight}
             /> 
             
-             <ShowCard 
-                fighters={fighters}
-            />
+             <ShowCard fighters={fighters} />
             
-            <FightStoryline 
-                showTime={showTime} 
-                displayTime={displayTime} 
-                fightStoryline={fightStoryline} 
-                odds={odds}
-            /> 
+            <FightStoryline selectedShowFight={selectedShowFight} /> 
 
-            <DividerWithText text={reviewType === 'REVIEW' ? 'Reviews' : 'Predictions'} />
+           
+
+            <DividerWithText text={UPCOMING ? 'Predictions' : 'Reviews'} />
             <PredictionsReviews 
                 reviewType={reviewType}
                 predictionsAndReviews={predictionsAndReviews}
@@ -63,7 +56,7 @@ export const ShowsMain = ({
                 showTheReviewForm={showTheReviewForm} 
                 setShowTheReviewForm={setShowTheReviewForm} 
             />
-            { displayTime && 
+            { UPCOMING && 
                 <ShowsCreateGroupScorecard 
                     deleteMember={deleteMember} 
                     emailValue={emailValue} 
@@ -73,7 +66,6 @@ export const ShowsMain = ({
                     members={members} 
                 />
             } 
-
         </Flex>    
     )
 }

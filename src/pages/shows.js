@@ -280,16 +280,11 @@ const Shows = props => {
         })
         .catch(err => console.log(err));
     };
-    const handleSetReviewType = reviewType => setReviewType(reviewType);
-    
     const fighterAName = fighters.length > 0 ? capFirstLetters(fighters[0].firstName + ' ' + fighters[0].lastName): '';
     const fighterBName = fighters.length > 0 ? capFirstLetters(fighters[1].firstName + ' ' + fighters[1].lastName): '';
     const { members } = groupScorecard;
     const { promoter, location, showStoryline, showTime } = selectedShow && selectedShow.promoter ? selectedShow : ''; 
-    // console.log('selectedShow: ', selectedShow);
-    // console.log('shows: ', shows)
-    // const { fightId, fightStoryline, isMainEvent, isTitleFight, odds, rounds, weightclass } = selectedShowFight;
-
+    
     return (
         <Flex 
             w="100%" 
@@ -317,19 +312,20 @@ const Shows = props => {
             />  
             <ShowsMain 
                 fighters={fighters}
-                accessTokenConfig={accessTokenConfig}
+                selectedShowFight={selectedShowFight}
                 predictionsAndReviews={predictionsAndReviews}
                 userReview={userReview}
                 showTheReviewForm={showTheReviewForm}
                 setShowTheReviewForm={setShowTheReviewForm}
                 selectedShow={selectedShow}
                 reviewType={reviewType}
-                selectedShowFight={selectedShowFight}
                 handleEmailSubmit={handleEmailSubmit}
                 deleteMember={deleteMember}
                 members={members}
+                emailValue={emailValue}
                 handleFormChange={handleFormChange}
                 handleScorecardSubmit={handleScorecardSubmit}
+                accessTokenConfig={accessTokenConfig}
             />
            
         </Flex>

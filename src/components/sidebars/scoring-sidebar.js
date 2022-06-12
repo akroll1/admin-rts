@@ -9,8 +9,6 @@ import { FaTv, FaRegMoneyBillAlt, FaMapMarkerAlt, FaRegClock, FaLock, FaLockOpen
 import { parseEpoch, predictionIsLocked } from '../../utils/utils'
 import { IoScaleOutline } from 'react-icons/io5'
 export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, handleAddGuestScorer, members, showGuestScorers, myGuestScorers, prediction, groupScorecard }) => {
-    // console.log('scoring sidebar, show: ',show)
-    // console.log('myGuestScorers: ',myGuestScorers)
     const transformedOdds = show => {
         const rawOdds = show.fights.filter( fight => fight.isMainEvent).map( mainEvent => mainEvent.fightOdds);
         const uppercase = rawOdds[0].split(',');
@@ -68,8 +66,10 @@ export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, han
                     { show && <NavItem icon={<FaRegMoneyBillAlt />} label={'Moneyline: ' + odds } /> }
                 </NavGroup>
                 <NavGroup label="Prediction">
-                    { show && <NavItem icon={locked ? <FaLock /> : <FaLockOpen />} label={<Button disabled={locked} justifyContent="flex-start" textAlign="left" onClick={() => handleLockedPrediction()} w="100%" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm">{transformedPrediction}</Button>} key={prediction} /> }
-                    { show && <NavItem icon={<FaTrophy />} label={<Button justifyContent="flex-start" textAlign="left" fontSize="lg" w="100%" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm">Score&#58; {finalScore}</Button>} /> }
+                    { true && <NavItem icon={locked ? <FaLock /> : <FaLockOpen />} label={<Button disabled={locked} justifyContent="flex-start" textAlign="left" onClick={() => handleLockedPrediction()} w="100%" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm">{transformedPrediction}</Button>} key={prediction} /> }
+                    { true && <NavItem icon={<FaTrophy />} label={<Button justifyContent="flex-start" textAlign="left" fontSize="lg" w="100%" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm">Score&#58; {finalScore}</Button>} /> }
+                    {/* { show && <NavItem icon={locked ? <FaLock /> : <FaLockOpen />} label={<Button disabled={locked} justifyContent="flex-start" textAlign="left" onClick={() => handleLockedPrediction()} w="100%" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm">{transformedPrediction}</Button>} key={prediction} /> }
+                    { show && <NavItem icon={<FaTrophy />} label={<Button justifyContent="flex-start" textAlign="left" fontSize="lg" w="100%" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm">Score&#58; {finalScore}</Button>} /> } */}
                 </NavGroup>
                 <NavGroup label="Group Members">
                     {members && members.length > 0 && members.map( (member, i) => {

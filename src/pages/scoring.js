@@ -10,7 +10,7 @@ import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import { useUserStore } from '../stores'
+import { useUserStore, useScoringStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();

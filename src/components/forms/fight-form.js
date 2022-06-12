@@ -7,7 +7,6 @@ import { fightStatusEnums, officialResultEnums, roundLengthOptions,  weightclass
 export const FightForm = ({ user, accessTokenConfig }) => {
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [fights, setFights] = useState([]);
     const [fightId, setFightId] = useState(null);
     const [fighterAId, setFighterAId] = useState('');
     const [fighterBId, setFighterBId] = useState('');
@@ -20,7 +19,7 @@ export const FightForm = ({ user, accessTokenConfig }) => {
         isMainEvent: false,
         isTitleFight: false,
         odds: null,
-        fightStoryline: '',
+        fightStoryline: null,
     });
     // interface FightCreateDTO {
     //     fighterIds: string[];
@@ -54,7 +53,7 @@ export const FightForm = ({ user, accessTokenConfig }) => {
     const handlePostFight = () => {
         setIsSubmitting(true);
         const url = process.env.REACT_APP_FIGHTS;
-        const postObj = Object.assign({}, form, {fightIds: [fighterAId, fighterBId]})
+        const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId]})
         console.log('postObj: ', postObj)
         return axios.post(url, postObj, accessTokenConfig)
         .then( res => console.log('res: ', res))

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Avatar, Box, Button, Checkbox, Divider, Flex, FormControl, FormHelperText, FormLabel, Heading, HStack, IconButton, Input, InputGroup, InputRightElement, Radio, RadioGroup, Select, Stack, StackDivider, Text, Textarea, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Button, Checkbox, Flex, FormControl, FormHelperText, FormLabel, Heading, HStack, IconButton, Input, InputGroup, InputRightElement, Radio, RadioGroup, Select, Stack, StackDivider, Text, Textarea, useColorModeValue, VStack } from '@chakra-ui/react'
 import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons'
 import { FieldGroup } from '../chakra/field-group'
 import Datepicker from 'react-datepicker'
@@ -7,7 +7,6 @@ import parseISO from 'date-fns/parseISO'
 import axios from 'axios'
 import { useNavigate } from 'react-router';
 import { removeBadEmails, roundLengthOptions, validateEmail, weightclasses } from '../utils/utils'
-import { v4 as uuidv4 } from 'uuid'
 
 export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
     const navigate = useNavigate();
@@ -22,7 +21,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
         fighterStatus: amPro,
         fightId: null,
         fightResult: null,
-        groupScorecardId: uuidv4(),
+        groupScorecardId: '',
         groupScorecardName: '',
         groupScorecardNotes: '',
         location: '',
@@ -121,7 +120,6 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
         const { fightDateTime, members } = groupScorecard;
         const groupScorecardObj = {
             ...groupScorecard,
-            groupScorecardId: uuidv4(),
             fightDateTime: new Date(fightDateTime).getTime(),
         };
         const tempMembers = members;
@@ -199,6 +197,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
                             <FormControl>
                                 <FormLabel isRequired>Date and Time</FormLabel>
                                 <Datepicker
+                                    id="date_picker"
                                     showTimeSelect
                                     dateFormat="Pp"
                                     selected={fightDateTime}

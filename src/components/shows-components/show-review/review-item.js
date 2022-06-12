@@ -7,7 +7,7 @@ import { ReviewPostStars } from '../../stars'
 export const ReviewItem = ({ reviewItem }) => {
   const { displayName, id, rating, review, title, updatedAt } = reviewItem;
   return (
-    <Stack p={["4", "8"]} flex="1 0 40%" spacing="2.5" textAlign="left" m="4">
+    <Stack p={["4", "8"]} flex="1 0 40%" spacing="2.5" textAlign="left" m="4" my="0">
       <Stack direction="row" spacing="3">
         <ReviewPostStars rating={rating} size="sm" />
         <Heading size="sm" fontWeight="medium" color={useColorModeValue('black', 'white')}>

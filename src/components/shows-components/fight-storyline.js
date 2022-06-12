@@ -1,7 +1,8 @@
 import React from 'react'
 import { Flex, Heading, Text } from '@chakra-ui/react'
 
-export const FightStoryline = ({ fightStoryline, odds }) => {
+export const FightStoryline = ({ selectedShowFight }) => {
+    const { fightStoryline, odds } = selectedShowFight;
     return (
         <>
             <Flex flexDir="row" justifyContent="flex-start" alignItems="flex-start">
@@ -22,7 +23,7 @@ export const FightStoryline = ({ fightStoryline, odds }) => {
                 p={['2', '4']} 
                 >
                 <Text noOfLines={[4, 3, 3]} fontSize="sm">{ fightStoryline }</Text>
-                { odds && <Heading p="6" display="inherit" as="h4" size="sm"><Text textDecoration="underline">Moneyline&#58;</Text>&nbsp; <Text textDecoration="none" style={{fontWeight: 'normal'}}>{ odds }</Text></Heading>}
+                { odds && <Heading p="6" pb="0" display="inherit" as="h4" size="sm"><Text textDecoration="underline">Moneyline&#58;</Text>&nbsp; <Text textDecoration="none" style={{fontWeight: 'normal'}}>{ odds }</Text></Heading>}
             </Flex>
         </>
     )

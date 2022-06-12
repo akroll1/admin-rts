@@ -4,65 +4,63 @@ import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useColorModeVa
 import { ReviewItem } from './review-item'
 
 export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowTheReviewForm, showTheReviewForm }) => {
+  // console.log('reviewType: ', reviewType)
   const type = reviewType.charAt(0) + reviewType.toLowerCase().slice(1);
+  // console.log('type: ', type)
   const renderType = predictionsAndReviews[reviewType]
+
   return (
-    <>
-      <Flex 
-        flexDir='column'
-        flexWrap="wrap"
-        id="reviews_predictions"
-        as="section"
-        maxH="20%" 
-        maxW="100%" 
-        my="auto" 
-        m="auto"
-        p={{base: '4', md: '6',lg: '8'}} 
-      >
-        <Stack spacing="12" m="auto">
-          { renderType?.length > 0 
-          ? <Stack spacing={{base: '8'}}>
-              <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
-                Fan {type}s
-              </Heading>
-              <Stack spacing="5" direction="row" alignItems="center" shouldWrapChildren>
-                  <Text fontSize="4xl" fontWeight="medium" lineHeight="1">
-                    4.3
+    <Flex 
+      flexDir='column'
+      flexWrap="wrap"
+      id="reviews_predictions"
+      as="section"
+      maxH="20%" 
+      maxW="100%" 
+      p={{base: '4', md: '6',lg: '8'}} 
+    >
+      <Stack spacing="12" m="auto">
+        { renderType?.length > 0 
+        ? <Stack spacing={{base: '8'}}>
+            <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
+              Fan {type}s
+            </Heading>
+            <Stack spacing="5" direction="row" alignItems="center" shouldWrapChildren>
+                <Text fontSize="4xl" fontWeight="medium" lineHeight="1">
+                  4.3
+                </Text>
+                <Stack spacing="1">
+                  <Rating defaultValue={4} size="sm" />
+                  <Text lineHeight="1" color={'gray.600'}>
+                    Based on 128 {type}s
                   </Text>
-                  <Stack spacing="1">
-                    <Rating defaultValue={4} size="sm" />
-                    <Text lineHeight="1" color={'gray.600'}>
-                      Based on 128 {type}s
-                    </Text>
-                  </Stack>
                 </Stack>
-              <HStack m="auto" maxW="100%" spacing="4">
-                <ButtonGroup m="auto" flexDir={['column', 'row']} size={["sm", "md", "lg"]}>
-                  <Button variant="outline">
-                    See all {type}s
-                  </Button>
-                  <Button mt={["2", "0"]} onClick={() => setShowTheReviewForm(!showTheReviewForm)} colorScheme="blue">
-                    Write a {type}
-                  </Button>
-                </ButtonGroup>
-              </HStack>
-            </Stack>
-          : 
-            <Flex m="auto" flexDirection="column" alignItems="center" justifyContent="center">
-              <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
-                Be the first to write a {type}!
-              </Heading>
-              <Button mt="1rem" onClick={() => setShowTheReviewForm(!showTheReviewForm)} size="lg" colorScheme="blue">
-                Write a {type}
-              </Button>
-            </Flex> 
-          }
-        </Stack>
-        <Flex w="100%" flexDir="row" flexWrap="wrap" alignItems="center">
-          {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
-          {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
-        </Flex>
+              </Stack>
+            <HStack m="auto" maxW="100%" spacing="4">
+              <ButtonGroup m="auto" flexDir={['column', 'row']} size={["sm", "md", "lg"]} mb="4">
+                <Button variant="outline">
+                  See all {type}s
+                </Button>
+                <Button mt={["2", "0"]} onClick={() => setShowTheReviewForm(!showTheReviewForm)} colorScheme="blue">
+                  Write a {type}
+                </Button>
+              </ButtonGroup>
+            </HStack>
+          </Stack>
+        : 
+          <Flex m="auto" flexDirection="column" alignItems="center" justifyContent="center">
+            <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
+              Be the first to write a {type}!
+            </Heading>
+            <Button mt="1rem" onClick={() => setShowTheReviewForm(!showTheReviewForm)} size="lg" colorScheme="blue">
+              Write a {type}
+            </Button>
+          </Flex> 
+        }
+      </Stack>
+      <Flex w="100%" flexDir="row" flexWrap="wrap" alignItems="center">
+        {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
       </Flex>
-    </>
+    </Flex>
   )
 }

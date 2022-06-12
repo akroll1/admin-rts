@@ -33,7 +33,7 @@ const Dashboard = props => {
   const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
   if(username && accessToken){
     accessTokenConfig = {
-      headers: { Authorization: `Bearer ${accessToken}` }
+        headers: { Authorization: `Bearer ${accessToken}` }
     };        
   } else {
     <Navigate to="/signin" replace state={{ path: location.pathname }} />
