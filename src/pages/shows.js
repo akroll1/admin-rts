@@ -3,14 +3,15 @@ import { Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react
 import axios from 'axios'
 import { ShowsSidebar } from '../components/sidebars'
 import { v4 as uuidv4 } from 'uuid'
-import { ReviewForm } from '../components/forms'
+import { ReviewFormModal } from '../components/modals'
 import { useUserStore } from '../stores'
-import { Navigate, useNavigate, useParams } from 'react-router'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { capFirstLetters, removeBadEmails, transformedOdds, validateEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 
 const Shows = props => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { id } = useParams();
     const toast = useToast();
     const user = useUserStore( user => user);
@@ -29,9 +30,9 @@ const Shows = props => {
     const [shows, setShows] = useState([]);
     const [selectedShow, setSelectedShow] = useState({});
     const [selectedShowFight, setSelectedShowFight] = useState([]);
-    const [showTheReviewForm, setShowTheReviewForm] = useState(false);
+    const [showReviewForm, setShowReviewForm] = useState(false);
     const [showThePredictionForm, setShowThePredictionForm] = useState(false);
-    const [userReview, setUserReview] = useState({});
+    const [userReview, setUserReview] = useState(null);
     const [predictionsAndReviews, setPredictionsAndReviews] = useState([]);
     const [reviewType, setReviewType] = useState('PREDICTION');
     const [selectedReview, setSelectedReview] = useState({})
@@ -59,8 +60,16 @@ const Shows = props => {
         showId: '',
         totalRounds: 0,
         weightclass: '',
-    })
-    // get the shows.
+    });
+    const [reviewForm, setReviewForm] = useState({
+        reviewId: null,
+        rating: 0,
+        review: '',
+        title: ''
+    });
+    /**
+     * 1. Get the shows, all or if ID in params.
+     * **/
     useEffect(() => {
         if(id && sub){ 
             const getShow = id => {
@@ -68,7 +77,6 @@ const Shows = props => {
                 axios.get(url, accessTokenConfig)
                     .then( res => {
                         setSelectedShow(res.data[0])
-                        return parseShowData(res.data)
                     })
                     .catch( err => console.log(err))
             }
@@ -82,22 +90,12 @@ const Shows = props => {
                         
                         setShows(res.data);
                         setSelectedShow(res.data[0]);
-                        // parseShowData(res.data[0])
                     })
                     .catch(err => console.log(err));
             }
             getAllShows();
         }
     },[id, sub])
-    function parseShowData(show) {
-        return;
-        const isMainEvent = show.fights.filter( fight => fight.isMainEvent);
-        console.log('isMainEvent: ',isMainEvent)
-        const { fighters } = isMainEvent[0];
-        setFighters(isMainEvent[0].fighters);
-        setSelectedShowMainEvent(isMainEvent[0]);
-        setSelectedShow({...show, isMainEvent, fighters });
-    }
     const handleEmailSubmit = e => {
         e.preventDefault();
         if(validateEmail(emailValue)){
@@ -115,6 +113,7 @@ const Shows = props => {
         const tempMembersArr = members.filter( member => member !== id)
         return setGroupScorecard({...groupScorecard, members: tempMembersArr});
     }
+    // 1. handleShowSelect.
     const handleShowSelect = (id, reviewType) => {
         if(reviewType === 'REMINDER' || reviewType === 'HISTORICAL') return;
 
@@ -123,44 +122,41 @@ const Shows = props => {
         setReviewType(reviewType);
         setSelectedShow(selected);
         setSelectedShowFight(selected.fight)
-        // return parseShowData(selected);
     };
+        //groupscorecard form???
     const handleFormChange = e => {
         const { id, value, checked } = e.currentTarget;
         if(id === 'reminders') return setGroupScorecard({...groupScorecard, reminders: checked})
         if(id === 'emailValue') return setEmailValue(value);
     };
+    // 1. Close review form.
+    const handleReviewFormClose = () => {
+        setTimeout(() => {
+            setReviewForm({
+                reviewId: null,
+                title: '',
+                rating: 0,
+                review: ''
+            });
+            setShowReviewForm(false);
+        },1000);
+    }
+    // 1. Submit the user review.
     const handleReviewFormSubmit = showReviewForm => {
         const url = process.env.REACT_APP_REVIEWS;
-
-        const postObj = {
-            ...showReviewForm,
+        const put = {
             owner: sub,
             displayName: username,
             showId: selectedShow.showId,
             reviewType: selectedShow.showTime > Date.now() ? 'REVIEW' : 'PREDICTION'
         };
-
-        if(!userReview){
-            return axios.post(url, postObj, accessTokenConfig)
-                .then(res => {
-                    if(res.status === 200){
-                        setUserReview(showReviewForm)
-                        return toast({ 
-                            title: 'Review Submitted!',
-                            duration: 5000,
-                            status: 'success',
-                            isClosable: true
-                        })
-                    }
-                }).catch(err => console.log(err));
-        } else {
-            const putObj = Object.assign({}, showReviewForm, {reviewId: userReview.reviewId});
-            console.log('putObj: ', putObj);
-            return axios.put(url, putObj, accessTokenConfig)
+        const putObj = Object.assign({}, showReviewForm, { ...put });
+        console.log('putObj: ', putObj);
+        return axios.put(url, putObj, accessTokenConfig)
             .then(res => {
                 if(res.status === 200){
                     setUserReview(showReviewForm)
+                    handleReviewFormClose();
                     return toast({ 
                         title: 'Review Submitted!',
                         duration: 5000,
@@ -169,23 +165,25 @@ const Shows = props => {
                     })
                 }
             }).catch(err => console.log(err));
-        }
+
     };
+// 1. check if a user has already submitted a review for this. 
     useEffect(() => {
-        /**
-         * 1. Get the fights on the show.
-         * 2. Get the reviews for the 
-         */
-        if(selectedShow.showId){
-            // get the fights on the show.
-            const getSelectedShowFights = () => {
-                const url = process.env.REACT_APP_FIGHTS + `/${selectedShow.fightIds[0]}`;
+        if(showReviewForm){
+            const getReview = async () => {
+                const url = process.env.REACT_APP_REVIEWS + `user/${selectedShow.fightIds[0]}`;
                 return axios.get(url, accessTokenConfig)
-                .then( res => setSelectedShowFight(res.data))
-                .catch( err => console.log(err));
+                .then(res => setUserReview(res.data))
+                .catch(err => console.log(err));
             }
-            getSelectedShowFights();
-        // get all reviews for a selected show.
+            getReview();
+        }
+    },[showReviewForm]);
+    /**
+     * 1. on selectedShow, get all the show Reviews
+     */
+    useEffect(() => {
+        if(selectedShow.showId){
             const getSelectedShowReviews = async () => {
                 const url = process.env.REACT_APP_REVIEWS + `${selectedShow.fightIds[0]}`;
                 return await axios.get(url, accessTokenConfig)
@@ -196,7 +194,7 @@ const Shows = props => {
                             PREDICTION: predictionsArr, 
                             REVIEW: reviewsArr
                         };
-                        if(res?.data.length === 0){
+                        if(res?.data?.length === 0){
                             return setPredictionsAndReviews(reviewsObj);
                         }
                         const [getReviews] = res?.data?.length > 0 && res?.data?.map( content => {
@@ -214,33 +212,24 @@ const Shows = props => {
             getSelectedShowReviews();
         }
     },[selectedShow])
-    // when selectedShowFights returns, get the fighters for <ShowCard />
-    useEffect(() => {
-        const { fighterIds } = selectedShowFight;
-        const getFighters = async fighterIds => {
-            const fighters = await Promise.all(fighterIds.map( async fighterId => {
-                const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
-                return axios.get(url, accessTokenConfig)
-                    .then( res => res.data)
-                    .catch( err => console.log(err));
-            }))
-            return setFighters(fighters);
-        };
-        getFighters(fighterIds);
-    }, [selectedShowFight])
 
+    // on selectedShow && selectedShow.showId, get the fighters.
     useEffect(() => {
-
-        if(showTheReviewForm){
-            const getReview = async () => {
-                const url = process.env.REACT_APP_REVIEWS + `user/${selectedShow.fightIds[0]}`;
-                return axios.get(url, accessTokenConfig)
-                .then(res => setUserReview(res.data))
-                .catch(err => console.log(err));
-            }
-            getReview();
+        if(selectedShow.showId){
+            const { fighterIds } = selectedShow.fight;
+            console.log('fighterIds: ', fighterIds);
+            const getFighters = async fighterIds => {
+                const fighters = await Promise.all(fighterIds.map( async fighterId => {
+                    const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
+                    return axios.get(url, accessTokenConfig)
+                        .then( res => res.data)
+                        .catch( err => console.log(err));
+                }))
+                return setFighters(fighters);
+            };
+            getFighters(fighterIds);
         }
-    },[showTheReviewForm]);
+    }, [selectedShow])
 
     const handleScorecardSubmit = () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
@@ -280,11 +269,8 @@ const Shows = props => {
         })
         .catch(err => console.log(err));
     };
-    const fighterAName = fighters.length > 0 ? capFirstLetters(fighters[0].firstName + ' ' + fighters[0].lastName): '';
-    const fighterBName = fighters.length > 0 ? capFirstLetters(fighters[1].firstName + ' ' + fighters[1].lastName): '';
-    const { members } = groupScorecard;
-    const { promoter, location, showStoryline, showTime } = selectedShow && selectedShow.promoter ? selectedShow : ''; 
     
+    const { members } = groupScorecard;
     return (
         <Flex 
             w="100%" 
@@ -297,11 +283,12 @@ const Shows = props => {
             mb={6} 
             pb={8}
         >    
-            { showTheReviewForm && 
-                <ReviewForm userReview={userReview} 
+            { showReviewForm && 
+                <ReviewFormModal 
+                    reviewForm={reviewForm}
+                    setReviewForm={setReviewForm}
                     handleReviewFormSubmit={handleReviewFormSubmit} 
-                    showTheReviewForm={showTheReviewForm} 
-                    setShowTheReviewForm={setShowTheReviewForm}
+                    handleReviewFormClose={handleReviewFormClose}
                 />
             }
 
@@ -315,8 +302,8 @@ const Shows = props => {
                 selectedShowFight={selectedShowFight}
                 predictionsAndReviews={predictionsAndReviews}
                 userReview={userReview}
-                showTheReviewForm={showTheReviewForm}
-                setShowTheReviewForm={setShowTheReviewForm}
+                showReviewForm={showReviewForm}
+                setShowReviewForm={setShowReviewForm}
                 selectedShow={selectedShow}
                 reviewType={reviewType}
                 handleEmailSubmit={handleEmailSubmit}
@@ -325,7 +312,6 @@ const Shows = props => {
                 emailValue={emailValue}
                 handleFormChange={handleFormChange}
                 handleScorecardSubmit={handleScorecardSubmit}
-                accessTokenConfig={accessTokenConfig}
             />
            
         </Flex>

@@ -9,8 +9,8 @@ export const ShowsMain = ({
     selectedShowFight, 
     predictionsAndReviews,
     userReview, 
-    showTheReviewForm, 
-    setShowTheReviewForm, 
+    showReviewForm, 
+    setShowReviewForm, 
     selectedShow, 
     reviewType,
     handleEmailSubmit, 
@@ -19,7 +19,6 @@ export const ShowsMain = ({
     emailValue,
     handleFormChange,
     handleScorecardSubmit,
-    accessTokenConfig,
 }) => {
     const { showTime } = selectedShow;
     const UPCOMING = showTime > Date.now() ? true : false; 
@@ -53,8 +52,8 @@ export const ShowsMain = ({
                 reviewType={reviewType}
                 predictionsAndReviews={predictionsAndReviews}
                 userReview={userReview} 
-                showTheReviewForm={showTheReviewForm} 
-                setShowTheReviewForm={setShowTheReviewForm} 
+                showReviewForm={showReviewForm} 
+                setShowReviewForm={setShowReviewForm} 
             />
             { UPCOMING && 
                 <ShowsCreateGroupScorecard 

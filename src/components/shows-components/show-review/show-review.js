@@ -3,7 +3,7 @@ import { Rating } from './rating'
 import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
 
-export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowTheReviewForm, showTheReviewForm }) => {
+export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowReviewForm, showReviewForm }) => {
   // console.log('reviewType: ', reviewType)
   const type = reviewType.charAt(0) + reviewType.toLowerCase().slice(1);
   // console.log('type: ', type)
@@ -17,7 +17,7 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
       as="section"
       maxH="20%" 
       maxW="100%" 
-      p={{base: '4', md: '6',lg: '8'}} 
+      p="2" 
     >
       <Stack spacing="12" m="auto">
         { renderType?.length > 0 
@@ -41,7 +41,7 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
                 <Button variant="outline">
                   See all {type}s
                 </Button>
-                <Button mt={["2", "0"]} onClick={() => setShowTheReviewForm(!showTheReviewForm)} colorScheme="blue">
+                <Button mt={["2", "0"]} onClick={() => setShowReviewForm(!showReviewForm)} colorScheme="blue">
                   Write a {type}
                 </Button>
               </ButtonGroup>
@@ -52,13 +52,13 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowT
             <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
               Be the first to write a {type}!
             </Heading>
-            <Button mt="1rem" onClick={() => setShowTheReviewForm(!showTheReviewForm)} size="lg" colorScheme="blue">
+            <Button mt="1rem" onClick={() => setShowReviewForm(!showReviewForm)} size="lg" colorScheme="blue">
               Write a {type}
             </Button>
           </Flex> 
         }
       </Stack>
-      <Flex w="100%" flexDir="row" flexWrap="wrap" alignItems="center">
+      <Flex w="100%" flexDir={["column", "row"]} flexWrap="wrap" alignItems="center">
         {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
       </Flex>
     </Flex>

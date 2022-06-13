@@ -1,8 +1,8 @@
 import React from 'react'
 import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack, useColorModeValue } from '@chakra-ui/react'
-import { ReviewFormForm } from './review-form-form'
+import { ReviewForm } from '../forms'
 
-export const ReviewForm = ({ userReview, handleReviewFormSubmit, setShowTheReviewForm }) => {
+export const ReviewFormModal = ({ reviewForm, setReviewForm, handleReviewFormClose, handleReviewFormSubmit, setShowReviewForm }) => {
     
     return (
         <Modal
@@ -16,7 +16,8 @@ export const ReviewForm = ({ userReview, handleReviewFormSubmit, setShowTheRevie
         <ModalOverlay />
         <ModalContent borderRadius="xl" mx={{ base: '2.5', lg: '16' }} overflow="hidden">
             <ModalCloseButton
-                onClick={() => setShowTheReviewForm(false)}
+            // can handle sanitizing the review form by moving the form state up here and sending down a clean form state.
+                onClick={handleReviewFormClose}
                 top="0"
                 right="0"
                 size="lg"
@@ -36,7 +37,12 @@ export const ReviewForm = ({ userReview, handleReviewFormSubmit, setShowTheRevie
                 >
                     Your review
                 </Heading>
-                <ReviewFormForm userReview={userReview} handleReviewFormSubmit={handleReviewFormSubmit} setShowTheReviewForm={setShowTheReviewForm}/>
+                <ReviewForm 
+                    reviewForm={reviewForm} 
+                    setReviewForm={setReviewForm} 
+                    handleReviewFormClose={handleReviewFormClose}
+                    handleReviewFormSubmit={handleReviewFormSubmit} 
+                />
             </Stack>
             </ModalBody>
         </ModalContent>
