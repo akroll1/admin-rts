@@ -3,7 +3,7 @@ import { Button, FormControl, FormGroup, FormLabel, Input, InputGroup, InputRigh
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { DividerWithText, FieldGroup } from '../../../chakra'
 
-export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmailSubmit, handleFormChange, handleScorecardSubmit, members }) => {
+export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmailSubmit, handleFormChange, handleCreateGroupScorecard, members }) => {
     return ( 
         <>
             <DividerWithText text={'Create a Group Scorecard'} />
@@ -24,7 +24,7 @@ export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmai
                         <Button colorScheme="blue" onClick={ handleEmailSubmit } leftIcon={<AddIcon />} mt="2rem" mr="1.2rem" type="button">
                             Add Members
                         </Button>
-                        <Button mt="2rem" _hover={{cursor: 'pointer'}} onClick={ handleScorecardSubmit } type="button" colorScheme="blue">
+                        <Button mt="2rem" _hover={{cursor: 'pointer'}} onClick={handleCreateGroupScorecard} type="button" colorScheme="blue">
                             Create Scorecard
                         </Button>
                     </FormControl>

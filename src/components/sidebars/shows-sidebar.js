@@ -5,7 +5,7 @@ import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { FaTicketAlt } from 'react-icons/fa'
 import { REVIEW_TYPE } from '../../utils'
-
+import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutline } from "react-icons/io5";
 export const ShowsSidebar = ({ shows, handleShowSelect }) => { 
     const [searchedShows, setSearchedShows] = useState(shows); // why???
     const separateShowsByType = shows => {
@@ -63,26 +63,57 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
                 <NavGroup label="Upcoming">
                     {upcoming?.length > 0 && upcoming.map( show => {
                         const { showId, fight: { fightQuickTitle } } = show;
-                        return <UpcomingNavItem name={REVIEW_TYPE.PREDICTION} showId={showId} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={fightQuickTitle} key={showId} />
+                        return <UpcomingNavItem 
+                            name={REVIEW_TYPE.PREDICTION} 
+                            showId={showId} 
+                            selectShow={e => selectShow(e.currentTarget)} 
+                            icon={<IoFlashOutline mt="-5px" />} 
+                            label={fightQuickTitle} 
+                            key={showId} 
+                            isPlaying
+                        />
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">
                     {recent?.length > 0 && recent.map( show => {
                         const { showId, fight: { fightQuickTitle } } = show;
-                        return <UpcomingNavItem name={REVIEW_TYPE.REVIEW} icon={<FaTicketAlt /> } selectShow={e => selectShow(e.currentTarget)} showId={showId} label={fightQuickTitle} key={showId} />
+                        return <UpcomingNavItem 
+                            name={REVIEW_TYPE.REVIEW} 
+                            icon={<IoStarOutline mt="-5px" /> } 
+                            selectShow={e => selectShow(e.currentTarget)} 
+                            showId={showId} 
+                            label={fightQuickTitle} 
+                            key={showId} 
+                        />
                     })}
                 </NavGroup>
                 <NavGroup label="Historical">
                     {historicalShows && historicalShows.length > 0 && historicalShows.map( (show,i) => {
-                        return <UpcomingNavItem name={REVIEW_TYPE.HISTORICAL} showId={'historical'} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={show} key={i} />
+                        return <UpcomingNavItem 
+                            name={REVIEW_TYPE.HISTORICAL} 
+                            showId={'historical'} 
+                            selectShow={e => selectShow(e.currentTarget)} 
+                            icon={<IoBookmarkOutline mt="-5px" />} 
+                            label={show} 
+                            key={i}
+                        />
                     })}
                 </NavGroup>
                 <NavGroup label="Fantasy">
                     {fantasyFights && fantasyFights.length > 0 && fantasyFights.map( (show,i) => {
-                        return <UpcomingNavItem name={REVIEW_TYPE.FANTASY} showId={'historical'} selectShow={e => selectShow(e.currentTarget)} icon={<FaTicketAlt />} label={show} key={i} />
+                        return <UpcomingNavItem 
+                            name={REVIEW_TYPE.FANTASY} 
+                            showId={'historical'} 
+                            selectShow={e => selectShow(e.currentTarget)} 
+                            icon={<IoGameControllerOutline />} 
+                            label={show} 
+                            key={i} 
+                        />
                     })}
                 </NavGroup>
             </Stack>
         </Flex>
     )
 }
+
+

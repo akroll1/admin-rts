@@ -50,7 +50,11 @@ export const capFirstLetters = word => {
     if(word == undefined || word.length === 0){
         return '';
     } else {
-        return word.split(' ').map(el => el.charAt(0).toUpperCase() + el.slice(1)  + ' ');
+        const words = word.split(' ');
+        if(words.length === 1){
+            return words.map(el => el.charAt(0).toUpperCase() + el.slice(1));
+        }
+        return words.map(el => el.charAt(0).toUpperCase() + el.slice(1) + ' ');
     } 
 };
 export const roundLengthOptions = [3,4,6,8,10,12,15];

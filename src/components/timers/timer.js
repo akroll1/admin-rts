@@ -21,7 +21,7 @@ const TimeUnit = props => {
     <Box textAlign="center">
       <Text
         fontWeight="semibold"
-        fontSize={{base: 'xl', md: '2xl'}} lineHeight="1">
+        fontSize={{base: 'xl', md: 'lg'}} lineHeight="1">
         {value.toLocaleString('en-US', {minimumIntegerDigits: 2})}
       </Text>
       <Text fontSize="xs" color="gray.400">

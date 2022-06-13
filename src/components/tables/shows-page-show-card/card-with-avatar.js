@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, AvatarProps, Box, Flex, FlexProps, useColorModeValue } from '@chakra-ui/react'
+import { Avatar, Box, Flex, useColorModeValue } from '@chakra-ui/react'
 
 export const CardWithAvatar = props => {
   const { children, avatarProps, ...rest } = props;

@@ -18,17 +18,16 @@ export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, han
     const odds = show && show.showId ? transformedOdds(show) : null;
     const [showGuests, setShowGuests] = useState(false);
     finalScore = parseInt(finalScore);
-    const { showTime, location, promoter } = show ? show : '';
+    const showTime = groupScorecard.fightDateTime;
     const locked = predictionIsLocked(showTime);
-    const { totalRounds, weightclass, fighterA, fighterB, fightResult, scorecardName, groupScorecardId, admin } = groupScorecard;
-    const fightLocation = location || groupScorecard.location;
+    const { location, totalRounds, weightclass, fighterA, fighterB, fightResult, scorecardName, groupScorecardId, admin } = groupScorecard;
     const transformedPrediction = prediction ? prediction.split(',').join(' ') : '';
     const transformedWeightclass = weightclass ? weightclass.split(',')[0] + '- ' + weightclass.split(',')[1]: '';
     const handleLockedPrediction = () => {
         if(locked) return alert('Prediction is locked!');
         setTogglePredictionModal(true);
     }
-
+    console.log('show: ', show)
     return (
         <Flex 
             id="scoring-sidebar" 
@@ -56,8 +55,8 @@ export const ScoringSidebar = ({ finalScore, setTogglePredictionModal, show, han
                     { showGuests && showGuestScorers && showGuestScorers.length > 0 && showGuestScorers.map( (guestScorer,i) => <NavItem id={guestScorer.guestScorerId} handleClick={handleAddGuestScorer} icon={<BiPlusCircle />} label={guestScorer.displayName} key={i} />)}
                 </NavGroup>
                 <NavGroup label="Show">
-                    { promoter && <NavItem icon={<FaTv />} label={promoter} />}
-                    { fightLocation && <NavItem icon={<FaMapMarkerAlt />} label={fightLocation} />}
+                    <NavItem icon={<FaTv />} label={'PBC'} />
+                    { location && <NavItem icon={<FaMapMarkerAlt />} label={location} />}
                     { showTime && <NavItem icon={<FaRegClock />} label={parseEpoch(showTime)} />}
                 </NavGroup>
                 <NavGroup label="Fight">

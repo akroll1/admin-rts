@@ -2,11 +2,17 @@ import React, {useState, useEffect} from 'react'
 import { Button, ButtonGroup, Flex, FormControl, FormLabel, Input, Stack, Textarea, useColorModeValue } from '@chakra-ui/react'
 import { ReviewFormStars } from '../../stars';
 
-export const ReviewForm = ({ reviewForm, setReviewForm, handleReviewFormSubmit, handleReviewFormClose }) => {
+export const ReviewForm = ({ reviewForm, setReviewForm, handleReviewFormSubmitPost, handleReviewFormSubmitPut, handleReviewFormClose }) => {
+  const [value, setValue] = useState(null);
   const submitReview = () => {
-      handleReviewFormSubmit(reviewForm);
+    if(reviewForm.reviewId){
+      return handleReviewFormSubmitPut(reviewForm);
+    }
+    return handleReviewFormSubmitPost(reviewForm);
   };
-
+  useEffect(() => {
+    setValue(reviewForm.rating)
+  },[])
   const handleStarsClick = rating => {
     setReviewForm({ ...reviewForm, rating})
   };
@@ -27,16 +33,15 @@ export const ReviewForm = ({ reviewForm, setReviewForm, handleReviewFormSubmit, 
         </FormControl>
         <FormControl id="rating">
           <FormLabel htmlFor="rating" color={useColorModeValue('gray.700', 'gray.200')}>Rate It!</FormLabel>
-          <ReviewFormStars rating={reviewForm.rating} handleStarsClick={handleStarsClick} />
+          <ReviewFormStars rating={value} handleStarsClick={handleStarsClick} />
         </FormControl>
 
         <FormControl id="review">
           <FormLabel
             htmlFor="review" 
-            fontSize={rating ? '1.2rem' : '1rem'}
             color={useColorModeValue('gray.700', 'gray.200')}
           >
-            {rating ? `Why ${rating} stars?` : `Review`}
+            Why?
           </FormLabel>
           <Textarea
             onChange={e => setReviewForm({ ...reviewForm, review: e.currentTarget.value})}

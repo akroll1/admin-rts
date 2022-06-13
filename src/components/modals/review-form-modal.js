@@ -2,7 +2,7 @@ import React from 'react'
 import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack, useColorModeValue } from '@chakra-ui/react'
 import { ReviewForm } from '../forms'
 
-export const ReviewFormModal = ({ reviewForm, setReviewForm, handleReviewFormClose, handleReviewFormSubmit, setShowReviewForm }) => {
+export const ReviewFormModal = ({ reviewForm, setReviewForm, handleReviewFormClose, handleReviewFormSubmitPost, handleReviewFormSubmitPut }) => {
     
     return (
         <Modal
@@ -30,18 +30,12 @@ export const ReviewFormModal = ({ reviewForm, setReviewForm, handleReviewFormClo
                 pb={{ base: '6' }}
             >
             <Stack spacing="6">
-                <Heading
-                    fontSize="2xl"
-                    fontWeight="semibold"
-                    color={useColorModeValue('black', 'white')}
-                >
-                    Your review
-                </Heading>
                 <ReviewForm 
                     reviewForm={reviewForm} 
                     setReviewForm={setReviewForm} 
                     handleReviewFormClose={handleReviewFormClose}
-                    handleReviewFormSubmit={handleReviewFormSubmit} 
+                    handleReviewFormSubmitPost={handleReviewFormSubmitPost} 
+                    handleReviewFormSubmitPut={handleReviewFormSubmitPut} 
                 />
             </Stack>
             </ModalBody>

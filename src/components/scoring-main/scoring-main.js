@@ -14,7 +14,7 @@ export const ScoringMain = ({ submitRoundScores, scoringModal, toggleScoringModa
             w="100%"
         >
             <Heading textAlign="center">Round {currentRound}</Heading> 
-            <Flex flexDir={["column", "column", "row"]} flex="1 0 40%">
+            <Flex flexDir={["column", "row", "row"]} flex="1 0 40%">
             {
                 groupScorecard?.fighterA && [fighterA, fighterB].map( (fighter,i) => {
                     return (
@@ -37,7 +37,7 @@ export const ScoringMain = ({ submitRoundScores, scoringModal, toggleScoringModa
                 colorScheme="red" 
                 margin="auto" 
                 w={["90%","40%"]}>
-                    Submit Round {currentRound} Scores
+                    Submit Scores
             </Button>
         </Flex>  
     )

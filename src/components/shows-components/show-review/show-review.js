@@ -11,9 +11,10 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowR
 
   return (
     <Flex 
+      id="reviews_predictions"
+      w="100%"
       flexDir='column'
       flexWrap="wrap"
-      id="reviews_predictions"
       as="section"
       maxH="20%" 
       maxW="100%" 
@@ -58,7 +59,7 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowR
           </Flex> 
         }
       </Stack>
-      <Flex w="100%" flexDir={["column", "row"]} flexWrap="wrap" alignItems="center">
+      <Flex px="4" w="100%" flexDir={["column", "row"]} flexWrap="wrap" alignItems="center">
         {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
       </Flex>
     </Flex>

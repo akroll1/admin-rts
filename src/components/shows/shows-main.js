@@ -1,14 +1,13 @@
 import React from 'react'
 import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
 import { PredictionsReviews, ShowsCreateGroupScorecard, ShowsMetadata, FightStoryline } from '../shows-components'
-import { ShowCard } from '../tables'
+import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 
 export const ShowsMain = ({
     fighters,
     selectedShowFight, 
     predictionsAndReviews,
-    userReview, 
     showReviewForm, 
     setShowReviewForm, 
     selectedShow, 
@@ -18,7 +17,7 @@ export const ShowsMain = ({
     members,
     emailValue,
     handleFormChange,
-    handleScorecardSubmit,
+    handleCreateGroupScorecard,
 }) => {
     const { showTime } = selectedShow;
     const UPCOMING = showTime > Date.now() ? true : false; 
@@ -28,7 +27,6 @@ export const ShowsMain = ({
             as="section"
             id="shows_main"
             p="4"
-            maxW={["100%", "90%", "80%"]} 
             flex="1 0 65%" 
             bg={mode('gray.900', 'white.500')} 
             flexDirection="column" 
@@ -37,21 +35,22 @@ export const ShowsMain = ({
             boxSizing="border-box" 
         >
             <ShowsMetadata
+                showTime={showTime}
                 selectedShow={selectedShow}
                 selectedShowFight={selectedShowFight}
             /> 
             
-             <ShowCard fighters={fighters} />
-            
+            <ShowsFighterFaceoff 
+                fighters={fighters} 
+                showTime={showTime}
+            />
+            <DividerWithText text="The Storyline" />
             <FightStoryline selectedShowFight={selectedShowFight} /> 
-
-           
 
             <DividerWithText text={UPCOMING ? 'Predictions' : 'Reviews'} />
             <PredictionsReviews 
                 reviewType={reviewType}
                 predictionsAndReviews={predictionsAndReviews}
-                userReview={userReview} 
                 showReviewForm={showReviewForm} 
                 setShowReviewForm={setShowReviewForm} 
             />
@@ -61,7 +60,7 @@ export const ShowsMain = ({
                     emailValue={emailValue} 
                     handleEmailSubmit={handleEmailSubmit} 
                     handleFormChange={handleFormChange} 
-                    handleScorecardSubmit={handleScorecardSubmit} 
+                    handleCreateGroupScorecard={handleCreateGroupScorecard} 
                     members={members} 
                 />
             } 

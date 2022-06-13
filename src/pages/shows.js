@@ -32,8 +32,7 @@ const Shows = props => {
     const [selectedShowFight, setSelectedShowFight] = useState([]);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [showThePredictionForm, setShowThePredictionForm] = useState(false);
-    const [userReview, setUserReview] = useState(null);
-    const [predictionsAndReviews, setPredictionsAndReviews] = useState([]);
+    const [predictionsAndReviews, setPredictionsAndReviews] = useState([]); 
     const [reviewType, setReviewType] = useState('PREDICTION');
     const [selectedReview, setSelectedReview] = useState({})
     const [selectedShowMainEvent, setSelectedShowMainEvent] = useState({});
@@ -90,6 +89,8 @@ const Shows = props => {
                         
                         setShows(res.data);
                         setSelectedShow(res.data[0]);
+                        // need this for fightQuickTitle.
+                        setSelectedShowFight(res.data[0].fight);
                     })
                     .catch(err => console.log(err));
             }
@@ -139,23 +140,23 @@ const Shows = props => {
                 review: ''
             });
             setShowReviewForm(false);
-        },1000);
+        },200);
     }
     // 1. Submit the user review.
-    const handleReviewFormSubmit = showReviewForm => {
+    const handleReviewFormSubmitPost = showReviewForm => {
         const url = process.env.REACT_APP_REVIEWS;
-        const put = {
+        const obj = {
+            ...showReviewForm,
             owner: sub,
             displayName: username,
             showId: selectedShow.showId,
-            reviewType: selectedShow.showTime > Date.now() ? 'REVIEW' : 'PREDICTION'
+            fightId: selectedShow.fightIds[0],
+            reviewType: Date.now() > selectedShow.showTime ? 'REVIEW' : 'PREDICTION'
         };
-        const putObj = Object.assign({}, showReviewForm, { ...put });
-        console.log('putObj: ', putObj);
-        return axios.put(url, putObj, accessTokenConfig)
+        const postObj = Object.assign({}, obj);
+        return axios.post(url, postObj, accessTokenConfig)
             .then(res => {
                 if(res.status === 200){
-                    setUserReview(showReviewForm)
                     handleReviewFormClose();
                     return toast({ 
                         title: 'Review Submitted!',
@@ -165,16 +166,47 @@ const Shows = props => {
                     })
                 }
             }).catch(err => console.log(err));
-
     };
-// 1. check if a user has already submitted a review for this. 
+    const handleReviewFormSubmitPut = showReviewForm => {
+        const url = process.env.REACT_APP_REVIEWS + `/${showReviewForm.reviewId}`;
+        const update = {
+            ...showReviewForm,
+            owner: sub,
+            displayName: username,
+            showId: selectedShow.showId,
+            reviewType: showReviewForm.reviewType
+        };
+        const putObj = Object.assign({}, update);
+        return axios.put(url, putObj, accessTokenConfig)
+            .then(res => {
+                if(res.status === 200){
+                    handleReviewFormClose();
+                    return toast({ 
+                        title: 'Review Submitted!',
+                        duration: 5000,
+                        status: 'success',
+                        isClosable: true
+                    })
+                }
+            }).catch(err => console.log(err));
+    };
+    /**
+     * 1. Check if a user has already submitted a review for this. 
+     * ** THIS CAN BE TWO OBJECTS, PREDICTION AND REVIEW! **
+    */
     useEffect(() => {
         if(showReviewForm){
             const getReview = async () => {
                 const url = process.env.REACT_APP_REVIEWS + `user/${selectedShow.fightIds[0]}`;
                 return axios.get(url, accessTokenConfig)
-                .then(res => setUserReview(res.data))
-                .catch(err => console.log(err));
+                    .then(res => {
+                        if(res?.data?.length > 0){
+                            const { data } = res;
+                            const [review] = data.filter( ({ reviewType }) => reviewType === reviewType) 
+                            setReviewForm(review);
+                        }
+                    })
+                    .catch(err => console.log(err));
             }
             getReview();
         }
@@ -197,16 +229,16 @@ const Shows = props => {
                         if(res?.data?.length === 0){
                             return setPredictionsAndReviews(reviewsObj);
                         }
-                        const [getReviews] = res?.data?.length > 0 && res?.data?.map( content => {
-                            const { type } = content;
-                            if(type === 'REVIEW'){
+                        const reviews = res?.data?.length > 0 && res?.data?.map( content => {
+                            const { reviewType } = content;
+                            if(reviewType === 'REVIEW'){
                                 reviewsArr.push(content);
                             } else {
                                 predictionsArr.push(content);
                             }
-                            return ({ PREDICTION: predictionsArr, REVIEW: reviewsArr });
                         });
-                        setPredictionsAndReviews(getReviews);
+                        console.log('predictionsArr: ', predictionsArr)
+                        setPredictionsAndReviews(reviewsObj);
                     }).catch(err => console.log(err))
             } 
             getSelectedShowReviews();
@@ -217,7 +249,6 @@ const Shows = props => {
     useEffect(() => {
         if(selectedShow.showId){
             const { fighterIds } = selectedShow.fight;
-            console.log('fighterIds: ', fighterIds);
             const getFighters = async fighterIds => {
                 const fighters = await Promise.all(fighterIds.map( async fighterId => {
                     const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
@@ -231,45 +262,33 @@ const Shows = props => {
         }
     }, [selectedShow])
 
-    const handleScorecardSubmit = () => {
+    const handleCreateGroupScorecard = () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
         const tempMembersArr = members.concat(email);
         const goodEmails = removeBadEmails(tempMembersArr);
         const dedupedEmails = [...new Set(goodEmails)];
-        const { showId, showName, location, showTime } = selectedShow;
-        const { fightId, weightclass, totalRounds } = selectedShowMainEvent;
+
         const scorecardObj = {
-            groupScorecardId: uuidv4(),
-            fightId,
-            showId,
-            admin: sub,
             ownerId: sub,
-            ownerDisplayName: username,
-            groupScorecardName: showName,
-            fighterA: fighters[0].firstName + ' ' + fighters[0].lastName,
-            fighterB: fighters[1].firstName + ' ' + fighters[1].lastName,
-            fighterAId: fighters[0].fighterId,
-            fighterBId: fighters[1].fighterId,
-            weightclass,
-            totalRounds,
-            members: dedupedEmails,
-            fighterStatus: 'pro',
-            location,
-            fightDateTime: showTime,
-            featuredShowId: showId,
-            fightResult: null
+            fightIds: selectedShow.fightIds,
+            showId: selectedShow.showId,
+            groupScorecardName: selectedShow.fight.fightQuickTitle,
+            members: dedupedEmails
         };
-        console.log('scorecardObj: ',scorecardObj);
+
+        // console.log('selectedShow: ', selectedShow)
+        // console.log('scorecardObj: ',scorecardObj);
+
         return axios.post(url, scorecardObj, accessTokenConfig)
-        .then(res => {
-            if(res.status === 200){
-                const { groupScorecardId } = res.data;
-                return navigate(`/scoring/${groupScorecardId}`);
-            }
-        })
-        .catch(err => console.log(err));
+            .then(res => {
+                if(res.status === 200){
+                    const { groupScorecardId } = res.data;
+                    return navigate(`/scoring/${groupScorecardId}`);
+                }
+            })
+            .catch(err => console.log(err));
     };
-    
+
     const { members } = groupScorecard;
     return (
         <Flex 
@@ -287,7 +306,8 @@ const Shows = props => {
                 <ReviewFormModal 
                     reviewForm={reviewForm}
                     setReviewForm={setReviewForm}
-                    handleReviewFormSubmit={handleReviewFormSubmit} 
+                    handleReviewFormSubmitPost={handleReviewFormSubmitPost} 
+                    handleReviewFormSubmitPut={handleReviewFormSubmitPut} 
                     handleReviewFormClose={handleReviewFormClose}
                 />
             }
@@ -301,7 +321,6 @@ const Shows = props => {
                 fighters={fighters}
                 selectedShowFight={selectedShowFight}
                 predictionsAndReviews={predictionsAndReviews}
-                userReview={userReview}
                 showReviewForm={showReviewForm}
                 setShowReviewForm={setShowReviewForm}
                 selectedShow={selectedShow}
@@ -311,7 +330,7 @@ const Shows = props => {
                 members={members}
                 emailValue={emailValue}
                 handleFormChange={handleFormChange}
-                handleScorecardSubmit={handleScorecardSubmit}
+                handleCreateGroupScorecard={handleCreateGroupScorecard}
             />
            
         </Flex>

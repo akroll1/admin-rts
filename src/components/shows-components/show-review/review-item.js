@@ -7,7 +7,7 @@ import { ReviewPostStars } from '../../stars'
 export const ReviewItem = ({ reviewItem }) => {
   const { displayName, rating, review, title, updatedAt } = reviewItem;
   return (
-    <Stack my="8" p={["1"]} boxSizing="border-box" flex="1 0 45%" spacing="2.5" textAlign="left">
+    <Stack my="8" p={["2"]} boxSizing="border-box" flex="1 0 45%" spacing="2.5" textAlign="left">
       <Box spacing="3" display="flex" flexDirection={["column", "row"]} alignItems={["flex-start", "center"]} justifyContent="flex-start">
         <ReviewPostStars minW="100%" rating={rating} size="sm" />
         <Heading pl={["0", "4"]} size="sm" maxW="50%" fontWeight="medium" color={useColorModeValue('black', 'white')}>

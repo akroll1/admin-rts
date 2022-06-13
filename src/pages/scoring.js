@@ -96,7 +96,7 @@ const Scoring = () => {
             const fetchGroupScorecard = async () => {
                 const { sub, email, username } = user;
                 const res = await axios.get(groupScorecardsUrl, accessTokenConfig);
-                // console.log('res: ', res.data);
+                console.log('res: ', res.data);
                 if(res.data.scorecards === 'No scorecard found.'){
                     alert('No Scorecard Found');
                     return;
