@@ -18,7 +18,6 @@ export const FightStoryline = ({ selectedShowFight }) => {
                     <Text 
                         fontWeight="bold"
                         letterSpacing="1px"
-                        textDecor="underline"
                     >
                         Moneyline
                     </Text>

@@ -8,6 +8,7 @@ import { useUserStore } from '../stores'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { capFirstLetters, removeBadEmails, transformedOdds, validateEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
+import jwt_decode from 'jwt-decode'
 
 const Shows = props => {
     const navigate = useNavigate();
@@ -264,31 +265,36 @@ const Shows = props => {
 
     const handleCreateGroupScorecard = () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
+        const idToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.idToken'); 
+        const decodedIdToken = jwt_decode(idToken)
+        const { email } = decodedIdToken;
         const tempMembersArr = members.concat(email);
         const goodEmails = removeBadEmails(tempMembersArr);
         const dedupedEmails = [...new Set(goodEmails)];
 
         const scorecardObj = {
+            fighterIds: selectedShow.fight.fighterIds,
+            ownerDisplayName: username,
+            email, // necessary to create a groupScorecard, membersArr.
             ownerId: sub,
-            fightIds: selectedShow.fightIds,
+            fightId: selectedShow.fightIds[0],
             showId: selectedShow.showId,
             groupScorecardName: selectedShow.fight.fightQuickTitle,
-            members: dedupedEmails
+            members: dedupedEmails,
+            rounds: selectedShow.fight.rounds
         };
-
-        // console.log('selectedShow: ', selectedShow)
-        // console.log('scorecardObj: ',scorecardObj);
 
         return axios.post(url, scorecardObj, accessTokenConfig)
             .then(res => {
                 if(res.status === 200){
                     const { groupScorecardId } = res.data;
-                    return navigate(`/scoring/${groupScorecardId}`);
+                    // this is fine, group scorecards is just under development.
+                    // return navigate(`/scoring/${groupScorecardId}`);
                 }
             })
             .catch(err => console.log(err));
     };
-
+    // console.log('selectedShow: ' , selectedShow);
     const { members } = groupScorecard;
     return (
         <Flex 

@@ -3,6 +3,9 @@ import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/reac
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { parseUrls, stickers } from '../../utils'
+import { FightStats } from './chat-sidebar-components/fight-stats'
+import { DividerWithText } from '../../chakra'
+
 // import { StickerPicker } from './chat-sidebar-components'
 // import { FaRProject } from 'react-icons/fa'
 // import { sanitize } from '../../utils'
@@ -25,6 +28,7 @@ export const ChatSidebar = ({
     const [chatMessages, setChatMessages] = useState([]);
     //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [powerShotDisabled, setPowerShotDisabled] = useState(false);
     const [prediction, setPrediction] = useState('');
     // refs
     const chatRef = createRef();
@@ -191,6 +195,10 @@ export const ChatSidebar = ({
         });
         connection.send(data);
         sendChatMessage();
+        setPowerShotDisabled(true);
+        setTimeout(() => {
+            setPowerShotDisabled(false)
+        },30000)
     };
 
     const socketActive = () => {
@@ -313,7 +321,9 @@ export const ChatSidebar = ({
             borderRadius="md" 
             overflowY="scroll"
         >
-            <Text p="2" pb="1" textAlign="center">FightSync Chat</Text>
+            <DividerWithText text="Last Round Poll" />
+            <FightStats />
+            <DividerWithText text="FightSync Chat" />
             <Input
                 as="input"
                 m="1"
@@ -369,7 +379,7 @@ export const ChatSidebar = ({
                     m="1"
                     p="1"
                     size="sm"
-                    disabled={!socketActive()}
+                    disabled={!socketActive() || powerShotDisabled}
                     loadingText="Joining..." 
                     onClick={handleSendPredictionMessage} 
                     variant="outline"

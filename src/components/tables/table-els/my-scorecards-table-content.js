@@ -16,23 +16,15 @@ import { useNavigate } from 'react-router'
         return <TableUser gsDisplayName={data} />
       },
     },
-    // {
-    //   Header: 'Scorecard Owner',
-    //   accessor: 'ownerDisplayName'
-    // },
     {
-      Header: 'Red Corner',
-      accessor: 'fighterA',
-    },
-    {
-      Header: 'Blue Corner',
-      accessor: 'fighterB',
+      Header: 'Your Prediction',
+      accessor: 'prediction'
     }
   ];
 
 export const MyScorecardsTableContent = ({ scorecardData }) => {
   const navigate = useNavigate();
-  console.log('screwcardData: ',scorecardData)
+  console.log('scorecardData: ',scorecardData)
   return (
     <Flex overflow="scroll" w="100%">
       <Table my="8" borderWidth="1px" fontSize="sm" size={['sm', 'md']}>
@@ -47,15 +39,17 @@ export const MyScorecardsTableContent = ({ scorecardData }) => {
         </Thead>
         <Tbody>
           { scorecardData?.length > 0 && scorecardData.map((row, index) => {
-            const { groupScorecardId } = row;
+            const { associatedGroupScorecard, scorecard } = row;
+            const { groupScorecardId, groupScorecardName } = associatedGroupScorecard;
+            const { prediction } = scorecard;
+            const accessors = [groupScorecardName, prediction];
+            console.log('scorecard: ', scorecard);
             return (
-              <Tr onClick={() => navigate(`/scoring/${groupScorecardId}`)} _hover={{cursor: 'pointer', bg: 'blue.700'}} style={{textAlign: 'center'}} key={index}>
-                {columns.map((column, index) => {
-                  const cell = row[column.accessor];
-                  const element = column.Cell?.(cell) ?? cell;
+              <Tr onClick={() => navigate(`/scoring/${groupScorecardId}`)} _hover={{cursor: 'pointer', bg: 'gray.700', color: '#fff', border: '1px solid #795858'}} style={{textAlign: 'center'}} key={index}>
+                {accessors.map((accessor, index) => {
                   return (
                     <Td style={{textAlign: 'center'}} whiteSpace="nowrap" key={index}>
-                      { element }                      
+                      { accessor ? accessor : 'Prediction Not Set' }                      
                     </Td>
                   )
                 })}

@@ -2,8 +2,16 @@ import React from 'react'
 import { Button, Flex, Heading } from '@chakra-ui/react'
 import { FighterSlider } from '../fighter-slider'
 
-export const ScoringMain = ({ submitRoundScores, scoringModal, toggleScoringModal, currentRound, sliderScores, setSliderScores, groupScorecard }) => {
-    const { fighterA, fighterB } = groupScorecard?.fighterA ? groupScorecard : '';
+export const ScoringMain = ({ 
+    fighterData,
+    submitRoundScores, 
+    scoringModal, 
+    toggleScoringModal, 
+    currentRound, 
+    sliderScores, 
+    setSliderScores, 
+    groupScorecard 
+}) => {
     return (
         <Flex 
             id="scoring-main"
@@ -16,19 +24,17 @@ export const ScoringMain = ({ submitRoundScores, scoringModal, toggleScoringModa
             <Heading textAlign="center">Round {currentRound}</Heading> 
             <Flex flexDir={["column", "row", "row"]} flex="1 0 40%">
             {
-                groupScorecard?.fighterA && [fighterA, fighterB].map( (fighter,i) => {
-                    return (
-                        <FighterSlider
-                            key={i}
-                            fighter={fighter}
-                            sliderScores={sliderScores}
-                            setSliderScores={setSliderScores}
-                            groupScorecard={groupScorecard} 
-                            toggleScoringModal={toggleScoringModal}
-                            scoringModal={scoringModal}
-                        />
-                    )
-                })
+                fighterData.length > 0 && fighterData.map( (fighter,i) => (
+                    <FighterSlider
+                        key={i}
+                        fighter={fighter}
+                        sliderScores={sliderScores}
+                        setSliderScores={setSliderScores}
+                        groupScorecard={groupScorecard} 
+                        toggleScoringModal={toggleScoringModal}
+                        scoringModal={scoringModal}
+                    />
+                ))
             }
             </Flex>
             <Button

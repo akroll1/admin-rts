@@ -24,7 +24,7 @@ export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmai
                         <Button colorScheme="blue" onClick={ handleEmailSubmit } leftIcon={<AddIcon />} mt="2rem" mr="1.2rem" type="button">
                             Add Members
                         </Button>
-                        <Button mt="2rem" _hover={{cursor: 'pointer'}} onClick={handleCreateGroupScorecard} type="button" colorScheme="blue">
+                        <Button mt="2rem" onClick={handleCreateGroupScorecard} type="button" colorScheme="blue">
                             Create Scorecard
                         </Button>
                     </FormControl>

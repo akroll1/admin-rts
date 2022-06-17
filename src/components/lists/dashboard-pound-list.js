@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 
-import { capFirstLetters } from '../../utils/utils'
+import { capFirstLetters } from '../../utils'
 import { useUserStore } from '../../stores'
 import { Navigate, useLocation } from 'react-router'
 
@@ -13,7 +13,7 @@ const initialDnDState = {
   originalOrder: [],
   updatedOrder: []
 }
-export const PoundList = ({ accessTokenConfig }) => {
+export const DashboardPoundList = ({ accessTokenConfig }) => {
   const location = useLocation();
   const toast = useToast();  
   const user = useUserStore( user => user);

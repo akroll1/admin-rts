@@ -6,7 +6,7 @@ import { UserInfo } from '../chakra'
 import { MyScorecards } from './my-scorecards'
 import { CreateGroupScorecard } from './create-scorecard'
 import { AccountSettingsForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
-import { PoundList } from '../components/lists'
+import { DashboardPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
 import { Navigate, useLocation } from 'react-router'
 import { useUserStore } from '../stores'
@@ -95,7 +95,7 @@ const Dashboard = props => {
       <Box overflow='scroll' flex="1 0 75%" spacing={8} mb={8} bg="blackAlpha.500" borderRadius="md" mt={0}>
         { form === 'SCORECARDS' && <MyScorecards toggleState={toggleState} accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} user={user} /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'POUND' && <PoundList accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'POUND' && <DashboardPoundList accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'USER' && <AccountSettingsForm accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'POUNDFORM' && <PoundForm accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'SHOW-FORM' && <ShowForm accessTokenConfig={accessTokenConfig} user={user} /> }

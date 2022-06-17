@@ -36,7 +36,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     
         socket.onclose = (event) => {
             console.log('Broadcast closed.');
-            // handleBroadcastReconnect();
+            handleBroadcastReconnect();
         };
     
         socket.onerror = (event) => {
@@ -52,6 +52,11 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
             setBroadcasts([update]);
             setNotificationTimeout(true)
         };
+        const handleBroadcastReconnect = () => {
+            setTimeout(() => {
+                initConnection(idToken);
+            },3000);
+        }
     };
 
     useEffect(() => {

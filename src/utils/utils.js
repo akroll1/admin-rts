@@ -22,8 +22,8 @@ export const parseUrls = (userInput) => {
     });
     return formattedMessage;
 };
-export const predictionIsLocked = stopEpoch => {
-    return Date.now() > stopEpoch ? true : false;
+export const predictionIsLocked = epoch => {
+    return Date.now() > epoch ? true : false;
 }
 export const parseEpoch = (epoch, form) => {
     // time needs to be set toLocale stuff...
@@ -88,16 +88,7 @@ export const createISOString = timestamp => {
     timestamp *= 1000;
     const time = parseISO(new Date(timestamp).toISOString());
 }
-/**
- * 
- * @param {string} rawOdds 
- * @returns {string}
- */
-export const transformedOdds = odds => {
-    const uppercase = odds.split(',');
-    const lowered = uppercase[0].charAt(0).toUpperCase() + uppercase[0].slice(1).toLowerCase() + ' ' + uppercase[1];
-    return lowered;
-};
+
 
 export const validateEmail = email => {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -121,3 +112,13 @@ export const getGameType = (path) => {
     if(path.includes('quiz')) return 'quiz';
     if(path.includes('predictive')) return 'predictive';
 };
+
+export const transformedWeightclass = weightclass => {
+    let temp;
+    if(weightclass.includes('LIGHT')){
+        temp = weightclass
+            .slice(5).
+            toLowerCase();
+        return `Light ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+    }
+}

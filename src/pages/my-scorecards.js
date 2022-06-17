@@ -6,16 +6,18 @@ import axios from 'axios'
 export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect, toggleState }) => {
     const [scorecardData, setScorecardData] = useState([]);
     useEffect(() => {
-        if(user && user.sub){
+        if(user){
             const getUserScorecards = async () => {
                 const url = process.env.REACT_APP_USER_SCORECARDS + `/${user.sub}`;
                 const scorecards = await axios.get(url, accessTokenConfig)
                     .then(res => {
                         // console.log('res: ',res);
                         return res.data.map(obj => {
-                            let tempGS = obj.associatedGroupScorecard;
-                            tempGS.scorecard = obj.scorecard;
-                            return tempGS;
+                            const { associatedGroupScorecard, scorecard } = obj;
+                            return ({
+                                associatedGroupScorecard,
+                                scorecard
+                            });
                         })
                     })
                     .catch(err => console.log(err))
@@ -23,7 +25,7 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect, toggle
             }
             getUserScorecards();
         }
-    },[toggleState]);
+    },[]);
 
     return (
         <>
