@@ -12,6 +12,7 @@ import { DividerWithText } from '../../chakra'
 // import { IoNotifications } from 'react-icons/io'
 
 export const ChatSidebar = ({ 
+    currentRound,
     accessTokenConfig, 
     chatKey, 
     displayName, 
@@ -321,7 +322,7 @@ export const ChatSidebar = ({
             borderRadius="md" 
             overflowY="scroll"
         >
-            <DividerWithText text="Last Round Poll" />
+            <DividerWithText text={`Round ${currentRound === 1 ? '' : currentRound - 1} Results`} />
             <FightStats />
             <DividerWithText text="FightSync Chat" />
             <Input

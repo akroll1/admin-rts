@@ -284,12 +284,14 @@ const Shows = props => {
             rounds: selectedShow.fight.rounds
         };
 
+        /////////////////////////////////////////////
+        // checking for a previous groupScorecard
         return axios.post(url, scorecardObj, accessTokenConfig)
             .then(res => {
                 if(res.status === 200){
                     const { groupScorecardId } = res.data;
                     // this is fine, group scorecards is just under development.
-                    // return navigate(`/scoring/${groupScorecardId}`);
+                    return navigate(`/dashboard/scorecards`);
                 }
             })
             .catch(err => console.log(err));

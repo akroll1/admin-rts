@@ -39,13 +39,13 @@ export const ScoringSidebar = ({
         });
     }
     const handlePredictionToggle = () => {
-        setToggleModal(prev => !prev);
+        setToggleModal(true);
     };
 
     const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? destructureData(showData) : '';
     finalScore = parseInt(finalScore);
     const { groupScorecardId, members, ownerId, scorecardName } = groupScorecard;
-    console.log('prediction: ', prediction);
+
     return (
         <Flex 
             id="scoring-sidebar" 
@@ -65,30 +65,32 @@ export const ScoringSidebar = ({
             color="white" 
             fontSize="sm"
         >
-            <AccountSwitcher fighterA={'fighterA'} fighterB={'fighterB'} scorecardName={scorecardName} groupScorecard={groupScorecardId} />
+            <AccountSwitcher />
             <Stack w="full" spacing="4" flex="1" overflow="auto" pt="8" p="2">
                 <NavGroup label="Prediction">
                     <NavItem 
+                        id="prediction"
                         icon={isLocked ? <FaLock /> : <FaLockOpen />} 
-                        label={<Button disabled={isLocked} 
-                        onClick={isLocked ? alert('Fight has started!') : handlePredictionToggle } 
-                        button={'button'}
-                        justifyContent="flex-start" 
-                        textAlign="left" 
-                        fontSize="md" 
-                        w="100%" 
-                        my="-2" 
-                        _focus={{bg:'transparent'}} 
-                        _hover="transparent" 
-                        variant="ghost" 
-                        size="sm" 
-                        pl="0" 
-                        m="0"
-                    >
-                        { prediction ? prediction : 'Set Prediction' }
-                    </Button>} 
-                    key={prediction.fighterId} 
-                /> 
+                        handlePredictionToggle={handlePredictionToggle}
+
+                        label={<Button 
+                            // disabled={isLocked} 
+                            button={'button'}
+                            justifyContent="flex-start" 
+                            textAlign="left" 
+                            fontSize="md" 
+                            w="100%" 
+                            my="-2" 
+                            _focus={{bg:'transparent'}} 
+                            _hover="transparent" 
+                            variant="ghost" 
+                            size="sm" 
+                            pl="0" 
+                            m="0"
+                        >
+                            { prediction ? prediction : 'Set Prediction' }
+                        </Button>} 
+                    /> 
                     <NavItem button="button" icon={<FaTrophy />} label={<Button justifyContent="flex-start" textAlign="left" fontSize="md" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm" pl="0">Score&#58; { 87 }</Button>} /> 
                 </NavGroup>
                
@@ -141,7 +143,7 @@ export const ScoringSidebar = ({
                 <NavItem 
                     icon={<BiPlusCircle />} 
                     label={<Button 
-                        onClick={() => console.log('line 66, onClick')}
+                        onClick={() => console.log('addGroupMember')}
                         _focus={{bg:'transparent'}} 
                         _hover="transparent" 
                         variant="ghost" 

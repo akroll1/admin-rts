@@ -6,6 +6,8 @@ import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { FaTicketAlt } from 'react-icons/fa'
 import { REVIEW_TYPE } from '../../utils'
 import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutline } from "react-icons/io5";
+import { DividerWithText } from '../../chakra'
+
 export const ShowsSidebar = ({ shows, handleShowSelect }) => { 
     const [searchedShows, setSearchedShows] = useState(shows); // why???
     const separateShowsByType = shows => {
@@ -51,7 +53,7 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
             position="relative" 
             alignItems="center" 
             justifyContent="center"
-            borderRadius="md"
+            borderRadius="lg"
             direction="column" 
             p="2" 
             bg="gray.900" 
@@ -59,15 +61,16 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
             fontSize="sm"
         >
             <SearchField style={{width: '100%'}} handleSearch={handleSearch} />
-            <Stack w="100%" spacing="4" flex="1" overflow="auto" pt="8">
+            <DividerWithText text="Shows" />
+            <Stack w="100%" spacing="4" flex="1" overflow="auto" pt="0">
                 <NavGroup label="Upcoming">
                     {upcoming?.length > 0 && upcoming.map( show => {
-                        const { showId, fight: { fightQuickTitle } } = show;
+                        const { showId, fight: { fightQuickTitle, isTitleFight } } = show;
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.PREDICTION} 
                             showId={showId} 
                             selectShow={e => selectShow(e.currentTarget)} 
-                            icon={<IoFlashOutline mt="-5px" />} 
+                            icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
                             label={fightQuickTitle} 
                             key={showId} 
                             isPlaying

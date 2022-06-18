@@ -13,7 +13,6 @@ const CustomOverlay = () => (
 )
 export const PredictionModal = ({ 
     rounds,
-    prediction, 
     setToggleModal, 
     toggleModal,
     fighterData,

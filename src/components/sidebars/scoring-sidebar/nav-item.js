@@ -3,11 +3,11 @@ import * as React from 'react'
 import { BsCaretRightFill } from 'react-icons/bs'
 
 export const NavItem = (props) => {
-  const { button, id, handleClick, active, subtle, icon, children, label, endElement, href } = props
+  const { handlePredictionToggle, button, id, handleClick, active, subtle, icon, children, label, endElement, href } = props
   return (
     <HStack
       id={id}
-      onClick={handleClick ? id => handleClick(id) : null}
+      onClick={id === 'prediction' ? () => handlePredictionToggle(true) : null }
       as="a"
       href={href}
       w="full"

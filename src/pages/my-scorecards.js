@@ -3,7 +3,7 @@ import { Heading, Center } from '@chakra-ui/react'
 import { MyScorecardsTable } from '../components/tables'
 import axios from 'axios'
 
-export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect, toggleState }) => {
+export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
     const [scorecardData, setScorecardData] = useState([]);
     useEffect(() => {
         if(user){
@@ -11,12 +11,13 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect, toggle
                 const url = process.env.REACT_APP_USER_SCORECARDS + `/${user.sub}`;
                 const scorecards = await axios.get(url, accessTokenConfig)
                     .then(res => {
-                        // console.log('res: ',res);
+                        console.log('res: ',res);
                         return res.data.map(obj => {
-                            const { associatedGroupScorecard, scorecard } = obj;
+                            const { associatedGroupScorecard, scorecard, fighterData } = obj;
                             return ({
                                 associatedGroupScorecard,
-                                scorecard
+                                scorecard,
+                                fighterData
                             });
                         })
                     })
