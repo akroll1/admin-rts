@@ -7,7 +7,7 @@ export const FighterSlider = ({ fighter, sliderScores, setSliderScores }) => {
     const { fighterId, firstName, lastName, ringname } = fighter; 
     useEffect(() => {
         if(sliderScores){
-            setScore(sliderScores[fighterId])
+            setScore(sliderScores[fighterId] ? sliderScores[fighterId] : 10)
         }
     },[sliderScores])
 

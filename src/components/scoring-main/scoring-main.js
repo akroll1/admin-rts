@@ -3,6 +3,7 @@ import { Button, Flex, Heading } from '@chakra-ui/react'
 import { FighterSlider } from '../fighter-slider'
 
 export const ScoringMain = ({ 
+    tableData,
     fighterData,
     submitRoundScores, 
     scoringModal, 
@@ -16,12 +17,12 @@ export const ScoringMain = ({
         <Flex 
             id="scoring-main"
             p="4" 
-            m="2" 
+            m={['auto', 'auto']} 
             flex="1 0 50%" 
             flexDir="column" 
             w="100%"
         >
-            <Heading textAlign="center">Round {currentRound}</Heading> 
+            <Heading textAlign="center">{currentRound ? `Round ${currentRound}` : ''}</Heading> 
             <Flex flexDir={["column", "row", "row"]} flex="1 0 40%">
             {
                 fighterData.length > 0 && fighterData.map( (fighter,i) => (
@@ -41,7 +42,8 @@ export const ScoringMain = ({
                 onClick={submitRoundScores} 
                 variant="outline" 
                 colorScheme="red" 
-                margin="auto" 
+                mx="auto" 
+                my="4"
                 w={["90%","40%"]}>
                     Submit Scores
             </Button>

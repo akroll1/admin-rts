@@ -65,6 +65,7 @@ export const PredictionModal = ({
                       <option value="UD">Unanimous Decision</option>
                       <option value="SD">Split Decision</option>
                       <option value="MD">Majority Decision</option>
+                      <option value="DR">Draw</option>
                       <option value="MR">Majority Draw</option>
                       <option value="DQ">Disqualification</option>
                       {totalRounds.map( (round,i) => {

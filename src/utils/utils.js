@@ -57,20 +57,7 @@ export const capFirstLetters = word => {
         return words.map(el => el.charAt(0).toUpperCase() + el.slice(1) + ' ');
     } 
 };
-export const roundLengthOptions = [3,4,6,8,10,12,15];
-export const weightclasses = [
-    {value:'Light flyweight,106', label:'Light flyweight (106 pounds)'},
-    {value:'Flyweight,112', label:'Flyweight (112 pounds)'},
-    {value:'Bantamweight,118', label:'Bantamweight (118 pounds)'},
-    {value:'Featherweight,125', label:'Featherweight (125 pounds)'},
-    {value:'Lightweight,135', label:'Lightweight (135 pounds)'},
-    {value:'Junior Welterweight,140', label:'Junior welterweight (140 pounds)'},
-    {value:'Welterweight,147', label:'Welterweight (147 pounds)'},
-    {value:'Middleweight,160', label:'Middleweight (160 pounds)'},
-    {value:'Light heavyweight,178', label:'Light heavyweight (178 pounds)'},
-    {value:'Cruiserweight,201', label:'Cruiserweight (201 pounds)'},
-    {value:'Heavyweight,201+', label:'Heavyweight (201+ pounds)'},    
-];
+
 /**
  * @param {number} epoch
  * @returns {number} epoch/1000
@@ -120,5 +107,11 @@ export const transformedWeightclass = weightclass => {
             .slice(5).
             toLowerCase();
         return `Light ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+    }
+    if(weightclass.includes('SUPER')){
+        temp = weightclass
+        .slice(5).
+        toLowerCase();
+        return `Super ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
     }
 }

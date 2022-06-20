@@ -1,4 +1,4 @@
-export * from './chat-sidebar'
+export * from './scoring-chat-sidebar'
 export * from './fighter-page-fighter-profile'
 export * from './fighters-sidebar'
 export * from './scoring-sidebar'

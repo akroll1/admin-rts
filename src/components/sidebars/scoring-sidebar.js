@@ -25,7 +25,7 @@ export const ScoringSidebar = ({
         const { show, fight } = showData;
         const { location, network, showTime } = show;
         const { odds, rounds, weightclass } = fight;
-        const transformedOdds = odds.split(',').join(',');
+        const transformedOdds = odds ? odds.split(',').join(',') : 'TBD';
         const isLocked = predictionIsLocked(showTime);
 
         return ({
@@ -44,15 +44,14 @@ export const ScoringSidebar = ({
 
     const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? destructureData(showData) : '';
     finalScore = parseInt(finalScore);
-    const { groupScorecardId, members, ownerId, scorecardName } = groupScorecard;
-
+    const { members } = groupScorecard;
     return (
         <Flex 
             id="scoring-sidebar" 
             flex="1 0 20%" 
             w="100%" 
-            minH={["40vh", "50vh", "80vh"]} 
-            maxH="80vh"
+            minH={["35vh", "40vh", "80vh"]} 
+            maxH={["35vh", "40vh", "80vh"]}
             height="auto" 
             overflowY="scroll" 
             position="relative" 
@@ -131,14 +130,12 @@ export const ScoringSidebar = ({
                 </NavGroup>
 
                 <NavGroup label="Group Members">
-                    {members && members.length > 0 && members.map( (member, i) => {
-                            if(ownerId === sub){ 
-                                return <NavItem icon={<BiStar />} label={member} key={i} />
-                            } else {
-                                return <NavItem icon={<BiUser />} label={member} key={i} />
-                            }
-                        })
-                    }
+                    { members && members.length > 0 && members.map( (member, i) => {
+                            // return <NavItem icon={<BiStar />} label={member} key={i} />
+                        // } else {
+                            return <NavItem icon={<BiUser />} label={member} key={i} />
+                        // }
+                    })}
                 
                 <NavItem 
                     icon={<BiPlusCircle />} 

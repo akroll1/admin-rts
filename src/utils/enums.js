@@ -4,7 +4,10 @@ export const REVIEW_TYPE = {
     PREDICTION: 'PREDICTION',
     REVIEW: 'REVIEW'
 };
-export const weightclassEnums = [ 
+
+export const ROUND_LENGTH_ENUMS = [3,4,6,8,10,12,15];
+
+export const WEIGHTCLASS_ENUMS = [ 
 	{value: 'HEAVYWEIGHT', label: 'Heavyweight'},
 	{value: 'CRUISERWEIGHT', label: 'Cruiserweight'},
 	{value: 'LIGHTHEAVYWEIGHT', label: 'Light Heavyweight'},
@@ -22,15 +25,8 @@ export const weightclassEnums = [
 	{value: 'FLYWEIGHT', label:'Flyweight'},
 	{value: 'JRFLYWEIGHT', label:'Jr. Flyweight'}
 ];
-export const fightStateEnums = {
-	ACTIVE: 'ACTIVE',
-	CANCELED: 'CANCELED',
-	COMPLETE: 'COMPLETE',
-    FANTASY: 'FANTASY',
-	PENDING: 'PENDING',
-};
 
-export const networkEnums = [
+export const NETWORK_ENUMS = [
 	{ value: 'ESPN', label: 'ESPN' },
 	{ value: 'ESPN+', label: 'ESPN+' },
 	{ value: 'HBO', label: 'HBO' },
@@ -42,21 +38,30 @@ export const networkEnums = [
 	{ value: 'NONE', label: 'NONE' }
 ];
 
-export const showStatusEnums = [
-	{ value: 'PENDING', label: 'PENDING' },
-	{ value: 'COMPLETED', label: 'COMPLETED' },
-	{ value: 'HISTORICAL', label: 'HISTORICAL' }
-];
-
-export const fightStatusEnums = [
+export const FIGHT_SHOW_STATUS_ENUMS = [
 	{ value: 'ACTIVE', label: 'ACTIVE' },
 	{ value: 'CANCELED', label: 'CANCELED' },
-	{ value: 'COMPLETE', label: 'COMPLETE' },
+	{ value: 'COMPLETED', label: 'COMPLETED' },
 	{ value: 'FANTASY', label: 'FANTASY' },
 	{ value: 'PENDING', label: 'PENDING' }
 ];
 
-export const officialResultEnums = [
+export const FIGHT_SHOW_STATUS_CONSTANTS = {
+	ACTIVE: 'ACTIVE',
+	CANCELED: 'CANCELED',
+	COMPLETED: 'COMPLETED',
+	FANTASY: 'FANTASY',
+	PENDING: 'PENDING'
+};
+export const STATUS_CONSTANTS = {
+	ACTIVE: 'ACTIVE',
+	CANCELED: 'CANCELED',
+	COMPLETED: 'COMPLETED',
+	FANTASY: 'FANTASY',
+	PENDING: 'PENDING',
+};
+
+export const OFFICIAL_RESULTS_ARRAY = [
     { value: 'UD', label: 'UD' },
     { value: 'MD', label: 'MD' },
     { value: 'MDD', label: 'MDD' },

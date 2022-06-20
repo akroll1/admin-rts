@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Select, Stack, StackDivider, Textarea, useToast, VStack } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import axios from 'axios'
-import { fightStatusEnums, officialResultEnums, roundLengthOptions,  weightclassEnums } from '../../utils'
+import { FIGHT_SHOW_STATUS_ENUMS, ROUND_LENGTH_ENUMS,  WEIGHTCLASS_ENUMS } from '../../utils'
 
 export const FightForm = ({ user, accessTokenConfig }) => {
     const toast = useToast();
@@ -123,14 +123,14 @@ export const FightForm = ({ user, accessTokenConfig }) => {
                             <FormControl isRequired id="weightclass">
                                 <FormLabel isRequired htmlFor="weightclass">Weight Class</FormLabel>
                                 <Select placeholder={form.weightclass || 'Weight Class'} onChange={e => handleFormChange(e,'FIGHT')}>
-                                    {weightclassEnums.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                    { WEIGHTCLASS_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                 </Select>
                             </FormControl>
                            
                             <FormControl isRequired id="rounds">
                                 <FormLabel htmlFor="rounds">Total Rounds</FormLabel>
                                 <Select placeholder={form.rounds || 'Rounds'} onChange={e => handleFormChange(e,'ROUNDS')}>
-                                    {roundLengthOptions.map(round => <option key={round} value={round}>{round}</option>)}
+                                    { ROUND_LENGTH_ENUMS.map(round => <option key={round} value={round}>{round}</option>)}
                                 </Select>
                             </FormControl>
                             <FormControl id="odds">
@@ -158,13 +158,13 @@ export const FightForm = ({ user, accessTokenConfig }) => {
                                 <FormControl id="fightStatus">
                                     <FormLabel htmlFor="fightStatus">Fight Status</FormLabel>
                                     <Select placeholder={form.fightStatus || 'Fight Status'} onChange={handleFormChange}>
-                                        {fightStatusEnums.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                        { FIGHT_SHOW_STATUS_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                     </Select>
                                 </FormControl>
                                 <FormControl id="officialResult">
                                     <FormLabel htmlFor="officialResult">Official Result</FormLabel>
                                     <Select placeholder={form.officialResult || 'Official Result'} onChange={handleFormChange}>
-                                        {officialResultEnums.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                        { WEIGHTCLASS_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                     </Select>
                                 </FormControl>
                                     <FormControl id="winnderId">

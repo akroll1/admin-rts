@@ -12,6 +12,7 @@ import { DividerWithText } from '../../chakra'
 // import { IoNotifications } from 'react-icons/io'
 
 export const ChatSidebar = ({ 
+    fightStatus,
     currentRound,
     accessTokenConfig, 
     chatKey, 
@@ -27,6 +28,7 @@ export const ChatSidebar = ({
     const [refreshTimer, setRefreshTimer] = useState({});
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
+    const [round, setRound] = useState('')
     //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [powerShotDisabled, setPowerShotDisabled] = useState(false);
@@ -40,6 +42,13 @@ export const ChatSidebar = ({
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
     
+    useEffect(() => {
+        if(currentRound){
+            if(currentRound === 1) return;
+            if(fightStatus === 'COMPLETED') return setRound(currentRound)
+            setRound(currentRound - 1)
+        }
+    },[currentRound])
 
     const requestToken = (selectedUsername, isModerator, selectedAvatar) => {
         // Set application state
@@ -79,7 +88,7 @@ export const ChatSidebar = ({
         // Focus the input field UI
         chatRef.current.focus();
     };
-    
+
     const handleReceiveMessage = (data) => {
         const { Attributes, Content, Sender, Type } = data;
         const { UserId } = Sender;
@@ -315,14 +324,14 @@ export const ChatSidebar = ({
             flexDir="column" 
             flex="1 0 20%" 
             w="100%" 
-            maxH={["25vh","25vh","80vh"]} 
-            minH={["12rem", "20rem", "80vh"]} 
+            maxH={["35vh","40vh","80vh"]} 
+            minH={["35vh", "40vh", "80vh"]} 
             p="2" 
             bg="gray.900" 
             borderRadius="md" 
             overflowY="scroll"
         >
-            <DividerWithText text={`Round ${currentRound === 1 ? '' : currentRound - 1} Results`} />
+            <DividerWithText text={`Round ${round} Results`} />
             <FightStats />
             <DividerWithText text="FightSync Chat" />
             <Input

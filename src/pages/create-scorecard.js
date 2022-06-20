@@ -6,7 +6,7 @@ import Datepicker from 'react-datepicker'
 import parseISO from 'date-fns/parseISO'
 import axios from 'axios'
 import { useNavigate } from 'react-router';
-import { removeBadEmails, roundLengthOptions, validateEmail, weightclasses } from '../utils/utils'
+import { removeBadEmails, ROUND_LENGTH_ENUMS, validateEmail, WEIGHTCLASS_ENUMS } from '../utils'
 
 export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
     const navigate = useNavigate();
@@ -177,7 +177,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
                             <FormControl isRequired id="weightclass">
                                 <FormLabel htmlFor="weightclass">Weight Class</FormLabel>
                                 <Select placeholder="Weight Class" onChange={handleFormChange}>
-                                    {weightclasses.map(weight => {
+                                    { WEIGHTCLASS_ENUMS.map(weight => {
                                         const { value, label } = weight;
                                         return <option key={value} value={value}>{label}</option>})
                                     }
@@ -186,7 +186,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
                             <FormControl isRequired id="totalRounds">
                                 <FormLabel htmlFor="totalRounds">Total Rounds</FormLabel>
                                 <Select placeholder="Rounds" id="rounds" onChange={handleFormChange}>
-                                    {roundLengthOptions.map(round => <option key={round} value={round}>{round}</option>)}
+                                    { ROUND_LENGTH_ENUMS.map(round => <option key={round} value={round}>{round}</option>)}
                                 </Select>
                             </FormControl>
                             <FormControl id="location">

@@ -8,7 +8,7 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
     useEffect(() => {
         if(user){
             const getUserScorecards = async () => {
-                const url = process.env.REACT_APP_USER_SCORECARDS + `/${user.sub}`;
+                const url = process.env.REACT_APP_SCORECARDS + `/${user.sub}`;
                 const scorecards = await axios.get(url, accessTokenConfig)
                     .then(res => {
                         console.log('res: ',res);

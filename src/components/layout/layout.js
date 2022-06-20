@@ -54,7 +54,8 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         };
         const handleBroadcastReconnect = () => {
             setTimeout(() => {
-                initConnection(idToken);
+                // initConnection(idToken);
+                console.log('broadcast reconnect commented out in layout.js.')
             },3000);
         }
     };

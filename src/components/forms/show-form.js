@@ -7,7 +7,7 @@ import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import '../../stylesheets/datepicker.css'
 import '../../stylesheets/datepicker.css'
-import { networkEnums, showStatusEnums, createTimestamp } from '../../utils'
+import { NETWORK_ENUMS, FIGHT_SHOW_STATUS_ENUMS, createTimestamp } from '../../utils'
 import parseISO from 'date-fns/parseISO'
 // import { addDays } from 'date-fns/addDays'
 
@@ -165,7 +165,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
                             <FormControl id="network">
                                 <FormLabel htmlFor="network">Network</FormLabel>
                                 <Select placeholder={form.network || 'Network'} onChange={handleFormChange}>
-                                    {networkEnums.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                    { NETWORK_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                 </Select>                            
                             </FormControl>
 
@@ -173,7 +173,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
                                 <FormControl id="showStatus">
                                     <FormLabel htmlFor="showStatus">Show Status</FormLabel>
                                     <Select onChange={handleFormChange}>
-                                        {showStatusEnums.map( ({value, label}) => <option placeholder='hey' key={value} value={value}>{label}</option>)}
+                                        { FIGHT_SHOW_STATUS_ENUMS.map( ({value, label}) => <option placeholder='hey' key={value} value={value}>{label}</option>)}
                                     </Select>                            
                                 </FormControl>
                             }
