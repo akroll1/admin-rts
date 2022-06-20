@@ -78,7 +78,7 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                         const fighter = fighters[i];
                         return (
                             <Flex flexDir="row" minW="100%" minH="4rem">
-                                <Flex borderRadius="3px" py="2" alignItems="center" justifyContent="flex-start" minW="15%">{displayName}</Flex>
+                                <Flex m="auto" borderRadius="3px" p="2" alignItems="center" justifyContent="flex-start" minW="15%">{displayName}</Flex>
                                 <Flex minW="80%" flexDir="row" justifyContent="center" alignContent="center">
                                     {
                                         rounds.map( score => {

@@ -2,14 +2,18 @@ import React, {useState, useEffect} from 'react'
 import { Heading, Center } from '@chakra-ui/react'
 import { MyScorecardsTable } from '../components/tables'
 import axios from 'axios'
+import { ConsoleLogger } from '@aws-amplify/core'
 
 export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
+    const { sub, username } = user;
     const [scorecardData, setScorecardData] = useState([]);
+
     useEffect(() => {
         if(user){
             const getUserScorecards = async () => {
-                const url = process.env.REACT_APP_SCORECARDS + `/${user.sub}`;
-                const scorecards = await axios.get(url, accessTokenConfig)
+                let url = process.env.REACT_APP_SCORECARDS + `/${user.sub}:${user.email}`;
+                const encodedUrl = encodeURI(url);
+                const scorecards = await axios.get(encodedUrl, accessTokenConfig)
                     .then(res => {
                         console.log('res: ',res);
                         return res.data.map(obj => {
@@ -27,7 +31,21 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
             getUserScorecards();
         }
     },[]);
-
+    useEffect(() => {
+        if(scorecardData.length > 0){
+            const checkOwnerId = () => {
+                return scorecardData.filter( async data => {
+                    if(data.scorecard.ownerId.includes('@')){
+                        const url = process.env.REACT_APP_SCORECARDS + `/${data.scorecard.scorecardId}`;
+                        return axios.patch(url, {ownerId: sub, ownerDisplayName: username }, accessTokenConfig)
+                            .then( res => console.log('res: ', res))
+                            .catch( err => console.log(err));
+                    }
+                })
+            }
+            checkOwnerId();
+        }
+    },[scorecardData])
     return (
         <>
             <Center>

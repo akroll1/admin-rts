@@ -25,21 +25,22 @@ export const columns = [
 ];
 
 export const MyScorecardsTableContent = ({ scorecardData }) => {
-  console.log('scorecardData: ',scorecardData);
-
   const navigate = useNavigate();
-  const transformedPredictionData = (fighterData, prediction) => {
-    // console.log('prediction: ', prediction)
-    // console.log('fighterData: ', fighterData)
-    const [fighter] =fighterData.filter( data => {
-      const { fighterId, firstName, lastName } = data;
-      const transformedPrediction = `${capFirstLetters(lastName)}, ${capFirstLetters(firstName)}`; 
-      if(prediction.includes(fighterId)){
-        return transformedPrediction
-      } 
-    });
-    return fighter;
-  }
+  console.log('scorecardData: ',scorecardData);
+  const [getPrediction] = scorecardData.map( data => {
+    const { fighterData, scorecard } = data;
+    if(scorecard.prediction){
+        const [prediction] = fighterData.map( fighter => {
+          if(fighter.fighterId === scorecard.prediction.slice(0,36)){
+            return capFirstLetters(fighter.lastName) + ' ' + scorecard.prediction.slice(37);
+          }
+        })
+        return prediction;
+      } else {
+        return 'Prediction Not Set'
+      }
+  });
+  console.log('getPrediction: ', getPrediction)
   return (
     <Flex overflow="scroll" w="100%">
       <Table my="8" borderWidth="1px" fontSize="sm" size={['sm', 'md']}>
@@ -56,14 +57,14 @@ export const MyScorecardsTableContent = ({ scorecardData }) => {
           { scorecardData?.length > 0 && scorecardData.map((row, index) => {
             const { associatedGroupScorecard, fighterData, scorecard } = row;
             const { groupScorecardId, groupScorecardName } = associatedGroupScorecard;
-            const { prediction } = scorecard;
-            const accessors = [groupScorecardName, prediction];
+            // const accessors = [groupScorecardName, prediction];
             return (
               <Tr onClick={() => navigate(`/scoring/${groupScorecardId}`)} _hover={{cursor: 'pointer', bg: 'gray.700', color: '#fff', border: '1px solid #795858'}} style={{textAlign: 'center'}} key={index}>
-                {accessors.map((accessor, index) => {
+                {columns.map((column, index) => {
+                  const { accessor } = column;
                   return (
                     <Td style={{textAlign: 'center'}} whiteSpace="nowrap" key={index}>
-                      { accessor ? accessor : 'Prediction Not Set'}                      
+                      { accessor === 'prediction' ? getPrediction : groupScorecardName}                      
                     </Td>
                   )
                 })}

@@ -5,7 +5,7 @@ import { ScoringTable } from '../components/tables'
 import { ScoringModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
 import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils'
-import { Navigate, useLocation } from 'react-router'
+import { Navigate, useLocation, useNavigate } from 'react-router'
 import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
@@ -14,12 +14,19 @@ import { useUserStore, useScoringStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
 
     //////////////////  SCORE STATE /////////////////////////
     const user = useUserStore( store => store);
     const { sub, email, username } = user;
+    const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
+
+    const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
+    const accessTokenConfig = {
+        headers: { Authorization: `Bearer ${accessToken}` }
+    };        
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
         fighterA: '', 
@@ -56,23 +63,13 @@ const Scoring = () => {
     
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
-    const userScorecardUrl = process.env.REACT_APP_SCORECARDS + `/${groupscorecard_id}`;
     const guestScorersUrl = process.env.REACT_APP_GUEST_SCORERS;
-    
-    //////////////////  TOKEN /////////////////////////
-    let accessTokenConfig;
-    const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
-    if(username && localStorageString){
-      const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
-      accessTokenConfig = {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      };        
-      const tokenIsGood = Date.now() < (accessToken.exp * 1000) ? true : false;
-      if(!tokenIsGood){
-        <Navigate to="/signin" replace state={{ path: location.pathname }} />;
-      } 
-    }
-    
+    useEffect(() => {
+        if(!sub){
+            navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
+        } 
+    },[sub]) 
+
     useEffect(() => {
         if(user?.sub && groupscorecard_id){
 
@@ -100,13 +97,7 @@ const Scoring = () => {
                 // Get THIS USER'S scorecard.
                 const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
                 // console.log('thisUserScorecard', thisUserScorecard)
-                const needsOwnerId = thisUserScorecard.ownerId !== sub; 
-
-                // Set user sub in DB, if not there already
-                if(needsOwnerId){
-                    axios.patch(userScorecardUrl, { ownerId: sub }, accessTokenConfig);
-                    thisUserScorecard.ownerId = sub;
-                }       
+               
                 // Set prediction, if necessary
                 const needsPrediction = !thisUserScorecard.prediction
                 if(needsPrediction){
@@ -244,7 +235,8 @@ const Scoring = () => {
         } else {
             const updatedGuestScorerArr = guestScorerIds.concat(id);
             // console.log('updatedGuestScorerArr: ',updatedGuestScorerArr);
-            return axios.patch(userScorecardUrl, { updatedGuestScorerArr }, accessTokenConfig)
+            const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
+            return axios.patch(url, { updatedGuestScorerArr }, accessTokenConfig)
                 .then(res => {
                     console.log('res: ',res);
                     if(res.status === 200){
@@ -266,20 +258,21 @@ const Scoring = () => {
             const transformedPrediction = `${capFirstLetters(lastName)}, ${value.split(',')[1]}`; 
             return value.includes(fighterId) ? setPrediction(transformedPrediction) : setNeedsPrediction(true);
         });
-        return axios.patch(userScorecardUrl, {prediction: value}, accessTokenConfig)
-        .then(res => {
-            if(res.data === 'Updated prediction'){
-                setNeedsPrediction(false);
-                setPredictionLock(!predictionLock);
-                return toast({ 
-                    title: 'Prediction Updated',
-                    duration: 3000,
-                    status: 'success',
-                    isClosable: true
-                })
-            }
-        })
-        .catch(err => console.log(err));
+        const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
+        return axios.patch(url, {prediction: value}, accessTokenConfig)
+            .then(res => {
+                if(res.data === 'Updated prediction'){
+                    setNeedsPrediction(false);
+                    setPredictionLock(!predictionLock);
+                    return toast({ 
+                        title: 'Prediction Updated',
+                        duration: 3000,
+                        status: 'success',
+                        isClosable: true
+                    })
+                }
+            })
+            .catch(err => console.log(err));
     };
     // useEffect for removing notifications.
     useEffect(() => {
@@ -342,6 +335,7 @@ const Scoring = () => {
     // console.log('scorecards: ', scorecards);
     return (
         <Flex flexDir="column" position="relative">
+            {/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
             <PredictionModal 
                 rounds={rounds}
                 setToggleModal={setToggleModal}
@@ -417,18 +411,3 @@ export default Scoring
 const SliderHeading = ({ quickTitle }) => (
     <Heading textAlign="center" as="h2" size="lg">{quickTitle}</Heading>
 )
-{/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
-
-
-// <ScoringModal 
-// reason={reason}
-// currentRound={currentRound}
-// scoringModal={scoringModal}
-// toggleScoringModal={toggleScoringModal}
-// fighterA={fighterA}
-// fighterASlider={fighterASlider}
-// fighterB={fighterB}
-// fighterBSlider={fighterBSlider}
-// handleReasonClick={handleReasonClick}
-// submitScores={submitScores}
-// />

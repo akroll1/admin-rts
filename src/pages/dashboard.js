@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useInsertionEffect} from 'react'
 import { Box, Divider, Flex, Spacer, Stack } from '@chakra-ui/react'
 import { FaListOl, FaEdit, FaRegBell, FaRegChartBar, FaRegQuestionCircle, FaUser } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
@@ -8,15 +8,23 @@ import { CreateGroupScorecard } from './create-scorecard'
 import { AccountSettingsForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
 import { DashboardPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
-import { Navigate, useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { useUserStore } from '../stores'
 import jwt_decode from 'jwt-decode'
 
 const Dashboard = props => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { type, showId } = useParams();
   const setUser = useUserStore( user => user.setUser);
   const user = useUserStore( store => store);
+  const { sub, email, username } = user;
+  const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
+  const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
+  const accessTokenConfig = {
+      headers: { Authorization: `Bearer ${accessToken}` }
+  };        
+
   const [toggleState, setToggleState] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
@@ -28,24 +36,19 @@ const Dashboard = props => {
     // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
     // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
-  let accessTokenConfig;
-  const { username } = user;
-  const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
-  if(username && accessToken){
-    accessTokenConfig = {
-        headers: { Authorization: `Bearer ${accessToken}` }
-    };        
-  } else {
-    <Navigate to="/signin" replace state={{ path: location.pathname }} />
-  }
   useEffect(() => {
-    const isSuperAdmin = jwt_decode(accessToken)['cognito:groups'][0] === 'rts-admins';
-    if(isSuperAdmin){
-      setUser({ ...user, isSuperAdmin })
-      setIsSuperAdmin(true);
-      setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+    if(!sub) navigate('/signin');
+    console.log('sub: ', sub)
+    const decodedToken = jwt_decode(accessToken);
+    if(decodedToken['cognito:groups']){
+      const isSuperAdmin = jwt_decode(accessToken)['cognito:groups'][0] === 'rts-admins';
+      if(isSuperAdmin){
+        setUser({ ...user, isSuperAdmin })
+        setIsSuperAdmin(true);
+        setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+        setToggleState(!toggleState)
+      }
     }
-    setToggleState(!toggleState)
   },[])
 
   const handleFormSelect = e => {
