@@ -1,16 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import { Avatar, Box, Button, Checkbox, Divider, Flex, FormControl, FormHelperText, FormLabel, Heading, HStack, IconButton, Input, InputGroup, InputRightElement, Radio, RadioGroup, Select, Stack, StackDivider, Text, Textarea, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Button, Checkbox, Flex, FormControl, FormHelperText, FormLabel, Heading, HStack, IconButton, Input, InputGroup, InputRightElement, Radio, RadioGroup, Select, Stack, StackDivider, Text, Textarea, useColorModeValue, VStack } from '@chakra-ui/react'
 import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons'
 import { FieldGroup } from '../chakra/field-group'
 import Datepicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css"
-import '../stylesheets/datepicker.css'
 import parseISO from 'date-fns/parseISO'
 import axios from 'axios'
-import { validateEmail, removeBadEmails } from './helpers'
-import { useNavigate } from 'react-router-dom';
-import { roundLengthOptions, weightclasses } from '../utils/utils'
-import { v4 as uuidv4 } from 'uuid'
+import { useNavigate } from 'react-router';
+import { removeBadEmails, ROUND_LENGTH_ENUMS, validateEmail, WEIGHTCLASS_ENUMS } from '../utils'
 
 export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
     const navigate = useNavigate();
@@ -25,7 +21,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
         fighterStatus: amPro,
         fightId: null,
         fightResult: null,
-        groupScorecardId: uuidv4(),
+        groupScorecardId: '',
         groupScorecardName: '',
         groupScorecardNotes: '',
         location: '',
@@ -124,7 +120,6 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
         const { fightDateTime, members } = groupScorecard;
         const groupScorecardObj = {
             ...groupScorecard,
-            groupScorecardId: uuidv4(),
             fightDateTime: new Date(fightDateTime).getTime(),
         };
         const tempMembers = members;
@@ -182,7 +177,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
                             <FormControl isRequired id="weightclass">
                                 <FormLabel htmlFor="weightclass">Weight Class</FormLabel>
                                 <Select placeholder="Weight Class" onChange={handleFormChange}>
-                                    {weightclasses.map(weight => {
+                                    { WEIGHTCLASS_ENUMS.map(weight => {
                                         const { value, label } = weight;
                                         return <option key={value} value={value}>{label}</option>})
                                     }
@@ -191,7 +186,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
                             <FormControl isRequired id="totalRounds">
                                 <FormLabel htmlFor="totalRounds">Total Rounds</FormLabel>
                                 <Select placeholder="Rounds" id="rounds" onChange={handleFormChange}>
-                                    {roundLengthOptions.map(round => <option key={round} value={round}>{round}</option>)}
+                                    { ROUND_LENGTH_ENUMS.map(round => <option key={round} value={round}>{round}</option>)}
                                 </Select>
                             </FormControl>
                             <FormControl id="location">
@@ -202,6 +197,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
                             <FormControl>
                                 <FormLabel isRequired>Date and Time</FormLabel>
                                 <Datepicker
+                                    id="date_picker"
                                     showTimeSelect
                                     dateFormat="Pp"
                                     selected={fightDateTime}

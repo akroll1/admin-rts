@@ -2,42 +2,46 @@ import React from 'react'
 import { Button, Flex, Heading } from '@chakra-ui/react'
 import { FighterSlider } from '../fighter-slider'
 
-export const ScoringMain = ({ submitRoundScores, scoringModal, toggleScoringModal, currentRound, sliderScores, setSliderScores, groupScorecard }) => {
-    const { fighterA, fighterB } = groupScorecard?.fighterA ? groupScorecard : '';
+export const ScoringMain = ({ 
+    scoringComplete,
+    fighterData,
+    submitRoundScores, 
+    scoredRounds, 
+    sliderScores, 
+    setSliderScores,
+    isSubmitting
+}) => {
     return (
         <Flex 
             id="scoring-main"
             p="4" 
-            m="2" 
+            m={['auto', 'auto']} 
             flex="1 0 50%" 
             flexDir="column" 
             w="100%"
         >
-            <Heading textAlign="center">Round {currentRound}</Heading> 
-            <Flex flexDir={["column", "column", "row"]} flex="1 0 40%">
+            <Heading textAlign="center">{scoredRounds ? `Round ${scoringComplete ? scoredRounds : scoredRounds+1}` : ''}</Heading> 
+            <Flex flexDir={["column", "row", "row"]} flex="1 0 40%">
             {
-                groupScorecard?.fighterA && [fighterA, fighterB].map( (fighter,i) => {
-                    return (
-                        <FighterSlider
-                            key={i}
-                            fighter={fighter}
-                            sliderScores={sliderScores}
-                            setSliderScores={setSliderScores}
-                            groupScorecard={groupScorecard} 
-                            toggleScoringModal={toggleScoringModal}
-                            scoringModal={scoringModal}
-                        />
-                    )
-                })
+                fighterData.length > 0 && fighterData.map( (fighter,i) => (
+                    <FighterSlider
+                        key={i}
+                        fighter={fighter}
+                        sliderScores={sliderScores}
+                        setSliderScores={setSliderScores}
+                    />
+                ))
             }
             </Flex>
             <Button
-                onClick={submitRoundScores} 
+                onClick={submitRoundScores}
+                disabled={isSubmitting || scoringComplete} 
                 variant="outline" 
                 colorScheme="red" 
-                margin="auto" 
+                mx="auto" 
+                my="4"
                 w={["90%","40%"]}>
-                    Submit Round {currentRound} Scores
+                    Submit Scores
             </Button>
         </Flex>  
     )

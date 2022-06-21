@@ -8,7 +8,7 @@ export const ReviewFormStars = ({ rating, handleStarsClick }) => (
             activeColor="#ffd700"
             count={5}
             isHalf
-            size={25}
+            size={22}
             onChange={handleStarsClick}
             value={rating}
             edit={true}

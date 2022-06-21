@@ -1,10 +1,10 @@
 import React from 'react'
-import { Box, Img, Stack } from '@chakra-ui/react'
+import { Box, Img, Stack, Text } from '@chakra-ui/react'
 
 export const TableUser = ({gsDisplayName}) => {
   let image = '';
   return (
-    <Stack direction="row" spacing="4" align="center">
+    <Stack m="auto" direction="row" spacing="4" align="center">
       {/* <Box flexShrink={0} h="10" w="10">
         <Img
           objectFit="cover"
@@ -18,16 +18,11 @@ export const TableUser = ({gsDisplayName}) => {
           alt=""
         />
       </Box> */}
-      <Box>
-        <Box fontSize="sm" fontWeight="medium">
-          {/* {name} */}
-          {gsDisplayName}
+        <Box m="auto" fontSize="sm" fontWeight="medium">
+          <Text>
+            {gsDisplayName}
+          </Text>
         </Box>
-        {/* <Box fontSize="sm" color="gray.500">
-          {email}
-          email here
-        </Box> */}
-      </Box>
     </Stack>
   )
 }

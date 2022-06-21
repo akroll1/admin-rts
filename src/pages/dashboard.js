@@ -1,40 +1,31 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useInsertionEffect} from 'react'
 import { Box, Divider, Flex, Spacer, Stack } from '@chakra-ui/react'
 import { FaListOl, FaEdit, FaRegBell, FaRegChartBar, FaRegQuestionCircle, FaUser } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
-import jwt_decode from 'jwt-decode'
 import { MyScorecards } from './my-scorecards'
 import { CreateGroupScorecard } from './create-scorecard'
-import { GuestScorerForm, DiscussionsForm, PoundForm, FightersForm, ShowForm, AccountSettingsForm } from '../components/forms'
-import { PoundList } from '../components/lists'
-import { ExpiredTokenModal } from '../components/modals'
+import { AccountSettingsForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
+import { DashboardPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
+import { useUserStore } from '../stores'
+import jwt_decode from 'jwt-decode'
 
 const Dashboard = props => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { type, showId } = useParams();
-  const username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : '';
-  let isLoggedIn, idToken, accessToken, decodedAccessToken, decodedIdToken;
-  if(username){
-      accessToken = username ? localStorage.getItem('CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken') : null ;
-      decodedAccessToken = jwt_decode(accessToken);
-      idToken = localStorage.getItem('CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.idToken');
-      decodedIdToken = jwt_decode(idToken);
-      isLoggedIn = Date.now()/1000 > decodedIdToken.exp ? false : true;
-  } else {
-      navigate('/signin', { referringPage: '/dashboard/' + type });
-  }
-  const idTokenConfig = {
-    headers: { Authorization: `Bearer ${idToken}` }
-  };        
+  const setUser = useUserStore( user => user.setUser);
+  const user = useUserStore( store => store);
+  const { sub, email, username } = user;
+  const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
+  const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
   const accessTokenConfig = {
-    headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: `Bearer ${accessToken}` }
   };        
-  const tokenIsGood = Date.now() < (decodedIdToken.exp * 1000) ? true : false;
+
   const [toggleState, setToggleState] = useState(false);
-  const [user, setUser] = useState(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
@@ -46,17 +37,18 @@ const Dashboard = props => {
     // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
   useEffect(() => {
-    if(tokenIsGood){
-      setUser({ ownerDisplayName: decodedAccessToken.username, sub: decodedAccessToken.sub, email: decodedIdToken.email })
-      if(decodedAccessToken['cognito:groups'] && decodedAccessToken['cognito:groups'][0] === 'rts-admins'){
-        setUser({ isSuperAdmin: true, ownerDisplayName: decodedAccessToken.username, sub: decodedAccessToken.sub, email: decodedIdToken.email })
+    if(!sub) navigate('/signin');
+    console.log('sub: ', sub)
+    const decodedToken = jwt_decode(accessToken);
+    if(decodedToken['cognito:groups']){
+      const isSuperAdmin = jwt_decode(accessToken)['cognito:groups'][0] === 'rts-admins';
+      if(isSuperAdmin){
+        setUser({ ...user, isSuperAdmin })
         setIsSuperAdmin(true);
-        setFormLinks( prev => [...prev, ...isSuperAdminFormOptions]);
-      } 
-    } else {
-      navigate('/signin', { referringPage: '/dashboard/' + type });
+        setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+        setToggleState(!toggleState)
+      }
     }
-    setToggleState(!toggleState)
   },[])
 
   const handleFormSelect = e => {
@@ -70,6 +62,8 @@ const Dashboard = props => {
     { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "GUEST-SCORERS", label:"Guest Scorers Form", type: 'Guest Scorers', icon: FaEdit, link: '/dashboard/guest-scorers' },
+    { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
+    { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
   ];
 
   const userFormLinks = () => {
@@ -85,7 +79,6 @@ const Dashboard = props => {
           <Box fontSize="sm" lineHeight="tall">
             <Box as="a" href="#" p="3" display="block" transition="background 0.1s" rounded="xl" _hover={{ bg: 'whiteAlpha.200' }} whiteSpace="nowrap">
               <UserInfo setForm={setForm} setActive={setActive} name={user && user.displayName ? user.displayName : ''} email={user ? user.email : ''} />
-              <ExpiredTokenModal openModal={!tokenIsGood} />
             </Box>
           </Box>
         </Stack>
@@ -103,15 +96,17 @@ const Dashboard = props => {
         </Stack>
       </Box>
       <Box overflow='scroll' flex="1 0 75%" spacing={8} mb={8} bg="blackAlpha.500" borderRadius="md" mt={0}>
-        { form === 'SCORECARDS' && <MyScorecards toggleState={toggleState} accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} user={user ? user: ''} /> }
+        { form === 'SCORECARDS' && <MyScorecards toggleState={toggleState} accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} user={user} /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'POUND' && <PoundList accessTokenConfig={accessTokenConfig} user={user ? user: ''} /> }
-        { form === 'USER' && <AccountSettingsForm idTokenConfig={idTokenConfig} user={user ? user: ''} /> }
-        { form === 'POUNDFORM' && <PoundForm accessTokenConfig={accessTokenConfig} user={user ? user: ''} /> }
-        { form === 'SHOW-FORM' && <ShowForm accessTokenConfig={accessTokenConfig} user={user ? user: ''} /> }
-        { form === 'FIGHTERS' && <FightersForm accessTokenConfig={accessTokenConfig} user={user ? user: ''} /> }
-        { form === 'DISCUSSIONS' && <DiscussionsForm accessTokenConfig={accessTokenConfig} user={user ? user: ''} /> }
-        { form === 'GUEST-SCORERS' && <GuestScorerForm accessTokenConfig={accessTokenConfig} user={user ? user: ''} /> }
+        { form === 'POUND' && <DashboardPoundList accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'USER' && <AccountSettingsForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'POUNDFORM' && <PoundForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'SHOW-FORM' && <ShowForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'FIGHTERS' && <FightersForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'DISCUSSIONS' && <DiscussionsForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'GUEST-SCORERS' && <GuestScorerForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'BROADCAST' && <BroadcastForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'FIGHT-FORM' && <FightForm accessTokenConfig={accessTokenConfig} user={user} /> }
       </Box>
     </Flex>
   )

@@ -22,19 +22,6 @@ const MobileNavContext = props => {
         <Box flexBasis="6rem">
           <ToggleButton isOpen={isOpen} onClick={onToggle} />
         </Box>
-        <Box as="a" rel="home" mx="auto">
-          <Logo h="24px" iconcolor="blue.400" />
-        </Box>
-        {/* <Box
-          visibility={{
-            base: 'hidden',
-            sm: 'visible',
-          }}
-        >
-          <Button as="a" colorScheme="blue">
-            { isLoggedIn ? 'Sign Out' : 'Sign In' }
-          </Button>
-        </Box> */}
       </Flex>
       <NavMenu animate={isOpen ? 'open' : 'closed'}>
         {links.map((link, i) => 

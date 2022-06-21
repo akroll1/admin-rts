@@ -5,7 +5,7 @@ import { AccountSwitcherButton } from './account-switcher-button'
   export const AccountSwitcher = ({ fighterA, fighterB, fightResult, scorecardName, groupScorecardId  }) => {
     return (
       <Menu>
-        <AccountSwitcherButton fightResult={fightResult} fighterA={fighterA} fighterB={fighterB}  scorecardName={scorecardName} groupScorecardId={groupScorecardId} />
+        <AccountSwitcherButton mb="2" fightResult={fightResult} fighterA={fighterA} fighterB={fighterB}  scorecardName={scorecardName} groupScorecardId={groupScorecardId} />
         <MenuList shadow="lg" py="4" color={useColorModeValue('gray.600', 'gray.200')} px="3">
           <Text fontWeight="medium" mb="2">
             My Scorecards

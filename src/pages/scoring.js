@@ -1,39 +1,32 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react'
+import { Flex, Heading, useControllableState, useForceUpdate, useToast } from '@chakra-ui/react'
 import axios from 'axios'
-import jwt_decode from 'jwt-decode'
 import { ScoringTable } from '../components/tables'
 import { ScoringModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
 import { ScoringSidebar } from '../components/sidebars'
-import { predictionIsLocked } from '../utils/utils';
-import { useNavigate } from 'react-router-dom'
+import { predictionIsLocked } from '../utils/utils'
+import { Navigate, useLocation, useNavigate } from 'react-router'
 import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
-import { capFirstLetters } from '../utils'
+import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
+import { useUserStore, useScoringStore } from '../stores'
 
-const Scoring = props => {
+const Scoring = () => {
+    const location = useLocation();
     const navigate = useNavigate();
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
-    const username = sessionStorage.getItem('username');
-    const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
-    let accessToken, idToken, decodedIdToken, sub, config, tokenIsGood;
-    if(username && localStorageString){
-        accessToken = localStorage.getItem(localStorageString + '.accessToken');
-        idToken = localStorage.getItem(localStorageString + '.idToken');
-        decodedIdToken = jwt_decode(idToken);
-        sub = decodedIdToken.sub;
-        config = {
-            headers: { Authorization: `Bearer ${idToken}` }
-        };        
-        tokenIsGood = Date.now() < (decodedIdToken.exp * 1000) ? true : false;
-    } else { 
-        navigate('/signin', {page: '/scoring/' + groupscorecard_id});
-    }
 
     //////////////////  SCORE STATE /////////////////////////
+    const user = useUserStore( store => store);
+    const { sub, email, username } = user;
+    const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
 
+    const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
+    const accessTokenConfig = {
+        headers: { Authorization: `Bearer ${accessToken}` }
+    };        
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
         fighterA: '', 
@@ -42,20 +35,15 @@ const Scoring = props => {
     });
     const [scorecards, setScorecards] = useState(null);
     const [userScorecard, setUserScorecard] = useState({});
-    const [userScores, setUserScores] = useState([]);
-    const [currentRound, setCurrentRound] = useState(0);
-    const [sliderScores, setSliderScores] = useState({
-        fighterA: 10,
-        fighterB: 10
-    });
-    const [scoringModal, toggleScoringModal] = useState(false);
-    const [dBCall, setDBCall] = useState(false);
-    const [reason, setReason] = useState('EA');
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [tableData, setTableData] = useState([]);
+    const [scoredRounds, setScoredRounds] = useState(0);
+    const [totalRounds, setTotalRounds] = useState(0);
+    const [sliderScores, setSliderScores] = useState({});
     const [onlyShowToCurrentRound, setOnlyShowToCurrentRound] = useState(false);
-    const [fightResult, setFightResult] = useState(null);
     const [chatKey, setChatKey] = useState(null);
-
+    const [quickTitle, setQuickTitle] = useState('');
+    const [fightStatus, setFightStatus] = useState(null);
+    const [scoringComplete, setScoringComplete] = useState(false);
     //////////////////  SIDEBAR /////////////////////////
     const [showGuestScorerIds, setShowGuestScorerIds] = useState(null);
     const [showGuestScorers, setShowGuestScorers] = useState(null);
@@ -64,150 +52,166 @@ const Scoring = props => {
     const [needsPrediction, setNeedsPrediction] = useState(false);
     const [prediction, setPrediction] = useState('');
     const [predictionLock, setPredictionLock] = useState(true);
-    const [guestScorersScorecards, setGuestScorersScorecards] = useState(null);
-
-    const [show, setShow] = useState({});
-    const [togglePredictionModal, setTogglePredictionModal] = useState(false);
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showData, setShowData] = useState(null);
+    const [fighterData, setFighterData] = useState([]);
+    const [toggleModal, setToggleModal] = useState(false);
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
-    const [notifications, setNotifications] = useState([
-        { notification: 'Thurman is on fire!', displayName: 'sarah'}, 
-        { notification: 'Thurman will get KO\'d this round!', displayName: 'andrew1'}
-    ]);
+    const [notifications, setNotifications] = useState([]);
     
     //////////////////  URL'S /////////////////////////
-    ////////////////////////////////////////////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
-    const userScorecardUrl = process.env.REACT_APP_USER_SCORECARDS + `/${groupscorecard_id}`;
     const guestScorersUrl = process.env.REACT_APP_GUEST_SCORERS;
+    useEffect(() => {
+        if(!sub){
+            navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
+        } 
+    },[sub]) 
 
     useEffect(() => {
-        if(tokenIsGood && groupscorecard_id){
-            /**
-             * 1. fetch groupScorecard.
-             * 2. Check if admin === current user email
-             *      -if so, set "isAdmin = true";
-             * 3. Set groupScorecards, scorecards and show (if no show, then set to null).
-             * 4. Get current user scorecard.
-             * 5. Check for ownerId on scorecard- if none, fire off call to set it.
-             * 6. Check for prediction- if none, set it.
-             * 7. Find current round.
-             * 8. Check if fight is complete.
-             * 9. Get guest scorer ID's and set them in state.
-             */
+        if(user?.sub && groupscorecard_id){
 
             // 1. Fetch Group Scorecard.
             const fetchGroupScorecard = async () => {
-                const res = await axios.get(groupScorecardsUrl, config);
-                // console.log('res: ', res.data);
-                if(res.data.scorecards === 'No scorecard found.'){
+                const { sub, email, username } = user;
+                const res = await axios.get(groupScorecardsUrl, accessTokenConfig);
+                console.log('res: ', res.data);
+                if(res.data === 'No scorecard found.'){
                     alert('No Scorecard Found');
                     return;
                 }
-                // 2. Set groupScorecard and scorecards.
+                // 2. Set groupScorecard scorecards, showData, guestScorers, chatKey.
                 setGroupScorecard(res.data.groupScorecard);
                 setScorecards(res.data.scorecards);
-                
-                // 3. Get THIS USER'S scorecard.
-                const [thisUserScorecard] = await res.data.scorecards.filter(scorecard => scorecard.member === decodedIdToken.email);
-                // console.log('thisUserScorecard', thisUserScorecard)
-                const needsOwnerId = !thisUserScorecard.ownerId || thisUserScorecard.ownerId !== sub || !thisUserScorecard.ownerDisplayName;
-                // 4. If a featured show, set in state.
-                if(res.data.show){
-                    setShow(res.data.show);
-                    setShowGuestScorerIds(res.data.show.guestScorerIds);
-                } else {
-                    setShow(null);
-                }
-                // 5. set user data in DB if not there already
-                if(needsOwnerId){
-                    axios.patch(userScorecardUrl, {ownerId: sub}, config);
-                    thisUserScorecard.ownerId = sub;
-                }
-                // 6. Check if user is GROUP ADMIN
-                if(res.data.groupScorecard.admin === decodedIdToken.email){
-                    setIsAdmin(true);
-                }                
-                // 7. Check for CHAT KEY. if !chatKey, get it in useEffect.
-                if(res.data.groupScorecard.chatKey){
-                    setChatKey(res.data.groupScorecard.chatKey);
-                }
-                // 8. Set prediction, if necessary
-                const needsPrediction = !thisUserScorecard.prediction && res.data.show?.showTime;
+                setShowData({
+                    show: res.data.show,
+                    fight: res.data.fight
+                });
+                setShowGuestScorerIds(res.data.show.guestScorerIds);
+                setChatKey(res.data.groupScorecard.chatKey);
+                setQuickTitle(res.data.fight.fightQuickTitle)
+                setFighterData(res.data.fighterData);
+
+                // Get THIS USER'S scorecard.
+                const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
+                console.log('thisUserScorecard', thisUserScorecard)
+               
+                // Set prediction, if necessary
+                const needsPrediction = !thisUserScorecard.prediction
                 if(needsPrediction){
-                    setNeedsPrediction(true); 
-                    setTogglePredictionModal(true);
+                    setTimeout(() => {
+                        setNeedsPrediction(true); 
+                        setToggleModal(true);
+                    },3000);
                 } else {
-                    setPrediction(thisUserScorecard.prediction);
+                    const transformPredictionData = () => {
+                        const { prediction } = thisUserScorecard;
+                        const [fighter] = res.data.fighterData.filter( data => {
+                            const { fighterId, lastName } = data;
+                            const transformedPrediction = `${capFirstLetters(lastName)}, ${prediction.split(',')[1]}`; 
+                            if(prediction.includes(fighterId)){
+                                return setPrediction(transformedPrediction);
+                            }
+                        });
+                    }
+                    transformPredictionData();
                 }
-                // 9. Find current round
-                const getCurrentRound = thisUserScorecard.scores.filter(score => score.fighterAScore !== 0);
-                const result = res.data.groupScorecard.fightResult ? setFightResult(res.data.groupScorecard.fightResult) : null;
-                setCurrentRound((getCurrentRound.length) + 1);
+                // Find current round
+                const getCurrentRound = thisUserScorecard => {
+                    // -1 is for zero round.
+                    const round = thisUserScorecard.scores.map( score => score.length).length -1;
+                    console.log('round: ', round)
+                    if(round >= res.data.fight.rounds){
+                        setScoringComplete(true);
+                        setScoredRounds(res.data.fight.rounds);
+                    } else {
+                        setScoredRounds(round)
+                    }
+                    if(round <= 1) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.PENDING);
+                    if(round >= res.data.fight.rounds) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED);
+                    if(round > 0 || round <= res.data.fight.rounds + 1) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.ACTIVE);
+                    return round;
+                }
+                getCurrentRound(thisUserScorecard);
+                setTotalRounds(res.data.fight.rounds);
+
                 setUserScorecard(thisUserScorecard);
-                setUserScores(thisUserScorecard.scores);
-                setMyGuestScorerIds(thisUserScorecard.guestScorerIds)
+                setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
+                const [fighter1, fighter2] = res.data.fighterData.map( ({ fighterId }) => {
+                    return ({
+                        [fighterId]: 10
+                    })
+                })
+                setSliderScores({ ...fighter1, ...fighter2 })
             }
             fetchGroupScorecard();
         } 
-    }, [tokenIsGood, dBCall, groupscorecard_id, onlyShowToCurrentRound]);
-
-    // check if chatKey, get sig4 token.
+    }, [user, groupscorecard_id]);
+    // destructure scores...
     useEffect(() => {
-        const { groupScorecardId, chatKey } = groupScorecard;
-        // right now, everyone should have chatKey, created in groupScorecard.
-        if( groupScorecardId && !chatKey ){
-            const getChatKey = async () => {
-                const url = process.env.REACT_APP_CHAT_ROOM_SERVICE + `/${groupScorecardId}`;
-                return axios.put(url, {}, config)
-                    .then( res => setChatKey(res.data.chatArnKey)).catch( err => console.log(err));
-            } 
-            getChatKey();
+        // handle the scorecards...
+        if(userScorecard.scorecardId){
+            const destructureScorecards = () => {
+                const s = scorecards.map( scorecard => {
+                    let { ownerDisplayName, ownerId, prediction, scores } = scorecard;
+                    const [fighter1, fighter2] = fighterData;
+                    const fighter1Id = fighter1.fighterId;
+                    const fighter2Id = fighter2.fighterId;
+                    const displayName = ownerDisplayName ? ownerDisplayName : ownerId;
+                    const sortRoundAscending = (a, b) => a.round - b.round;
+                    let predictionResult;
+                    
+                    if(prediction){
+                        const index = prediction.indexOf(',')
+                        predictionResult = prediction.slice(index+1);
+                        prediction = prediction.slice(0,index);
+                    }
+
+                    const totals = scores.reduce( (acc, curr) => {
+                        if(!acc[fighter1.lastName]){
+                            acc[fighter1.lastName] = 0;
+                        }
+                        acc[fighter1.lastName] += curr[fighter1Id]
+                        
+                        if(!acc[fighter2.lastName]){
+                            acc[fighter2.lastName] = 0;
+                        }
+                        acc[fighter2.lastName] += curr[fighter2Id]
+                        return acc
+                    },{});
+
+                    const mappedScores = scores.map( score => {
+                        const { round } = score;
+                        const f1name = fighter1.lastName;
+                        const f2name = fighter2.lastName;
+                        return ({
+                            round,
+                            [f1name]: score[fighter1Id],
+                            [f2name]: score[fighter2Id]
+                        })
+                    }).filter( ({ round }) => round !== 0)
+                    .sort(sortRoundAscending);
+                   
+                    return ({
+                        mappedScores,
+                        displayName,
+                        totals,
+                        fighters: [fighter1.lastName, fighter2.lastName],
+                        prediction
+                    })
+                })
+                setTableData(s);
+            }
+            destructureScorecards();
         }
-        if(groupScorecardId && chatKey){
+    },[scorecards]);
 
-        }
-
-    }, [groupScorecard]) 
-
-
-    // const submitScores = async () => {
-    //     // console.log('userScores 94: ',userScores);
-    //     const scoresArr = userScores.map(score => {
-    //         if(score.round === currentRound){
-    //             score['reason'] = reason;
-    //             // changed these to sliderScores...
-    //             // score['fighterAScore'] = fighterASlider;
-    //             // score['fighterBScore'] = fighterBSlider;
-    //         }
-    //         return score;
-    //     })
-    //     userScorecard.scores = scoresArr;
-    //     await axios.put(userScorecardUrl, userScorecard, config)
-    //         .then(res => {
-    //             console.log('put res: ',res)
-    //             if(res.status === 200){
-    //                 console.log('200');
-    //                 setSliderScores({fighter1: 10, fighter2: 10});
-    //                 setReason('EA');
-    //                 setDBCall(() => !dBCall);
-    //                 setUserScorecard(res.data);
-    //                 setUserScores(res.data.scores);
-    //                 const getCurrentRound = res.data.scores.filter(score => score.fighterAScore !== 0);
-    //                 setCurrentRound((getCurrentRound.length+1));
-    //             }
-    //         })
-    //         .catch(err => console.log('put err: ',err));
-    //         toggleScoringModal(!scoringModal);
-    // };
-    // when the groupsScorecard comes in, replace fighterA and B with their names...
-    
     // get GUEST SCORER ID's.
     useEffect(() => {
         if(showGuestScorerIds && showGuestScorerIds.length > 0){
             const getShowGuestScorers = () => {
-                return axios.post(guestScorersUrl, showGuestScorerIds, config)
+                return axios.post(guestScorersUrl, showGuestScorerIds, accessTokenConfig)
                     .then(res => setShowGuestScorers(res.data))
                     .catch(err => console.log(err))
             }
@@ -218,7 +222,7 @@ const Scoring = props => {
     useEffect(() => {
         if(myGuestScorerIds && myGuestScorerIds.length > 0){
             const getMyGuestScorers = () => {
-                return axios.post(guestScorersUrl, myGuestScorerIds, config)
+                return axios.post(guestScorersUrl, myGuestScorerIds, accessTokenConfig)
                     .then(res => setMyGuestScorers(res.data))
                     .catch(err => console.log(err))
             }
@@ -237,79 +241,45 @@ const Scoring = props => {
         } else {
             const updatedGuestScorerArr = guestScorerIds.concat(id);
             // console.log('updatedGuestScorerArr: ',updatedGuestScorerArr);
-            return axios.patch(userScorecardUrl, { updatedGuestScorerArr }, config)
+            const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
+            return axios.patch(url, { updatedGuestScorerArr }, accessTokenConfig)
                 .then(res => {
                     console.log('res: ',res);
                     if(res.status === 200){
-                        setDBCall(!dBCall);
+                        // add to current state.
                     }
                 })
                 .catch(err => console.log(err))
         }
     }
-    // scoring reason.
-    const handleReasonClick = e => {
-        let { id } = e.currentTarget;
-        return setReason(id);
-    }
-    useEffect(() => {
-        if(scorecards && scorecards.length > 0){
-            function getScorecardTotals(scorecards){
-                const newArr = [];
-                for(let i = 0; i < scorecards.length; i++){
-                    const card = scorecards[i];
-                    const scores = card.scores;
-                    let fighterATotal;
-                    let fighterBTotal;
-                    if(onlyShowToCurrentRound){
-                        fighterATotal = scores.slice(0,(currentRound-1)).reduce((previousValue, currentValue) => {
-                            return previousValue + currentValue.fighterAScore;
-                        },0)
-                        fighterBTotal = scores.slice(0,(currentRound-1)).reduce((previousValue, currentValue) => {
-                            return previousValue + currentValue.fighterBScore;
-                        },0)
-                    } else {
-                        fighterATotal = scores.reduce((previousValue, currentValue) => {
-                            return previousValue + currentValue.fighterAScore;
-                        },0)
-                        fighterBTotal = scores.reduce((previousValue, currentValue) => {
-                            return previousValue + currentValue.fighterBScore;
-                        },0)
 
-                    }
-                        scorecards[i].fighterATotal = fighterATotal;
-                        scorecards[i].fighterBTotal = fighterBTotal;
-                        newArr.push(scorecards[i]);
-                }
-                return scorecards
-            }
-            getScorecardTotals(scorecards);
-        }
-    },[scorecards]);
     // submit fight prediction.
     const handleSubmitPrediction = value => {
-        if(show?.showTime){
-            if(predictionIsLocked(show?.showTime)) {
-                setPredictionLock(true);
-                return alert('Predictions are now locked!');
-            }
-            return axios.patch(userScorecardUrl, {prediction: value}, config)
+
+        if(predictionIsLocked(showData.show.showTime)) {
+            setPredictionLock(true);
+            return alert('Predictions are now locked!');
+        }
+        const [fighter] = fighterData.filter( data => {
+            const { fighterId, lastName } = data;
+            const transformedPrediction = `${capFirstLetters(lastName)}, ${value.split(',')[1]}`; 
+            return value.includes(fighterId) ? setPrediction(transformedPrediction) : setNeedsPrediction(true);
+        });
+        const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
+        return axios.patch(url, {prediction: value}, accessTokenConfig)
             .then(res => {
-                // console.log('res: ',res)
                 if(res.data === 'Updated prediction'){
-                    setPrediction(value);
                     setNeedsPrediction(false);
                     setPredictionLock(!predictionLock);
                     return toast({ 
                         title: 'Prediction Updated',
-                        duration: 5000,
+                        duration: 3000,
                         status: 'success',
                         isClosable: true
                     })
                 }
             })
             .catch(err => console.log(err));
-        }
     };
     // useEffect for removing notifications.
     useEffect(() => {
@@ -331,55 +301,72 @@ const Scoring = props => {
         setNotifications(filtered)
     };
     const submitRoundScores = () => {
-        console.log('submitRoundScores, 340');
-        console.log('userScorecard: ', userScorecard)
-        const { scores } = userScorecard;
-        const filtered = scores.filter( ({ round }) => round != currentRound);
-        // have to keep the fighter scores in sync
-        // because the score properties, in scorecards, are generic.
-        const sliderScoresUpdate = () => {
-            if(sliderScores[fighterA] === fighterA){
-                const update = {
-                    fighterAScore: sliderScores[fighterA],
-                    fighterBScore: sliderScores[fighterB]
-                }
-                return (update)
-            } else {
-                console.log('fighters out of sync');
+        if(scoringComplete) return;
+        setIsSubmitting(true);
+        const { scorecardId } = userScorecard;
+        const update = {
+            ...sliderScores,
+            round: scoredRounds + 1
+        };
+        const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
+        let newObj = {};
+        for(const [key] of Object.entries(sliderScores)){
+            newObj = {
+                ...newObj,
+                [key]: 10
             }
         }
-        console.log('sliderScoresUpdate: ', sliderScoresUpdate());
-
-        const update = {
-            reason: '',
-            round: currentRound,
-            ...sliderScoresUpdate()
-        };
-        console.log('filtered: ', filtered);
-        console.log('update: ', update);
-        /**
-            1. Get sliders scores.
-            2. Update scorecard.
-            3. Update group scorecard.
-            4. Update DB.
-            5. Update chat.
-         *  */ 
-
-
+       
+        return axios.put(url, update, accessTokenConfig)
+            .then( res => {
+                if(res.status === 200){
+                    const { scores, scorecardId } = userScorecard;
+                    const filtered = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
+                    // console.log('filtered: ', filtered);
+                    const tempScores = scores.concat(update);
+                    const tempScorecard = Object.assign({}, {...userScorecard, scores: tempScores });
+                    const newScorecards = filtered.concat(tempScorecard);
+                    // console.log('tempScorecard: ', tempScorecard)
+                    if(tempScores.length >= showData.fight.rounds){
+                        setScoredRounds(showData.fight.rounds)
+                        setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
+                    }
+                    setScorecards(newScorecards)
+                    setUserScorecard({ ...userScorecard, scores: tempScores });
+                    // needs to be if currentRound === end, then currentRound stays same
+                    // and setScoringComplete(true);
+                    if(scoredRounds + 1 >= totalRounds){
+                        setScoringComplete(true);
+                        setScoredRounds(totalRounds)
+                    }
+                    setScoredRounds(prev => prev+1);
+                    setSliderScores(newObj);
+                }
+            })
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false));
     };
 
     const { ownerDisplayName, finalScore } = userScorecard;
-	const { weightclass, totalRounds, fighterA, fighterB, scorecardName } = groupScorecard;
-    const { members } = groupScorecard;
-    const { showName } = show && show.showName ? show : '';
-    // console.log('chatKey: ', chatKey)
-    // console.log('user: ',user);
+    const { rounds } = showData?.fight ? showData.fight : 0;
     // console.log('group scorecard: ',groupScorecard)
-    // console.log('userScorecard: ', userScorecard)
+    // console.log('userScorecard: ', userScorecard);
+    // console.log('scorecards: ', scorecards);
+    // console.log('totalRounds: ', totalRounds)
+    // console.log('scoringComplete: ', scoringComplete);
+
     return (
         <Flex flexDir="column" position="relative">
-            <SliderHeading fighterA={fighterA} fighterB={fighterB} />
-            <Flex position="fixed" right="0" top="2rem" flexDir="column" zIndex="1000" w="100%">
+            {/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
+            <PredictionModal 
+                rounds={rounds}
+                setToggleModal={setToggleModal}
+                toggleModal={toggleModal}
+                fighterData={fighterData}
+                handleSubmitPrediction={handleSubmitPrediction} 
+            />
+            <SliderHeading quickTitle={quickTitle} />
+            <Flex w={["100%","auto"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="10000">
                 {notifications.length > 0 && notifications.map( ({notification, displayName}) => {
                     return (
                         <Notification
@@ -405,8 +392,8 @@ const Scoring = props => {
                 py={8
             }>    
                 <ScoringSidebar 
-                    show={show}
-                    members={members}
+                    sub={sub}
+                    showData={showData}
                     showGuestScorers={showGuestScorers}
                     myGuestScorers={myGuestScorers}
                     prediction={prediction}
@@ -414,19 +401,22 @@ const Scoring = props => {
                     groupScorecard={groupScorecard}
                     handleAddGuestScorer={handleAddGuestScorer}
                     setShowGuestScorers={setShowGuestScorers}
-                    setTogglePredictionModal={setTogglePredictionModal}
+                    setToggleModal={setToggleModal}
                 />
                 <ScoringMain 
-                    scoringModa={scoringModal} 
-                    toggleScoringModal={toggleScoringModal} 
-                    currentRound={currentRound} 
+                    scoringComplete={scoringComplete}
+                    submitRoundScores={submitRoundScores}
+                    scoredRounds={scoredRounds}
+                    fighterData={fighterData}
                     sliderScores={sliderScores} 
                     setSliderScores={setSliderScores} 
-                    groupScorecard={groupScorecard}
-                    submitRoundScores={submitRoundScores}
+                    isSubmitting={isSubmitting}
+                    totalRounds={totalRounds}
                 />
                 <ChatSidebar 
-                    config={config}
+                    fightStatus={fightStatus}
+                    scoredRounds={scoredRounds} 
+                    accessTokenConfig={accessTokenConfig}
                     chatKey={chatKey}
                     displayName={ownerDisplayName}
                     notifications={notifications}
@@ -434,33 +424,12 @@ const Scoring = props => {
                     setNotificationTimeout={setNotificationTimeout}
                 />
             </Flex>   
-            <ScoringTable fightResult={fightResult} prediction={prediction} fighterA={fighterA} fighterB={fighterB} totalRounds={totalRounds} currentRound={currentRound} scorecards={scorecards} />
+            <ScoringTable tableData={tableData} totalRounds={totalRounds} />
         </Flex>
     )
 }
 export default Scoring
 
-const SliderHeading = ({ fighterA, fighterB }) => (
-    <Heading textAlign="center" as="h2" size="lg">{capFirstLetters(fighterA)} vs {capFirstLetters(fighterB)}</Heading>
+const SliderHeading = ({ quickTitle }) => (
+    <Heading textAlign="center" as="h2" size="lg">{quickTitle}</Heading>
 )
-{/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
-
-// <PredictionModal 
-// togglePredictionModal={togglePredictionModal}
-// setTogglePredictionModal={setTogglePredictionModal}
-// groupScorecard={groupScorecard} 
-// handleSubmitPrediction={handleSubmitPrediction} 
-// prediction={prediction}
-// />
-// <ScoringModal 
-// reason={reason}
-// currentRound={currentRound}
-// scoringModal={scoringModal}
-// toggleScoringModal={toggleScoringModal}
-// fighterA={fighterA}
-// fighterASlider={fighterASlider}
-// fighterB={fighterB}
-// fighterBSlider={fighterBSlider}
-// handleReasonClick={handleReasonClick}
-// submitScores={submitScores}
-// />

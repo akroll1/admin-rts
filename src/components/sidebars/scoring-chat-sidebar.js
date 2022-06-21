@@ -3,12 +3,24 @@ import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/reac
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { parseUrls, stickers } from '../../utils'
-import { StickerPicker } from './chat-sidebar-components'
-import { FaRProject } from 'react-icons/fa'
-import { sanitize } from '../../utils'
-import { IoNotifications } from 'react-icons/io'
+import { FightStats } from './chat-sidebar-components/fight-stats'
+import { DividerWithText } from '../../chakra'
 
-export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNotifications, setNotificationTimeout }) => {
+// import { StickerPicker } from './chat-sidebar-components'
+// import { FaRProject } from 'react-icons/fa'
+// import { sanitize } from '../../utils'
+// import { IoNotifications } from 'react-icons/io'
+
+export const ChatSidebar = ({ 
+    fightStatus,
+    scoredRounds,
+    accessTokenConfig, 
+    chatKey, 
+    displayName, 
+    notifications, 
+    setNotifications, 
+    setNotificationTimeout 
+}) => {
     // chatKey is room key for room ARN, required for chat metadata.
     const [moderator, setModerator] = useState(false);
     const [avatar, setAvatar] = useState({});
@@ -16,17 +28,27 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
     const [refreshTimer, setRefreshTimer] = useState({});
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
-    const [connection, setConnection] = useState(null);
+    const [round, setRound] = useState('')
     //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [powerShotDisabled, setPowerShotDisabled] = useState(false);
     const [prediction, setPrediction] = useState('');
     // refs
     const chatRef = createRef();
     const predictionRef = createRef();
     const messagesEndRef = createRef();
+    
+    const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
     
+    useEffect(() => {
+        if(scoredRounds){
+            if(scoredRounds === 1) return;
+            if(fightStatus === 'COMPLETED') return setRound(scoredRounds)
+            setRound(scoredRounds)
+        }
+    },[scoredRounds])
 
     const requestToken = (selectedUsername, isModerator, selectedAvatar) => {
         // Set application state
@@ -51,7 +73,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
             userId: `${displayName}`,
         };
     
-        axios.post(`${process.env.REACT_APP_CHAT_SERVICE}`, data, config)
+        axios.post(`${process.env.REACT_APP_CHAT_SERVICE}`, data, accessTokenConfig)
             .then( res => {
                 // console.log('res, 58: ', res)
                 setChatToken(res.data);
@@ -66,7 +88,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
         // Focus the input field UI
         chatRef.current.focus();
     };
-    
+
     const handleReceiveMessage = (data) => {
         const { Attributes, Content, Sender, Type } = data;
         const { UserId } = Sender;
@@ -171,7 +193,6 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
     };
 
     const handleSendPredictionMessage = () => {
-        console.log('handleSendPredictionMessage')
         const sanitizedPrediction = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
         const uuid = uuidv4();
         const data = JSON.stringify({
@@ -184,6 +205,10 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
         });
         connection.send(data);
         sendChatMessage();
+        setPowerShotDisabled(true);
+        setTimeout(() => {
+            setPowerShotDisabled(false)
+        },30000)
     };
 
     const socketActive = () => {
@@ -299,14 +324,16 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
             flexDir="column" 
             flex="1 0 20%" 
             w="100%" 
-            maxH={["25vh","25vh","80vh"]} 
-            minH={["12rem", "20rem", "80vh"]} 
+            maxH={["35vh","40vh","80vh"]} 
+            minH={["35vh", "40vh", "80vh"]} 
             p="2" 
             bg="gray.900" 
             borderRadius="md" 
             overflowY="scroll"
         >
-            <Text p="2" pb="1" textAlign="center">FightSync Chat</Text>
+            <DividerWithText text={`Round ${round} Results`} />
+            <FightStats />
+            <DividerWithText text="FightSync Chat" />
             <Input
                 as="input"
                 m="1"
@@ -362,7 +389,7 @@ export const ChatSidebar = ({ config, chatKey, displayName, notifications, setNo
                     m="1"
                     p="1"
                     size="sm"
-                    disabled={!socketActive()}
+                    disabled={!socketActive() || powerShotDisabled}
                     loadingText="Joining..." 
                     onClick={handleSendPredictionMessage} 
                     variant="outline"

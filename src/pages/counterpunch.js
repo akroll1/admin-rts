@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Player } from '../components/player'
 import { Flex } from '@chakra-ui/react'
-import {slicedGame, getGameType} from './helpers'
+import {slicedGame, getGameType} from '../utils'
 // import Chat from '../components/chat'
 // import ChannelsAside from '../components/channels-aside'
 import axios from 'axios';

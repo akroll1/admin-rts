@@ -6,9 +6,9 @@ import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate } from 'react-router-dom'
+import { useUserStore } from '../../stores'
 
 export const SignIn = props => {
-  const { setIsLoggedIn } = props;
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [isSignin, setIsSignin] = useState(true);
@@ -19,6 +19,8 @@ export const SignIn = props => {
     password: '',
     code: ''
   });
+  const setUser = useUserStore( state => state.setUser);
+
   const handleFormChange = e => {
     const { id, value } = e.currentTarget;
     setFormData({...formData, [id]: value.trim() });
@@ -39,7 +41,6 @@ export const SignIn = props => {
     const { email, password, username } = formData;
     Auth.signUp({ username, password, attributes: { email } })
       .then((data) => {
-        // console.log(data);
         setWaitingForCode(true);
         setSubmitting(false);
       })
@@ -88,25 +89,22 @@ export const SignIn = props => {
       password,
     })
     .then((user) => {
+      const { attributes } = user;
+      setUser({ ...attributes, username });
       sessionStorage.setItem('isLoggedIn',true);
-      sessionStorage.setItem('username', username);
       return navigate('/dashboard/scorecards', { username });
     })
     .catch((err) => {
       console.log('handleSignin err: ', err);
       if(err == 'UserNotConfirmedException: User is not confirmed.'){
         alert('Please confirm your account.');
-        setSubmitting(false);
         setWaitingForCode(true);
         setIsSignin(false);
         return;
       }
       alert('Incorrect Username or Password')
-      setSubmitting(false);
-      return;
-    });
+    }).finally(() => setSubmitting(false));
   }
-  // console.log('formData: ',formData)
 
   return (
     <Box bg={useColorModeValue('gray.500', 'gray.800')} py="12" px={{ base: '4', lg: '8' }}>
