@@ -16,8 +16,10 @@ import Fighters from './fighters'
 import Discussion from './discussions'
 import Shows from './shows'
 import theme from '../theme'
+import { PoundPage } from './pound'
 
 const App = () => {
+  
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') == 'true');
   return (
     <ChakraProvider theme={theme}>
@@ -40,6 +42,11 @@ const App = () => {
             <Route exact path="/discussions/:id" element={<Discussion />} />
             <Route exact path="/shows/:id" element={<Shows />} />
             <Route exact path="/shows" element={<Shows />} />
+            <Route exact path="/pound" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <PoundPage />
+              </PrivateRoute>
+            }/>
             <Route exact path="/dashboard/:type" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Dashboard /> 

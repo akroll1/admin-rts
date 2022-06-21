@@ -78,9 +78,9 @@ export const FightersForm = ({ user, accessTokenConfig }) => {
             <form id="settings-form" onSubmit={(e) => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
-                    Fighter's Form
+                    Fighter Form
                     </Heading>
-                    <FieldGroup title="Personal Info">
+                    <FieldGroup title="Create A Fighter">
                         <VStack width="full" spacing="6">
                             <FormControl id="firstName">
                                 <FormLabel>First Name</FormLabel>

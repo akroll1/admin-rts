@@ -1,26 +1,10 @@
 
-import React, {useEffect} from 'react'
-import { Flex, Table, Th, Tr, Td, Thead,Tbody, useColorModeValue as mode } from '@chakra-ui/react'
-import { ScoringTableInfo } from '../../chakra'
-// import { scoringTablePrediction } from '../../utils'
+import React, { useEffect, useState } from 'react'
+import { Box, Flex, Text, useColorModeValue as mode } from '@chakra-ui/react'
+import { ScoringTableInfo } from './scoring-table-els'
 
-export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scorecards, totalRounds, currentRound }) => {
-    const whichRoundKO = prediction => {
-        if(prediction){
-            prediction = prediction.toLowerCase();
-            return prediction.includes('ko') ? prediction.slice(prediction.indexOf('ko')+2) : false;    
-        }
-    }
-    const isFighterA = (prediction, fighterA) => {
-        if(prediction){
-            prediction = prediction.toLowerCase();
-            return prediction.split(' ')[1].split(',')[0].includes(fighterA.toLowerCase().split(' ')[1]) ? 'fighterAScore' : 'fighterBScore';
-        }
-    }
-        
-    //     scoringTablePrediction(prediction, fighterA);
-    // console.log('winType: ', winType);
-    //     fighterA.includes
+export const ScoringTable = ({ tableData, totalRounds }) => {
+    // console.log('tableData: ', tableData);
     const columns = [
         {
             Header: 'Player',
@@ -31,7 +15,7 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
         },
         {
             Header: 'Round',
-            accessor: 'round'
+            accessor: 'rounds'
         },
         {
             Header: 'Total',
@@ -39,108 +23,92 @@ export const ScoringTable = ({ fightResult, prediction, fighterA, fighterB, scor
         },
 
     ];
-    
-    // console.log('scorecards: ',scorecards)
-    const getPlayersData = scorecards && scorecards.length > 0 && scorecards.map( scorecard => {
-        const { prediction, scores, ownerDisplayName, member, fighterATotal, fighterBTotal } = scorecard;
-        const player = ownerDisplayName ? ownerDisplayName : member;
-        const getRound = prediction => {
-            if(!prediction) return 
-            const index = prediction.indexOf('KO');
-            if(index > -1){
-                const round = prediction.slice(index+2);
-                return round;
-            } 
-        }
-        return ({
-            player,
-            scores,
-            fighterATotal,
-            fighterBTotal,
-            round: getRound(prediction)
-        });
-    });
-    // console.log('getPlayersData: ',getPlayersData)
-    const rows = scorecards && scorecards.length > 0 ? scorecards.length : 0;
-    const rounds = new Array(totalRounds).fill('Round');
-    return (            
-        <Table style={{tableLayout:'fixed', width: '100%'}} overflowX="scroll" overflowY="scroll" size="md" variant="striped" my="8" borderWidth="1px" fontSize="sm">
-            { fightResult && <caption style={{margin: '1rem auto',width: '100%', captionSide:"top"}}>Official: {fightResult} </caption> }
-            <Thead bg={mode('gray.50', 'gray.800')}>
-                <Tr>
-                    {columns.map((column, index) => {
+    const MapRounds = totalRounds => {
+        return [...Array(totalRounds).fill(1)].map( (round, i) => {
+            const width = String(100 / totalRounds)+ '%';
 
-                        if(index === 0){
-                            return (    
-                                <Th style={{transform:'rotate(-90deg)'}} color="white" fontWeight="bold" style={{width: '5%'}} key={index} whiteSpace="nowrap" scope="col" key={index}>
-                                    {column.Header}
-                                </Th>
-                            )
-                        } else if(index === 1){
-                            return rounds.map( (round, roundIndex) => {
-                                return <Th key={roundIndex} style={roundIndex+1 === currentRound ? {color:'white', fontWeight: 'bold', fontSize: '1.3rem', borderBottom:'1px dotted white'} : null} color="white" fontWeight="bold">{roundIndex+1}</Th>
-                            })
-                        } else if(index === 2){
-                            return <Th color="white" fontWeight="bold">Total</Th>
-                        }
+            return (
+                <Flex maxW={width} minW={width}>
+                    <Text m="auto">{i + 1}</Text>
+                </Flex>
+            )
+        })
+    };
+    const MapOther = label => {
+        return (
+            <Flex alignItems="center" justifyContent="center" m="auto" >
+                <Text>{label}</Text>
+            </Flex>
+        )
+    }
+    const [fighter1, fighter2] = tableData.length > 0 ? tableData[0].fighters : '';
+    return (      
+        <Flex 
+            id="scoring_table" 
+            flexDir="column"
+            m="auto"
+            p="4"
+            overflowX="scroll"
+            w="100%"
+        >     
+            <Flex maxW="90%" minW="90%" flexDir="column">
+                <Flex minW="100%" m="auto" flexDir="row" justifyContent="space-between" bg={mode('gray.50', 'gray.800')}>
+                    { columns.map( (column, i) => {
+
+                        return (
+                            <Flex fontWeight="bold" alignItems="center" justifyContent="center" maxW={column.Header === 'Round' ? '80%' : ''} minW={column.Header === 'Round' ? '80%' : '15%'}>
+                                {column.Header === 'Round' ? MapRounds(totalRounds) : MapOther(column.Header)}
+                            </Flex>
+                        )  
                     })}
-                </Tr>
-            </Thead>
-            <Tbody>
-                {getPlayersData && getPlayersData.length > 0 && getPlayersData.map( (row, idx) => {
-                    // console.log('row: ',row)
-                    const { scores, fighterATotal, fighterBTotal } = row
-                    return (
-                        <Tr key={idx}>
-                            {columns.map( (column, i) => {
-                                // console.log('column: ',column)
-                                const cell = row[column.accessor];
-                                const element = column.Cell?.(row, fighterA, fighterB) ?? cell;
-                                
-                                if(i === 0){
-                                    return (
-                                        <Td>
-                                            {element}
-                                        </Td>
-                                    )
-                                }
-                                if(i === 1){
-                                    return scores.map( (scoreRow,ind) => {
-                                        // console.log('scoreRow: ',scoreRow)
-                                        const koRound = whichRoundKO(prediction)-1;
-                                        const whichFighter = isFighterA(prediction, fighterB);
-                                        // console.log('whichFighter: ',whichFighter);
-
-                                        // console.log('koRound: ',koRound)
-                                        const { fighterAScore, fighterBScore } = scoreRow;
-                                        return (
-                                            <Td p="0" key={ind}>
-                                                <Flex  p="1" m="1" flexDirection="column" alignItems="center" justifyContent="space-between">
-                                                    <Flex style={ind == koRound  ? {border:'1px solid red', fontSize: '1.2rem'} : null} borderRadius="3px" bg="gray.500" color="black" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterAScore}</Flex>
-                                                    <Flex style={ind == koRound && whichFighter === String(fighterBScore) ? {border:'1px solid red', fontSize: '1.2rem'} : null} color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBScore}</Flex>
+                </Flex>
+                <Flex minW="100%" flexDir="column" justifyContent="space-between" bg={mode('gray.50', 'gray.800')}>
+                    { tableData.map( (row, i) => {
+                        let { displayName, mappedScores, totals } = row;
+                        displayName = displayName.indexOf('@') > -1 ? displayName.slice(0, displayName.indexOf('@')) : displayName;
+                        const getRounds = () => {
+                            if(mappedScores.length >= totalRounds){
+                                return mappedScores.slice(0, totalRounds);
+                            } 
+                            
+                            const dummySlots = totalRounds - mappedScores.length;
+                            const fillerArr = Array(dummySlots).fill('');
+                            return mappedScores.concat(...fillerArr);
+                        }
+                        const rounds = getRounds();
+                        return (
+                            <Flex flexDir="row" minW="100%" minH="4rem">
+                                <Flex m="auto" borderRadius="3px" p="2" alignItems="center" justifyContent="flex-start" minW="15%">{displayName}</Flex>
+                                <Flex minW="80%" flexDir="row" justifyContent="center" alignContent="center">
+                                    {
+                                        rounds.map( score => {
+                                            return (
+                                                <Flex minH="4rem" flexDir="column" minW={`${100/totalRounds}%`} justifyContent="center">
+                                                    <Flex borderRadius="1px" bg="whiteAlpha.300" justifyContent="center" flexDir="row">
+                                                        { score[fighter1] ? score[fighter1] : '0'  }
+                                                    </Flex>
+                                                    <Flex justifyContent="center" flexDir="row">
+                                                        { score[fighter2] ? score[fighter2] : '0'  }
+                                                    </Flex>
                                                 </Flex>
-
-                                            </Td>
-                                    )
-                                })}
-                                if(i === 2){
-                                    return (
-                                        <Td p="0">
-                                            <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                                                <Flex fontWeight="bold" fontSize="md" color="gray.400" flexDirection="column" alignItems="center" justifyContent="center" w="100%">{fighterATotal}</Flex>
-                                                <Flex fontWeight="bold" fontSize="md" color="whiteAlpha.900" flexDirection="column" alignItems="center" justifyContent="center" mt="0.5rem" w="100%">{fighterBTotal}</Flex>
-                                            </Flex>
-                                        </Td>
-                                    )
-                                }
-                                
-                            })}
-
-                        </Tr>
-                    )
-                })}
-            </Tbody>
-        </Table>
+                                            )
+                                        })
+                                    }
+                                </Flex>
+                                <Flex py="2" flexDir="column" minW="10%">
+                                    <Flex  borderRadius="2px" bg="whiteAlpha.400" minW="100%" flexDir="column" alignItems="center" justifyContent="center">
+                                        {!totals[fighter1] ? '0' : totals[fighter1]}
+                                    </Flex>
+                                    <Flex minW="100%" flexDir="column" alignItems="center" justifyContent="center">
+                                        {!totals[fighter2] ? '0' : totals[fighter2]}
+                                    </Flex>
+                                </Flex>
+                            </Flex>
+                        )
+                    })}
+                </Flex>
+            </Flex>
+        </Flex>
     )
 }
         

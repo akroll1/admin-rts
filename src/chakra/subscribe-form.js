@@ -4,8 +4,8 @@ import {FooterHeading} from './footer-heading'
 
 export const SubscribeForm = (props) => {
   return (
-    <chakra.form {...props} onSubmit={(e) => e.preventDefault()}>
-      <Stack spacing="4">
+    <chakra.form {...props} onSubmit={(e) => e.preventDefault()} maxW="100%">
+      <Stack spacing="2">
         <FooterHeading>Subscribe to our newsletter</FooterHeading>
         <Text>Get the <span style={{fontWeight: 'bold',color: '#FFF'}}>FightCloud newsletter</span> delivered directly to your inbox!</Text>
         <Stack spacing="4" direction={{ base: 'column', md: 'row' }}>

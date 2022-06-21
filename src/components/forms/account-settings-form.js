@@ -5,14 +5,15 @@ import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect,FieldGroup } from '../../chakra'
 import axios from 'axios'
 
-export const AccountSettingsForm = ({ user, idTokenConfig }) => {
+export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
   const [userProfile, setUserProfile] = useState({})
 
   useEffect(() => {
     if(user && user.sub){
       const url = process.env.REACT_APP_USERS + `/${user.sub}`;
       const fetchUser = async () => {
-        return await axios.get(url, idTokenConfig)
+        // accessTokenConfig has been changed from idTokenConfig, check the server...
+        return await axios.get(url, accessTokenConfig)
           .then(res => {
             const { email, displayName, sub } = res.data;
             const obj = {
@@ -34,7 +35,7 @@ export const AccountSettingsForm = ({ user, idTokenConfig }) => {
   }
   const updateUser = () => {
     const url = process.env.REACT_APP_USERS + `/${user.sub}`;
-    axios.put(url, userProfile, idTokenConfig)
+    axios.put(url, userProfile, accessTokenConfig)
       .then(res => console.log('updated user'))
       .catch(err => console.log(err));
   }

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack, useColorModeValue } from '@chakra-ui/react'
-import { ReviewFormForm } from './review-form-form'
+import { ReviewForm } from '../forms'
 
-export const ReviewForm = ({ userReview, handleReviewFormSubmit, setShowTheReviewForm }) => {
+export const ReviewFormModal = ({ reviewForm, setReviewForm, handleReviewFormClose, handleReviewFormSubmitPost, handleReviewFormSubmitPut }) => {
     
     return (
         <Modal
@@ -16,7 +16,8 @@ export const ReviewForm = ({ userReview, handleReviewFormSubmit, setShowTheRevie
         <ModalOverlay />
         <ModalContent borderRadius="xl" mx={{ base: '2.5', lg: '16' }} overflow="hidden">
             <ModalCloseButton
-                onClick={() => setShowTheReviewForm(false)}
+            // can handle sanitizing the review form by moving the form state up here and sending down a clean form state.
+                onClick={handleReviewFormClose}
                 top="0"
                 right="0"
                 size="lg"
@@ -29,14 +30,13 @@ export const ReviewForm = ({ userReview, handleReviewFormSubmit, setShowTheRevie
                 pb={{ base: '6' }}
             >
             <Stack spacing="6">
-                <Heading
-                    fontSize="2xl"
-                    fontWeight="semibold"
-                    color={useColorModeValue('black', 'white')}
-                >
-                    Your review
-                </Heading>
-                <ReviewFormForm userReview={userReview} handleReviewFormSubmit={handleReviewFormSubmit} setShowTheReviewForm={setShowTheReviewForm}/>
+                <ReviewForm 
+                    reviewForm={reviewForm} 
+                    setReviewForm={setReviewForm} 
+                    handleReviewFormClose={handleReviewFormClose}
+                    handleReviewFormSubmitPost={handleReviewFormSubmitPost} 
+                    handleReviewFormSubmitPut={handleReviewFormSubmitPut} 
+                />
             </Stack>
             </ModalBody>
         </ModalContent>

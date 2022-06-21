@@ -3,16 +3,16 @@ import * as React from 'react'
 import { BsCaretRightFill } from 'react-icons/bs'
 
 export const NavItem = (props) => {
-  const { id, handleClick, active, subtle, icon, children, label, endElement, href } = props
+  const { handlePredictionToggle, button, id, handleClick, active, subtle, icon, children, label, endElement, href } = props
   return (
     <HStack
       id={id}
-      onClick={handleClick ? id => handleClick(id) : null}
+      onClick={id === 'prediction' ? () => handlePredictionToggle(true) : null }
       as="a"
       href={href}
       w="full"
       px="1"
-      py="1"
+      py={button ? "0" : "1"}
       cursor="pointer"
       userSelect="none"
       rounded="md"
@@ -28,7 +28,7 @@ export const NavItem = (props) => {
       <Box fontSize="lg" color={active ? 'red' : 'gray.400'}>
         {icon}
       </Box>
-      <Box fontSize="1rem" flex="1" fontWeight="inherit" color={subtle ? 'gray.400' : undefined}>
+      <Box pl="2" fontSize="1rem" flex="1" fontWeight="inherit" color={subtle ? 'gray.400' : undefined}>
         {label}
       </Box>
       {endElement && !children && <Box>{endElement}</Box>}
