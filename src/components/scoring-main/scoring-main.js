@@ -15,7 +15,8 @@ export const ScoringMain = ({
         <Flex 
             id="scoring-main"
             p="4" 
-            m={['auto', 'auto']} 
+            m={['auto', 'auto', 'unset']} 
+            marginTop="1rem"
             flex="1 0 50%" 
             flexDir="column" 
             w="100%"
