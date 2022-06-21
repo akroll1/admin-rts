@@ -13,7 +13,7 @@ import { DividerWithText } from '../../chakra'
 
 export const ChatSidebar = ({ 
     fightStatus,
-    currentRound,
+    scoredRounds,
     accessTokenConfig, 
     chatKey, 
     displayName, 
@@ -43,12 +43,12 @@ export const ChatSidebar = ({
     connectionRef.current = connection;
     
     useEffect(() => {
-        if(currentRound){
-            if(currentRound === 1) return;
-            if(fightStatus === 'COMPLETED') return setRound(currentRound)
-            setRound(currentRound - 1)
+        if(scoredRounds){
+            if(scoredRounds === 1) return;
+            if(fightStatus === 'COMPLETED') return setRound(scoredRounds)
+            setRound(scoredRounds)
         }
-    },[currentRound])
+    },[scoredRounds])
 
     const requestToken = (selectedUsername, isModerator, selectedAvatar) => {
         // Set application state

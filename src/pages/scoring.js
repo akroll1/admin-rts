@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Flex, Heading, useToast } from '@chakra-ui/react'
+import { Flex, Heading, useControllableState, useForceUpdate, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
 import { ScoringModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
@@ -36,14 +36,14 @@ const Scoring = () => {
     const [scorecards, setScorecards] = useState(null);
     const [userScorecard, setUserScorecard] = useState({});
     const [tableData, setTableData] = useState([]);
-    const [currentRound, setCurrentRound] = useState(0);
+    const [scoredRounds, setScoredRounds] = useState(0);
     const [totalRounds, setTotalRounds] = useState(0);
     const [sliderScores, setSliderScores] = useState({});
-    const [scoringModal, toggleScoringModal] = useState(false);
     const [onlyShowToCurrentRound, setOnlyShowToCurrentRound] = useState(false);
     const [chatKey, setChatKey] = useState(null);
     const [quickTitle, setQuickTitle] = useState('');
     const [fightStatus, setFightStatus] = useState(null);
+    const [scoringComplete, setScoringComplete] = useState(false);
     //////////////////  SIDEBAR /////////////////////////
     const [showGuestScorerIds, setShowGuestScorerIds] = useState(null);
     const [showGuestScorers, setShowGuestScorers] = useState(null);
@@ -52,11 +52,10 @@ const Scoring = () => {
     const [needsPrediction, setNeedsPrediction] = useState(false);
     const [prediction, setPrediction] = useState('');
     const [predictionLock, setPredictionLock] = useState(true);
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
     const [toggleModal, setToggleModal] = useState(false);
-
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -96,7 +95,7 @@ const Scoring = () => {
 
                 // Get THIS USER'S scorecard.
                 const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
-                // console.log('thisUserScorecard', thisUserScorecard)
+                console.log('thisUserScorecard', thisUserScorecard)
                
                 // Set prediction, if necessary
                 const needsPrediction = !thisUserScorecard.prediction
@@ -119,19 +118,26 @@ const Scoring = () => {
                     transformPredictionData();
                 }
                 // Find current round
-                const getCurrentRound = thisUserScorecard.scores.map(score => score.length);
-                const getFightStatus = round => {
-                    if(round == 0) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.PENDING);
-                    if(round > res.data.fight.rounds) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
-                    if(round > 0 || round <= res.data.fight.rounds + 1) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.ACTIVE)
-                 }
-                setFightStatus(getFightStatus(currentRound))
-                // const result = res.data.groupScorecard.fightResult ? setFightResult(res.data.groupScorecard.fightResult) : null;
-                setCurrentRound(getCurrentRound.length >= res.data.fight.rounds ? res.data.fight.rounds : getCurrentRound.length);
+                const getCurrentRound = thisUserScorecard => {
+                    // -1 is for zero round.
+                    const round = thisUserScorecard.scores.map( score => score.length).length -1;
+                    console.log('round: ', round)
+                    if(round >= res.data.fight.rounds){
+                        setScoringComplete(true);
+                        setScoredRounds(res.data.fight.rounds);
+                    } else {
+                        setScoredRounds(round)
+                    }
+                    if(round <= 1) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.PENDING);
+                    if(round >= res.data.fight.rounds) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED);
+                    if(round > 0 || round <= res.data.fight.rounds + 1) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.ACTIVE);
+                    return round;
+                }
+                getCurrentRound(thisUserScorecard);
                 setTotalRounds(res.data.fight.rounds);
+
                 setUserScorecard(thisUserScorecard);
                 setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
-                // setSliderScores
                 const [fighter1, fighter2] = res.data.fighterData.map( ({ fighterId }) => {
                     return ({
                         [fighterId]: 10
@@ -142,12 +148,12 @@ const Scoring = () => {
             fetchGroupScorecard();
         } 
     }, [user, groupscorecard_id]);
-    
+    // destructure scores...
     useEffect(() => {
         // handle the scorecards...
         if(userScorecard.scorecardId){
             const destructureScorecards = () => {
-                return scorecards.map( scorecard => {
+                const s = scorecards.map( scorecard => {
                     let { ownerDisplayName, ownerId, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
                     const fighter1Id = fighter1.fighterId;
@@ -195,11 +201,11 @@ const Scoring = () => {
                         prediction
                     })
                 })
+                setTableData(s);
             }
-            const destructured = destructureScorecards();
-            setTableData(destructured);
+            destructureScorecards();
         }
-    },[userScorecard]);
+    },[scorecards]);
 
     // get GUEST SCORER ID's.
     useEffect(() => {
@@ -249,6 +255,7 @@ const Scoring = () => {
 
     // submit fight prediction.
     const handleSubmitPrediction = value => {
+
         if(predictionIsLocked(showData.show.showTime)) {
             setPredictionLock(true);
             return alert('Predictions are now locked!');
@@ -294,12 +301,12 @@ const Scoring = () => {
         setNotifications(filtered)
     };
     const submitRoundScores = () => {
-        const round = currentRound;
-        if(currentRound >= showData.fight.rounds) return;
+        if(scoringComplete) return;
+        setIsSubmitting(true);
         const { scorecardId } = userScorecard;
         const update = {
             ...sliderScores,
-            round
+            round: scoredRounds + 1
         };
         const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
         let newObj = {};
@@ -311,21 +318,33 @@ const Scoring = () => {
         }
        
         return axios.put(url, update, accessTokenConfig)
-        .then( res => {
-            if(res.status === 200){
-                const { scores } = userScorecard;
-                const temp = scores.concat(update);
-                if(temp.length >= showData.fight.rounds){
-                    setCurrentRound(showData.fight.rounds)
-                    setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
+            .then( res => {
+                if(res.status === 200){
+                    const { scores, scorecardId } = userScorecard;
+                    const filtered = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
+                    // console.log('filtered: ', filtered);
+                    const tempScores = scores.concat(update);
+                    const tempScorecard = Object.assign({}, {...userScorecard, scores: tempScores });
+                    const newScorecards = filtered.concat(tempScorecard);
+                    // console.log('tempScorecard: ', tempScorecard)
+                    if(tempScores.length >= showData.fight.rounds){
+                        setScoredRounds(showData.fight.rounds)
+                        setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
+                    }
+                    setScorecards(newScorecards)
+                    setUserScorecard({ ...userScorecard, scores: tempScores });
+                    // needs to be if currentRound === end, then currentRound stays same
+                    // and setScoringComplete(true);
+                    if(scoredRounds + 1 >= totalRounds){
+                        setScoringComplete(true);
+                        setScoredRounds(totalRounds)
+                    }
+                    setScoredRounds(prev => prev+1);
+                    setSliderScores(newObj);
                 }
-                setCurrentRound(temp.length >= showData.fight.rounds ? showData.fight.rounds : temp.length);
-                setUserScorecard({ ...userScorecard, scores: temp });
-                setSliderScores(newObj);
-            }
-        })
-        .catch( err => console.log(err))
-        .finally(() => console.log('send scores in chat!'));
+            })
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false));
     };
 
     const { ownerDisplayName, finalScore } = userScorecard;
@@ -333,6 +352,9 @@ const Scoring = () => {
     // console.log('group scorecard: ',groupScorecard)
     // console.log('userScorecard: ', userScorecard);
     // console.log('scorecards: ', scorecards);
+    // console.log('totalRounds: ', totalRounds)
+    // console.log('scoringComplete: ', scoringComplete);
+
     return (
         <Flex flexDir="column" position="relative">
             {/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
@@ -382,18 +404,18 @@ const Scoring = () => {
                     setToggleModal={setToggleModal}
                 />
                 <ScoringMain 
+                    scoringComplete={scoringComplete}
+                    submitRoundScores={submitRoundScores}
+                    scoredRounds={scoredRounds}
                     fighterData={fighterData}
-                    currentRound={currentRound}
-                    scoringModal={scoringModal} 
-                    toggleScoringModal={toggleScoringModal} 
                     sliderScores={sliderScores} 
                     setSliderScores={setSliderScores} 
-                    groupScorecard={groupScorecard}
-                    submitRoundScores={submitRoundScores}
-                    />
+                    isSubmitting={isSubmitting}
+                    totalRounds={totalRounds}
+                />
                 <ChatSidebar 
                     fightStatus={fightStatus}
-                    currentRound={currentRound} 
+                    scoredRounds={scoredRounds} 
                     accessTokenConfig={accessTokenConfig}
                     chatKey={chatKey}
                     displayName={ownerDisplayName}

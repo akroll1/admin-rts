@@ -5,6 +5,7 @@ import { TableUser } from './table-user'
 import { useNavigate } from 'react-router'
 import { capFirstLetters } from '../../../utils'
 import { IoConstructOutline } from 'react-icons/io5'
+
 const badgeEnum = {
   completed: 'green',
   active: 'orange',
@@ -26,21 +27,18 @@ export const columns = [
 
 export const MyScorecardsTableContent = ({ scorecardData }) => {
   const navigate = useNavigate();
-  console.log('scorecardData: ',scorecardData);
-  const [getPrediction] = scorecardData.map( data => {
-    const { fighterData, scorecard } = data;
-    if(scorecard.prediction){
-        const [prediction] = fighterData.map( fighter => {
-          if(fighter.fighterId === scorecard.prediction.slice(0,36)){
-            return capFirstLetters(fighter.lastName) + ' ' + scorecard.prediction.slice(37);
-          }
-        })
-        return prediction;
-      } else {
-        return 'Prediction Not Set'
+  
+  const getPrediction = scorecardData => {
+    return scorecardData.map( data => {
+      const { fighterData, scorecard } = data;
+      if(scorecard.prediction){
+        const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
+        return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
       }
-  });
-  console.log('getPrediction: ', getPrediction)
+      return 'Prediction Not Set'
+    })
+  };
+
   return (
     <Flex overflow="scroll" w="100%">
       <Table my="8" borderWidth="1px" fontSize="sm" size={['sm', 'md']}>
@@ -55,16 +53,15 @@ export const MyScorecardsTableContent = ({ scorecardData }) => {
         </Thead>
         <Tbody>
           { scorecardData?.length > 0 && scorecardData.map((row, index) => {
-            const { associatedGroupScorecard, fighterData, scorecard } = row;
+            const { associatedGroupScorecard } = row;
             const { groupScorecardId, groupScorecardName } = associatedGroupScorecard;
-            // const accessors = [groupScorecardName, prediction];
             return (
               <Tr onClick={() => navigate(`/scoring/${groupScorecardId}`)} _hover={{cursor: 'pointer', bg: 'gray.700', color: '#fff', border: '1px solid #795858'}} style={{textAlign: 'center'}} key={index}>
                 {columns.map((column, index) => {
                   const { accessor } = column;
                   return (
                     <Td style={{textAlign: 'center'}} whiteSpace="nowrap" key={index}>
-                      { accessor === 'prediction' ? getPrediction : groupScorecardName}                      
+                      { accessor === 'prediction' ? getPrediction(scorecardData)[0] : groupScorecardName}                      
                     </Td>
                   )
                 })}

@@ -1,10 +1,10 @@
 
-import React, {useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Flex, Text, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 
 export const ScoringTable = ({ tableData, totalRounds }) => {
-    console.log('tableData: ', tableData);
+    // console.log('tableData: ', tableData);
     const columns = [
         {
             Header: 'Player',
@@ -41,6 +41,7 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
             </Flex>
         )
     }
+    const [fighter1, fighter2] = tableData.length > 0 ? tableData[0].fighters : '';
     return (      
         <Flex 
             id="scoring_table" 
@@ -49,7 +50,7 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
             p="4"
             overflowX="scroll"
             w="100%"
-        >      
+        >     
             <Flex maxW="90%" minW="90%" flexDir="column">
                 <Flex minW="100%" m="auto" flexDir="row" justifyContent="space-between" bg={mode('gray.50', 'gray.800')}>
                     { columns.map( (column, i) => {
@@ -63,19 +64,18 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                 </Flex>
                 <Flex minW="100%" flexDir="column" justifyContent="space-between" bg={mode('gray.50', 'gray.800')}>
                     { tableData.map( (row, i) => {
-                        let { displayName, mappedScores, totals, fighters } = row;
+                        let { displayName, mappedScores, totals } = row;
                         displayName = displayName.indexOf('@') > -1 ? displayName.slice(0, displayName.indexOf('@')) : displayName;
-                        const addRounds = mappedScores => {
-                            const mappedScoresLength = mappedScores.length;
-                            const dummySlots = totalRounds - mappedScoresLength;
+                        const getRounds = () => {
+                            if(mappedScores.length >= totalRounds){
+                                return mappedScores.slice(0, totalRounds);
+                            } 
+                            
+                            const dummySlots = totalRounds - mappedScores.length;
                             const fillerArr = Array(dummySlots).fill('');
-                            if(mappedScoresLength < totalRounds){
-                                const newScores = mappedScores.concat(...fillerArr);
-                                return newScores;
-                            }
-                        };
-                        const rounds = addRounds(mappedScores);
-                        const fighter = fighters[i];
+                            return mappedScores.concat(...fillerArr);
+                        }
+                        const rounds = getRounds();
                         return (
                             <Flex flexDir="row" minW="100%" minH="4rem">
                                 <Flex m="auto" borderRadius="3px" p="2" alignItems="center" justifyContent="flex-start" minW="15%">{displayName}</Flex>
@@ -85,10 +85,10 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                                             return (
                                                 <Flex minH="4rem" flexDir="column" minW={`${100/totalRounds}%`} justifyContent="center">
                                                     <Flex borderRadius="1px" bg="whiteAlpha.300" justifyContent="center" flexDir="row">
-                                                        { score[fighter] ? score[fighter] : '0'  }
+                                                        { score[fighter1] ? score[fighter1] : '0'  }
                                                     </Flex>
                                                     <Flex justifyContent="center" flexDir="row">
-                                                        { score[fighter+1] ? score[fighter+1] : '0'  }
+                                                        { score[fighter2] ? score[fighter2] : '0'  }
                                                     </Flex>
                                                 </Flex>
                                             )
@@ -97,10 +97,10 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                                 </Flex>
                                 <Flex py="2" flexDir="column" minW="10%">
                                     <Flex  borderRadius="2px" bg="whiteAlpha.400" minW="100%" flexDir="column" alignItems="center" justifyContent="center">
-                                        {totals[fighter]}
+                                        {!totals[fighter1] ? '0' : totals[fighter1]}
                                     </Flex>
                                     <Flex minW="100%" flexDir="column" alignItems="center" justifyContent="center">
-                                        {!totals[fighter+1] ? '0' : totals[fighter+1]}
+                                        {!totals[fighter2] ? '0' : totals[fighter2]}
                                     </Flex>
                                 </Flex>
                             </Flex>
