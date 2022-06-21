@@ -322,24 +322,19 @@ const Scoring = () => {
                 if(res.status === 200){
                     const { scores, scorecardId } = userScorecard;
                     const filtered = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
-                    // console.log('filtered: ', filtered);
                     const tempScores = scores.concat(update);
                     const tempScorecard = Object.assign({}, {...userScorecard, scores: tempScores });
                     const newScorecards = filtered.concat(tempScorecard);
-                    // console.log('tempScorecard: ', tempScorecard)
-                    if(tempScores.length >= showData.fight.rounds){
-                        setScoredRounds(showData.fight.rounds)
-                        setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
-                    }
+                    
                     setScorecards(newScorecards)
                     setUserScorecard({ ...userScorecard, scores: tempScores });
-                    // needs to be if currentRound === end, then currentRound stays same
-                    // and setScoringComplete(true);
-                    if(scoredRounds + 1 >= totalRounds){
+                    if(scoredRounds >= totalRounds){
                         setScoringComplete(true);
                         setScoredRounds(totalRounds)
+                        setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
+                    } else {
+                        setScoredRounds(prev => prev+1);
                     }
-                    setScoredRounds(prev => prev+1);
                     setSliderScores(newObj);
                 }
             })
