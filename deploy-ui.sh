@@ -9,3 +9,4 @@ set -ueo pipefail
 # fi
 
 aws s3 sync ./build s3://${BUCKET} --delete
+# forcing diff
