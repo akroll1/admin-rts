@@ -56,6 +56,9 @@ const Scoring = () => {
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
     const [toggleModal, setToggleModal] = useState(false);
+
+    //////////////////  CHAT /////////////////////////
+    const [chatScorecard, setChatScorecard] = useState(null)
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -121,7 +124,6 @@ const Scoring = () => {
                 const getCurrentRound = thisUserScorecard => {
                     // -1 is for zero round.
                     const round = thisUserScorecard.scores.map( score => score.length).length -1;
-                    console.log('round: ', round)
                     if(round >= res.data.fight.rounds){
                         setScoringComplete(true);
                         setScoredRounds(res.data.fight.rounds);
@@ -146,6 +148,12 @@ const Scoring = () => {
                 setSliderScores({ ...fighter1, ...fighter2 })
             }
             fetchGroupScorecard();
+            
+            // const sync = setInterval(() => {
+            //     fetchGroupScorecard();
+            //     if(sync) return;
+            //     sync();
+            // }, 30000);
         } 
     }, [user, groupscorecard_id]);
     // destructure scores...
@@ -252,7 +260,6 @@ const Scoring = () => {
                 .catch(err => console.log(err))
         }
     }
-
     // submit fight prediction.
     const handleSubmitPrediction = value => {
 
@@ -309,10 +316,10 @@ const Scoring = () => {
             round: scoredRounds + 1
         };
         const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-        let newObj = {};
+        let resetSliderScores = {};
         for(const [key] of Object.entries(sliderScores)){
-            newObj = {
-                ...newObj,
+            resetSliderScores = {
+                ...resetSliderScores,
                 [key]: 10
             }
         }
@@ -326,7 +333,7 @@ const Scoring = () => {
                     const tempScorecard = Object.assign({}, {...userScorecard, scores: tempScores });
                     const newScorecards = filtered.concat(tempScorecard);
                     
-                    setScorecards(newScorecards)
+                    setScorecards(newScorecards);
                     setUserScorecard({ ...userScorecard, scores: tempScores });
                     if(scoredRounds >= totalRounds){
                         setScoringComplete(true);
@@ -335,12 +342,30 @@ const Scoring = () => {
                     } else {
                         setScoredRounds(prev => prev+1);
                     }
-                    setSliderScores(newObj);
+                    setSliderScores(resetSliderScores);
+                    // send scores in chat.
+                    setChatScorecard({ update, scorecardId })
                 }
             })
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));
     };
+    const handleReRenderScorecards = updateScore => {
+        const { scorecardId, update } = updateScore;
+        if(scorecardId === userScorecard.scorecardId) return;
+        const updatedScorecards = scorecards.map( scorecard => {
+            if(scorecardId === scorecard.scorecardId){
+                const temp = {
+                    ...scorecard,
+                    scores: scorecard.scores.concat(update)
+                }
+                return temp
+            }
+            return scorecard;
+        });
+        console.log('updatedScorecards: ', updatedScorecards);
+        setScorecards(updatedScorecards)
+    }
 
     const { ownerDisplayName, finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
@@ -409,6 +434,9 @@ const Scoring = () => {
                     totalRounds={totalRounds}
                 />
                 <ChatSidebar 
+                    handleReRenderScorecards={handleReRenderScorecards}
+                    chatScorecard={chatScorecard}
+                    setChatScorecard={setChatScorecard}
                     fightStatus={fightStatus}
                     scoredRounds={scoredRounds} 
                     accessTokenConfig={accessTokenConfig}

@@ -35,6 +35,7 @@ export const NETWORK_ENUMS = [
 	{ value: 'SHOWTIME',  label: 'SHOWTIME' },
 	{ value: 'SHOWTIMEPPV', label: 'SHOWTIMEPPV' },
 	{ value: 'FIGHTSYNC', label: 'FIGHTSYNC' },
+	{ value: 'FIGHTTV', label: 'FIGHTTV' },
 	{ value: 'NONE', label: 'NONE' }
 ];
 

@@ -91,6 +91,29 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
               </FormControl>
             </VStack>
           </FieldGroup>
+          <FieldGroup title="BoxCoins">
+            <FormControl id="boxCoins">
+              <FormLabel>Total</FormLabel>
+              <Input w="25%" readOnly type="number" value={boxCoins} />
+            </FormControl>
+          </FieldGroup>
+          <FieldGroup title="Public Profile">
+            <Stack width="full" spacing="4">
+              <Checkbox defaultChecked isChecked={isPublic} id="isPublic" onChange={() => handleCheckbox()}>Allow your account to be public.</Checkbox>
+            </Stack>
+          </FieldGroup>
+          <FieldGroup title="Language">
+            <VStack width="full" spacing="6">
+              <LanguageSelect />
+            </VStack>
+          </FieldGroup>
+          <FieldGroup title="Connect accounts">
+            <HStack width="full">
+              <Button variant="outline" leftIcon={<Box as={FaGoogle} color="red.400" />}>
+                Google
+              </Button>
+            </HStack>
+          </FieldGroup>
           <FieldGroup title="Profile Image">
             <Stack direction="row" spacing="6" align="center" width="full">
               <Avatar
@@ -110,29 +133,6 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
                 </Text>
               </Box>
             </Stack>
-          </FieldGroup>
-          <FieldGroup title="Language">
-            <VStack width="full" spacing="6">
-              <LanguageSelect />
-            </VStack>
-          </FieldGroup>
-          <FieldGroup title="Public Profile">
-            <Stack width="full" spacing="4">
-              <Checkbox defaultChecked isChecked={isPublic} id="isPublic" onChange={() => handleCheckbox()}>Allow your account to be public.</Checkbox>
-            </Stack>
-          </FieldGroup>
-          <FieldGroup title="Connect accounts">
-            <HStack width="full">
-              <Button variant="outline" leftIcon={<Box as={FaGoogle} color="red.400" />}>
-                Google
-              </Button>
-            </HStack>
-          </FieldGroup>
-          <FieldGroup title="BoxCoins">
-            <FormControl id="boxCoins">
-              <FormLabel>Total</FormLabel>
-              <Input w="25%" readOnly type="number" value={boxCoins} />
-            </FormControl>
           </FieldGroup>
         </Stack>
         <FieldGroup mt="8">
