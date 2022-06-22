@@ -73,7 +73,7 @@ export const ChatSidebar = ({
             userId: `${displayName}`,
         };
     
-        axios.post(`${process.env.REACT_APP_CHAT_SERVICE}`, data, accessTokenConfig)
+        axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, data, accessTokenConfig)
             .then( res => {
                 // console.log('res, 58: ', res)
                 setChatToken(res.data);

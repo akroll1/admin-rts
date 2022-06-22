@@ -32,7 +32,7 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
         }
     },[]);
     useEffect(() => {
-        if(scorecardData.length > 0){
+        if(scorecardData?.length > 0){
             const checkOwnerId = () => {
                 return scorecardData.filter( async data => {
                     if(data.scorecard.ownerId.includes('@')){

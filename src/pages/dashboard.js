@@ -36,9 +36,9 @@ const Dashboard = props => {
     // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
     // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
+ 
   useEffect(() => {
     if(!sub) navigate('/signin');
-    console.log('sub: ', sub)
     const decodedToken = jwt_decode(accessToken);
     if(decodedToken['cognito:groups']){
       const isSuperAdmin = jwt_decode(accessToken)['cognito:groups'][0] === 'rts-admins';
@@ -49,7 +49,7 @@ const Dashboard = props => {
         setToggleState(!toggleState)
       }
     }
-  },[])
+  },[sub])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);

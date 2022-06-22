@@ -1,49 +1,58 @@
 import React, {useEffect, useState} from 'react'
-import { Avatar, Box, Button, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Avatar, Box, Button, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { HiCloudUpload } from 'react-icons/hi'
 import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect,FieldGroup } from '../../chakra'
 import axios from 'axios'
 
 export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
+  const toast = useToast();
   const [userProfile, setUserProfile] = useState({})
 
   useEffect(() => {
-    if(user && user.sub){
+    if(user?.sub){
       const url = process.env.REACT_APP_USERS + `/${user.sub}`;
       const fetchUser = async () => {
-        // accessTokenConfig has been changed from idTokenConfig, check the server...
-        return await axios.get(url, accessTokenConfig)
-          .then(res => {
-            const { email, displayName, sub } = res.data;
-            const obj = {
-              ...userProfile,
-              ...res.data
-            }
-            console.log('obj: ',obj)
-            setUserProfile(obj);
-          })
-          .catch(err => console.log(err));
-        }
-        fetchUser();
+        const fetchedUser = await axios.get(url, accessTokenConfig)
+        .then( res => res.data).catch( err => console.log(err));
+
+        if(fetchedUser === 'User not found!'){
+          return await axios.post(process.env.REACT_APP_USERS, user, accessTokenConfig)
+            .then( res => setUserProfile({...res.data})).catch( err => console.log(err));
+        } 
+        
+        setUserProfile({ ...fetchedUser, displayName: user.username });
+      }
+      fetchUser();
     }
-  },[user]);
+
+  },[user.sub]);
 
   const handleFormInput = e => {
     const {id, value} = e.currentTarget;
-    setUserProfile({...userProfile, [id]: value.trim()})
+    setUserProfile({...userProfile, [id]: value})
   }
+
   const updateUser = () => {
     const url = process.env.REACT_APP_USERS + `/${user.sub}`;
     axios.put(url, userProfile, accessTokenConfig)
-      .then(res => console.log('updated user'))
-      .catch(err => console.log(err));
+      .then(res => {
+        if(res.status === 200){
+          return toast({ 
+            title: 'User Updated',
+            duration: 3000,
+            status: 'success',
+            isClosable: true
+          })
+        }
+      }).catch(err => console.log(err));
   }
   const handleCheckbox = () => {
     setUserProfile({...userProfile, isPublic: !isPublic});
   };
-  const { email, firstName, lastName, displayName, bio, isPublic, boxCoins } = userProfile;
 
+  const { email, firstName, lastName, displayName, bio, isPublic, boxCoins } = userProfile;
+  console.log('userProfile: ', userProfile);
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={(e) => {e.preventDefault()}}>
@@ -55,12 +64,12 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
             <VStack width="full" spacing="6">
               <FormControl id="email">
                 <FormLabel>Email</FormLabel>
-                <Input readOnly type="email" value={email} onChange={handleFormInput} />
+                <Input readOnly type="email" value={email} />
               </FormControl>
 
               <FormControl id="displayName">
                 <FormLabel>Display Name</FormLabel>
-                <Input onChange={handleFormInput} type="text" maxLength={255} value={displayName} />
+                <Input readOnly type="text" maxLength={255} value={displayName} />
               </FormControl>
 
               <FormControl id="firstName">
@@ -120,9 +129,9 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
             </HStack>
           </FieldGroup>
           <FieldGroup title="BoxCoins">
-            <FormControl id="boxCoin">
+            <FormControl id="boxCoins">
               <FormLabel>Total</FormLabel>
-              <Input w="33%" readOnly type="number" value={boxCoins} />
+              <Input w="25%" readOnly type="number" value={boxCoins} />
             </FormControl>
           </FieldGroup>
         </Stack>
