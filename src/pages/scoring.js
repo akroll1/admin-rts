@@ -10,7 +10,7 @@ import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import { useUserStore, useScoringStore } from '../stores'
+import { useUserStore, useScorecardStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();
@@ -22,7 +22,7 @@ const Scoring = () => {
     const user = useUserStore( store => store);
     const { sub, email, username } = user;
     const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
-
+    const chatScorecardScore = useScorecardStore( store => store.scorecard);
     const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
     const accessTokenConfig = {
         headers: { Authorization: `Bearer ${accessToken}` }
@@ -71,7 +71,22 @@ const Scoring = () => {
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
         } 
     },[sub]) 
-
+    useEffect(() => {
+        if(chatScorecardScore?.scorecardId && scorecards?.length > 0){
+            const updatedScorecards = scorecards.map( scorecard => {
+                if(scorecard.scorecardId === chatScorecardScore.scorecardId){
+                    const { scores } = scorecard;
+                    const tempScores = scores.concat(chatScorecardScore.update);
+                    return ({
+                        ...scorecard,
+                        scores: tempScores
+                    })
+                }
+                return scorecard;
+            })
+            setScorecards(updatedScorecards)
+        }
+    },[chatScorecardScore])
     useEffect(() => {
         if(user?.sub && groupscorecard_id){
 
@@ -436,7 +451,6 @@ const Scoring = () => {
                 <ChatSidebar 
                     handleReRenderScorecards={handleReRenderScorecards}
                     chatScorecard={chatScorecard}
-                    setChatScorecard={setChatScorecard}
                     fightStatus={fightStatus}
                     scoredRounds={scoredRounds} 
                     accessTokenConfig={accessTokenConfig}

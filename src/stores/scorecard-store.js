@@ -4,14 +4,13 @@ import { persist } from 'zustand/middleware'
 const useStore = create(
     persist(
         (set, get) => ({
-            
-            setFight: fight => {
+            setScorecards: scorecard => {
                 set(state => ({
-                    fight
+                    scorecard
                 }))
             }
         })
     )
 );
 
-export const useScoringStore = useStore;
+export const useScorecardStore = useStore;

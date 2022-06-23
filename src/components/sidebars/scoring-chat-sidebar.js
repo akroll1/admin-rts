@@ -5,22 +5,15 @@ import { v4 as uuidv4 } from 'uuid'
 import { parseUrls, stickers } from '../../utils'
 import { FightStats } from './chat-sidebar-components/fight-stats'
 import { DividerWithText } from '../../chakra'
-
-// import { StickerPicker } from './chat-sidebar-components'
-// import { FaRProject } from 'react-icons/fa'
-// import { sanitize } from '../../utils'
-// import { IoNotifications } from 'react-icons/io'
+import { useScorecardStore } from '../../stores'
 
 export const ChatSidebar = ({ 
-    handleReRenderScorecards,
     chatScorecard,
-    setChatScorecard,
     fightStatus,
     scoredRounds,
     accessTokenConfig, 
     chatKey, 
     displayName, 
-    notifications, 
     setNotifications, 
     setNotificationTimeout 
 }) => {
@@ -32,6 +25,7 @@ export const ChatSidebar = ({
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
     const [round, setRound] = useState('')
+    const [update, setUpdate] = useState(null);
     //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [powerShotDisabled, setPowerShotDisabled] = useState(false);
@@ -44,7 +38,8 @@ export const ChatSidebar = ({
     const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
-    
+    const setScorecardsStore = useScorecardStore(state => state.setScorecards)
+
     useEffect(() => {
         if(scoredRounds){
             if(scoredRounds === 1) return;
@@ -52,16 +47,19 @@ export const ChatSidebar = ({
             setRound(scoredRounds)
         }
     },[scoredRounds])
+    
     useEffect(() => {
         if(chatKey){
             handleRequestToken()
         }
     },[chatKey])
+    
     useEffect(() => {
         if(chatScorecard?.scorecardId){
             handleSendMessage('UPDATE')
         }
     },[chatScorecard])
+
     const requestToken = (selectedUsername, isModerator, selectedAvatar) => {
         // Set application state
         setIsSubmitting(true);
@@ -103,6 +101,7 @@ export const ChatSidebar = ({
         const { Attributes, Content, Sender, Type } = data;
         const { UserId } = Sender;
         const message = JSON.parse(Attributes[Content]);
+        console.log('data: ', data);
         if(Content === 'CHAT'){
             setChatMessages(prev => [{ message, displayName: UserId, type: Type }, ...prev ]);
         } else if(Content === 'PREDICTION'){
@@ -110,8 +109,9 @@ export const ChatSidebar = ({
             setNotificationTimeout(prev => !prev);
             setChatMessages(prev => [{ message, displayName: UserId, type: Type }, ...prev ]);
         } else if(Content === 'UPDATE'){
-            const update = JSON.parse(Attributes['UPDATE']);
-            handleReRenderScorecards(update);
+            const update = JSON.parse(Attributes.UPDATE);
+            console.log('UPDATE: ', update)
+            setScorecardsStore(update)
         }
     };
  

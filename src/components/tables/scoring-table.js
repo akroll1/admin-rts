@@ -28,7 +28,7 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
             const width = String(100 / totalRounds)+ '%';
 
             return (
-                <Flex maxW={width} minW={width}>
+                <Flex key={i} maxW={width} minW={width}>
                     <Text m="auto">{i + 1}</Text>
                 </Flex>
             )
@@ -56,7 +56,7 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                     { columns.map( (column, i) => {
 
                         return (
-                            <Flex fontWeight="bold" alignItems="center" justifyContent="center" maxW={column.Header === 'Round' ? '80%' : ''} minW={column.Header === 'Round' ? '80%' : '15%'}>
+                            <Flex key={i} fontWeight="bold" alignItems="center" justifyContent="center" maxW={column.Header === 'Round' ? '80%' : ''} minW={column.Header === 'Round' ? '80%' : '15%'}>
                                 {column.Header === 'Round' ? MapRounds(totalRounds) : MapOther(column.Header)}
                             </Flex>
                         )  
@@ -77,13 +77,13 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                         }
                         const rounds = getRounds();
                         return (
-                            <Flex flexDir="row" minW="100%" minH="4rem">
+                            <Flex key={i} flexDir="row" minW="100%" minH="4rem">
                                 <Flex m="auto" borderRadius="3px" p="2" alignItems="center" justifyContent="flex-start" minW="15%">{displayName}</Flex>
                                 <Flex minW="80%" flexDir="row" justifyContent="center" alignContent="center">
                                     {
-                                        rounds.map( score => {
+                                        rounds.map( (score, idx) => {
                                             return (
-                                                <Flex minH="4rem" flexDir="column" minW={`${100/totalRounds}%`} justifyContent="center">
+                                                <Flex key={idx} minH="4rem" flexDir="column" minW={`${100/totalRounds}%`} justifyContent="center">
                                                     <Flex borderRadius="1px" bg="whiteAlpha.300" justifyContent="center" flexDir="row">
                                                         { score[fighter1] ? score[fighter1] : '0'  }
                                                     </Flex>

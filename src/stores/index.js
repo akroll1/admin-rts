@@ -1,3 +1,3 @@
 export * from './broadcast-store'
-export * from './scoring-store'
+export * from './scorecard-store'
 export * from './userStore'
