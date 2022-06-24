@@ -2,9 +2,18 @@ import React, { useEffect, createRef } from 'react'
 import { chakra, Button, FormControl, FormLabel, Input, Stack, Text } from '@chakra-ui/react'
 import { PasswordField } from './password-field'
 
-export const SignUpForm = ({ resendVerificationCode, handleConfirmCode, waitingForCode, handleSignUp, handleFormChange, formData }) => {
+export const SignUpForm = ({ 
+  handleForgotPassword,
+  isSubmitting,
+  resendVerificationCode, 
+  handleConfirmCode, 
+  waitingForCode, 
+  handleSignUp, 
+  handleFormChange, 
+  form 
+}) => {
   const inputRef = createRef();
-  const { username, email, password, code } = formData;
+  const { username, email, password, code } = form;
 
   useEffect(() => {
     inputRef.current.focus();
@@ -29,14 +38,42 @@ export const SignUpForm = ({ resendVerificationCode, handleConfirmCode, waitingF
       : <Stack spacing="6">
           <FormControl id="username">
             <FormLabel>Username</FormLabel>
-            <Input ref={inputRef} onChange={handleFormChange} value={username} name="username" type="text" required />
+            <Input 
+              ref={inputRef} 
+              onChange={handleFormChange} 
+              value={username} 
+              name="username" 
+              type="text" 
+              required 
+            />
           </FormControl>
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
-            <Input onChange={handleFormChange} value={email} name="email" type="email" autoComplete="email" required />
+            <Input 
+              onChange={handleFormChange} 
+              value={email} name="email" 
+              type="email" 
+              autoComplete="email" 
+              required 
+            />
           </FormControl>
-          <PasswordField password={password} handleFormChange={handleFormChange} />
-          <Button _hover={{cursor: 'pointer'}} as="a" onClick={handleSignUp} type="button" colorScheme="blue" size="lg" fontSize="md">
+          <PasswordField 
+            handleForgotPassword={handleForgotPassword}
+            password={password} 
+            handleFormChange={handleFormChange} 
+          />
+          <Button 
+            id="signin_button" 
+            isLoading={isSubmitting}
+            loadingText="Submitting..."
+            _hover={{cursor: 'pointer'}} 
+            as="a" 
+            onClick={handleSignUp} 
+            type="button" 
+            colorScheme="blue" 
+            size="lg" 
+            fontSize="md"
+          >
             Sign-Up
           </Button>
         </Stack>
