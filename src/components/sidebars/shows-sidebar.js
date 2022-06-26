@@ -11,7 +11,7 @@ import { DividerWithText } from '../../chakra'
 export const ShowsSidebar = ({ shows, handleShowSelect }) => { 
     const [searchedShows, setSearchedShows] = useState(shows); // why???
     const separateShowsByType = shows => {
-        const upcoming = shows.filter( ({ showTime }) => showTime > Date.now()).reverse();
+        const upcoming = shows.filter( ({ showTime }) => showTime > Date.now());
         const recent = shows.filter( ({ showTime }) => showTime < Date.now());
         return ({
             recent,

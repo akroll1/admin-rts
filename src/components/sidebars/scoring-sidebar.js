@@ -10,7 +10,6 @@ import { parseEpoch, predictionIsLocked, transformedWeightclass } from '../../ut
 import { IoScaleOutline } from 'react-icons/io5'
 
 export const ScoringSidebar = ({ 
-    sub,
     finalScore, 
     setToggleModal, 
     showData, 
@@ -48,11 +47,10 @@ export const ScoringSidebar = ({
     return (
         <Flex 
             id="scoring-sidebar" 
-            flex="1 0 20%" 
             w="100%" 
-            minH={["35vh", "40vh", "80vh"]} 
-            maxH={["35vh", "40vh", "80vh"]}
-            height="auto" 
+            flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
+            minH={["35vh", "40vh", "60vh"]} 
+            maxH={["35vh", "40vh", "60vh"]}
             overflowY="scroll" 
             position="relative" 
             alignItems="center" 
@@ -133,7 +131,7 @@ export const ScoringSidebar = ({
                     { members && members.length > 0 && members.map( (member, i) => {
                             // return <NavItem icon={<BiStar />} label={member} key={i} />
                         // } else {
-                            return <NavItem icon={<BiUser />} label={member} key={i} />
+                            return <NavItem icon={<BiUser />} label={member.split('@')[0]} key={i} />
                         // }
                     })}
                 

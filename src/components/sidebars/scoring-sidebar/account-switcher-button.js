@@ -1,14 +1,15 @@
-import { Box, Circle, Flex, HStack, Img, NavItem, Stack, useMenuButton } from '@chakra-ui/react'
 import * as React from 'react'
+import { Box, Circle, Flex, HStack, Img, NavItem, Stack, useMenuButton } from '@chakra-ui/react'
 import { HiSelector } from 'react-icons/hi'
+
 export const AccountSwitcherButton = (props) => {
     const buttonProps = useMenuButton(props);
-    const { fighterA, fighterB, fightResult, scorecardName, groupScorecardId } = props;
-    const transformedFightResult = fightResult => {
-        if(fightResult === 'pending') return <Circle m="3" size="3" bg="blue.400" />
-        if(fightResult === 'active') return <Circle m="3" size="3" bg="blue.400" />
-        if(fightResult === 'complete') return <Circle m="3" size="3" bg="blue.400" />
-    }
+    const { groupScorecardId, label } = props;
+    // const transformedFightResult = fightResult => {
+    //     if(fightResult === 'pending') return <Circle m="3" size="3" bg="blue.400" />
+    //     if(fightResult === 'active') return <Circle m="3" size="3" bg="blue.400" />
+    //     if(fightResult === 'complete') return <Circle m="3" size="3" bg="blue.400" />
+    // }
     return (
         <Flex
             as="button"
@@ -32,16 +33,15 @@ export const AccountSwitcherButton = (props) => {
                 />
                 <Box textAlign="start">
                 <Box isTruncated fontWeight="semibold">
-                    {scorecardName}
+                    {label}
                 </Box>
                 <Box fontSize="xs" color="gray.400">
-                    Switch Scorecards
+                    Scorecards
                 </Box>
                 </Box>
             </HStack>
             <Stack>
             </Stack>
-            {transformedFightResult(fightResult)}
             <Box fontSize="lg" color="gray.400">
                 <HiSelector />
             </Box>

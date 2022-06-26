@@ -64,8 +64,8 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                 </Flex>
                 <Flex minW="100%" flexDir="column" justifyContent="space-between" bg={mode('gray.50', 'gray.800')}>
                     { tableData.map( (row, i) => {
-                        let { displayName, mappedScores, totals } = row;
-                        displayName = displayName.indexOf('@') > -1 ? displayName.slice(0, displayName.indexOf('@')) : displayName;
+                        let { username, mappedScores, totals } = row;
+                        username = username.indexOf('@') > -1 ? username.slice(0, username.indexOf('@')) : username;
                         const getRounds = () => {
                             if(mappedScores.length >= totalRounds){
                                 return mappedScores.slice(0, totalRounds);
@@ -78,7 +78,7 @@ export const ScoringTable = ({ tableData, totalRounds }) => {
                         const rounds = getRounds();
                         return (
                             <Flex key={i} flexDir="row" minW="100%" minH="4rem">
-                                <Flex m="auto" borderRadius="3px" p="2" alignItems="center" justifyContent="flex-start" minW="15%">{displayName}</Flex>
+                                <Flex m="auto" borderRadius="3px" p="2" alignItems="center" justifyContent="flex-start" minW="15%">{username}</Flex>
                                 <Flex minW="80%" flexDir="row" justifyContent="center" alignContent="center">
                                     {
                                         rounds.map( (score, idx) => {

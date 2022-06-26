@@ -18,7 +18,7 @@ const Dashboard = props => {
   const { type, showId } = useParams();
   const setUser = useUserStore( user => user.setUser);
   const user = useUserStore( store => store);
-  const { sub, email, username } = user;
+  const { email, sub, username } = user;
   const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
   const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
   const accessTokenConfig = {
@@ -38,16 +38,20 @@ const Dashboard = props => {
   ]);
  
   useEffect(() => {
-    if(!sub) navigate('/signin');
-    const decodedToken = jwt_decode(accessToken);
-    if(decodedToken['cognito:groups']){
-      const isSuperAdmin = jwt_decode(accessToken)['cognito:groups'][0] === 'rts-admins';
-      if(isSuperAdmin){
-        setUser({ ...user, isSuperAdmin })
-        setIsSuperAdmin(true);
-        setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-        setToggleState(!toggleState)
+    if(sub){
+      const setAuth = async () => {
+        const decodedToken = await jwt_decode(accessToken);
+        if(decodedToken['cognito:groups']){
+          const isSuperAdmin = jwt_decode(accessToken)['cognito:groups'][0] === 'rts-admins';
+          if(isSuperAdmin){
+            setUser({ ...user, isSuperAdmin })
+            setIsSuperAdmin(true);
+            setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+            setToggleState(!toggleState)
+          }
+        }
       }
+      setAuth()
     }
   },[sub])
 
@@ -78,7 +82,7 @@ const Dashboard = props => {
         <Stack spacing={6}>
           <Box fontSize="sm" lineHeight="tall">
             <Box as="a" href="#" p="3" display="block" transition="background 0.1s" rounded="xl" _hover={{ bg: 'whiteAlpha.200' }} whiteSpace="nowrap">
-              <UserInfo setForm={setForm} setActive={setActive} name={user && user.displayName ? user.displayName : ''} email={user ? user.email : ''} />
+              <UserInfo setForm={setForm} setActive={setActive} name={username} email={email} />
             </Box>
           </Box>
         </Stack>

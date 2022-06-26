@@ -137,8 +137,6 @@ export const SignIn = props => {
     setForgotPassword(true);
     Auth.forgotPassword( username )
   }
-  console.log('form: ', form)
-  console.log('forgotPassword: ', forgotPassword)
   return (
     <Box bg={useColorModeValue('gray.500', 'gray.800')} py="12" px={{ base: '4', lg: '8' }}>
       <Box maxW="md" mx="auto">

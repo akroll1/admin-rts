@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
 
 export const FightStats = (props) => {
-  const { label, value, ...boxProps } = props
+  const { label, value, ...boxProps } = props;
   return (
     <Flex
         px="2"
@@ -12,6 +12,7 @@ export const FightStats = (props) => {
         {...boxProps}
         alignItems="center"
         justifyContent="space-evenly"
+        my="-2"
     >
         <Stack>
             <Text m="auto" fontSize="sm" color="muted">

@@ -2,31 +2,16 @@ import React, {useEffect, useState} from 'react'
 import { Avatar, Box, Button, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { HiCloudUpload } from 'react-icons/hi'
 import { FaGoogle } from 'react-icons/fa'
-import { LanguageSelect,FieldGroup } from '../../chakra'
+import { LanguageSelect, FieldGroup } from '../../chakra'
 import axios from 'axios'
+import { useUserStore } from '../../stores'
+
 
 export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
+  console.log('user-9: ', user);
+  const setUser = useUserStore( user => user.setUser);
   const toast = useToast();
-  const [userProfile, setUserProfile] = useState({})
-
-  useEffect(() => {
-    if(user?.sub){
-      const url = process.env.REACT_APP_USERS + `/${user.sub}`;
-      const fetchUser = async () => {
-        const fetchedUser = await axios.get(url, accessTokenConfig)
-        .then( res => res.data).catch( err => console.log(err));
-
-        if(fetchedUser === 'User not found!'){
-          return await axios.post(process.env.REACT_APP_USERS, user, accessTokenConfig)
-            .then( res => setUserProfile({...res.data})).catch( err => console.log(err));
-        } 
-        
-        setUserProfile({ ...fetchedUser, displayName: user.username });
-      }
-      fetchUser();
-    }
-
-  },[user.sub]);
+  const [userProfile, setUserProfile] = useState(user)
 
   const handleFormInput = e => {
     const {id, value} = e.currentTarget;
@@ -35,9 +20,16 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
 
   const updateUser = () => {
     const url = process.env.REACT_APP_USERS + `/${user.sub}`;
+    const { firstName, lastName, bio } = userProfile;
+    const update = {
+      firstName,
+      lastName,
+      bio
+    };
     axios.put(url, userProfile, accessTokenConfig)
       .then(res => {
         if(res.status === 200){
+          setUser({ ...user, ...update })
           return toast({ 
             title: 'User Updated',
             duration: 3000,
@@ -51,8 +43,8 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
     setUserProfile({...userProfile, isPublic: !isPublic});
   };
 
-  const { email, firstName, lastName, displayName, bio, isPublic, boxCoins } = userProfile;
-  console.log('userProfile: ', userProfile);
+  const { email, firstName, lastName, username, bio, isPublic, boxCoins } = userProfile;
+  // console.log('userProfile: ', userProfile);
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={(e) => {e.preventDefault()}}>
@@ -67,9 +59,9 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
                 <Input readOnly type="email" value={email} />
               </FormControl>
 
-              <FormControl id="displayName">
-                <FormLabel>Display Name</FormLabel>
-                <Input readOnly type="text" maxLength={255} value={displayName} />
+              <FormControl id="username">
+                <FormLabel>User Name</FormLabel>
+                <Input readOnly type="text" maxLength={255} value={username} />
               </FormControl>
 
               <FormControl id="firstName">
