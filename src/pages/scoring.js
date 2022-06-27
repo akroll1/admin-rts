@@ -2,15 +2,15 @@ import React, {useEffect, useState} from 'react'
 import { Flex, Heading, useControllableState, useForceUpdate, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import { ScoringModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
+import {  PredictionModal } from '../components/modals'
 import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils'
-import { Navigate, useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import { useUserStore, useScoringStore } from '../stores'
+import { useUserStore, useChatScorecardStore, useStatsStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();
@@ -21,8 +21,9 @@ const Scoring = () => {
     //////////////////  SCORE STATE /////////////////////////
     const user = useUserStore( store => store);
     const { sub, email, username } = user;
+    const setStats = useStatsStore( store => store.setStats)
     const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
-
+    const chatScorecardStore = useChatScorecardStore( store => store.chatScorecard);
     const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
     const accessTokenConfig = {
         headers: { Authorization: `Bearer ${accessToken}` }
@@ -36,15 +37,15 @@ const Scoring = () => {
     const [scorecards, setScorecards] = useState(null);
     const [userScorecard, setUserScorecard] = useState({});
     const [tableData, setTableData] = useState([]);
-    const [scoredRounds, setScoredRounds] = useState(0);
+    const [scoredRounds, setScoredRounds] = useState('');
     const [totalRounds, setTotalRounds] = useState(0);
     const [sliderScores, setSliderScores] = useState({});
     const [onlyShowToCurrentRound, setOnlyShowToCurrentRound] = useState(false);
     const [chatKey, setChatKey] = useState(null);
     const [quickTitle, setQuickTitle] = useState('');
     const [fightStatus, setFightStatus] = useState(null);
-    const [scoringComplete, setScoringComplete] = useState(false);
-    //////////////////  SIDEBAR /////////////////////////
+    const [fightComplete, setFightComplete] = useState(false);
+    //////////////////  SIDEBAR  /////////////////////////
     const [showGuestScorerIds, setShowGuestScorerIds] = useState(null);
     const [showGuestScorers, setShowGuestScorers] = useState(null);
     const [myGuestScorerIds, setMyGuestScorerIds] = useState(null);
@@ -56,13 +57,18 @@ const Scoring = () => {
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
     const [toggleModal, setToggleModal] = useState(false);
+    
+    //////////////////  CHAT SIDEBAR   /////////////////////////
+    const [updateCards, setUpdateCards] = useState(false);
+    const [chatScorecard, setChatScorecard] = useState(null);
+    const [roundResults, setRoundResults] = useState(null);
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
     
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
-    const guestScorersUrl = process.env.REACT_APP_GUEST_SCORERS;
+
     useEffect(() => {
         if(!sub){
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
@@ -74,7 +80,6 @@ const Scoring = () => {
 
             // 1. Fetch Group Scorecard.
             const fetchGroupScorecard = async () => {
-                const { sub, email, username } = user;
                 const res = await axios.get(groupScorecardsUrl, accessTokenConfig);
                 console.log('res: ', res.data);
                 if(res.data === 'No scorecard found.'){
@@ -92,18 +97,22 @@ const Scoring = () => {
                 setChatKey(res.data.groupScorecard.chatKey);
                 setQuickTitle(res.data.fight.fightQuickTitle)
                 setFighterData(res.data.fighterData);
+                setTotalRounds(res.data.fight.rounds);
 
                 // Get THIS USER'S scorecard.
                 const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
                 console.log('thisUserScorecard', thisUserScorecard)
-               
+                setUserScorecard(thisUserScorecard);
+                setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
+
                 // Set prediction, if necessary
+                //TODO:// check for if time expired, too.
                 const needsPrediction = !thisUserScorecard.prediction
                 if(needsPrediction){
                     setTimeout(() => {
                         setNeedsPrediction(true); 
                         setToggleModal(true);
-                    },3000);
+                    },5000);
                 } else {
                     const transformPredictionData = () => {
                         const { prediction } = thisUserScorecard;
@@ -117,118 +126,177 @@ const Scoring = () => {
                     }
                     transformPredictionData();
                 }
-                // Find current round
-                const getCurrentRound = thisUserScorecard => {
-                    // -1 is for zero round.
-                    const round = thisUserScorecard.scores.map( score => score.length).length -1;
-                    console.log('round: ', round)
-                    if(round >= res.data.fight.rounds){
-                        setScoringComplete(true);
-                        setScoredRounds(res.data.fight.rounds);
-                    } else {
-                        setScoredRounds(round)
-                    }
-                    if(round <= 1) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.PENDING);
-                    if(round >= res.data.fight.rounds) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED);
-                    if(round > 0 || round <= res.data.fight.rounds + 1) return setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.ACTIVE);
-                    return round;
-                }
-                getCurrentRound(thisUserScorecard);
-                setTotalRounds(res.data.fight.rounds);
 
-                setUserScorecard(thisUserScorecard);
-                setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
-                const [fighter1, fighter2] = res.data.fighterData.map( ({ fighterId }) => {
+                const findScoredRounds = thisUserScorecard => {
+                    const scored = thisUserScorecard.scores.length;
+                    if(scored + 1 > res.data.fight.rounds){
+                        setFightComplete(true);
+                        return res.data.fight.rounds
+                    }
+                    return scored;
+                }
+                const round = findScoredRounds(thisUserScorecard);
+                setScoredRounds(round);
+                const [fighter1, fighter2] = res.data.fighterData.map( ({ lastName }) => {
                     return ({
-                        [fighterId]: 10
+                        [lastName]: 10
                     })
                 })
-                setSliderScores({ ...fighter1, ...fighter2 })
+                setSliderScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId })
             }
             fetchGroupScorecard();
+            
+            // const sync = setInterval(() => {
+            //     fetchGroupScorecard();
+            //     if(sync) return;
+            //     sync();
+            // }, 30000);
         } 
     }, [user, groupscorecard_id]);
+    // take in the new scores from the store and organize them
+    // then set them to the new scorecards and do the things.
+    useEffect(() => {
+        if(scorecards?.length > 0){
+            if(userScorecard.scorecardId === chatScorecardStore.scorecardId) return;
+            let update = {};
+            for(const [key, value] of Object.entries(chatScorecardStore)){
+                if(key !== 'scorecardId'){
+                    update = {
+                        ...update,
+                        [key]: value
+                    }
+                }
+            }
+            const [scorecardToUpdate] = scorecards.filter( ({ scorecardId }) => scorecardId === chatScorecardStore.scorecardId );
+            const filtered = scorecards.filter( scorecard => scorecard.scorecardId !== chatScorecardStore.scorecardId)
+            const temp = scorecardToUpdate.scores.concat(update);
+            const newScores = {
+                ...scorecardToUpdate,
+                scores: temp
+            }
+            const updatedCards = [...filtered, newScores];
+            setScorecards(updatedCards);
+            setUpdateCards(prev => !prev)
+        }
+    },[chatScorecardStore])
     // destructure scores...
     useEffect(() => {
         // handle the scorecards...
-        if(userScorecard.scorecardId){
-            const destructureScorecards = () => {
+        if(scorecards?.length > 0){
+            const getTableData = () => {
                 const s = scorecards.map( scorecard => {
-                    let { ownerDisplayName, ownerId, prediction, scores } = scorecard;
+                    let { username, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
-                    const fighter1Id = fighter1.fighterId;
-                    const fighter2Id = fighter2.fighterId;
-                    const displayName = ownerDisplayName ? ownerDisplayName : ownerId;
                     const sortRoundAscending = (a, b) => a.round - b.round;
-                    let predictionResult;
                     
+                    let predictionResult = null;
                     if(prediction){
                         const index = prediction.indexOf(',')
-                        predictionResult = prediction.slice(index+1);
-                        prediction = prediction.slice(0,index);
+                        if(prediction.slice(index+1).includes("KO")){
+                            predictionResult = parseInt(prediction.slice(index+3));
+                        } else {
+                            predictionResult = prediction.slice(index+1);
+                        }
+                        TODO: // this is making the predictions the same.
+                        prediction = fighter1.fighter1Id === prediction.slice(0,index) ? fighter1.lastName : fighter2.lastName
                     }
 
                     const totals = scores.reduce( (acc, curr) => {
-                        if(!acc[fighter1.lastName]){
-                            acc[fighter1.lastName] = 0;
+                        if(curr[fighter1.lastName]){
+                            acc[fighter1.lastName] += curr[fighter1.lastName];
                         }
-                        acc[fighter1.lastName] += curr[fighter1Id]
-                        
-                        if(!acc[fighter2.lastName]){
-                            acc[fighter2.lastName] = 0;
+                        if(curr[fighter2.lastName]){
+                            acc[fighter2.lastName] += curr[fighter2.lastName];
                         }
-                        acc[fighter2.lastName] += curr[fighter2Id]
-                        return acc
-                    },{});
-
+                        return acc;
+                    },{
+                        [fighter1.lastName]: 0,
+                        [fighter2.lastName]: 0
+                    });
                     const mappedScores = scores.map( score => {
                         const { round } = score;
                         const f1name = fighter1.lastName;
                         const f2name = fighter2.lastName;
                         return ({
                             round,
-                            [f1name]: score[fighter1Id],
-                            [f2name]: score[fighter2Id]
+                            [f1name]: score[fighter1.lastName] ? score[fighter1.lastName] : 0,
+                            [f2name]: score[fighter2.lastName] ? score[fighter2.lastName] : 0
                         })
-                    }).filter( ({ round }) => round !== 0)
+                    })
                     .sort(sortRoundAscending);
                    
                     return ({
                         mappedScores,
-                        displayName,
+                        username,
                         totals,
                         fighters: [fighter1.lastName, fighter2.lastName],
-                        prediction
+                        prediction,
+                        predictionResult
                     })
                 })
                 setTableData(s);
+                setStats(s)
             }
-            destructureScorecards();
+            getTableData();
         }
-    },[scorecards]);
+    },[scorecards, updateCards]);
+
+    const submitRoundScores = () => {
+        if(fightComplete) return;
+        setIsSubmitting(true);
+        const { scorecardId } = userScorecard;
+        const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
+        return axios.put(url, sliderScores, accessTokenConfig)
+            .then( res => {
+                if(res.status === 200){
+                    // UPDATES.
+                    const { scores, scorecardId } = userScorecard;
+                    const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
+                    const tempScores = scores.concat(sliderScores);
+                    const tempScorecard = Object.assign({}, { ...userScorecard, scores: tempScores });
+                    const updatedScorecards = otherScorecards.concat(tempScorecard);
+
+                    const isFightComplete = sliderScores.round + 1 > totalRounds;
+                    setScoredRounds(sliderScores.round);
+
+                    setSliderScores({ ...sliderScores, round: sliderScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
+                    setScorecards(updatedScorecards);
+                    setUserScorecard({ ...userScorecard, scores: tempScores });
+                    setChatScorecard(sliderScores);
+                    if(isFightComplete){
+                        alert('FIGHT COMPLETE')
+                        setFightComplete(true);
+                        setScoredRounds(totalRounds)
+                        setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
+                    }
+                }
+            })
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false));
+    };
 
     // get GUEST SCORER ID's.
-    useEffect(() => {
-        if(showGuestScorerIds && showGuestScorerIds.length > 0){
-            const getShowGuestScorers = () => {
-                return axios.post(guestScorersUrl, showGuestScorerIds, accessTokenConfig)
-                    .then(res => setShowGuestScorers(res.data))
-                    .catch(err => console.log(err))
-            }
-            getShowGuestScorers();
-        }
-    },[showGuestScorerIds]);
-    // these can probably be combined???
-    useEffect(() => {
-        if(myGuestScorerIds && myGuestScorerIds.length > 0){
-            const getMyGuestScorers = () => {
-                return axios.post(guestScorersUrl, myGuestScorerIds, accessTokenConfig)
-                    .then(res => setMyGuestScorers(res.data))
-                    .catch(err => console.log(err))
-            }
-            getMyGuestScorers()
-        }
-    },[myGuestScorerIds]);
+    // useEffect(() => {
+    //     if(showGuestScorerIds && showGuestScorerIds.length > 0){
+    //         const getShowGuestScorers = () => {
+    //             return axios.post(guestScorersUrl, showGuestScorerIds, accessTokenConfig)
+    //                 .then(res => setShowGuestScorers(res.data))
+    //                 .catch(err => console.log(err))
+    //         }
+    //         getShowGuestScorers();
+    //     }
+    // },[showGuestScorerIds]);
+    // // these can probably be combined???
+    // useEffect(() => {
+    //     if(myGuestScorerIds && myGuestScorerIds.length > 0){
+    //         const getMyGuestScorers = () => {
+    //             return axios.post(guestScorersUrl, myGuestScorerIds, accessTokenConfig)
+    //                 .then(res => setMyGuestScorers(res.data))
+    //                 .catch(err => console.log(err))
+    //         }
+    //         getMyGuestScorers()
+    //     }
+    // },[myGuestScorerIds]);
     // add guest scorer.
     const handleAddGuestScorer = e => {
         const { id, value } = e.currentTarget;
@@ -252,7 +320,6 @@ const Scoring = () => {
                 .catch(err => console.log(err))
         }
     }
-
     // submit fight prediction.
     const handleSubmitPrediction = value => {
 
@@ -300,56 +367,12 @@ const Scoring = () => {
         const filtered = temp.filter( ({ notification }) => notification !== id);
         setNotifications(filtered)
     };
-    const submitRoundScores = () => {
-        if(scoringComplete) return;
-        setIsSubmitting(true);
-        const { scorecardId } = userScorecard;
-        const update = {
-            ...sliderScores,
-            round: scoredRounds + 1
-        };
-        const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-        let newObj = {};
-        for(const [key] of Object.entries(sliderScores)){
-            newObj = {
-                ...newObj,
-                [key]: 10
-            }
-        }
-       
-        return axios.put(url, update, accessTokenConfig)
-            .then( res => {
-                if(res.status === 200){
-                    const { scores, scorecardId } = userScorecard;
-                    const filtered = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
-                    const tempScores = scores.concat(update);
-                    const tempScorecard = Object.assign({}, {...userScorecard, scores: tempScores });
-                    const newScorecards = filtered.concat(tempScorecard);
-                    
-                    setScorecards(newScorecards)
-                    setUserScorecard({ ...userScorecard, scores: tempScores });
-                    if(scoredRounds >= totalRounds){
-                        setScoringComplete(true);
-                        setScoredRounds(totalRounds)
-                        setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
-                    } else {
-                        setScoredRounds(prev => prev+1);
-                    }
-                    setSliderScores(newObj);
-                }
-            })
-            .catch( err => console.log(err))
-            .finally(() => setIsSubmitting(false));
-    };
-
-    const { ownerDisplayName, finalScore } = userScorecard;
+   
+    const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
-    // console.log('group scorecard: ',groupScorecard)
-    // console.log('userScorecard: ', userScorecard);
-    // console.log('scorecards: ', scorecards);
-    // console.log('totalRounds: ', totalRounds)
-    // console.log('scoringComplete: ', scoringComplete);
-
+    console.log('tableData: ', tableData)
+    // console.log('chatScorecard: ', chatScorecard)
+    // console.log('roundResults: ', roundResults);
     return (
         <Flex flexDir="column" position="relative">
             {/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
@@ -362,14 +385,14 @@ const Scoring = () => {
             />
             <SliderHeading quickTitle={quickTitle} />
             <Flex w={["100%","auto"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="10000">
-                {notifications.length > 0 && notifications.map( ({notification, displayName}) => {
+                {notifications.length > 0 && notifications.map( ({notification, username}) => {
                     return (
                         <Notification
                             key={notification}
                             id={notification}
                             handleCloseNotification={handleCloseNotification}
                             notification={notification} 
-                            displayName={displayName}
+                            username={username}
                         /> 
                     )
                 })}
@@ -398,28 +421,27 @@ const Scoring = () => {
                     setShowGuestScorers={setShowGuestScorers}
                     setToggleModal={setToggleModal}
                 />
-                <ScoringMain 
-                    scoringComplete={scoringComplete}
+                <ScoringMain
+                    totalRounds={totalRounds}
+                    fightComplete={fightComplete}
                     submitRoundScores={submitRoundScores}
-                    scoredRounds={scoredRounds}
                     fighterData={fighterData}
                     sliderScores={sliderScores} 
                     setSliderScores={setSliderScores} 
                     isSubmitting={isSubmitting}
-                    totalRounds={totalRounds}
                 />
                 <ChatSidebar 
-                    fightStatus={fightStatus}
-                    scoredRounds={scoredRounds} 
+                    fighterData={fighterData}
+                    chatScorecard={chatScorecard}
                     accessTokenConfig={accessTokenConfig}
                     chatKey={chatKey}
-                    displayName={ownerDisplayName}
+                    username={username}
                     notifications={notifications}
                     setNotifications={setNotifications}
                     setNotificationTimeout={setNotificationTimeout}
                 />
             </Flex>   
-            <ScoringTable tableData={tableData} totalRounds={totalRounds} />
+            <ScoringTable scoredRounds={scoredRounds} tableData={tableData} totalRounds={totalRounds} />
         </Flex>
     )
 }

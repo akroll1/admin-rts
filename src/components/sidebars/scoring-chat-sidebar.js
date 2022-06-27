@@ -2,22 +2,15 @@ import React, { useState, createRef, useRef, useEffect } from 'react'
 import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { parseUrls, stickers } from '../../utils'
 import { FightStats } from './chat-sidebar-components/fight-stats'
 import { DividerWithText } from '../../chakra'
-
-// import { StickerPicker } from './chat-sidebar-components'
-// import { FaRProject } from 'react-icons/fa'
-// import { sanitize } from '../../utils'
-// import { IoNotifications } from 'react-icons/io'
+import { useChatScorecardStore } from '../../stores'
 
 export const ChatSidebar = ({ 
-    fightStatus,
-    scoredRounds,
+    chatScorecard,
     accessTokenConfig, 
     chatKey, 
-    displayName, 
-    notifications, 
+    username, 
     setNotifications, 
     setNotificationTimeout 
 }) => {
@@ -29,6 +22,7 @@ export const ChatSidebar = ({
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
     const [round, setRound] = useState('')
+    const [update, setUpdate] = useState(null);
     //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [powerShotDisabled, setPowerShotDisabled] = useState(false);
@@ -41,14 +35,20 @@ export const ChatSidebar = ({
     const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
+    const setChatScorecardStore = useChatScorecardStore(state => state.setChatScorecard)
     
     useEffect(() => {
-        if(scoredRounds){
-            if(scoredRounds === 1) return;
-            if(fightStatus === 'COMPLETED') return setRound(scoredRounds)
-            setRound(scoredRounds)
+        if(chatKey){
+            handleRequestToken()
         }
-    },[scoredRounds])
+    },[chatKey])
+    
+    useEffect(() => {
+        if(chatScorecard?.scorecardId && connection){
+            console.log('handleSendMesage')
+            handleSendMessage('UPDATE')
+        }
+    },[chatScorecard])
 
     const requestToken = (selectedUsername, isModerator, selectedAvatar) => {
         // Set application state
@@ -65,15 +65,15 @@ export const ChatSidebar = ({
         const data = {
             chatKey,
             attributes: {
-                username: `${displayName}`,
+                username: `${username}`,
                 // avatar: `${selectedAvatar.src}`,
             },
             capabilities: permissions,
             sessionDurationInMinutes: process.env.REACT_APP_TOKEN_REFRESH_IN_MINUTES,
-            userId: `${displayName}`,
+            userId: `${username}`,
         };
     
-        axios.post(`${process.env.REACT_APP_CHAT_SERVICE}`, data, accessTokenConfig)
+        axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, data, accessTokenConfig)
             .then( res => {
                 // console.log('res, 58: ', res)
                 setChatToken(res.data);
@@ -83,37 +83,22 @@ export const ChatSidebar = ({
                 setChatToken(null);
                 console.log(err);
             }).finally(() => setIsSubmitting(false));
-    
-        // setShowSignIn(false);
         // Focus the input field UI
-        chatRef.current.focus();
+        // chatRef.current.focus();
     };
 
-    const handleReceiveMessage = (data) => {
-        const { Attributes, Content, Sender, Type } = data;
-        const { UserId } = Sender;
-        const message = Content === 'CHAT' ? Attributes.chat : Attributes.prediction;
-        if(Content === 'CHAT'){
-            setChatMessages(prev => [{ message, displayName: UserId, type: Type }, ...prev ]);
-        } else {
-            setNotifications(prev => [ ...prev, {notification: message, displayName: UserId} ]);
-            setNotificationTimeout(prev => !prev);
-        }
-    };
- 
     const initConnection = async (token) => {
         const connectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
         setConnection(connectionInit);
     
         connectionInit.onopen = (event) => {
             console.info("Connected to the chat room.");
-            renderConnect();
+            setChatMessages(prevState => [...prevState]);
         };
     
         connectionInit.onclose = (event) => {
             // If the websocket closes, remove the current chat token
             setChatToken(null);
-            renderDisconnect(event.reason);
         };
     
         connectionInit.onerror = (event) => {
@@ -122,48 +107,54 @@ export const ChatSidebar = ({
     
         connectionInit.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            const eventType = data["Type"];
-    
-            switch (eventType) {
-            case "EVENT":
-                console.info("Received event:", data);
-                // handleEvent(data);
-                break;
-            case "ERROR":
-                console.info("Received error:", data);
-                // handleError(data);
-                // implement the error message.
-                break;
-            case "MESSAGE":
-                handleReceiveMessage(data)
-                break;
-            default:
-                console.error("Unknown message received:", event);
-            }
+            handleReceiveMessage(data);
         };
     };
+
+    const handleSendMessage = messageType => {
+        if(messageType !== 'UPDATE' && !chatMessage) return
+        const sanitizedMessage = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+        const uuid = uuidv4();
+        const data = JSON.stringify({
+            requestId: uuid,
+            action: 'SEND_MESSAGE',
+            content: messageType,
+            Attributes: {
+                [messageType]: JSON.stringify(messageType === 'UPDATE' ? chatScorecard : sanitizedMessage)
+            }
+        });
+        connection.send(data);
+        setChatMessage('');
+        if(messageType === 'PREDICTION'){
+            setPowerShotDisabled(true);
+            setTimeout(() => {
+                setPowerShotDisabled(false)
+            },10000)
+        }
+    };
+    const handleReceiveMessage = (data) => {
+        console.log('data- 102: ', data)
+        const { Attributes, Content, Sender, Type } = data;
+        const { UserId } = Sender;
+        const message = JSON.parse(Attributes[Content]);
+        if(Content === 'CHAT'){
+            setChatMessages(prev => [{ message, username: UserId, type: Type }, ...prev ]);
+        } else if(Content === 'PREDICTION'){
+            setNotifications(prev => [ ...prev, {notification: message, username: UserId} ]);
+            setNotificationTimeout(prev => !prev);
+            setChatMessages(prev => [{ message, username: UserId, type: Type }, ...prev ]);
+        } else if(Content === 'UPDATE'){
+            const update = JSON.parse(Attributes.UPDATE);
+            setChatScorecardStore(update)
+        }
+    };
+ 
     // useEffect(() => {
     //     const scrollToBottom = () => {
     //         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     //     };
     //     scrollToBottom();
     // });
-
-    useEffect(() => {
-        // if (chatToken === null) return;
-        // If there's a timer that was running previously, clear it
-        if (refreshTimer) {
-            clearTimeout(refreshTimer);
-        }
-    // Request a new token after the refresh timeout has passed
-        const timer = setTimeout(() => {
-            connectionRef.current.close();
-            requestToken(displayName, moderator, avatar);
-        }, process.env.REACT_APP_TOKEN_REFRESH_IN_MINUTES * 60 * 1000);
-
-        setRefreshTimer(timer);
-        return () => clearTimeout(timer);
-    }, [chatToken]); 
     
     const handleChatChange = e => {
         setChatMessage(e.target.value);
@@ -171,161 +162,38 @@ export const ChatSidebar = ({
     const handleChatKeydown = e => {
         if (e.key === "Enter") {
             if (chatMessage) {
-                sendChatMessage(chatMessage);
                 setChatMessage("");
+                handleSendMessage('CHAT');
             }
         }
     };
-    
-    const sendChatMessage = () => {
-        const sanitizedMessage = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-        const uuid = uuidv4();
-        const data = JSON.stringify({
-            requestId: uuid,
-            action: 'SEND_MESSAGE',
-            content: 'CHAT',
-            Attributes: {
-                chat: sanitizedMessage
-            }
-        });
-        connection.send(data);
-        setChatMessage('');
-    };
-
-    const handleSendPredictionMessage = () => {
-        const sanitizedPrediction = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-        const uuid = uuidv4();
-        const data = JSON.stringify({
-            requestId: uuid,
-            action: 'SEND_MESSAGE',
-            content: 'PREDICTION',
-            Attributes: {
-                prediction: sanitizedPrediction
-            }
-        });
-        connection.send(data);
-        sendChatMessage();
-        setPowerShotDisabled(true);
-        setTimeout(() => {
-            setPowerShotDisabled(false)
-        },30000)
-    };
-
     const socketActive = () => {
         return connection?.readyState === 1;
     };
-    
     const handleRequestToken = () => {
-        requestToken(displayName, true);
+        requestToken(username, true);
     };
-    const handleSendChatMessage = () => {
-        if(chatMessage){
-            sendChatMessage(chatMessage)
-        } 
-        return;
-    }
     // Renderers
-    const renderErrorMessage = (errorMessage) => {
-        return (
-        <div className="error-line" key={errorMessage.timestamp}>
-            <p>{errorMessage.message}</p>
-        </div>
-        );
-    };
-
-    const renderChatMessage = (message, i) => {
-        // const sender = message.message.userId;
-        const { displayName } = message;
-        const formattedMessage = parseUrls(message.message);
+    const renderMessage = (message, i) => {
         return (
             <Flex key={i} display="flex" m="2" mb="0" mt="1">
-                <Text key={i}>{`${displayName}: ${formattedMessage}`}</Text>
+                <Text key={i}>{`${message.username}: ${message.message}`}</Text>
             </Flex>
         );
     };
     
-    const renderPredictionMessage = message => {
-        console.log('renderPredictionMessage: ', message);
-        const notification = {
-            displayName,
-            notification: message
-        };
-        setNotifications({...notifications, notification})
-    }
     const renderMessages = () => {
-        // console.log()
-        return chatMessages.map( (message, i) => {
-            switch (message.type) {
-                case "ERROR":
-                    const errorMessage = renderErrorMessage(message);
-                    return errorMessage;
-                case "SUCCESS":
-                    return;
-                case "STICKER":
-                // const stickerMessage = renderStickerMessage(message);
-                // return stickerMessage;
-                return;
-                case 'PREDICTION':
-                    renderChatMessage(message, i)
-                    return renderPredictionMessage(message, i);
-                case "MESSAGE":
-                    return renderChatMessage(message, i);
-                default:
-                    return console.info("Received unsupported message:", message);
-            }
-        });
+        return chatMessages.map( (message, i) => renderMessage(message, i))
     };
-    
-    const renderDisconnect = (reason) => {
-        // The reason for a disconnect can be a string (if kicked), or a
-        // JSON string (if token is timed out)
-        let parsedReason;
-        try {
-            // If reason is a JSON string, parse it
-            parsedReason = JSON.parse(reason);
-        } catch (e) {
-            // If reason is not a JSON string, don't parse it
-            parsedReason = reason;
-        }
-    
-        let message = parsedReason;
-        if (typeof parsedReason === "object") {
-            message = parsedReason.ErrorMessage;
-        }
-    
-        const error = {
-            type: "ERROR",
-            timestamp: `${Date.now()}`,
-            username: "",
-            userId: "",
-            avatar: "",
-            message: `Connection closed.`,
-        };
-        setChatMessages((prevState) => {
-            return [...prevState, error];
-        });
-    };
-    
-    const renderConnect = () => {
-        const status = {
-            type: "SUCCESS",
-            timestamp: `${Date.now()}`,
-            username: "",
-            userId: "",
-            avatar: "",
-            message: `Connected!`,
-        };
-        setChatMessages(prevState => [...prevState, status]);
-    };
-
+   
     return (
         <Flex 
             id="chat-sidebar"
             flexDir="column" 
-            flex="1 0 20%" 
+            flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             w="100%" 
-            maxH={["35vh","40vh","80vh"]} 
-            minH={["35vh", "40vh", "80vh"]} 
+            minH={["40vh", "40vh", "60vh"]} 
+            maxH={["40vh", "40vh", "60vh"]}
             p="2" 
             bg="gray.900" 
             borderRadius="md" 
@@ -361,7 +229,7 @@ export const ChatSidebar = ({
                             size="sm"
                             isLoading={isSubmitting} 
                             loadingText="Joining..." 
-                            onClick={handleSendChatMessage} 
+                            onClick={() => handleSendMessage('CHAT')} 
                             variant="solid"
                             colorScheme="teal"
                         >
@@ -391,7 +259,7 @@ export const ChatSidebar = ({
                     size="sm"
                     disabled={!socketActive() || powerShotDisabled}
                     loadingText="Joining..." 
-                    onClick={handleSendPredictionMessage} 
+                    onClick={() => handleSendMessage('PREDICTION')} 
                     variant="outline"
                     colorScheme="red"
                 >

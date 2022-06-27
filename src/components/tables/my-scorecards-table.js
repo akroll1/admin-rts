@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react'
 import { MyScorecardsTableContent, TableActions, ScorecardsTablePagination } from './table-els'
 
 export const MyScorecardsTable = ({ scorecardData }) => {
-  // console.log('scorecardData, table: ',scorecardData)
+
   const options = [
     { 
       value: 'upcoming',
@@ -15,7 +15,7 @@ export const MyScorecardsTable = ({ scorecardData }) => {
     },
     { 
       value: 'completed',
-      label: 'Completed'
+      label: 'Complete'
     },
   ];
   return (

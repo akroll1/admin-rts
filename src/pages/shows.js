@@ -6,9 +6,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { ReviewFormModal } from '../components/modals'
 import { useUserStore } from '../stores'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
-import { capFirstLetters, removeBadEmails, transformedOdds, validateEmail } from '../utils'
+import { removeBadEmails, REVIEW_TYPE, validateEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import jwt_decode from 'jwt-decode'
+import { Predictions } from 'aws-amplify'
 
 const Shows = props => {
     const navigate = useNavigate();
@@ -55,7 +56,7 @@ const Shows = props => {
         groupScorecardNotes: '',
         location: '',
         members: [email],
-        ownerDisplayName: username,
+        username,
         ownerId: sub, 
         showId: '',
         totalRounds: 0,
@@ -144,36 +145,49 @@ const Shows = props => {
         },200);
     }
     // 1. Submit the user review.
-    const handleReviewFormSubmitPost = showReviewForm => {
-        const url = process.env.REACT_APP_REVIEWS;
+    const handleReviewFormSubmit = (showReviewForm, verbType) => {
+        let url = verbType === 'POST' 
+            ? process.env.REACT_APP_REVIEWS 
+            : process.env.REACT_APP_REVIEWS + `/${showReviewForm.reviewId}`;
         const obj = {
             ...showReviewForm,
             owner: sub,
-            displayName: username,
+            username,
             showId: selectedShow.showId,
             fightId: selectedShow.fightIds[0],
-            reviewType: Date.now() > selectedShow.showTime ? 'REVIEW' : 'PREDICTION'
+            reviewType: Date.now() > selectedShow.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
         };
-        const postObj = Object.assign({}, obj);
-        return axios.post(url, postObj, accessTokenConfig)
+        const reviewObj = Object.assign({}, obj);
+        return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, accessTokenConfig)
             .then(res => {
                 if(res.status === 200){
-                    handleReviewFormClose();
-                    return toast({ 
-                        title: 'Review Submitted!',
-                        duration: 5000,
-                        status: 'success',
-                        isClosable: true
-                    })
+                    let temp;
+                    if(reviewObj.reviewType === 'PREDICTION'){
+                        temp = predictionsAndReviews.PREDICTION.concat(reviewObj);
+                        return setPredictionsAndReviews({ ...predictionsAndReviews, PREDICTION: temp })
+                    }
+                    if(reviewObj.reviewType === 'REVIEW'){
+                        temp = predictionsAndReviews.REVIEW.concat(reviewObj);
+                        return setPredictionsAndReviews({ ...predictionsAndReviews, REVIEW: temp })
+                    }
                 }
-            }).catch(err => console.log(err));
+            }).catch(err => console.log(err))
+            .finally(() => {
+                handleReviewFormClose();
+                return toast({ 
+                    title: 'Review Submitted!',
+                    duration: 5000,
+                    status: 'success',
+                    isClosable: true
+                })
+            });
     };
     const handleReviewFormSubmitPut = showReviewForm => {
         const url = process.env.REACT_APP_REVIEWS + `/${showReviewForm.reviewId}`;
         const update = {
             ...showReviewForm,
             owner: sub,
-            displayName: username,
+            username,
             showId: selectedShow.showId,
             reviewType: showReviewForm.reviewType
         };
@@ -220,25 +234,28 @@ const Shows = props => {
             const getSelectedShowReviews = async () => {
                 const url = process.env.REACT_APP_REVIEWS + `${selectedShow.fightIds[0]}`;
                 return await axios.get(url, accessTokenConfig)
-                    .then(res => {
+                    .then( res => {
                         const reviewsArr = [];
                         const predictionsArr = [];
                         let reviewsObj = {
-                            PREDICTION: predictionsArr, 
-                            REVIEW: reviewsArr
+                            [REVIEW_TYPE.PREDICTION]: predictionsArr, 
+                            [REVIEW_TYPE.REVIEW]: reviewsArr
                         };
-                        if(res?.data?.length === 0){
+                        if(res.data?.length === 0){
                             return setPredictionsAndReviews(reviewsObj);
                         }
-                        const reviews = res?.data?.length > 0 && res?.data?.map( content => {
-                            const { reviewType } = content;
-                            if(reviewType === 'REVIEW'){
-                                reviewsArr.push(content);
-                            } else {
-                                predictionsArr.push(content);
+                        const reviews = res.data?.length > 0 && res.data?.map( review => {
+                            const { reviewType } = review;
+                            // limited to 4 reviews right now.
+                            if(reviewType === REVIEW_TYPE.REVIEW){
+                                if(reviewsArr.length >= 5) return;
+                                reviewsArr.push(review);
+                            }
+                            if(reviewType === REVIEW_TYPE.PREDICTION){
+                                if(predictionsArr.length >= 5) return;
+                                predictionsArr.push(review);
                             }
                         });
-                        console.log('predictionsArr: ', predictionsArr)
                         setPredictionsAndReviews(reviewsObj);
                     }).catch(err => console.log(err))
             } 
@@ -274,7 +291,7 @@ const Shows = props => {
 
         const scorecardObj = {
             fighterIds: selectedShow.fight.fighterIds,
-            ownerDisplayName: username,
+            username,
             email, // necessary to create a groupScorecard, membersArr.
             ownerId: sub,
             fightId: selectedShow.fightIds[0],
@@ -314,8 +331,7 @@ const Shows = props => {
                 <ReviewFormModal 
                     reviewForm={reviewForm}
                     setReviewForm={setReviewForm}
-                    handleReviewFormSubmitPost={handleReviewFormSubmitPost} 
-                    handleReviewFormSubmitPut={handleReviewFormSubmitPut} 
+                    handleReviewFormSubmit={handleReviewFormSubmit} 
                     handleReviewFormClose={handleReviewFormClose}
                 />
             }

@@ -27,6 +27,7 @@ export const ShowsMain = ({
             as="section"
             id="shows_main"
             p="4"
+            pb="1"
             flex="1 0 65%" 
             bg={mode('gray.900', 'white.500')} 
             flexDirection="column" 

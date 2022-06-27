@@ -20,13 +20,13 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     useEffect(() => {
         if(isLoggedIn){
             const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
-            const idToken = localStorage.getItem(localStorageString + '.idToken');
-            initConnection(idToken);
+            const accessToken = localStorage.getItem(localStorageString + '.accessToken');
+            initConnection(accessToken);
         }
     },[isLoggedIn])
 
-    const initConnection = async (idToken) => {
-        const socket = new WebSocket(process.env.REACT_APP_BROADCAST_URL,  + `?token=${idToken}`);
+    const initConnection = async (accessToken) => {
+        const socket = new WebSocket(process.env.REACT_APP_BROADCAST_URL);
         setBroadcastConnection(socket);
     
         socket.onopen = (event) => {
@@ -44,9 +44,8 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         };
     
         socket.onmessage = (event) => {
-            const { broadcast } = JSON.parse(event.data);
             const update = {
-                notification: broadcast,
+                notification: event.data,
                 displayName: 'FightSync.live'
             };
             setBroadcasts([update]);
@@ -54,8 +53,8 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         };
         const handleBroadcastReconnect = () => {
             setTimeout(() => {
-                // initConnection(idToken);
-                console.log('broadcast reconnect commented out in layout.js.')
+                initConnection(accessToken);
+                // console.log('broadcast reconnect commented out in layout.js.')
             },3000);
         }
     };
@@ -87,16 +86,17 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
             return () => clearTimeout(timer);
         }
     },[notificationTimeout])
+
     return (
         <>  
             
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Box as="main">
-                <Flex w={["100%","auto"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="1000">
-                    {broadcasts?.length > 0 && broadcasts?.map( ({ notification, displayName }) => {
+                <Flex w={["100%","100%"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="1000">
+                    {broadcasts?.length > 0 && broadcasts?.map( ({ notification, displayName }, i) => {
                         return (
                             <Notification
-                                key={notification}
+                                key={i}
                                 id={notification}
                                 handleCloseNotification={handleCloseNotification}
                                 notification={notification} 
@@ -111,3 +111,4 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         </>
     )
 }
+

@@ -3,7 +3,7 @@ import { Box, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, Input
   import { HiEye, HiEyeOff } from 'react-icons/hi'
   
   export const PasswordField = React.forwardRef((props, ref) => {
-    const { handleFormChange, password } = props;
+    const { handleFormChange, password, handleForgotPassword } = props;
     const { isOpen, onToggle } = useDisclosure()
     const inputRef = React.useRef(null)
     const mergeRef = useMergeRefs(inputRef, ref)
@@ -31,7 +31,14 @@ import { Box, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, Input
       <FormControl id="password">
         <Flex justify="space-between">
           <FormLabel>Password</FormLabel>
-          <Box as="a" color={mode('blue.600', 'blue.200')} fontWeight="semibold" fontSize="sm">
+          <Box 
+            onClick={handleForgotPassword}
+            as="a" 
+            color={mode('blue.600', 'blue.200')} 
+            fontWeight="semibold" 
+            fontSize="sm"
+            _hover={{ cursor: 'pointer' }}
+          >
             Forgot Password?
           </Box>
         </Flex>
