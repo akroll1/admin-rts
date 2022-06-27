@@ -133,7 +133,7 @@ export const ChatSidebar = ({
         }
     };
     const handleReceiveMessage = (data) => {
-        console.log('data- 102: ', data)
+        // console.log('data- 102: ', data)
         const { Attributes, Content, Sender, Type } = data;
         const { UserId } = Sender;
         const message = JSON.parse(Attributes[Content]);
@@ -199,7 +199,7 @@ export const ChatSidebar = ({
             borderRadius="md" 
             overflowY="scroll"
         >
-            <DividerWithText text={`Round ${round} Results`} />
+            <DividerWithText text={`Group Results`} />
             <FightStats />
             <DividerWithText text="FightSync Chat" />
             <Input
