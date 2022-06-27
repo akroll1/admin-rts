@@ -25,7 +25,6 @@ const Dashboard = props => {
       headers: { Authorization: `Bearer ${accessToken}` }
   };        
 
-  const [toggleState, setToggleState] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
@@ -38,22 +37,19 @@ const Dashboard = props => {
   ]);
  
   useEffect(() => {
-    if(sub){
-      const setAuth = async () => {
-        const decodedToken = await jwt_decode(accessToken);
-        if(decodedToken['cognito:groups']){
-          const isSuperAdmin = jwt_decode(accessToken)['cognito:groups'][0] === 'rts-admins';
-          if(isSuperAdmin){
-            setUser({ ...user, isSuperAdmin })
-            setIsSuperAdmin(true);
-            setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-            setToggleState(!toggleState)
-          }
+    const setAuth = async () => {
+      const token = accessToken;
+      const decodedToken = await jwt_decode(token);
+      if(decodedToken['cognito:groups']){
+        const isSuperAdmin = decodedToken['cognito:groups'][0] === 'rts-admins';
+        if(isSuperAdmin){
+          setIsSuperAdmin(true);
+          setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
         }
       }
-      setAuth()
     }
-  },[sub])
+    setAuth()
+  },[])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
@@ -100,8 +96,8 @@ const Dashboard = props => {
         </Stack>
       </Box>
       <Box overflow='scroll' flex="1 0 75%" spacing={8} mb={8} bg="blackAlpha.500" borderRadius="md" mt={0}>
-        { form === 'SCORECARDS' && <MyScorecards toggleState={toggleState} accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} user={user} /> }
-        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'SCORECARDS' && <MyScorecards accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} /> }
+        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} user={user?.sub ? user : null} /> }
         { form === 'POUND' && <DashboardPoundList accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'USER' && <AccountSettingsForm accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'POUNDFORM' && <PoundForm accessTokenConfig={accessTokenConfig} user={user} /> }

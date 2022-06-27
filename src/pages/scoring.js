@@ -189,17 +189,8 @@ const Scoring = () => {
                     const [fighter1, fighter2] = fighterData;
                     const sortRoundAscending = (a, b) => a.round - b.round;
                     
-                    let predictionResult = null;
-                    if(prediction){
-                        const index = prediction.indexOf(',')
-                        if(prediction.slice(index+1).includes("KO")){
-                            predictionResult = parseInt(prediction.slice(index+3));
-                        } else {
-                            predictionResult = prediction.slice(index+1);
-                        }
-                        TODO: // this is making the predictions the same.
-                        prediction = fighter1.fighter1Id === prediction.slice(0,index) ? fighter1.lastName : fighter2.lastName
-                    }
+                    const index = prediction.indexOf(',');
+                    prediction = prediction.slice(0, index) === fighter1.fighterId ? `${fighter1.lastName},${prediction.slice(index+1)}` : `${fighter2.lastName},${prediction.slice(index+1)}`;
 
                     const totals = scores.reduce( (acc, curr) => {
                         if(curr[fighter1.lastName]){
@@ -230,8 +221,7 @@ const Scoring = () => {
                         username,
                         totals,
                         fighters: [fighter1.lastName, fighter2.lastName],
-                        prediction,
-                        predictionResult
+                        prediction
                     })
                 })
                 setTableData(s);
@@ -244,24 +234,24 @@ const Scoring = () => {
     const submitRoundScores = () => {
         if(fightComplete) return;
         setIsSubmitting(true);
-        const { scorecardId } = userScorecard;
+        const { scores, scorecardId } = userScorecard;
+        const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
+        const tempScores = scores.concat(sliderScores);
+        const tempScorecard = Object.assign({}, { ...userScorecard, scores: tempScores });
+        const updatedScorecards = otherScorecards.concat(tempScorecard);
+
+        const isFightComplete = sliderScores.round + 1 > totalRounds;
+        setScoredRounds(sliderScores.round);
+
+        setSliderScores({ ...sliderScores, round: sliderScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
+        setScorecards(updatedScorecards);
+        setUserScorecard({ ...userScorecard, scores: tempScores });
         const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
         return axios.put(url, sliderScores, accessTokenConfig)
             .then( res => {
                 if(res.status === 200){
                     // UPDATES.
-                    const { scores, scorecardId } = userScorecard;
-                    const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
-                    const tempScores = scores.concat(sliderScores);
-                    const tempScorecard = Object.assign({}, { ...userScorecard, scores: tempScores });
-                    const updatedScorecards = otherScorecards.concat(tempScorecard);
-
-                    const isFightComplete = sliderScores.round + 1 > totalRounds;
-                    setScoredRounds(sliderScores.round);
-
-                    setSliderScores({ ...sliderScores, round: sliderScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
-                    setScorecards(updatedScorecards);
-                    setUserScorecard({ ...userScorecard, scores: tempScores });
+                    
                     setChatScorecard(sliderScores);
                     if(isFightComplete){
                         alert('FIGHT COMPLETE')
@@ -370,7 +360,7 @@ const Scoring = () => {
    
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
-    console.log('tableData: ', tableData)
+    // console.log('tableData: ', tableData)
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
     return (

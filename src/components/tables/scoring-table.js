@@ -4,7 +4,9 @@ import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue as 
 import { ScoringTableInfo } from './scoring-table-els'
 
 export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
-
+    // console.log('tableData: ', tableData)
+    const sort = (a, b) => a.username - b.username;
+    tableData = tableData.sort( sort )
     const columns = [
         {
             Header: 'Player',
@@ -70,7 +72,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                     return (
                                         <Th 
                                             key={roundIndex} 
-                                            style={roundIndex+1 === scoredRounds ? {color:'white', fontWeight: 'bold', fontSize: '1.3rem', borderBottom:'1px dotted white'} : null} 
+                                            // style={roundIndex === currentRound ? {color:'white', fontWeight: 'bold', fontSize: '1.3rem', borderBottom:'1px dotted white'} : null} 
                                             color="white" 
                                             fontWeight="bold"
                                             textAlign="center"
@@ -87,7 +89,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                 </Thead>
                 <Tbody>
                     {tableData?.length > 0 && tableData?.map( (row, idx) => {
-                        const { mappedScores, prediction, predictionResult, totals, username } = row;;
+                        const { mappedScores, prediction, totals, username } = row;;
                         let filledMappedScores;   
                         if(mappedScores.length < totalRounds){
                             const numberToFill = totalRounds - (mappedScores.length);
@@ -95,6 +97,10 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                             filledMappedScores = mappedScores.concat(addingRounds)
                         }
                         const currentRound = mappedScores.length;
+                        const index = prediction.indexOf(',');
+                        const transformedPrediction = prediction.slice(0, index);
+                        const predictionResult = prediction.slice(index+1);
+                        const roundKO = predictionResult.slice(2);
                         return (
                             <Tr key={idx} p="0">
                                 {columns.map( (column, i) => {
@@ -118,20 +124,21 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                                         <Flex 
                                                             color={i >= mappedScores.length ? 'transparent' : "black"}
                                                             borderRadius="2px"
-                                                            borderX={(i) % 2 == 0 ? (i) >= currentRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
+                                                            // borderX={(i) % 2 == 0 ? (i) >= currentRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
+                                                            borderX={"3px solid #2e3648"}
                                                             w="100%"
                                                             p="1"
-                                                            bg={roundScores[fighter1] ? "gray.500" : "transparent"} 
+                                                            bg={roundScores[fighter1] ? "gray.500" : "gray.600"} 
                                                             flexDirection="column" 
                                                             alignItems="center" 
                                                             justifyContent="center" 
-                                                            // style={(i+1) == predictionResult && (prediction == totals[fighter1]) ? {border:'1px solid red', fontSize: '1.2rem'} : null} 
+                                                            style={(i+1) == roundKO && (transformedPrediction == fighter1) ? {border:'1px solid red', fontSize: '1.2rem'} : null} 
                                                         >   
-                                                            {roundScores[fighter1]}
+                                                            {roundScores[fighter1] }
                                                         </Flex>
                                                         <Flex 
                                                             w="100%"
-                                                            style={(i+1) == predictionResult ? (i+1) >= currentRound ? {border:'1px solid red', fontSize: '1.2rem'} : {border:'1px solid gray'} : {borderBottom:'1px solid tranparent'}} 
+                                                            style={(i+1) == roundKO && (transformedPrediction == fighter2) ? {border:'1px solid red', fontSize: '1.2rem'} : null} 
                                                             color={i >= mappedScores.length ? 'transparent' : "whiteAlpha.900"}
                                                             // borderX={(i+1) <= totalRounds ? (i+1) % 2 !== 0 ? "3px solid #2e3648" : "3px solid tranparent" : "3px solid #1a202c"}
                                                             flexDirection="column" 

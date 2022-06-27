@@ -48,12 +48,12 @@ const App = () => {
               </PrivateRoute>
             }/>
             <Route exact path="/dashboard/:type" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Dashboard /> 
               </PrivateRoute>
             }/>
             <Route exact path="/dashboard/:type/:showId" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Dashboard />
               </PrivateRoute>
             } />
