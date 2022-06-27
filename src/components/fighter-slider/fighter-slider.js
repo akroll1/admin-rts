@@ -3,7 +3,6 @@ import { Avatar, Button, Center, Divider, Flex, Heading, Image, Slider, SliderTr
 import { capFirstLetters } from '../../utils'
 
 export const FighterSlider = ({ fighter, sliderScores, setSliderScores }) => {
-    console.log('sliderScores: ', sliderScores)
     const [score, setScore] = useState(10);
     const { fighterId, firstName, lastName, ringname } = fighter; 
     useEffect(() => {

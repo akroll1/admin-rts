@@ -7,7 +7,7 @@ import { useNavigate, Navigate } from 'react-router'
 export const AccountSwitcher = () => {
   const navigate = useNavigate();
   const scorecards = useUserScorecardsStore( state => state.userScorecards);
-  console.log('scorecards: ', scorecards)
+  // console.log('scorecards: ', scorecards)
   const { groupScorecardId, label } = scorecards?.length > 0 ? scorecards : '';
   return (
     <Menu>

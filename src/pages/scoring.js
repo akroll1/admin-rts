@@ -10,7 +10,7 @@ import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import { useUserStore, useChatScorecardStore } from '../stores'
+import { useUserStore, useChatScorecardStore, useStatsStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();
@@ -21,7 +21,7 @@ const Scoring = () => {
     //////////////////  SCORE STATE /////////////////////////
     const user = useUserStore( store => store);
     const { sub, email, username } = user;
-  
+    const setStats = useStatsStore( store => store.setStats)
     const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
     const chatScorecardStore = useChatScorecardStore( store => store.chatScorecard);
     const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
@@ -45,7 +45,6 @@ const Scoring = () => {
     const [quickTitle, setQuickTitle] = useState('');
     const [fightStatus, setFightStatus] = useState(null);
     const [fightComplete, setFightComplete] = useState(false);
-    const [stats, setStats] = useState([]);
     //////////////////  SIDEBAR  /////////////////////////
     const [showGuestScorerIds, setShowGuestScorerIds] = useState(null);
     const [showGuestScorers, setShowGuestScorers] = useState(null);
@@ -198,6 +197,7 @@ const Scoring = () => {
                         } else {
                             predictionResult = prediction.slice(index+1);
                         }
+                        TODO: // this is making the predictions the same.
                         prediction = fighter1.fighter1Id === prediction.slice(0,index) ? fighter1.lastName : fighter2.lastName
                     }
 
@@ -373,7 +373,6 @@ const Scoring = () => {
     console.log('tableData: ', tableData)
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
-    console.log('stats: ', stats)
     return (
         <Flex flexDir="column" position="relative">
             {/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
@@ -442,7 +441,7 @@ const Scoring = () => {
                     setNotificationTimeout={setNotificationTimeout}
                 />
             </Flex>   
-            <ScoringTable tableData={tableData} totalRounds={totalRounds} />
+            <ScoringTable scoredRounds={scoredRounds} tableData={tableData} totalRounds={totalRounds} />
         </Flex>
     )
 }
