@@ -1,21 +1,29 @@
 import React, {useState, useEffect} from 'react'
 import { Button, ButtonGroup, Flex, FormControl, FormLabel, Input, Stack, Textarea, useColorModeValue } from '@chakra-ui/react'
 import { ReviewFormStars } from '../../stars';
+import { REVIEW_TYPE } from '../../../utils';
 
-export const ReviewForm = ({ reviewForm, setReviewForm, handleReviewFormSubmitPost, handleReviewFormSubmitPut, handleReviewFormClose }) => {
+export const ReviewForm = ({ 
+  reviewForm, 
+  setReviewForm, 
+  handleReviewFormSubmit,
+  handleReviewFormClose 
+}) => {
   const [value, setValue] = useState(null);
+
   const submitReview = () => {
-    if(reviewForm.reviewId){
-      return handleReviewFormSubmitPut(reviewForm);
-    }
-    return handleReviewFormSubmitPost(reviewForm);
+    const verbType = reviewForm.reviewId ? 'PUT' : 'POST';
+    return handleReviewFormSubmit(reviewForm, verbType);
   };
+
   useEffect(() => {
     setValue(reviewForm.rating)
   },[])
+  
   const handleStarsClick = rating => {
     setReviewForm({ ...reviewForm, rating})
   };
+
   const { rating } = reviewForm;
   return (
     <form>

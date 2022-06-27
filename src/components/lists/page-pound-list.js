@@ -21,13 +21,13 @@ export const PagePoundList = ({ officialPoundList }) => {
                                 <Stack direction="row" justify="space-between" spacing="4">
                                     <HStack spacing="3">
                                         <Avatar src={avatarUrl} boxSize="10">
-                                            <AvatarBadge boxSize="4" bg="red.300" />
+                                            <AvatarBadge boxSize="4" bg="red.500" />
                                         </Avatar>
                                         <Box>
                                         <Text fontWeight="medium" color="emphasized">
                                             {capFirstLetters(firstName)} {capFirstLetters(lastName)}
                                         </Text>
-                                        <Text color="muted">{capFirstLetters(ringname)}</Text>
+                                        <Text fontSize="xs" color="muted">Last Week&#8211; </Text>
                                         </Box>
                                     </HStack>
                                     <Text fontSize="xl" color="muted">{i+1}&nbsp;&nbsp;</Text>

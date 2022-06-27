@@ -3,7 +3,12 @@ import { Rating } from './rating'
 import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
 
-export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowReviewForm, showReviewForm }) => {
+export const PredictionsReviews = ({ 
+  reviewType, 
+  predictionsAndReviews, 
+  setShowReviewForm, 
+  showReviewForm 
+}) => {
   // console.log('reviewType: ', reviewType)
   const type = reviewType.charAt(0) + reviewType.toLowerCase().slice(1);
   // console.log('type: ', type)
@@ -26,23 +31,37 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowR
             <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
               Fan {type}s
             </Heading>
-            <Stack spacing="5" direction="row" alignItems="center" shouldWrapChildren>
-                <Text fontSize="4xl" fontWeight="medium" lineHeight="1">
-                  4.3
+            <Stack 
+              spacing="5" 
+              direction="row" 
+              alignItems="center" 
+              shouldWrapChildren
+            >
+              <Text fontSize="4xl" fontWeight="medium" lineHeight="1">
+                4.3
+              </Text>
+              <Stack spacing="1">
+                <Rating defaultValue={4} size="sm" />
+                <Text lineHeight="1" color={'gray.600'}>
+                  Based on 128 {type}s
                 </Text>
-                <Stack spacing="1">
-                  <Rating defaultValue={4} size="sm" />
-                  <Text lineHeight="1" color={'gray.600'}>
-                    Based on 128 {type}s
-                  </Text>
-                </Stack>
               </Stack>
+            </Stack>
             <HStack m="auto" maxW="100%" spacing="4">
-              <ButtonGroup m="auto" flexDir={['column', 'row']} size={["sm", "md", "lg"]} mb="4">
+              <ButtonGroup 
+                m="auto" 
+                flexDir={['column', 'row']} 
+                size={["sm", "md", "lg"]} 
+                mb="4"
+              >
                 <Button variant="outline">
                   See all {type}s
                 </Button>
-                <Button mt={["2", "0"]} onClick={() => setShowReviewForm(!showReviewForm)} colorScheme="blue">
+                <Button 
+                  mt={["2", "0"]} 
+                  onClick={() => setShowReviewForm(!showReviewForm)} 
+                  colorScheme="blue"
+                >
                   Write a {type}
                 </Button>
               </ButtonGroup>
@@ -53,14 +72,25 @@ export const PredictionsReviews = ({ reviewType, predictionsAndReviews, setShowR
             <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
               Be the first to write a {type}!
             </Heading>
-            <Button mt="1rem" onClick={() => setShowReviewForm(!showReviewForm)} size="lg" colorScheme="blue">
+            <Button 
+              mt="1rem" 
+              onClick={() => setShowReviewForm(!showReviewForm)} 
+              size="lg" 
+              colorScheme="blue"
+            >
               Write a {type}
             </Button>
           </Flex> 
         }
       </Stack>
-      <Flex px="4" w="100%" flexDir={["column", "row"]} flexWrap="wrap" alignItems="center">
-        {renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
+      <Flex 
+        px="4" 
+        w="100%" 
+        flexDir={["column", "row"]} 
+        flexWrap="wrap" 
+        alignItems="center"
+      >
+        { renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
       </Flex>
     </Flex>
   )

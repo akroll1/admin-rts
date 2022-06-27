@@ -1,16 +1,5 @@
 import parseISO from 'date-fns/parseISO'
 
-// export const scoringTablePrediction = (prediction, fighterA) => {
-//     prediction = prediction.toLowerCase();
-//     console.log('prediction: ',prediction);
-//     const style = {};
-//     if(prediction.includes('ko')){
-//         ko = prediction.slice(prediction.indexOf('KO')+2); 
-//         style.color = 'red';
-//         style
-//     }
-//     // prediction.includes
-// }
 export const parseUrls = (userInput) => {
     var urlRegExp = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_.~#?&//=]*)/g;
     let formattedMessage = userInput.replace(urlRegExp, (match) => {
@@ -114,4 +103,5 @@ export const transformedWeightclass = weightclass => {
         toLowerCase();
         return `Super ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
     }
+    return `${ weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
 }

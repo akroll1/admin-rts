@@ -7,7 +7,7 @@ export const FighterSlider = ({ fighter, sliderScores, setSliderScores }) => {
     const { fighterId, firstName, lastName, ringname } = fighter; 
     useEffect(() => {
         if(sliderScores){
-            setScore(sliderScores[fighterId] ? sliderScores[fighterId] : 10)
+            setScore(sliderScores[lastName])
         }
     },[sliderScores])
 
@@ -28,7 +28,7 @@ export const FighterSlider = ({ fighter, sliderScores, setSliderScores }) => {
                 max={10} 
                 id={fighterId} 
                 aria-label="fighter scoring slider" 
-                onChange={value => setSliderScores({...sliderScores, [fighterId]: value})}
+                onChange={value => setSliderScores({...sliderScores, [lastName]: value})}
             >
                 <SliderTrack maxW="90%" bg="whiteAlpha.400">
                     <SliderFilledTrack bg="whiteAlpha.800" />
