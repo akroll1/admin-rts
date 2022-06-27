@@ -20,7 +20,7 @@ jobs:
           aws-region: us-east-1
       - name: Build React App
         run: npm install && npm run build
-      - name: SEt executable on .sh deploy script
-        run: git update-index --chmod=+x ./deploy-ui.sh
+      - name: Make deploy.sh executable
+        run: chmod +x ./deploy-ui.sh
       - name: Deploy app build to S3 bucket
         run: ./deploy-ui.sh dev
