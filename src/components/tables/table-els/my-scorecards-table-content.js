@@ -13,7 +13,7 @@ const badgeEnum = {
 
 
 export const MyScorecardsTableContent = ({ scorecardData }) => {
-  console.log('scorecardData: ', scorecardData)
+  // console.log('scorecardData: ', scorecardData)
   const navigate = useNavigate();
 
   return (

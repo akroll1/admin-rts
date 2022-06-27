@@ -17,7 +17,7 @@ export const ScoringTableInfo = ({ username, prediction }) => {
             { usernameCheck(username) }
         </Box>
         <Box mt="2" fontSize="sm"  color="white" fontWeight="normal">
-          {`${capFirstLetters(prediction)}`}
+          {`${capFirstLetters(prediction.replace(/,/g,"-"))}`}
         </Box>
         {/* <Img
           objectFit="cover"

@@ -5,19 +5,20 @@ import axios from 'axios'
 import { useUserStore, useUserScorecardsStore, useUserScorecardStore } from '../stores'
 import { capFirstLetters } from '../utils'
 
-export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
-    const { email, sub, username } = user;
+export const MyScorecards = ({ accessTokenConfig, handleFormSelect }) => {
     const [scorecardData, setScorecardData] = useState([]);
+    const user = useUserStore( user => user);
+    const { email, sub, username } = user;
     const setUser = useUserStore( user => user.setUser);
     const setScorecardsStore = useUserScorecardsStore( state => state.setUserScorecards)
     useEffect(() => {
-        if(user){
+        if(sub){
             const getUserScorecards = async () => {
                 const url = process.env.REACT_APP_SCORECARDS + `/${sub}:${email}`;
-                const encodedUrl = encodeURI(url);
-                const scorecards = await axios.get(encodedUrl, accessTokenConfig)
+                // const encodedUrl = encodeURI(url);
+                const scorecards = await axios.get(url, accessTokenConfig)
                     .then(res => {
-                        console.log('res: ',res);
+                        // console.log('res: ',res);
                         const data = res.data.map(obj => {
                             const { fighterData, scorecard } = obj;
                             const { groupScorecardId, rounds, scores } = scorecard;
@@ -45,7 +46,7 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
             }
             getUserScorecards();
         }
-    },[]);
+    },[sub]);
     // put scorecard info in for scorecards switcher.
     useEffect(() => {
         if(scorecardData.length > 0){
@@ -54,26 +55,25 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
     },[scorecardData])
     // put user in DB, if not exists.
     useEffect(() => {
-        const checkOwnerId = async () => {
-            const url = process.env.REACT_APP_USERS + `/${sub}`;
-            const userExists = await axios.get(url, accessTokenConfig)
+        if(sub){
+
+            const checkOwnerId = async () => {
+                const url = process.env.REACT_APP_USERS + `/${sub}`;
+                const userExists = await axios.get(url, accessTokenConfig)
                 .then( res => res.data).catch( err => console.log(err));
-            if(!userExists){
-                const postUser = {
-                    sub,
-                    email,
-                    username
-                };
-                return await axios.post(process.env.REACT_APP_USERS, postUser, accessTokenConfig)
-                    .then( res => {
-                        if(res.status === 200){
-                            setUser({ ...res.data})
-                        }
-                    }).catch( err => console.log(err));
+                if(!userExists){
+                    const postUser = {
+                        sub,
+                        email,
+                        username
+                    };
+                    return await axios.post(process.env.REACT_APP_USERS, postUser, accessTokenConfig)
+                    .then( res => res).catch( err => console.log(err));
+                }
             }
+            checkOwnerId();
         }
-        checkOwnerId();
-    },[])
+    },[sub])
     return (
         <>
             <Center>
