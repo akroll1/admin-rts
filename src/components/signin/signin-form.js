@@ -21,7 +21,14 @@ export const SignInForm = ({
       <Stack spacing="6">
         <FormControl id="username">
           <FormLabel>Username</FormLabel>
-          <Input ref={inputRef} onChange={handleFormChange} value={username} name="username" type="text" required />
+          <Input 
+            ref={inputRef} 
+            onChange={e => handleFormChange(e)} 
+            value={username} 
+            name="username" 
+            type="text" 
+            required 
+          />
         </FormControl>
         <PasswordField 
           handleFormChange={handleFormChange} 

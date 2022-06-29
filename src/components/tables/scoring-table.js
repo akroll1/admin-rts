@@ -97,10 +97,10 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                             filledMappedScores = mappedScores.concat(addingRounds)
                         }
                         const currentRound = mappedScores.length;
-                        const index = prediction.indexOf(',');
-                        const transformedPrediction = prediction.slice(0, index);
-                        const predictionResult = prediction.slice(index+1);
-                        const roundKO = predictionResult.slice(2);
+                        const index = prediction ? prediction.indexOf(',') : '';
+                        const transformedPrediction = prediction ? prediction.slice(0, index) : '';
+                        const predictionResult = prediction ? prediction.slice(index+1) : '';
+                        const roundKO = prediction ? predictionResult.slice(2) : '';
                         return (
                             <Tr key={idx} p="0">
                                 {columns.map( (column, i) => {
@@ -134,7 +134,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                                             justifyContent="center" 
                                                             style={(i+1) == roundKO && (transformedPrediction == fighter1) ? {border:'1px solid red', fontSize: '1.2rem'} : null} 
                                                         >   
-                                                            {roundScores[fighter1] }
+                                                            {roundScores[fighter1]}
                                                         </Flex>
                                                         <Flex 
                                                             w="100%"

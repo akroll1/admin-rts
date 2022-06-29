@@ -14,7 +14,6 @@ export const SignIn = props => {
   const name = searchParams.get('name');
   const pw = searchParams.get('pw');
   const nonce = searchParams.get('nonce');
-  // console.log('pw:' ,pw)
 
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
@@ -30,25 +29,26 @@ export const SignIn = props => {
   const [isForcePasswordChange, setIsForcePasswordChange] = useState(false)
   const [forgotPassword, setForgotPassword] = useState(false);
   const setUser = useUserStore( state => state.setUser);
-  // useEffect(() => {
-  //   if(nonce && nonce === 'u49kei4'){
-  //     setForm({ ...form, username: name, password: pw})
-  //   }
-  // }, [nonce])
+  
+  useEffect(() => {
+    if(nonce && nonce === 'u49kei4'){
+      Amplify.configure({
+        Auth: {
+          region: process.env.REACT_APP_REGION,
+          userPoolId: process.env.REACT_APP_USER_POOL_ID,
+          userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID,
+        }
+      })
+      setForm({ ...form, password: pw, username: name })
+      handleSignIn(name, pw)
+    }
+  }, []);
+
   const handleFormChange = e => {
     const { id, value } = e.currentTarget;
     setForm({...form, [id]: value.trim() });
   };
-  useEffect(() => {
-    Amplify.configure({
-      Auth: {
-        region: process.env.REACT_APP_REGION,
-        userPoolId: process.env.REACT_APP_USER_POOL_ID,
-        userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID,
-      }
-    })
-  },[]);
-  
+
   const handleSignUp = e => {
     e.preventDefault();
     setSubmitting(true);
@@ -92,9 +92,8 @@ export const SignIn = props => {
         console.log(e);
       });
   };
-  const handleSignIn = () => {
+  const handleSignIn = (username = form.username, password = form.password) => {
     setSubmitting(true);
-    const { username, password } = form;
     Auth.signIn({
       username,
       password
@@ -102,7 +101,6 @@ export const SignIn = props => {
     .then((user) => {
       console.log('user: ', user);
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
-        console.log('New Password Required');
         setIsForcePasswordChange(true);
         setForm({ ...form, password: '', user });
         setIsSignin(false)
@@ -126,9 +124,10 @@ export const SignIn = props => {
   }
   const handleForcePWChange = () => {
     const { username, password, user, email } = form;
-    Auth.completeNewPassword( user, password )
+   Auth.completeNewPassword( user, password )
       .then(() => {
-        handleSignIn({ username, password })
+        sessionStorage.setItem('isLoggedIn',true);
+        return navigate('/dashboard/scorecards', { username });
       }).catch( err => console.log(err));
   }
   const handleForgotPassword = e => {
@@ -204,7 +203,7 @@ export const SignIn = props => {
           <ForcedPasswordChange 
             handleForcePWChange={handleForcePWChange} 
             handleFormChange={handleFormChange} 
-            password={form.forcedPW} 
+            password={form.password} 
           /> 
         }
 

@@ -13,10 +13,7 @@ import { useUserStore } from '../stores'
 import jwt_decode from 'jwt-decode'
 
 const Dashboard = props => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const { type, showId } = useParams();
-  const setUser = useUserStore( user => user.setUser);
   const user = useUserStore( store => store);
   const { email, sub, username } = user;
   const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
@@ -69,7 +66,17 @@ const Dashboard = props => {
   const userFormLinks = () => {
     return formLinks.map((option,i) => {
       const { value, label, icon, link } = option;
-      return (<NavLinkDashboard subtle link={link} id={value} key={value} onClick={e => handleFormSelect(e)} label={label} icon={icon} isActive={active === value ? true : false} />)
+      return (
+        <NavLinkDashboard   
+          subtle={true} 
+          link={link} 
+          id={value} 
+          key={value} 
+          onClick={e => handleFormSelect(e)} 
+          label={label} 
+          icon={icon} 
+          isActive={active === value ? true : false} 
+        />)
     })
   }
   return (
@@ -95,9 +102,17 @@ const Dashboard = props => {
         <Spacer />
         </Stack>
       </Box>
-      <Box overflow='scroll' flex="1 0 75%" spacing={8} mb={8} bg="blackAlpha.500" borderRadius="md" mt={0}>
+      <Box 
+        overflow='scroll' 
+        flex="1 0 75%" 
+        spacing={8} 
+        mb={8} 
+        bg="blackAlpha.500" 
+        borderRadius="md" 
+        mt={0}
+      >
         { form === 'SCORECARDS' && <MyScorecards accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} /> }
-        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} user={user?.sub ? user : null} /> }
+        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} /> }
         { form === 'POUND' && <DashboardPoundList accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'USER' && <AccountSettingsForm accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'POUNDFORM' && <PoundForm accessTokenConfig={accessTokenConfig} user={user} /> }

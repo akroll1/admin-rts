@@ -9,7 +9,6 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { removeBadEmails, REVIEW_TYPE, validateEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import jwt_decode from 'jwt-decode'
-import { Predictions } from 'aws-amplify'
 
 const Shows = props => {
     const navigate = useNavigate();
@@ -28,16 +27,12 @@ const Shows = props => {
         <Navigate to="/signin" replace state={{ path: location.pathname }} />
     }
     const baseUrl = process.env.REACT_APP_SHOWS;
-        
     const [shows, setShows] = useState([]);
     const [selectedShow, setSelectedShow] = useState({});
     const [selectedShowFight, setSelectedShowFight] = useState([]);
     const [showReviewForm, setShowReviewForm] = useState(false);
-    const [showThePredictionForm, setShowThePredictionForm] = useState(false);
     const [predictionsAndReviews, setPredictionsAndReviews] = useState([]); 
     const [reviewType, setReviewType] = useState('PREDICTION');
-    const [selectedReview, setSelectedReview] = useState({})
-    const [selectedShowMainEvent, setSelectedShowMainEvent] = useState({});
     const [fighters, setFighters] = useState([]);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
@@ -87,7 +82,7 @@ const Shows = props => {
             const getAllShows = () => {
                 return axios.get(baseUrl, accessTokenConfig)
                     .then(res => {
-                        console.log('res, 86: ', res)
+                        // console.log('res, 86: ', res)
                         
                         setShows(res.data);
                         setSelectedShow(res.data[0]);
@@ -161,41 +156,11 @@ const Shows = props => {
         return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, accessTokenConfig)
             .then(res => {
                 if(res.status === 200){
-                    let temp;
-                    if(reviewObj.reviewType === 'PREDICTION'){
-                        temp = predictionsAndReviews.PREDICTION.concat(reviewObj);
-                        return setPredictionsAndReviews({ ...predictionsAndReviews, PREDICTION: temp })
-                    }
-                    if(reviewObj.reviewType === 'REVIEW'){
-                        temp = predictionsAndReviews.REVIEW.concat(reviewObj);
-                        return setPredictionsAndReviews({ ...predictionsAndReviews, REVIEW: temp })
-                    }
-                }
-            }).catch(err => console.log(err))
-            .finally(() => {
-                handleReviewFormClose();
-                return toast({ 
-                    title: 'Review Submitted!',
-                    duration: 5000,
-                    status: 'success',
-                    isClosable: true
-                })
-            });
-    };
-    const handleReviewFormSubmitPut = showReviewForm => {
-        const url = process.env.REACT_APP_REVIEWS + `/${showReviewForm.reviewId}`;
-        const update = {
-            ...showReviewForm,
-            owner: sub,
-            username,
-            showId: selectedShow.showId,
-            reviewType: showReviewForm.reviewType
-        };
-        const putObj = Object.assign({}, update);
-        return axios.put(url, putObj, accessTokenConfig)
-            .then(res => {
-                if(res.status === 200){
-                    handleReviewFormClose();
+                    const filtered = predictionsAndReviews[reviewType].filter( review => review.owner !== reviewObj.owner);
+
+                    const temp = filtered.concat(reviewObj);
+                    setPredictionsAndReviews({ ...predictionsAndReviews, [reviewType]: temp })
+
                     return toast({ 
                         title: 'Review Submitted!',
                         duration: 5000,
@@ -203,38 +168,21 @@ const Shows = props => {
                         isClosable: true
                     })
                 }
-            }).catch(err => console.log(err));
+            }).catch(err => console.log(err))
+            .finally(() => handleReviewFormClose());
     };
-    /**
-     * 1. Check if a user has already submitted a review for this. 
-     * ** THIS CAN BE TWO OBJECTS, PREDICTION AND REVIEW! **
-    */
-    useEffect(() => {
-        if(showReviewForm){
-            const getReview = async () => {
-                const url = process.env.REACT_APP_REVIEWS + `user/${selectedShow.fightIds[0]}`;
-                return axios.get(url, accessTokenConfig)
-                    .then(res => {
-                        if(res?.data?.length > 0){
-                            const { data } = res;
-                            const [review] = data.filter( ({ reviewType }) => reviewType === reviewType) 
-                            setReviewForm(review);
-                        }
-                    })
-                    .catch(err => console.log(err));
-            }
-            getReview();
-        }
-    },[showReviewForm]);
+
+   
     /**
      * 1. on selectedShow, get all the show Reviews
      */
     useEffect(() => {
         if(selectedShow.showId){
             const getSelectedShowReviews = async () => {
-                const url = process.env.REACT_APP_REVIEWS + `${selectedShow.fightIds[0]}`;
-                return await axios.get(url, accessTokenConfig)
+                const url = process.env.REACT_APP_REVIEWS + `/${reviewType.toLowerCase()}/${selectedShow.fightIds[0]}`;
+                return axios.get(url, accessTokenConfig)
                     .then( res => {
+                        console.log('res: ', res)
                         const reviewsArr = [];
                         const predictionsArr = [];
                         let reviewsObj = {
@@ -246,13 +194,10 @@ const Shows = props => {
                         }
                         const reviews = res.data?.length > 0 && res.data?.map( review => {
                             const { reviewType } = review;
-                            // limited to 4 reviews right now.
                             if(reviewType === REVIEW_TYPE.REVIEW){
-                                if(reviewsArr.length >= 5) return;
                                 reviewsArr.push(review);
                             }
                             if(reviewType === REVIEW_TYPE.PREDICTION){
-                                if(predictionsArr.length >= 5) return;
                                 predictionsArr.push(review);
                             }
                         });
@@ -262,7 +207,26 @@ const Shows = props => {
             getSelectedShowReviews();
         }
     },[selectedShow])
-
+    /**
+     * 1. Check if a user has already submitted a review for this. 
+     * ** THIS CAN BE TWO OBJECTS, PREDICTION AND REVIEW! **
+     * **  **
+    */
+    useEffect(() => {
+        if(showReviewForm){
+            const getReview = async () => {
+                const url = process.env.REACT_APP_REVIEWS + `/user/${reviewType.toLowerCase()}/${selectedShow.fightIds[0]}`;
+                return axios.get(url, accessTokenConfig)
+                    .then(res => {
+                        if(res.data.reviewId){
+                            setReviewForm(res.data);
+                        }
+                    })
+                    .catch(err => console.log(err));
+            }
+            getReview();
+        }
+    },[showReviewForm]);
     // on selectedShow && selectedShow.showId, get the fighters.
     useEffect(() => {
         if(selectedShow.showId){
@@ -280,10 +244,10 @@ const Shows = props => {
         }
     }, [selectedShow])
 
-    const handleCreateGroupScorecard = () => {
+    const handleCreateGroupScorecard = async () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
         const idToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.idToken'); 
-        const decodedIdToken = jwt_decode(idToken)
+        const decodedIdToken = await jwt_decode(idToken)
         const { email } = decodedIdToken;
         const tempMembersArr = members.concat(email);
         const goodEmails = removeBadEmails(tempMembersArr);
@@ -328,7 +292,7 @@ const Shows = props => {
             pb={8}
         >    
             { showReviewForm && 
-                <ReviewFormModal 
+                <ReviewFormModal
                     reviewForm={reviewForm}
                     setReviewForm={setReviewForm}
                     handleReviewFormSubmit={handleReviewFormSubmit} 
