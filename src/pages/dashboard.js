@@ -14,13 +14,16 @@ import jwt_decode from 'jwt-decode'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const user = useUserStore( store => store);
+  const user = useUserStore( store => store.user);
   const { email, sub, username } = user;
-  const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
-  const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
-  const accessTokenConfig = {
+  let localStorageString, accessToken, accessTokenConfig;
+  if(username){
+    localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
+    accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
+    accessTokenConfig = {
       headers: { Authorization: `Bearer ${accessToken}` }
-  };        
+    };        
+  }
 
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
@@ -34,19 +37,20 @@ const Dashboard = props => {
   ]);
  
   useEffect(() => {
-    const setAuth = async () => {
-      const token = accessToken;
-      const decodedToken = await jwt_decode(token);
-      if(decodedToken['cognito:groups']){
-        const isSuperAdmin = decodedToken['cognito:groups'][0] === 'rts-admins';
-        if(isSuperAdmin){
-          setIsSuperAdmin(true);
-          setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+    if(accessToken){
+        const setAuth = async () => {
+        const decodedToken = await jwt_decode(accessToken);
+        if(decodedToken['cognito:groups']){
+          const isSuperAdmin = decodedToken['cognito:groups'][0] === 'rts-admins';
+          if(isSuperAdmin){
+            setIsSuperAdmin(true);
+            setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+          }
         }
       }
+      setAuth()
     }
-    setAuth()
-  },[])
+  },[accessToken])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
@@ -72,7 +76,7 @@ const Dashboard = props => {
           link={link} 
           id={value} 
           key={value} 
-          onClick={e => handleFormSelect(e)} 
+          onClick={handleFormSelect} 
           label={label} 
           icon={icon} 
           isActive={active === value ? true : false} 

@@ -8,7 +8,6 @@ import { useUserStore } from '../../stores'
 
 
 export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
-  const setUser = useUserStore( user => user.setUser);
   const toast = useToast();
   const [userProfile, setUserProfile] = useState(user)
 
@@ -28,7 +27,6 @@ export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
     axios.put(url, userProfile, accessTokenConfig)
       .then(res => {
         if(res.status === 200){
-          setUser({ ...user, ...update })
           return toast({ 
             title: 'User Updated',
             duration: 3000,

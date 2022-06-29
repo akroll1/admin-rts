@@ -3,8 +3,9 @@ import create from "zustand"
 const useStore = create(
     set => ({
         broadcast: '',
-        sendBroadcast: broadcast => {
+        setBroadcast: broadcast => {
             set(state => ({
+                ...state,
                 broadcast
             }))
         }
