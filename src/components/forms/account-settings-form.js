@@ -8,7 +8,6 @@ import { useUserStore } from '../../stores'
 
 
 export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
-  console.log('user-9: ', user);
   const setUser = useUserStore( user => user.setUser);
   const toast = useToast();
   const [userProfile, setUserProfile] = useState(user)

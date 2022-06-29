@@ -30,15 +30,15 @@ export const SignIn = props => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const setUser = useUserStore( state => state.setUser);
   
+  Amplify.configure({
+    Auth: {
+      region: process.env.REACT_APP_REGION,
+      userPoolId: process.env.REACT_APP_USER_POOL_ID,
+      userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID,
+    }
+  })
   useEffect(() => {
     if(nonce && nonce === 'u49kei4'){
-      Amplify.configure({
-        Auth: {
-          region: process.env.REACT_APP_REGION,
-          userPoolId: process.env.REACT_APP_USER_POOL_ID,
-          userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID,
-        }
-      })
       setForm({ ...form, password: pw, username: name })
       handleSignIn(name, pw)
     }
@@ -99,7 +99,7 @@ export const SignIn = props => {
       password
     })
     .then((user) => {
-      console.log('user: ', user);
+      // console.log('user: ', user);
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
         setIsForcePasswordChange(true);
         setForm({ ...form, password: '', user });
