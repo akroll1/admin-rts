@@ -6,6 +6,7 @@ const useStore = create(
         (set, get) => ({
             setChatScorecard: chatScorecard => {
                 set(state => ({
+                    ...state,
                     chatScorecard
                 }))
             }

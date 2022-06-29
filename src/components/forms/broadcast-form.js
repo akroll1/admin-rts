@@ -4,10 +4,8 @@ import { useBroadcastStore } from '../../stores';
 import { FieldGroup } from '../../chakra';
 
 export const BroadcastForm = () => {
-    const [form, setForm] = useState({
-        broadcast: ''
-    });
-    const sendBroadcast = useBroadcastStore( ({ sendBroadcast }) => sendBroadcast)
+    const [form, setForm] = useState({broadcast: ''});
+    const sendBroadcast = useBroadcastStore( ({ setBroadcast }) => setBroadcast)
     const sendTheBroadcast = () => {
         sendBroadcast(form.broadcast);
         setForm({ broadcast: '' });

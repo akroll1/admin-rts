@@ -82,7 +82,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                     )
                                 })
                             } else if(index === 2){
-                                return <Th color="white" fontWeight="bold">Total</Th>
+                                return <Th key={index+99} color="white" fontWeight="bold">Total</Th>
                             }
                         })}
                     </Tr>
@@ -110,7 +110,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                     
                                     if(i === 0){
                                         return (
-                                            <Td p="0">
+                                            <Td key={i} p="0">
                                                 {element}
                                             </Td>
                                         )
@@ -119,7 +119,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                         return filledMappedScores?.map( (roundScores, i) => {
                                             // console.log('roundScores: ', roundScores);
                                             return (
-                                                <Td key={i} p="0px !important">
+                                                <Td key={i+88} p="0px !important">
                                                     <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                         <Flex 
                                                             color={i >= mappedScores.length ? 'transparent' : "black"}
@@ -156,7 +156,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                     }
                                     if(i === 2){
                                         return (
-                                            <Td p="0">
+                                            <Td p="0" key={i+44}>
                                                 <Flex p="0" flexDirection="column" alignItems="center" justifyContent="center">
                                                     <Flex 
                                                         fontWeight="bold" 

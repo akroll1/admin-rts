@@ -7,23 +7,28 @@ import { useBroadcastStore, useUserStore } from '../../stores'
 
 export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     // set broadcasts back to an empty string, here or in broadcast form...
-    const broadcast = useBroadcastStore( ({ broadcast }) => broadcast);
+    const message = useBroadcastStore( ({ broadcast }) => broadcast);
     const username = useUserStore( ({ username }) => username);
 
-    const [notificationTimeout, setNotificationTimeout] = useState(false);
-    const [broadcasts, setBroadcasts] = useState([]);
+    const [broadcast, setBroadcast] = useState('');
     const [broadcastConnection, setBroadcastConnection] = useState(null);
     const connectionRef = useRef(broadcastConnection);
     connectionRef.current = broadcastConnection;
   
 
     useEffect(() => {
-        if(isLoggedIn){
-            const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
-            const accessToken = localStorage.getItem(localStorageString + '.accessToken');
-            initConnection(accessToken);
+        const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
+        const accessToken = localStorage.getItem(localStorageString + '.accessToken');
+        initConnection(accessToken);
+    },[])
+    
+    useEffect(() => {
+        if(message){
+            setBroadcast(message);
+            broadcastConnection.send(JSON.stringify({ action: 'routeBroadcast', data: { broadcast }}));
+            // setNotificationTimeout(true);
         }
-    },[isLoggedIn])
+    },[message]);
 
     const initConnection = async (accessToken) => {
         const socket = new WebSocket(process.env.REACT_APP_BROADCAST_URL);
@@ -44,67 +49,59 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         };
     
         socket.onmessage = (event) => {
+            // console.log('onmessage: ', event)
             const update = {
                 notification: event.data,
                 displayName: 'FightSync.live'
             };
-            setBroadcasts([update]);
-            setNotificationTimeout(true)
+            setBroadcast(update);
+            setTimeout(() => {
+                setBroadcast('')
+            },5000)
         };
         const handleBroadcastReconnect = () => {
             setTimeout(() => {
                 initConnection(accessToken);
                 // console.log('broadcast reconnect commented out in layout.js.')
-            },3000);
+            },1000);
         }
     };
-
-    useEffect(() => {
-        if(broadcast.length > 0){
-            broadcastConnection.send(JSON.stringify({ action: 'routeBroadcast', data: { broadcast }}));
-            setNotificationTimeout(true);
-        }
-    },[broadcast]);
       
     // useEffect(() => {
     //     if(broadcasts.length > 0){
 
     //     }
     // },[broadcasts])
-    // const socketActive = () => {
-    //     return connection?.readyState === 1;
-    // }
+    const socketActive = () => {
+        return broadcastConnection?.readyState === 1;
+    }
     const handleCloseNotification = e => {
-        setBroadcasts([]);
+        setBroadcast('');
     };
-    useEffect(() => {
-        if(notificationTimeout){
-            const timer = setTimeout(() => {
-                setBroadcasts([])
-                setNotificationTimeout(false);
-            }, 5000)
-            return () => clearTimeout(timer);
-        }
-    },[notificationTimeout])
+    // useEffect(() => {
+    //     if(notificationTimeout){
+    //         const timer = setTimeout(() => {
+    //             setBroadcast('')
+    //             setNotificationTimeout(false);
+    //         }, 5000)
+    //         return () => clearTimeout(timer);
+    //     }
+    // },[notificationTimeout])
 
+    const { notification, displayName } = broadcast ? broadcast : '';
+    console.log('broadcast: ', broadcast)
     return (
         <>  
-            
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Box as="main">
-                <Flex w={["100%","100%"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="1000">
-                    {broadcasts?.length > 0 && broadcasts?.map( ({ notification, displayName }, i) => {
-                        return (
-                            <Notification
-                                key={i}
-                                id={notification}
-                                handleCloseNotification={handleCloseNotification}
-                                notification={notification} 
-                                displayName={displayName}
-                            /> 
-                        )
-                    })}
-                </Flex>    
+                    <Flex display={broadcast ? 'flex' : 'none'} w={["100%","100%"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="1000">
+                        <Notification
+                            id={notification}
+                            handleCloseNotification={handleCloseNotification}
+                            notification={notification} 
+                            displayName={displayName}
+                        /> 
+                    </Flex>    
                 {children}
             </Box>
             <Footer/>

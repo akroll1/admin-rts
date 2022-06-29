@@ -6,6 +6,7 @@ const useStore = create(
         (set, get) => ({
             setStats: stats => {
                 set(state => ({
+                    ...state,
                     stats
                 }))
             }

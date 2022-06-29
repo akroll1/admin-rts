@@ -9,7 +9,6 @@ export const MyScorecards = ({ accessTokenConfig, handleFormSelect }) => {
     const [scorecardData, setScorecardData] = useState([]);
     const user = useUserStore( user => user);
     const { email, sub, username } = user;
-    const setUser = useUserStore( user => user.setUser);
     const setScorecardsStore = useUserScorecardsStore( state => state.setUserScorecards)
     useEffect(() => {
         if(sub){
@@ -41,18 +40,14 @@ export const MyScorecards = ({ accessTokenConfig, handleFormSelect }) => {
                             })
                         });
                         setScorecardData(data)
+                        // put scorecard info in for scorecards switcher.
+                        setScorecardsStore(data)
                     })
                     .catch(err => console.log(err))
             }
             getUserScorecards();
         }
     },[sub]);
-    // put scorecard info in for scorecards switcher.
-    useEffect(() => {
-        if(scorecardData.length > 0){
-            setScorecardsStore(scorecardData)
-        }
-    },[scorecardData])
     // put user in DB, if not exists.
     useEffect(() => {
         if(sub){

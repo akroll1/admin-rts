@@ -16,7 +16,7 @@ export const SignIn = props => {
   const nonce = searchParams.get('nonce');
 
   const navigate = useNavigate();
-  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSignin, setIsSignin] = useState(true);
   const [waitingForCode, setWaitingForCode] = useState(false);
   const [form, setForm] = useState({
@@ -51,18 +51,18 @@ export const SignIn = props => {
 
   const handleSignUp = e => {
     e.preventDefault();
-    setSubmitting(true);
+    setIsSubmitting(true);
     const { email, password, username } = form;
     Auth.signUp({ username, password, attributes: { email } })
       .then((data) => {
         setWaitingForCode(true);
       })
       .catch((err) => {
-        setSubmitting(false);
+        setIsSubmitting(false);
         if(err.message.includes('User already exists')){
           alert('User already exists!')
         }
-      }).finally(() => setSubmitting(false))
+      }).finally(() => setIsSubmitting(false))
   };
   
   const handleConfirmCode = e => {
@@ -93,7 +93,7 @@ export const SignIn = props => {
       });
   };
   const handleSignIn = (username = form.username, password = form.password) => {
-    setSubmitting(true);
+    setIsSubmitting(true);
     Auth.signIn({
       username,
       password
@@ -101,13 +101,12 @@ export const SignIn = props => {
     .then((user) => {
       // console.log('user: ', user);
       const { attributes } = user;
+      setUser({ ...attributes, username, isLoggedIn: true });
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
         setIsForcePasswordChange(true);
-        setUser({ ...attributes, username });
         setForm({ ...form, password: '', user });
         setIsSignin(false)
       } else {
-        setUser({ ...attributes, username });
         sessionStorage.setItem('isLoggedIn',true);
         return navigate('/dashboard/scorecards', { username });
       }
@@ -121,7 +120,7 @@ export const SignIn = props => {
         return;
       }
       alert('Incorrect Username or Password')
-    }).finally(() => setSubmitting(false));
+    }).finally(() => setIsSubmitting(false));
   }
   const handleForcePWChange = () => {
     const { username, password, user, email } = form;
@@ -166,7 +165,7 @@ export const SignIn = props => {
             <Card>
               <SignInForm 
                 handleForgotPassword={handleForgotPassword}
-                submitting={submitting} 
+                isSubmitting={isSubmitting} 
                 handleSignIn={handleSignIn} 
                 handleFormChange={handleFormChange} 
                 form={form} 
@@ -188,7 +187,7 @@ export const SignIn = props => {
             <Card>
               <SignUpForm 
                 handleForgotPassword={handleForgotPassword}
-                submitting={submitting} 
+                isSubmitting={isSubmitting} 
                 resendVerificationCode={resendVerificationCode} 
                 handleConfirmCode={handleConfirmCode} 
                 waitingForCode={waitingForCode} 

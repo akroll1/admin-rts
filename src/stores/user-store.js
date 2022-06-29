@@ -4,11 +4,10 @@ import { persist } from 'zustand/middleware'
 const useStore = create(
     persist(
         (set, get) => ({
-            isLoggedIn: false,
             setUser: user => {
                 set(state => ({
-                    ...user,
-                    isLoggedIn: true
+                    ...state,
+                    user
                 }))
             }
         })
