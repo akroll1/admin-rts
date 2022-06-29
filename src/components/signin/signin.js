@@ -100,12 +100,13 @@ export const SignIn = props => {
     })
     .then((user) => {
       // console.log('user: ', user);
+      const { attributes } = user;
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
         setIsForcePasswordChange(true);
+        setUser({ ...attributes, username });
         setForm({ ...form, password: '', user });
         setIsSignin(false)
       } else {
-        const { attributes } = user;
         setUser({ ...attributes, username });
         sessionStorage.setItem('isLoggedIn',true);
         return navigate('/dashboard/scorecards', { username });
