@@ -188,9 +188,10 @@ const Scoring = () => {
                     let { username, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
                     const sortRoundAscending = (a, b) => a.round - b.round;
-                    
-                    const index = prediction.indexOf(',');
-                    prediction = prediction.slice(0, index) === fighter1.fighterId ? `${fighter1.lastName},${prediction.slice(index+1)}` : `${fighter2.lastName},${prediction.slice(index+1)}`;
+                    if(prediction){
+                        const index = prediction.indexOf(',');
+                        prediction = prediction.slice(0, index) === fighter1.fighterId ? `${fighter1.lastName},${prediction.slice(index+1)}` : `${fighter2.lastName},${prediction.slice(index+1)}`;
+                    }
 
                     const totals = scores.reduce( (acc, curr) => {
                         if(curr[fighter1.lastName]){
