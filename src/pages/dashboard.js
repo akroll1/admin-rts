@@ -8,23 +8,17 @@ import { CreateGroupScorecard } from './create-scorecard'
 import { AccountSettingsForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
 import { DashboardPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
-import { useLocation, useNavigate } from 'react-router'
-import { useUserStore } from '../stores'
+import { useUserStore, useUserScorecardsStore } from '../stores'
 import jwt_decode from 'jwt-decode'
+import axios from 'axios'
+import { capFirstLetters } from '../utils'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
   const user = useUserStore( store => store.user);
+  const setScorecardsStore = useUserScorecardsStore( state => state.setUserScorecards)
   const { email, sub, username } = user;
-  let localStorageString, accessToken, accessTokenConfig;
-  if(username){
-    localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
-    accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
-    accessTokenConfig = {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    };        
-  }
-
+  
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
@@ -35,10 +29,18 @@ const Dashboard = props => {
     // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
     // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
- 
+  const [scorecards, setScorecards] = useState([]);
+
+  let accessTokenConfig;
   useEffect(() => {
-    if(accessToken){
-        const setAuth = async () => {
+    if(username){
+      const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
+      const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
+      accessTokenConfig = {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      };        
+      
+      const setAuth = async () => {
         const decodedToken = await jwt_decode(accessToken);
         if(decodedToken['cognito:groups']){
           const isSuperAdmin = decodedToken['cognito:groups'][0] === 'rts-admins';
@@ -48,9 +50,42 @@ const Dashboard = props => {
           }
         }
       }
+
+      const getUserScorecards = async () => {
+      const url = process.env.REACT_APP_SCORECARDS + `/${sub}-${email}`;
+      const scorecards = await axios.get(url, accessTokenConfig)
+        .then(res => {
+          // console.log('res: ',res);
+          const data = res.data.map(obj => {
+            const { fighterData, scorecard } = obj;
+            const { groupScorecardId, rounds, scores } = scorecard;
+            const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
+            const setPrediction = prediction => {
+                if(prediction){
+                    const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
+                    return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
+                }
+                    return 'Prediction Not Set'
+            }
+            const prediction = setPrediction(scorecard.prediction);
+            const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
+            const isComplete = scores.length >= rounds;
+            return ({
+                prediction,
+                label,
+                groupScorecardId,
+                isComplete
+            })
+          });
+          setScorecards(data)
+          // put scorecard info in for scorecards switcher.
+          setScorecardsStore(data)
+        }).catch(err => console.log(err))
+      }
+      getUserScorecards();
       setAuth()
     }
-  },[accessToken])
+  },[username])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
@@ -115,7 +150,7 @@ const Dashboard = props => {
         borderRadius="md" 
         mt={0}
       >
-        { form === 'SCORECARDS' && <MyScorecards user={user} accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} /> }
+        { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} handleFormSelect={handleFormSelect} /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} /> }
         { form === 'POUND' && <DashboardPoundList accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'USER' && <AccountSettingsForm accessTokenConfig={accessTokenConfig} user={user} /> }

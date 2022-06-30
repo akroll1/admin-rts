@@ -2,7 +2,7 @@ import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { MyScorecardsTableContent, TableActions, ScorecardsTablePagination } from './table-els'
 
-export const MyScorecardsTable = ({ scorecardData }) => {
+export const MyScorecardsTable = ({ scorecards }) => {
 
   const options = [
     { 
@@ -21,8 +21,8 @@ export const MyScorecardsTable = ({ scorecardData }) => {
   return (
     <Box w="100%" as="section" py="12" maxW={{base: 'container.xl', md: 'container.xl', lg: 'container.xl'}} mx="auto" px={{base: '6', md: '8'}}>
       <TableActions options={options} />
-      <MyScorecardsTableContent scorecardData={scorecardData} />
-      <ScorecardsTablePagination total={scorecardData && scorecardData.length ? scorecardData.length : '0'} />
+      <MyScorecardsTableContent scorecards={scorecards} />
+      <ScorecardsTablePagination total={scorecards && scorecards.length ? scorecards.length : '0'} />
     </Box>
   )
 }
