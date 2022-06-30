@@ -13,7 +13,6 @@ export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
         if(sub){
             const getUserScorecards = async () => {
                 const url = process.env.REACT_APP_SCORECARDS + `/${sub}:${email}`;
-                // const encodedUrl = encodeURI(url);
                 const scorecards = await axios.get(url, accessTokenConfig)
                     .then(res => {
                         // console.log('res: ',res);
