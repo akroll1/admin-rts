@@ -1,17 +1,14 @@
 import create from "zustand"
 import { persist } from 'zustand/middleware'
 
-const useStore = create(
+export const useChatScorecardStore = create(
     persist(
         (set, get) => ({
             setChatScorecard: chatScorecard => {
                 set(state => ({
-                    ...state,
                     chatScorecard
                 }))
             }
         })
     )
 );
-
-export const useChatScorecardStore = useStore;

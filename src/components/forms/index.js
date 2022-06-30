@@ -1,4 +1,4 @@
-export * from './account-settings-form'
+export * from './my-account-form'
 export * from './broadcast-form'
 export * from './discussions-form'
 export * from './fight-form'

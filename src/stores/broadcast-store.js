@@ -1,6 +1,6 @@
 import create from "zustand"
 
-const useStore = create(
+export const broadcastStore = create(
     set => ({
         broadcast: '',
         setBroadcast: broadcast => {
@@ -11,5 +11,3 @@ const useStore = create(
         }
     })
 );
-
-export const useBroadcastStore = useStore;

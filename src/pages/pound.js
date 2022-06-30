@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
 import axios from 'axios'
-
-import { capFirstLetters } from '../utils'
-import { useUserStore } from '../stores'
-import { Navigate, useLocation } from 'react-router'
+import { userStore } from '../stores'
+import { useLocation } from 'react-router'
 import { PagePoundList } from '../components/lists'
 
 const initialDnDState = {
@@ -17,7 +15,6 @@ const initialDnDState = {
 export const PoundPage = ({ accessTokenConfig }) => {
   const location = useLocation();
   const toast = useToast();  
-  const user = useUserStore( user => user);
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
   const [combinedList, setCombinedList] = useState([]);
@@ -25,21 +22,13 @@ export const PoundPage = ({ accessTokenConfig }) => {
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   const baseUrl = process.env.REACT_APP_POUND_LIST;
   
-  let config;
-  const { username } = user;
-  const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
-  if(username && accessToken){
-    config = {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    };        
-  } else {
-    <Navigate to="/signin" replace state={{ path: location.pathname }} />
-  }
+  const user = userStore( state => state.user);
+  const tokenConfig = userStore( state => state.tokenConfig);
   ////////////////////////////////////////////////////////
   useEffect(() => {
       const getLists = async () => {
         const url = baseUrl + `/${user.sub}`;
-        return await axios.get(url, config)
+        return await axios.get(url, tokenConfig)
           .then(res => {
             const { usersList, officialList } = res.data;
             const bothLists = res.data.usersList.concat(res.data.officialList);
@@ -112,7 +101,7 @@ export const PoundPage = ({ accessTokenConfig }) => {
       owner: `${user.sub}`
     }
     const url = baseUrl + `/${user.sub}`;
-    return axios.put(url, poundObj, config)
+    return axios.put(url, poundObj, tokenConfig)
       .then(res => {
         if(res.status === 200){
           toast({ title: 'Updated P4P List!',

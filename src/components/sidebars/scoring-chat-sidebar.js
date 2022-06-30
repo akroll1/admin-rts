@@ -8,7 +8,7 @@ import { useChatScorecardStore } from '../../stores'
 
 export const ChatSidebar = ({ 
     chatScorecard,
-    accessTokenConfig, 
+    tokenConfig, 
     chatKey, 
     username, 
     setNotifications, 
@@ -73,7 +73,7 @@ export const ChatSidebar = ({
             userId: `${username}`,
         };
     
-        axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, data, accessTokenConfig)
+        axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, data, tokenConfig)
             .then( res => {
                 // console.log('res, 58: ', res)
                 setChatToken(res.data);

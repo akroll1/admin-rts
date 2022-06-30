@@ -7,11 +7,11 @@ import { FightersPageFightersTable } from '../components/tables'
 import { FighterStats } from '../components/fighter-stats'
 import { FightersSidebar } from '../components/sidebars'
 import { FightersPageFighterProfile } from '../components/sidebars'
-import { useUserStore } from '../stores'
+import { userStore } from '../stores'
 
 const Fighters = () => {
     const location = useLocation();
-    const user = useUserStore( user => user);
+    const user = userStore( user => user);
     const { email, sub, username } = user;
     let accessTokenConfig;
     const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');

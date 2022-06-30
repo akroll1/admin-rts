@@ -5,88 +5,99 @@ import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
 import { MyScorecards } from './my-scorecards'
 import { CreateGroupScorecard } from './create-scorecard'
-import { AccountSettingsForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
-import { DashboardPoundList } from '../components/lists'
+import { MyAccountForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
+import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
-import { useUserStore, useUserScorecardsStore } from '../stores'
+import { userStore, userScorecardsStore } from '../stores'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { capFirstLetters } from '../utils'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const user = useUserStore( store => store.user);
-  const setScorecardsStore = useUserScorecardsStore( state => state.setUserScorecards)
-  const { email, sub, username } = user;
+  const user = userStore( state => state.user);
+  const setUser = userStore( state => state.setUser)
+  const setUserScorecards = userScorecardsStore( state => state.setUserScorecards)
+  const setTokenInUserStore = userStore( store => store.setToken);
   
+  const [tokenConfig, setTokenConfig] = useState(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
     { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaEdit, link: '/dashboard/scorecards' },
     { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound-list' },
-    { value: "USER", label:"Account Settings", type: 'User', icon: FaUser, link: '/dashboard/user' },
+    { value: "ACCOUNT", label:"Account Settings", type: 'User', icon: FaUser, link: '/dashboard/account' },
     // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
     // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
-  const [scorecards, setScorecards] = useState([]);
+  const [scorecards, setScorecards] = useState(null);
 
-  let accessTokenConfig;
   useEffect(() => {
-    if(username){
-      const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
-      const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
-      accessTokenConfig = {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      };        
-      
-      const setAuth = async () => {
-        const decodedToken = await jwt_decode(accessToken);
-        if(decodedToken['cognito:groups']){
-          const isSuperAdmin = decodedToken['cognito:groups'][0] === 'rts-admins';
-          if(isSuperAdmin){
-            setIsSuperAdmin(true);
-            setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-          }
-        }
+    const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}`;
+    const token = localStorage.getItem(`${localStorageString}.accessToken`);
+    const config = {
+      headers: { 
+        Authorization: `Bearer ${token}` 
       }
-
-      const getUserScorecards = async () => {
-      const url = process.env.REACT_APP_SCORECARDS + `/${sub}-${email}`;
-      const scorecards = await axios.get(url, accessTokenConfig)
-        .then(res => {
-          // console.log('res: ',res);
-          const data = res.data.map(obj => {
-            const { fighterData, scorecard } = obj;
-            const { groupScorecardId, rounds, scores } = scorecard;
-            const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
-            const setPrediction = prediction => {
-                if(prediction){
-                    const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
-                    return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
-                }
-                    return 'Prediction Not Set'
-            }
-            const prediction = setPrediction(scorecard.prediction);
-            const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
-            const isComplete = scores.length >= rounds;
-            return ({
-                prediction,
-                label,
-                groupScorecardId,
-                isComplete
-            })
-          });
-          setScorecards(data)
-          // put scorecard info in for scorecards switcher.
-          setScorecardsStore(data)
-        }).catch(err => console.log(err))
+    };
+    setTokenConfig(config);
+    setTokenInUserStore(config);
+    
+    const setAuth = async () => {
+      const decodedToken = await jwt_decode(token);
+      if(!user.sub){
+        const { sub } = decodedToken;
+        setUser({ ...user, sub });
       }
-      getUserScorecards();
-      setAuth()
+      const isSuperAdmin = decodedToken['cognito:groups'] ? decodedToken['cognito:groups'][0] === 'rts-admins' : false;
+      if(isSuperAdmin){
+        setUser({ ...user, isSuperAdmin })
+        setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+      } 
     }
-  },[username])
-
+    setAuth()
+  },[])
+  // getScorecards && check if user exists.
+  useEffect(() => {
+    if(tokenConfig){
+      const getUserScorecards = async () => {
+        const url = process.env.REACT_APP_SCORECARDS + `/${user.sub}-${user.email}`;
+        const scorecards = await axios.get(url, tokenConfig)
+          .then(res => {
+            if(res.data.length > 0 ) setUserScorecards(res.data)
+            // console.log('res: ',res);
+            const data = res.data.map(obj => {
+              const { fighterData, scorecard } = obj;
+              const { groupScorecardId, rounds, scores } = scorecard;
+              const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
+              const setPrediction = prediction => {
+                  if(prediction){
+                      const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
+                      return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
+                  }
+                      return 'Prediction Not Set'
+              }
+              const prediction = setPrediction(scorecard.prediction);
+              const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
+              const isComplete = scores.length >= rounds;
+              return ({
+                  prediction,
+                  label,
+                  groupScorecardId,
+                  isComplete
+              })
+            });
+            setScorecards(data)
+            // put scorecard info in for scorecards switcher.
+            if(res.data.length > 0){
+              setUserScorecards(data)
+            }
+          }).catch(err => console.log(err))
+        }
+        getUserScorecards();
+    }
+  },[tokenConfig])
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
     setActive(e.currentTarget.id);
@@ -124,7 +135,7 @@ const Dashboard = props => {
         <Stack spacing={6}>
           <Box fontSize="sm" lineHeight="tall">
             <Box as="a" href="#" p="3" display="block" transition="background 0.1s" rounded="xl" _hover={{ bg: 'whiteAlpha.200' }} whiteSpace="nowrap">
-              <UserInfo setForm={setForm} setActive={setActive} name={username} email={email} />
+              <UserInfo setForm={setForm} setActive={setActive} name={user.username} email={user.email} />
             </Box>
           </Box>
         </Stack>
@@ -151,16 +162,16 @@ const Dashboard = props => {
         mt={0}
       >
         { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} handleFormSelect={handleFormSelect} /> }
-        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} /> }
-        { form === 'POUND' && <DashboardPoundList accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'USER' && <AccountSettingsForm accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'POUNDFORM' && <PoundForm accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'SHOW-FORM' && <ShowForm accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'FIGHTERS' && <FightersForm accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'DISCUSSIONS' && <DiscussionsForm accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'GUEST-SCORERS' && <GuestScorerForm accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'BROADCAST' && <BroadcastForm accessTokenConfig={accessTokenConfig} user={user} /> }
-        { form === 'FIGHT-FORM' && <FightForm accessTokenConfig={accessTokenConfig} user={user} /> }
+        { form === 'POUND' && <MyPoundList tokenConfig={tokenConfig} user={user} /> }
+        { form === 'ACCOUNT' && <MyAccountForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} tokenConfig={tokenConfig} /> }
+        { form === 'POUNDFORM' && <PoundForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'SHOW-FORM' && <ShowForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'FIGHTERS' && <FightersForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'DISCUSSIONS' && <DiscussionsForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'GUEST-SCORERS' && <GuestScorerForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'BROADCAST' && <BroadcastForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'FIGHT-FORM' && <FightForm tokenConfig={tokenConfig} user={user} /> }
       </Box>
     </Flex>
   )

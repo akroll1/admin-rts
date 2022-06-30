@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ShowsSidebar } from '../components/sidebars'
 import { v4 as uuidv4 } from 'uuid'
 import { ReviewFormModal } from '../components/modals'
-import { useUserStore } from '../stores'
+import { userStore } from '../stores'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { removeBadEmails, REVIEW_TYPE, validateEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
@@ -12,20 +12,11 @@ import jwt_decode from 'jwt-decode'
 
 const Shows = props => {
     const navigate = useNavigate();
-    const location = useLocation();
     const { id } = useParams();
     const toast = useToast();
-    const user = useUserStore( user => user);
-    const { email, sub, username } = user;
-    let accessTokenConfig;
-    const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
-    if(username && accessToken){
-        accessTokenConfig = {
-            headers: { Authorization: `Bearer ${accessToken}` }
-        };        
-    } else {
-        <Navigate to="/signin" replace state={{ path: location.pathname }} />
-    }
+    const user = userStore( user => ({...user.user, tokenConfig: user.tokenConfig }));
+    const { email, sub, username, tokenConfig } = user;
+
     const baseUrl = process.env.REACT_APP_SHOWS;
     const [shows, setShows] = useState([]);
     const [selectedShow, setSelectedShow] = useState({});
@@ -70,7 +61,7 @@ const Shows = props => {
         if(id && sub){ 
             const getShow = id => {
                 const url = baseUrl + `/${id}`;
-                axios.get(url, accessTokenConfig)
+                axios.get(url, tokenConfig)
                     .then( res => {
                         setSelectedShow(res.data[0])
                     })
@@ -80,7 +71,7 @@ const Shows = props => {
         }
         if(sub){
             const getAllShows = () => {
-                return axios.get(baseUrl, accessTokenConfig)
+                return axios.get(baseUrl, tokenConfig)
                     .then(res => {
                         // console.log('res, 86: ', res)
                         
@@ -153,7 +144,7 @@ const Shows = props => {
             reviewType: Date.now() > selectedShow.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
         };
         const reviewObj = Object.assign({}, obj);
-        return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, accessTokenConfig)
+        return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     const filtered = predictionsAndReviews[reviewType].filter( review => review.owner !== reviewObj.owner);
@@ -180,7 +171,7 @@ const Shows = props => {
         if(selectedShow.showId){
             const getSelectedShowReviews = async () => {
                 const url = process.env.REACT_APP_REVIEWS + `/${reviewType.toLowerCase()}/${selectedShow.fightIds[0]}`;
-                return axios.get(url, accessTokenConfig)
+                return axios.get(url, tokenConfig)
                     .then( res => {
                         console.log('res: ', res)
                         const reviewsArr = [];
@@ -216,7 +207,7 @@ const Shows = props => {
         if(showReviewForm){
             const getReview = async () => {
                 const url = process.env.REACT_APP_REVIEWS + `/user/${reviewType.toLowerCase()}/${selectedShow.fightIds[0]}`;
-                return axios.get(url, accessTokenConfig)
+                return axios.get(url, tokenConfig)
                     .then(res => {
                         if(res.data.reviewId){
                             setReviewForm(res.data);
@@ -234,7 +225,7 @@ const Shows = props => {
             const getFighters = async fighterIds => {
                 const fighters = await Promise.all(fighterIds.map( async fighterId => {
                     const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
-                    return axios.get(url, accessTokenConfig)
+                    return axios.get(url, tokenConfig)
                         .then( res => res.data)
                         .catch( err => console.log(err));
                 }))
@@ -267,7 +258,7 @@ const Shows = props => {
 
         /////////////////////////////////////////////
         // checking for a previous groupScorecard
-        return axios.post(url, scorecardObj, accessTokenConfig)
+        return axios.post(url, scorecardObj, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     const { groupScorecardId } = res.data;

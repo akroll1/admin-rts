@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
-import { useStatsStore } from '../../../stores'
+import { statsStore } from '../../../stores'
 import { capFirstLetters } from '../../../utils'
 
 export const FightStats = (props) => {
     const { label, value, ...boxProps } = props;
-    const stats = useStatsStore( store => store.stats);
+    const stats = statsStore( state => state.stats);
+
     const [fighters, setFighters] = useState(null);
     
     useEffect(() => {
@@ -60,7 +61,7 @@ export const FightStats = (props) => {
                     {capFirstLetters(fighter1)}
                 </Text>
                 <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
-                    {fighter1Percentage ? fighter1Percentage : 99}&#37;	
+                    {fighter1Percentage ? fighter1Percentage : 0}&#37;	
                 </Heading>
             </Stack>
             <Stack>
@@ -68,7 +69,7 @@ export const FightStats = (props) => {
                     {capFirstLetters(fighter2)}
                 </Text>
                 <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
-                    {fighter2Percentage ? fighter2Percentage : 99}&#37;	
+                    {fighter2Percentage ? fighter2Percentage : 0}&#37;	
                 </Heading>
             </Stack>
         </Flex>

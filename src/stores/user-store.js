@@ -1,17 +1,19 @@
 import create from "zustand"
 import { persist } from 'zustand/middleware'
 
-const useStore = create(
+export const userStore = create(
     persist(
         (set, get) => ({
             setUser: user => {
                 set(state => ({
-                    ...state,
                     user
+                }))
+            },
+            setToken: tokenConfig => {
+                set(state => ({
+                    tokenConfig,
                 }))
             }
         })
     )
 );
-
-export const useUserStore = useStore;

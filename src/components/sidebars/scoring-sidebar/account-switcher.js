@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { Flex, Menu, MenuDivider, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Text, useColorModeValue } from '@chakra-ui/react'
 import { AccountSwitcherButton } from './account-switcher-button'
-import { useUserScorecardsStore } from '../../../stores'
-import { useNavigate, Navigate } from 'react-router'
+import { userScorecardsStore } from '../../../stores'
+import { useNavigate } from 'react-router'
 
 export const AccountSwitcher = () => {
   const navigate = useNavigate();
-  const scorecards = useUserScorecardsStore( state => state.userScorecards);
+  const scorecards = userScorecardsStore( state => state.userScorecards);
   // console.log('scorecards: ', scorecards)
   const { groupScorecardId, label } = scorecards?.length > 0 ? scorecards : '';
   return (

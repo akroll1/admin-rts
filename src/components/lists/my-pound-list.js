@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useT
 import axios from 'axios'
 
 import { capFirstLetters } from '../../utils'
-import { useUserStore } from '../../stores'
+import { userStore } from '../../stores'
 import { Navigate, useLocation } from 'react-router'
 
 const initialDnDState = {
@@ -13,10 +13,8 @@ const initialDnDState = {
   originalOrder: [],
   updatedOrder: []
 }
-export const DashboardPoundList = ({ accessTokenConfig }) => {
-  const location = useLocation();
+export const MyPoundList = ({ tokenConfig, user }) => {
   const toast = useToast();  
-  const user = useUserStore( user => user);
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
   const [combinedList, setCombinedList] = useState([]);
@@ -24,36 +22,28 @@ export const DashboardPoundList = ({ accessTokenConfig }) => {
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   const baseUrl = process.env.REACT_APP_POUND_LIST;
   
-  let config;
-  const { username } = user;
-  const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
-  if(username && accessToken){
-    config = {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    };        
-  } else {
-    <Navigate to="/signin" replace state={{ path: location.pathname }} />
-  }
   ////////////////////////////////////////////////////////
   useEffect(() => {
+    if(user.sub){
       const getLists = async () => {
         const url = baseUrl + `/${user.sub}`;
-        return await axios.get(url, config)
-          .then(res => {
-            const { usersList, officialList } = res.data;
-            const bothLists = res.data.usersList.concat(res.data.officialList);
-            const usersListIds = usersList.map( fighter => fighter.fighterId);
-            const filtered = officialList.filter( fighterObj => {
-              return !usersListIds.includes(fighterObj.fighterId)
-            });
-            setCombinedList([...usersList, ...filtered])
-            setOfficialPoundList(officialList)
-            setSelectedFighter(res.data.usersList[0])
-          })
-          .catch(err => console.log(err));
+        return await axios.get(url, tokenConfig)
+        .then(res => {
+          const { usersList, officialList } = res.data;
+          const bothLists = res.data.usersList.concat(res.data.officialList);
+          const usersListIds = usersList.map( fighter => fighter.fighterId);
+          const filtered = officialList.filter( fighterObj => {
+            return !usersListIds.includes(fighterObj.fighterId)
+          });
+          setCombinedList([...usersList, ...filtered])
+          setOfficialPoundList(officialList)
+          setSelectedFighter(res.data.usersList[0])
+        })
+        .catch(err => console.log(err));
       }
       getLists();
-  }, []);
+    }
+  }, [user.sub]);
 
   const onDragStart = e => {
     const initialPosition = Number(e.currentTarget.dataset.position);
@@ -111,7 +101,7 @@ export const DashboardPoundList = ({ accessTokenConfig }) => {
       owner: `${user.sub}`
     }
     const url = baseUrl + `/${user.sub}`;
-    return axios.put(url, poundObj, config)
+    return axios.put(url, poundObj, tokenConfig)
       .then(res => {
         if(res.status === 200){
           toast({ title: 'Updated P4P List!',
