@@ -116,7 +116,7 @@ const Dashboard = props => {
         borderRadius="md" 
         mt={0}
       >
-        { form === 'SCORECARDS' && <MyScorecards accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} /> }
+        { form === 'SCORECARDS' && <MyScorecards user={user} accessTokenConfig={accessTokenConfig} handleFormSelect={handleFormSelect} /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} accessTokenConfig={accessTokenConfig} /> }
         { form === 'POUND' && <DashboardPoundList accessTokenConfig={accessTokenConfig} user={user} /> }
         { form === 'USER' && <AccountSettingsForm accessTokenConfig={accessTokenConfig} user={user} /> }
