@@ -6,7 +6,7 @@ import { ScoringTableInfo } from './scoring-table-els'
 export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
     // console.log('tableData: ', tableData)
     const sort = (a, b) => a.username - b.username;
-    tableData = tableData.sort( sort )
+    const sortedTable = tableData.sort( sort )
     const columns = [
         {
             Header: 'Player',
@@ -28,7 +28,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
     
     // console.log('getPlayersData: ',getPlayersData)
     const rounds = new Array(totalRounds).fill('Round');
-    const [fighter1, fighter2] = tableData?.length > 0 ? tableData[0].fighters : '';
+    const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : '';
     return (      
         <Flex 
             id="score_table" 
@@ -88,7 +88,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {tableData?.length > 0 && tableData?.map( (row, idx) => {
+                    {sortedTable?.length > 0 && sortedTable?.map( (row, idx) => {
                         const { mappedScores, prediction, totals, username } = row;;
                         let filledMappedScores;   
                         if(mappedScores.length < totalRounds){
