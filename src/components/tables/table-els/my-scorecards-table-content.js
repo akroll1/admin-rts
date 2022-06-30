@@ -12,8 +12,8 @@ const badgeEnum = {
 }
 
 
-export const MyScorecardsTableContent = ({ scorecardData }) => {
-  // console.log('scorecardData: ', scorecardData)
+export const MyScorecardsTableContent = ({ scorecards }) => {
+  // console.log('scorecards: ', scorecards)
   const navigate = useNavigate();
 
   return (
@@ -33,7 +33,7 @@ export const MyScorecardsTableContent = ({ scorecardData }) => {
           </Tr>
         </Thead>
         <Tbody>
-          { scorecardData?.length > 0 && scorecardData.map((row, index) => {
+          { scorecards?.length > 0 && scorecards.map((row, index) => {
             const { groupScorecardId, isComplete, label, prediction } = row;
             return (
               <Tr key={groupScorecardId} onClick={() => navigate(`/scoring/${groupScorecardId}`)} _hover={{cursor: 'pointer', bg: 'gray.700', color: '#fff', border: '1px solid #795858'}} style={{textAlign: 'center'}} key={index}>
