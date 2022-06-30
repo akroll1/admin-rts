@@ -23,7 +23,7 @@ export const SignInForm = ({
           <FormLabel>Username</FormLabel>
           <Input 
             ref={inputRef} 
-            onChange={e => handleFormChange(e)} 
+            onChange={handleFormChange} 
             value={username} 
             name="username" 
             type="text" 

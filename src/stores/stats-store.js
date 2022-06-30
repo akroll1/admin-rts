@@ -1,17 +1,14 @@
 import create from "zustand"
 import { persist } from 'zustand/middleware'
 
-const useStore = create(
+export const statsStore = create(
     persist(
         (set, get) => ({
             setStats: stats => {
                 set(state => ({
-                    ...state,
                     stats
                 }))
             }
         })
     )
 );
-
-export const useStatsStore = useStore;

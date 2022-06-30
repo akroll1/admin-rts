@@ -10,24 +10,19 @@ import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import { useUserStore, useChatScorecardStore, useStatsStore } from '../stores'
+import { userStore, useChatScorecardStore, statsStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
-
     //////////////////  SCORE STATE /////////////////////////
-    const user = useUserStore( store => store);
+    const user = userStore( state => state.user);
+    const tokenConfig = userStore( state => state.tokenConfig);
     const { sub, email, username } = user;
-    const setStats = useStatsStore( store => store.setStats)
-    const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${username}`;
-    const chatScorecardStore = useChatScorecardStore( store => store.chatScorecard);
-    const accessToken = localStorage.getItem(`${localStorageString}.accessToken`);
-    const accessTokenConfig = {
-        headers: { Authorization: `Bearer ${accessToken}` }
-    };        
+    const setStats = statsStore( state => state.setStats)
+    const chatScorecardStore = useChatScorecardStore( state => state.chatScorecard);
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
         fighterA: '', 
@@ -70,17 +65,17 @@ const Scoring = () => {
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
     useEffect(() => {
-        if(!sub){
+        if(!user.sub){
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
         } 
-    },[sub]) 
+    },[user.sub]) 
 
     useEffect(() => {
-        if(user?.sub && groupscorecard_id){
+        if(user.sub && groupscorecard_id){
 
             // 1. Fetch Group Scorecard.
             const fetchGroupScorecard = async () => {
-                const res = await axios.get(groupScorecardsUrl, accessTokenConfig);
+                const res = await axios.get(groupScorecardsUrl, tokenConfig);
                 console.log('res: ', res.data);
                 if(res.data === 'No scorecard found.'){
                     alert('No Scorecard Found');
@@ -248,7 +243,7 @@ const Scoring = () => {
         setScorecards(updatedScorecards);
         setUserScorecard({ ...userScorecard, scores: tempScores });
         const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-        return axios.put(url, sliderScores, accessTokenConfig)
+        return axios.put(url, sliderScores, tokenConfig)
             .then( res => {
                 if(res.status === 200){
                     // UPDATES.
@@ -270,7 +265,7 @@ const Scoring = () => {
     // useEffect(() => {
     //     if(showGuestScorerIds && showGuestScorerIds.length > 0){
     //         const getShowGuestScorers = () => {
-    //             return axios.post(guestScorersUrl, showGuestScorerIds, accessTokenConfig)
+    //             return axios.post(guestScorersUrl, showGuestScorerIds, tokenConfig)
     //                 .then(res => setShowGuestScorers(res.data))
     //                 .catch(err => console.log(err))
     //         }
@@ -281,7 +276,7 @@ const Scoring = () => {
     // useEffect(() => {
     //     if(myGuestScorerIds && myGuestScorerIds.length > 0){
     //         const getMyGuestScorers = () => {
-    //             return axios.post(guestScorersUrl, myGuestScorerIds, accessTokenConfig)
+    //             return axios.post(guestScorersUrl, myGuestScorerIds, tokenConfig)
     //                 .then(res => setMyGuestScorers(res.data))
     //                 .catch(err => console.log(err))
     //         }
@@ -301,7 +296,7 @@ const Scoring = () => {
             const updatedGuestScorerArr = guestScorerIds.concat(id);
             // console.log('updatedGuestScorerArr: ',updatedGuestScorerArr);
             const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
-            return axios.patch(url, { updatedGuestScorerArr }, accessTokenConfig)
+            return axios.patch(url, { updatedGuestScorerArr }, tokenConfig)
                 .then(res => {
                     console.log('res: ',res);
                     if(res.status === 200){
@@ -324,7 +319,7 @@ const Scoring = () => {
             return value.includes(fighterId) ? setPrediction(transformedPrediction) : setNeedsPrediction(true);
         });
         const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
-        return axios.patch(url, {prediction: value}, accessTokenConfig)
+        return axios.patch(url, {prediction: value}, tokenConfig)
             .then(res => {
                 if(res.data === 'Updated prediction'){
                     setNeedsPrediction(false);
@@ -424,7 +419,7 @@ const Scoring = () => {
                 <ChatSidebar 
                     fighterData={fighterData}
                     chatScorecard={chatScorecard}
-                    accessTokenConfig={accessTokenConfig}
+                    tokenConfig={tokenConfig}
                     chatKey={chatKey}
                     username={username}
                     notifications={notifications}

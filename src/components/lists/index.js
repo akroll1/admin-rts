@@ -1,2 +1,2 @@
-export * from './dashboard-pound-list'
+export * from './my-pound-list'
 export * from './page-pound-list'

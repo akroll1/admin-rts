@@ -3,11 +3,11 @@ import { Footer } from './footer'
 import { Navbar } from './navbar'
 import { Box, Flex } from '@chakra-ui/react'
 import { Notification } from '../notifications'
-import { useBroadcastStore, useUserStore } from '../../stores'
+import { broadcastStore, userStore } from '../../stores'
 
 export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
-    const message = useBroadcastStore( ({ broadcast }) => broadcast);
-    const username = useUserStore( ({ username }) => username);
+    const message = broadcastStore( ({ broadcast }) => broadcast);
+    const username = userStore( ({ username }) => username);
 
     const [broadcast, setBroadcast] = useState('');
     const [broadcastConnection, setBroadcastConnection] = useState(null);

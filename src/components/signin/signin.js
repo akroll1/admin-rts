@@ -6,7 +6,7 @@ import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useUserStore } from '../../stores'
+import { userStore } from '../../stores'
 import { ForcedPasswordChange } from './forced-password-change'
 
 export const SignIn = props => {
@@ -28,7 +28,7 @@ export const SignIn = props => {
   });
   const [isForcePasswordChange, setIsForcePasswordChange] = useState(false)
   const [forgotPassword, setForgotPassword] = useState(false);
-  const setUser = useUserStore( state => state.setUser);
+  const setUser = userStore( state => state.setUser);
   
   Amplify.configure({
     Auth: {
@@ -48,13 +48,42 @@ export const SignIn = props => {
     const { id, value } = e.currentTarget;
     setForm({...form, [id]: value.trim() });
   };
-
+  const handleSignIn = (username = form.username, password = form.password) => {
+    setIsSubmitting(true);
+    Auth.signIn({
+      username,
+      password
+    })
+    .then((user) => {
+      // console.log('user: ', user);
+      const { attributes } = user;
+      if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
+        setIsForcePasswordChange(true);
+        setForm({ ...form, password: '', user });
+        setIsSignin(false)
+      } else {
+        setUser({ ...attributes, username, isLoggedIn: true });
+        sessionStorage.setItem('isLoggedIn',true);
+        return navigate('/dashboard/scorecards', { username });
+      }
+    })
+    .catch((err) => {
+      console.log('handleSignin err: ', err);
+      if(err == 'UserNotConfirmedException: User is not confirmed.'){
+        alert('Please confirm your account.');
+        setWaitingForCode(true);
+        setIsSignin(false);
+        return;
+      }
+      alert('Incorrect Username or Password')
+    }).finally(() => setIsSubmitting(false));
+  }
   const handleSignUp = e => {
     e.preventDefault();
     setIsSubmitting(true);
     const { email, password, username } = form;
     Auth.signUp({ username, password, attributes: { email } })
-      .then((data) => {
+      .then( data => {
         setWaitingForCode(true);
       })
       .catch((err) => {
@@ -64,7 +93,23 @@ export const SignIn = props => {
         }
       }).finally(() => setIsSubmitting(false))
   };
-  
+  const handleForcePWChange = () => {
+    const { username, password, user, email } = form;
+    Auth.completeNewPassword( user, password )
+      .then( res => { 
+        // console.log('res: ', res);
+        const { username, challengeParam: {  userAttributes } } = res;
+        const { email_verified, email } = userAttributes;
+        setUser({ username, email_verified, email })
+        sessionStorage.setItem('isLoggedIn',true);
+        return navigate('/dashboard/scorecards', { user });
+      }).catch( err => {
+        console.log('err: ', err);
+        if(Array.from(err).includes('InvalidPasswordException') > -1){
+          alert('Password does not meet requirements.')
+        }
+      });
+  }
   const handleConfirmCode = e => {
     e.preventDefault();
     const { code, username } = form;
@@ -92,44 +137,7 @@ export const SignIn = props => {
         console.log(e);
       });
   };
-  const handleSignIn = (username = form.username, password = form.password) => {
-    setIsSubmitting(true);
-    Auth.signIn({
-      username,
-      password
-    })
-    .then((user) => {
-      // console.log('user: ', user);
-      const { attributes } = user;
-      setUser({ ...attributes, username, isLoggedIn: true });
-      if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
-        setIsForcePasswordChange(true);
-        setForm({ ...form, password: '', user });
-        setIsSignin(false)
-      } else {
-        sessionStorage.setItem('isLoggedIn',true);
-        return navigate('/dashboard/scorecards', { username });
-      }
-    })
-    .catch((err) => {
-      console.log('handleSignin err: ', err);
-      if(err == 'UserNotConfirmedException: User is not confirmed.'){
-        alert('Please confirm your account.');
-        setWaitingForCode(true);
-        setIsSignin(false);
-        return;
-      }
-      alert('Incorrect Username or Password')
-    }).finally(() => setIsSubmitting(false));
-  }
-  const handleForcePWChange = () => {
-    const { username, password, user, email } = form;
-   Auth.completeNewPassword( user, password )
-      .then(() => {
-        sessionStorage.setItem('isLoggedIn',true);
-        return navigate('/dashboard/scorecards', { username });
-      }).catch( err => console.log(err));
-  }
+  
   const handleForgotPassword = e => {
     e.preventDefault();
     const { username } = form;

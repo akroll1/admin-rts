@@ -40,11 +40,7 @@ const App = () => {
             <Route exact path="/counterpunch" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
-            <Route exact path="/shows" element={
-              <PrivateRoute>
-                <Shows /> 
-              </PrivateRoute>
-            }/>
+            <Route exact path="/shows" element={<Shows />} />
             <Route exact path="/shows/:id" element={
               <PrivateRoute>
                 <Shows /> 

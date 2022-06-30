@@ -7,7 +7,7 @@ import axios from 'axios'
 import { useUserStore } from '../../stores'
 
 
-export const AccountSettingsForm = ({ user, accessTokenConfig }) => {
+export const MyAccountForm = ({ user, accessTokenConfig }) => {
   const toast = useToast();
   const [userProfile, setUserProfile] = useState(user)
 
