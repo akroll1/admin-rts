@@ -15,7 +15,6 @@ import jwt_decode from 'jwt-decode'
 const Dashboard = props => {
   const { type, showId } = useParams();
   const user = useUserStore( store => store.user);
-  console.log('USER: ', user)
   const { email, sub, username } = user;
   let localStorageString, accessToken, accessTokenConfig;
   if(username){
