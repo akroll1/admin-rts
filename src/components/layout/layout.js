@@ -6,7 +6,6 @@ import { Notification } from '../notifications'
 import { useBroadcastStore, useUserStore } from '../../stores'
 
 export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
-    // set broadcasts back to an empty string, here or in broadcast form...
     const message = useBroadcastStore( ({ broadcast }) => broadcast);
     const username = useUserStore( ({ username }) => username);
 
@@ -24,9 +23,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     
     useEffect(() => {
         if(message){
-            setBroadcast(message);
-            broadcastConnection.send(JSON.stringify({ action: 'routeBroadcast', data: { broadcast }}));
-            // setNotificationTimeout(true);
+            broadcastConnection.send(JSON.stringify({ action: 'routeBroadcast', data: message }));
         }
     },[message]);
 
@@ -36,22 +33,20 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     
         socket.onopen = (event) => {
             console.info("Broadcast connected: ", event);
-            // renderConnect();
         };
     
         socket.onclose = (event) => {
-            console.log('Broadcast closed.');
             handleBroadcastReconnect();
         };
     
         socket.onerror = (event) => {
-            console.error("Broadcast websocket error observed:", event);
+            console.error("Broadcast websocket error event:", event);
         };
     
         socket.onmessage = (event) => {
             // console.log('onmessage: ', event)
             const update = {
-                notification: event.data,
+                notification: JSON.parse(event.data).data,
                 displayName: 'FightSync.live'
             };
             setBroadcast(update);
@@ -62,34 +57,19 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         const handleBroadcastReconnect = () => {
             setTimeout(() => {
                 initConnection(accessToken);
-                // console.log('broadcast reconnect commented out in layout.js.')
             },1000);
         }
     };
-      
-    // useEffect(() => {
-    //     if(broadcasts.length > 0){
 
-    //     }
-    // },[broadcasts])
     const socketActive = () => {
         return broadcastConnection?.readyState === 1;
     }
     const handleCloseNotification = e => {
         setBroadcast('');
     };
-    // useEffect(() => {
-    //     if(notificationTimeout){
-    //         const timer = setTimeout(() => {
-    //             setBroadcast('')
-    //             setNotificationTimeout(false);
-    //         }, 5000)
-    //         return () => clearTimeout(timer);
-    //     }
-    // },[notificationTimeout])
 
     const { notification, displayName } = broadcast ? broadcast : '';
-    console.log('broadcast: ', broadcast)
+    // console.log('broadcast: ', broadcast)
     return (
         <>  
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />

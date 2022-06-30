@@ -184,7 +184,6 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                             </Td>
                                         )
                                     }
-                                    
                                 })}
 
                             </Tr>

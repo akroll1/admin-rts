@@ -9,6 +9,9 @@ export const BroadcastForm = () => {
     const sendTheBroadcast = () => {
         sendBroadcast(form.broadcast);
         setForm({ broadcast: '' });
+        setTimeout(() => {
+            sendBroadcast('');
+        },5000)
     }   
     const { broadcast } = form;
     return (
