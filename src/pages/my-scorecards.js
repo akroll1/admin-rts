@@ -5,9 +5,8 @@ import axios from 'axios'
 import { useUserStore, useUserScorecardsStore, useUserScorecardStore } from '../stores'
 import { capFirstLetters } from '../utils'
 
-export const MyScorecards = ({ accessTokenConfig, handleFormSelect }) => {
+export const MyScorecards = ({ user, accessTokenConfig, handleFormSelect }) => {
     const [scorecardData, setScorecardData] = useState([]);
-    const user = useUserStore( user => user);
     const { email, sub, username } = user;
     const setScorecardsStore = useUserScorecardsStore( state => state.setUserScorecards)
     useEffect(() => {
