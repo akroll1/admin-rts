@@ -15,7 +15,14 @@ import {
   
   export const Notification = ({ id, notification, displayName, handleCloseNotification }) => {
     return (
-      <ScaleFade position="absolute" top="0" right="0" initialScale={0.9} in={notification}>
+      <ScaleFade 
+        position="absolute" 
+        top="0" 
+        right="0" 
+        initialScale={0.9} 
+        in={notification}
+        opacity={1}
+      >
         <Box as="section" p="1" m="1" my="0">
           <Flex direction="row-reverse">
             <Box

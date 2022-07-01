@@ -74,14 +74,22 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         <>  
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Box as="main">
-                    <Flex display={broadcast ? 'flex' : 'none'} w={["100%","100%"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="1000">
-                        <Notification
-                            id={notification}
-                            handleCloseNotification={handleCloseNotification}
-                            notification={notification} 
-                            displayName={displayName}
-                        /> 
-                    </Flex>    
+                <Flex 
+                    display={broadcast ? 'flex' : 'none'} 
+                    w={["100%","100%"]} 
+                    position="fixed" 
+                    top="1rem" 
+                    right="0" 
+                    flexDir="column" 
+                    zIndex="1000"
+                >
+                    <Notification
+                        id={notification}
+                        handleCloseNotification={handleCloseNotification}
+                        notification={notification} 
+                        displayName={displayName}
+                    /> 
+                </Flex>    
                 {children}
             </Box>
             <Footer/>
