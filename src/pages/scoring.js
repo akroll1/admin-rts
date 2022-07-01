@@ -234,22 +234,22 @@ const Scoring = () => {
         const { scores, scorecardId } = userScorecard;
         const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
         const tempScores = scores.concat(sliderScores);
-        const tempScorecard = Object.assign({}, { ...userScorecard, scores: tempScores });
+        const tempScorecard = Object.assign(Object.create({}), { ...userScorecard, scores: tempScores });
         const updatedScorecards = otherScorecards.concat(tempScorecard);
 
         const isFightComplete = sliderScores.round + 1 > totalRounds;
         setScoredRounds(sliderScores.round);
-
+        const held = Object.assign(Object.create({}),sliderScores);
         setSliderScores({ ...sliderScores, round: sliderScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
         setScorecards(updatedScorecards);
         setUserScorecard({ ...userScorecard, scores: tempScores });
         const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-        return axios.put(url, sliderScores, tokenConfig)
+        return axios.put(url, held, tokenConfig)
             .then( res => {
                 if(res.status === 200){
                     // UPDATES.
                     
-                    setChatScorecard(sliderScores);
+                    setChatScorecard(held);
                     if(isFightComplete){
                         alert('FIGHT COMPLETE')
                         setFightComplete(true);
@@ -362,7 +362,6 @@ const Scoring = () => {
             .then( res => console.log('res: ', res))
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false))
-
     };
 
     const { finalScore } = userScorecard;
