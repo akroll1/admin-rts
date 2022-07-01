@@ -100,10 +100,7 @@ const Dashboard = props => {
         const updateUser = async () => {
           const url = process.env.REACT_APP_USERS + `/${user.sub}`;
           return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
-            .then( res => {
-              setUser({ ...user, ...res.data })
-              console.log('res: ', res)
-            }).catch( err => console.log(err));
+            .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
         }
 
         updateUser();
