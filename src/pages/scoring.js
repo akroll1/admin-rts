@@ -386,7 +386,14 @@ const Scoring = () => {
                 handleSubmitPrediction={handleSubmitPrediction} 
             />
             <SliderHeading quickTitle={quickTitle} />
-            <Flex w={["100%","auto"]} position="fixed" top="1rem" right="0" flexDir="column" zIndex="10000">
+            <Flex 
+                w={["100%","auto"]} 
+                position="fixed" 
+                top="1rem" 
+                right="0" 
+                flexDir="column" 
+                zIndex="10000"
+            >
                 {notifications.length > 0 && notifications.map( ({notification, username}) => {
                     return (
                         <Notification

@@ -14,6 +14,7 @@ import {
   } from '@chakra-ui/react'
   
   export const Notification = ({ id, notification, displayName, handleCloseNotification }) => {
+    console.log('notification: ', notification)
     return (
       <ScaleFade 
         position="absolute" 
