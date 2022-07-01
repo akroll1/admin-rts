@@ -76,6 +76,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
             {/* { notification &&  */}
                 <Flex 
                 display={broadcast.displayName ? 'flex' : 'none'} 
+                opacity="1"
                 w={["100%","100%"]} 
                 position="fixed" 
                 top="1rem" 
