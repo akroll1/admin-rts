@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Flex, Heading, useControllableState, useForceUpdate, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import {  PredictionModal } from '../components/modals'
+import {  AddMemberModal, PredictionModal } from '../components/modals'
 import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils'
 import { useLocation, useNavigate } from 'react-router'
@@ -60,7 +60,8 @@ const Scoring = () => {
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
-    
+    //////////////////  ADD MEMBER MODAL /////////////////////////
+    const [addMemberModal, setAddMemberModal] = useState(false);
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
@@ -353,7 +354,17 @@ const Scoring = () => {
         const filtered = temp.filter( ({ notification }) => notification !== id);
         setNotifications(filtered)
     };
-   
+    
+    const handleAddMemberSubmit = async email => {
+        setIsSubmitting(true);
+        console.log('email: ', email);
+        return await axios.put(groupScorecardsUrl, { email }, tokenConfig)
+            .then( res => console.log('res: ', res))
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false))
+
+    };
+
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
     // console.log('tableData: ', tableData)
@@ -361,7 +372,12 @@ const Scoring = () => {
     // console.log('roundResults: ', roundResults);
     return (
         <Flex flexDir="column" position="relative">
-            {/* <ExpiredTokenModal openModal={!tokenIsGood} /> */}
+            <AddMemberModal 
+                handleAddMemberSubmit={handleAddMemberSubmit}
+                isSubmitting={isSubmitting}
+                addMemberModal={addMemberModal}
+                setAddMemberModal={setAddMemberModal}
+            />
             <PredictionModal 
                 rounds={rounds}
                 setToggleModal={setToggleModal}
@@ -396,6 +412,7 @@ const Scoring = () => {
                 py={8
             }>    
                 <ScoringSidebar 
+                    setAddMemberModal={setAddMemberModal}
                     sub={sub}
                     showData={showData}
                     showGuestScorers={showGuestScorers}

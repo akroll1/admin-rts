@@ -10,6 +10,7 @@ import { parseEpoch, predictionIsLocked, transformedWeightclass } from '../../ut
 import { IoScaleOutline } from 'react-icons/io5'
 
 export const ScoringSidebar = ({ 
+    setAddMemberModal,
     finalScore, 
     setToggleModal, 
     showData, 
@@ -44,6 +45,7 @@ export const ScoringSidebar = ({
     const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? destructureData(showData) : '';
     finalScore = parseInt(finalScore);
     const { members } = groupScorecard;
+
     return (
         <Flex 
             id="scoring-sidebar" 
@@ -138,7 +140,7 @@ export const ScoringSidebar = ({
                 <NavItem 
                     icon={<BiPlusCircle />} 
                     label={<Button 
-                        onClick={() => console.log('addGroupMember')}
+                        onClick={() => setAddMemberModal(true)}
                         _focus={{bg:'transparent'}} 
                         _hover="transparent" 
                         variant="ghost" 

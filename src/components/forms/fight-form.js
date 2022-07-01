@@ -4,7 +4,7 @@ import { FieldGroup } from '../../chakra'
 import axios from 'axios'
 import { FIGHT_SHOW_STATUS_ENUMS, ROUND_LENGTH_ENUMS,  WEIGHTCLASS_ENUMS } from '../../utils'
 
-export const FightForm = ({ user, accessTokenConfig }) => {
+export const FightForm = ({ user, tokenConfig }) => {
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightId, setFightId] = useState(null);
@@ -43,10 +43,10 @@ export const FightForm = ({ user, accessTokenConfig }) => {
         setIsSubmitting(true);
         const fightObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId]})
         const url = process.env.REACT_APP_FIGHTS + `/${fightId}`;
-        return axios.put(url, fightObj, accessTokenConfig)
-        .then( res => console.log('res: ', res))
-        .catch( err => console.log(err))
-        .finally(() => setIsSubmitting(false));
+        return axios.put(url, fightObj, tokenConfig)
+            .then( res => console.log('res: ', res))
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false));
         
     };
     
@@ -55,37 +55,37 @@ export const FightForm = ({ user, accessTokenConfig }) => {
         const url = process.env.REACT_APP_FIGHTS;
         const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId]})
         console.log('postObj: ', postObj)
-        return axios.post(url, postObj, accessTokenConfig)
-        .then( res => console.log('res: ', res))
-        .catch( err => console.log(err))
-        .finally(() => setIsSubmitting(false));
+        return axios.post(url, postObj, tokenConfig)
+            .then( res => console.log('res: ', res))
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false));
     };
     
     const searchForFight = () => {
         setIsSubmitting(true);
         const url = process.env.REACT_APP_FIGHTS + `/${fightId}`
-        return axios.get(url, accessTokenConfig)
-        .then( res => {
-            if(res.status === 200){
-                const { fighterIds } = res.data;
-                setFighterAId(`${fighterIds[0]}`);
-                setFighterBId(`${fighterIds[1]}`);
-                setForm({ ...res.data })
-            }
-        })
-        .catch( err => console.log(err))
-        .finally(() => setIsSubmitting(false));
+        return axios.get(url, tokenConfig)
+            .then( res => {
+                if(res.status === 200){
+                    const { fighterIds } = res.data;
+                    setFighterAId(`${fighterIds[0]}`);
+                    setFighterBId(`${fighterIds[1]}`);
+                    setForm({ ...res.data })
+                }
+            })
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false));
     };
     const deleteFight = () => {
         setIsSubmitting(true);
         const url = process.env.REACT_APP_FIGHT + `/${fightId}`;
-        return axios.delete(url, accessTokenConfig)
-        .then( res => console.log('res: ', res))
-        .catch( err => console.log(err))
-        .finally(() => setIsSubmitting(false));
+        return axios.delete(url, tokenConfig)
+            .then( res => console.log('res: ', res))
+            .catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false));
     };
     const { fighterIds, fightQuickTitle, weightclass, rounds, isMainEvent, isTitleFight, odds, fightStoryline } = form;
-    console.log('form: ', form);
+
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
              <FieldGroup title="Search for a Fight">

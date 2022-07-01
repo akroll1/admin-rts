@@ -7,7 +7,7 @@ import axios from 'axios'
 import { useUserStore } from '../../stores'
 
 
-export const MyAccountForm = ({ user, accessTokenConfig }) => {
+export const MyAccountForm = ({ user, tokenConfig }) => {
   const toast = useToast();
   const [userProfile, setUserProfile] = useState(user)
 
@@ -24,7 +24,7 @@ export const MyAccountForm = ({ user, accessTokenConfig }) => {
       lastName,
       bio
     };
-    axios.put(url, userProfile, accessTokenConfig)
+    axios.put(url, userProfile, tokenConfig)
       .then(res => {
         if(res.status === 200){
           return toast({ 

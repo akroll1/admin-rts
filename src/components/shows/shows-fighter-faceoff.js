@@ -1,10 +1,9 @@
 import React from 'react'
-import { Avatar, Box, Flex, useColorModeValue } from '@chakra-ui/react'
+import { Avatar, Flex } from '@chakra-ui/react'
 import { FighterInfoCard } from '../tables/shows-page-show-card/fighter-info-card'
 import { ShowsCountdownTimer } from '../timers'
 
 export const ShowsFighterFaceoff = ({ fighters, showTime }) => {
-  const { ringname, lastName, firstName } = fighters;
   return (
     <>
     <Flex
@@ -24,7 +23,7 @@ export const ShowsFighterFaceoff = ({ fighters, showTime }) => {
       maxW={["100%", "90%", "80%"]}
     >
       { fighters?.map( fighter => {
-        const { ringname, lastName, firstName } = fighter;
+        const { firstName, lastName, ringname } = fighter;
         return (
           <Flex 
             key={lastName}
@@ -38,7 +37,7 @@ export const ShowsFighterFaceoff = ({ fighters, showTime }) => {
           >
             <Avatar size="lg" />
             <FighterInfoCard 
-              ringname={ringname || ''} 
+              ringname={ringname ?? ''} 
               lastName={lastName} 
               firstName={firstName} 
             />

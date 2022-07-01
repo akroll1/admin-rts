@@ -6,7 +6,7 @@ import Datepicker from 'react-datepicker'
 import parseISO from 'date-fns/parseISO'
 import axios from 'axios'
 import { useNavigate } from 'react-router';
-import { removeBadEmails, ROUND_LENGTH_ENUMS, validateEmail, WEIGHTCLASS_ENUMS } from '../utils'
+import { removeBadEmails, ROUND_LENGTH_ENUMS, isValidEmail, WEIGHTCLASS_ENUMS } from '../utils'
 
 export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
     const navigate = useNavigate();
@@ -98,7 +98,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
     }
     const handleEmailSubmit = e => {
         e.preventDefault();
-        if(validateEmail(emailValue)){
+        if(isValidEmail(emailValue)){
             const { members } = groupScorecard;
             const tempMembers = members.concat(emailValue);
             setGroupScorecard({...groupScorecard, members: tempMembers});
