@@ -52,7 +52,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
             setBroadcast(update);
             setTimeout(() => {
                 setBroadcast('')
-            },5000)
+            },50000)
         };
         const handleBroadcastReconnect = () => {
             setTimeout(() => {
@@ -81,7 +81,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
                     top="1rem" 
                     right="0" 
                     flexDir="column" 
-                    zIndex="1000"
+                    zIndex="100000"
                 >
                     <Notification
                         id={notification}
