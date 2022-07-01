@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ReviewFormModal } from '../components/modals'
 import { userStore } from '../stores'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
-import { removeBadEmails, REVIEW_TYPE, validateEmail } from '../utils'
+import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import jwt_decode from 'jwt-decode'
 
@@ -87,7 +87,7 @@ const Shows = props => {
     },[id, sub])
     const handleEmailSubmit = e => {
         e.preventDefault();
-        if(validateEmail(emailValue)){
+        if(isValidEmail(emailValue)){
             const { members } = groupScorecard;
             const tempMembers = members.concat(emailValue);
             setGroupScorecard({...groupScorecard, members: tempMembers});

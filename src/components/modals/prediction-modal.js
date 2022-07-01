@@ -43,49 +43,67 @@ export const PredictionModal = ({
   }
 
   return (
-    <>
-      <Modal blockScrollOnMount={false} isCentered isOpen={toggleModal} motionPreset="slideInBottom">
-        <ModalOverlay/>
-        <ModalContent>
-          <ModalHeader display="flex" flexDirection="row" textAlign="center" justifyContent="space-around">{<Icon as={FaTrophy} boxSize={6} />} Predict and Win! {<Icon as={FaTrophy} boxSize={6} />}</ModalHeader>
-          <ModalBody>
-            {/* { !prediction && <p style={{color: 'gray', textAlign: 'center', margin: '1rem', marginTop: '-1rem'}}>Set your Prediction!</p> } */}
-              <form>
-                <Flex flexDirection="row" alignItems="center" justifyContent="center">
-                  <Select _hover={{cursor: 'pointer'}} onChange={e => getFighter(e)} m="1" placeholder="Select winner">
-                    { fighterData.map( fighter => {
-                        const { fighterId, firstName, lastName, ringname } = fighter;
-                        return (
-                          <option key={fighterId} id={fighterId} value={fighterId}>{`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`}</option>
-                        )
-                        })
-                      }
-                  </Select>
-                  <Select _hover={{cursor: 'pointer'}} onChange={e => getResult(e)} m="1" placeholder="Select Result">
-                      <option value="UD">Unanimous Decision</option>
-                      <option value="SD">Split Decision</option>
-                      <option value="MD">Majority Decision</option>
-                      <option value="DR">Draw</option>
-                      <option value="MR">Majority Draw</option>
-                      <option value="DQ">Disqualification</option>
-                      {totalRounds.map( (round,i) => {
-                          return <option key={i} value={'KO'+(i+1)}>KO{i+1}</option>
-                      })}
-                  </Select>
-                </Flex>
-              </form>
-          </ModalBody>
-          <ModalFooter display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-            <Button onClick={() => handleLocalPredictionSubmit()} colorScheme="blue" mr={3}>
-              Save Prediction
-            </Button>
-            <Button variant="outline" onClick={() => setToggleModal(false)} colorScheme="blue" mr={3}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <Modal 
+      blockScrollOnMount={false} 
+      isCentered 
+      isOpen={toggleModal} 
+      motionPreset="slideInBottom"
+    >
+      <ModalOverlay/>
+      <ModalContent>
+        <ModalHeader 
+          display="flex" 
+          flexDirection="row" 
+          textAlign="center" 
+          justifyContent="space-around"
+        >
+          {<Icon as={FaTrophy} boxSize={6} />} Predict and Win! {<Icon as={FaTrophy} boxSize={6} />}
+        </ModalHeader>
+        <ModalBody>
+            <form>
+              <Flex 
+                flexDirection="row" 
+                alignItems="center" 
+                justifyContent="center"
+              >
+                <Select _hover={{cursor: 'pointer'}} onChange={e => getFighter(e)} m="1" placeholder="Select winner">
+                  { fighterData.map( fighter => {
+                      const { fighterId, firstName, lastName, ringname } = fighter;
+                      return (
+                        <option key={fighterId} id={fighterId} value={fighterId}>{`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`}</option>
+                      )
+                      })
+                    }
+                </Select>
+                <Select _hover={{cursor: 'pointer'}} onChange={e => getResult(e)} m="1" placeholder="Select Result">
+                    <option value="UD">Unanimous Decision</option>
+                    <option value="SD">Split Decision</option>
+                    <option value="MD">Majority Decision</option>
+                    <option value="DR">Draw</option>
+                    <option value="MR">Majority Draw</option>
+                    <option value="DQ">Disqualification</option>
+                    {totalRounds.map( (round,i) => {
+                        return <option key={i} value={'KO'+(i+1)}>KO{i+1}</option>
+                    })}
+                </Select>
+              </Flex>
+            </form>
+        </ModalBody>
+        <ModalFooter 
+          display="flex" 
+          flexDirection="row" 
+          alignItems="center" 
+          justifyContent="center"
+        >
+          <Button onClick={() => handleLocalPredictionSubmit()} colorScheme="blue" mr={3}>
+            Save Prediction
+          </Button>
+          <Button variant="outline" onClick={() => setToggleModal(false)} colorScheme="blue" mr={3}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
 }
 

@@ -96,8 +96,20 @@ const Dashboard = props => {
           }).catch(err => console.log(err))
         }
         getUserScorecards();
+        // put user data into DB.
+        const updateUser = async () => {
+          const url = process.env.REACT_APP_USERS + `/${user.sub}`;
+          return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
+            .then( res => {
+              setUser({ ...user, ...res.data })
+              console.log('res: ', res)
+            }).catch( err => console.log(err));
+        }
+
+        updateUser();
     }
   },[tokenConfig])
+
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
     setActive(e.currentTarget.id);

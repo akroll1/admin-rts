@@ -4,11 +4,11 @@ import * as React from 'react'
 export const UserInfo = (props) => {
   const { name, image, email, setForm, setActive} = props
   const handleUserFormClick = () => {
-      setForm('USER');
-      setActive('USER');
+      setForm('ACCOUNT');
+      setActive('ACCOUNT');
   }
   return (
-    <HStack onClick={() => handleUserFormClick()}display="inline-flex">
+    <HStack onClick={() => handleUserFormClick()} display="inline-flex">
       <Avatar size="sm" name={name} src={image} />
       <Box lineHeight="1">
         <Text fontWeight="semibold">{name}</Text>

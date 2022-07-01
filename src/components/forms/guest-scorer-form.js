@@ -4,7 +4,7 @@ import { FieldGroup } from '../../chakra'
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid'
 
-export const GuestScorerForm = ({ user, accessTokenConfig }) => {
+export const GuestScorerForm = ({ user, tokenConfig }) => {
     const toast = useToast();
     const guestScorerUrl = process.env.REACT_APP_GUEST_SCORERS;
     const [guestScorer, setGuestScorer] = useState({
@@ -23,7 +23,7 @@ export const GuestScorerForm = ({ user, accessTokenConfig }) => {
     }
     const submitGuestScorer = () => {
         const guestScorerPutUrl = guestScorerUrl + `/${guestScorer.guestScorerId}`;
-        return axios.put(guestScorerPutUrl, guestScorer, accessTokenConfig)
+        return axios.put(guestScorerPutUrl, guestScorer, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     toast({ title: 'Guest Scorer PUT good.',

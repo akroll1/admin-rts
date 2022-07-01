@@ -5,7 +5,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid'
 import { DiscussionsFormTable } from '../tables';
 
-export const DiscussionsForm = ({ user, accessTokenConfig }) => {
+export const DiscussionsForm = ({ user, tokenConfig }) => {
     const toast = useToast();
     const discussionsUrl = process.env.REACT_APP_DISCUSSIONS;
     const [discussions, setDiscussions] = useState([]);
@@ -20,7 +20,7 @@ export const DiscussionsForm = ({ user, accessTokenConfig }) => {
     });
 
     useEffect(() => {
-        axios.get(discussionsUrl,accessTokenConfig)
+        axios.get(discussionsUrl,tokenConfig)
             .then(res => setDiscussions(res.data))
             .catch(err => console.log(err))
     },[])
@@ -34,7 +34,7 @@ export const DiscussionsForm = ({ user, accessTokenConfig }) => {
     }
     const submitDiscussion = () => {
         const discussionsPutUrl = discussionsUrl + `/${discussion.discussionId}`;
-        return axios.put(discussionsPutUrl, discussion, accessTokenConfig)
+        return axios.put(discussionsPutUrl, discussion, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     toast({ title: 'Discussion PUT good.',

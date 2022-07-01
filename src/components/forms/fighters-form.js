@@ -5,12 +5,11 @@ import { FightersTable } from '../tables';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid'
 
-export const FightersForm = ({ user, accessTokenConfig }) => {
+export const FightersForm = ({ user, tokenConfig }) => {
     const toast = useToast();
     const fightersUrl = process.env.REACT_APP_FIGHTERS;
     const [fighters, setFighters] = useState([]);
     const [fighter, setFighter] = useState({
-        fighterId: uuidv4(),
         firstName: '',
         lastName: '',
         ringname: '',
@@ -22,11 +21,6 @@ export const FightersForm = ({ user, accessTokenConfig }) => {
         socials: [],
         home: ''
     });
-    useEffect(() => {
-        axios.get(fightersUrl,accessTokenConfig)
-            .then(res => setFighters(res.data))
-            .catch(err => console.log(err))
-    },[])
 
     const setFighterInfo = e => {
         const { id, value } = e.currentTarget;
@@ -37,7 +31,7 @@ export const FightersForm = ({ user, accessTokenConfig }) => {
         // console.log('inside submit fighter: ',fighter);
         const url = fightersUrl + `/${fighter.fighterId}`;
         // console.log('fighter: ',fighter);
-        return axios.put(url, fighter, accessTokenConfig)
+        return axios.put(url, fighter, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     toast({ title: 'Fighter updated!',
@@ -73,9 +67,11 @@ export const FightersForm = ({ user, accessTokenConfig }) => {
     // console.log('fighters: ',fighters);
     // console.log('fighter: ',fighter)
     const { fighterId, firstName, lastName, ringname, wins, losses, draws, kos, dq, socials, home } = fighter;
+    console.log('fighterId: ', fighterId);
+
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto" height="auto">
-            <form id="settings-form" onSubmit={(e) => {e.preventDefault()}}>
+            <form id="settings-form" onSubmit={e => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
                     Fighter Form

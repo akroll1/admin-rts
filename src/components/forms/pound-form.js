@@ -4,7 +4,7 @@ import { FieldGroup } from '../../chakra'
 import { FightersTable } from '../tables'
 import axios from 'axios';
 
-export const PoundForm = ({ user, accessTokenConfig }) => {
+export const PoundForm = ({ user, tokenConfig }) => {
   const toast = useToast();
   const poundUrl = process.env.REACT_APP_POUND_LIST + `/${1}`;
   const fightersUrl = process.env.REACT_APP_FIGHTERS;
@@ -14,7 +14,7 @@ export const PoundForm = ({ user, accessTokenConfig }) => {
   const [fighterIdsList, setFighterIdsList] = useState([]);
 
   useEffect(() => {
-      axios.get(poundUrl,accessTokenConfig)
+      axios.get(poundUrl,tokenConfig)
           .then(res => {
             const getFighterIds = res.data.map( fighterObj => fighterObj.fighterId);
             setFighterIdsList(getFighterIds);   
@@ -30,7 +30,7 @@ export const PoundForm = ({ user, accessTokenConfig }) => {
   const getFighter = e => {
     const url = fightersUrl + `/${fighterId}`;
     console.log('poundList: ',poundList)
-    axios.get(url, accessTokenConfig)
+    axios.get(url, tokenConfig)
       .then(res => {
         console.log('res.data: ',res.data)
         const addFighterToList = poundList.concat(res.data);
@@ -49,7 +49,7 @@ export const PoundForm = ({ user, accessTokenConfig }) => {
       ownerId: '1'
     };
     console.log('updateObj: ',updateObj)
-    return axios.post(url, updateObj, accessTokenConfig)
+    return axios.post(url, updateObj, tokenConfig)
       .then(res => {
         if(res.status === 200){
           toast({ title: 'P4P List updated!',

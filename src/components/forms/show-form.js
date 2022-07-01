@@ -11,7 +11,7 @@ import { NETWORK_ENUMS, FIGHT_SHOW_STATUS_ENUMS, createTimestamp } from '../../u
 import parseISO from 'date-fns/parseISO'
 // import { addDays } from 'date-fns/addDays'
 
-export const ShowForm = ({ user, accessTokenConfig }) => {
+export const ShowForm = ({ user, tokenConfig }) => {
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [guestScorer, setGuestScorer] = useState('');
@@ -32,7 +32,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
         if(showId){
             setIsSubmitting(true);
             const url = process.env.REACT_APP_SHOWS + `/${showId}`;
-            return axios.get(url, accessTokenConfig)
+            return axios.get(url, tokenConfig)
                 .then( res => {
                     let { showTime } = res.data;
                     const time = parseISO(new Date(showTime).toISOString());
@@ -49,7 +49,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
         const { showTime, fightIds } = form;
         let postObj = Object.assign(form, {showTime: createTimestamp(showTime)}, {fightIds: [fightIds[0]]})
         // console.log('postObj: ', postObj);
-        return axios.post(url, postObj, accessTokenConfig)
+        return axios.post(url, postObj, tokenConfig)
         .then(res => {
             if(res.status === 200){
                 toast({ title: 'Show updated!',
@@ -82,7 +82,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
         const putObj = Object.assign({}, obj, {showTime: createTimestamp(showTime)});
         console.log('putObj: ', putObj);
 
-        return axios.put(url, putObj, accessTokenConfig)
+        return axios.put(url, putObj, tokenConfig)
             .then( res => console.log('res: ', res))
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));
@@ -105,7 +105,7 @@ export const ShowForm = ({ user, accessTokenConfig }) => {
         setIsSubmitting(true);
         const url = process.env.REACT_APP_SHOWS + `/${showId}`;
 
-        return axios.delete(url, accessTokenConfig)
+        return axios.delete(url, tokenConfig)
             .then( res => {
                 console.log('res: ', res);
                 if(res.status === 200){
