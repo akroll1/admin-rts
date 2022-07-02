@@ -11,10 +11,13 @@ const MobileNavContext = props => {
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const { isLoggedIn, setIsLoggedIn } = props;
-  const signOut = () => {
-    setIsLoggedIn(false);
-    sessionStorage.clear();
-    navigate('/');
+  const handleButtonClick = () => {
+    if(isLoggedIn){
+      setIsLoggedIn(false);
+      sessionStorage.clear();
+      return navigate('/');
+    }
+    return navigate("/signin")
   }
   return (
     <>
@@ -33,16 +36,9 @@ const MobileNavContext = props => {
             </NavLink.Mobile>
           ),
         )}
-        {isLoggedIn &&
-          <Button colorScheme={isLoggedIn ? "blue" : "blue"} w="full" size="lg" mt="5" onClick={() => signOut()}>
-            Sign Out
+          <Button colorScheme="blue" w="full" size="sm" onClick={handleButtonClick}>
+            {isLoggedIn ? `Sign Out` : `Sign In`}
           </Button>
-        }
-        {!isLoggedIn &&
-          <Button as="a" colorScheme="blue" w="full" size="sm" mt="5" href="/signin">
-            Sign In
-          </Button>
-        }
       </NavMenu>
     </>
   )
@@ -51,11 +47,14 @@ const MobileNavContext = props => {
 const DesktopNavContent = props => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = props;
-  const signOut = () => {
-    setIsLoggedIn(false);
-    sessionStorage.clear();
-    navigate('/');
-  }    
+  const handleButtonClick = () => {
+    if(isLoggedIn){
+      setIsLoggedIn(false);
+      sessionStorage.clear();
+      return navigate('/');
+    }
+    return navigate("/signin")
+  }
   return (
     <Flex className="nav-content__desktop" align="center" justify="space-between" {...props}>
       <Box as="a" href="#" rel="home">
@@ -73,17 +72,9 @@ const DesktopNavContent = props => {
         ))}
       </HStack>
       <HStack spacing="8" minW="200px" justify="space-between">
-        {/* <Box as="a" href="/signin" color={mode('blue.600', 'blue.300')} fontWeight="bold"> */}
-        {isLoggedIn &&
-          <Button colorScheme="blue" w="full" size="sm" m="auto" onClick={() => signOut()}>
-            Sign Out
-          </Button>
-        }
-        {!isLoggedIn &&
-          <Button as="a" colorScheme="blue" w="full" size="sm" m="auto" href="/signin">
-            Sign In
-          </Button>
-        }
+        <Button colorScheme="blue" w="full" size="sm" onClick={handleButtonClick}>
+          {isLoggedIn ? `Sign Out` : `Sign In`}
+        </Button>
       </HStack>
     </Flex>
   )
