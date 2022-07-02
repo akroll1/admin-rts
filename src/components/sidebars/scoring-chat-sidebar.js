@@ -192,16 +192,14 @@ export const ChatSidebar = ({
             flexDir="column" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             w="100%" 
-            minH={["40vh", "40vh", "60vh"]} 
+            minH={["22rem"]} 
             maxH={["40vh", "40vh", "60vh"]}
             p="2" 
             bg="gray.900" 
             borderRadius="md" 
             overflowY="scroll"
         >
-            <DividerWithText text={`Group Results`} />
             <FightStats />
-            <DividerWithText text="FightSync Chat" />
             <Input
                 as="input"
                 m="1"
