@@ -52,7 +52,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
             setBroadcast(update);
             setTimeout(() => {
                 setBroadcast('')
-            },50000)
+            },5000)
         };
         const handleBroadcastReconnect = () => {
             setTimeout(() => {
@@ -73,26 +73,25 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     return (
         <>  
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-            {/* { notification &&  */}
-                <Flex 
-                display={broadcast.displayName ? 'flex' : 'none'} 
-                opacity="1 !important"
-                w={["100%","100%"]} 
-                position="fixed" 
-                top="1rem" 
-                right="0" 
-                flexDir="column" 
-                zIndex="100000"
-            >
-                <Notification
-                    id={notification}
-                    handleCloseNotification={handleCloseNotification}
-                    notification={notification} 
-                    displayName={displayName}
-                /> 
-            </Flex>    
-            {/* } */}
             <Box as="main">
+                { notification.length > 0 && 
+                    <Flex 
+                        display={broadcast ? 'flex' : 'none'} 
+                        w={["100%","100%"]} 
+                        position="fixed" 
+                        top="1rem" 
+                        right="0" 
+                        flexDir="column" 
+                        zIndex="10000"
+                    >
+                        <Notification
+                            id={notification}
+                            handleCloseNotification={handleCloseNotification}
+                            notification={notification} 
+                            displayName={displayName}
+                        /> 
+                    </Flex> 
+                }   
                 {children}
             </Box>
             <Footer/>
