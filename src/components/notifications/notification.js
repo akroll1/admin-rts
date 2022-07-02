@@ -20,7 +20,7 @@ import {
         top="0" 
         right="0" 
         initialScale={0.9} 
-        in={notification.length > 0 ? true : false}
+        in={notification?.length > 0 ? true : false}
       >
         <Box as="section" p="1" m="1" my="0">
           <Flex direction="row-reverse">

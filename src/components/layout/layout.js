@@ -36,7 +36,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         };
     
         socket.onclose = (event) => {
-            handleBroadcastReconnect();
+            initConnection(accessToken);
         };
     
         socket.onerror = (event) => {
@@ -54,11 +54,6 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
                 setBroadcast('')
             },5000)
         };
-        const handleBroadcastReconnect = () => {
-            setTimeout(() => {
-                initConnection(accessToken);
-            },1000);
-        }
     };
 
     const socketActive = () => {
@@ -74,7 +69,7 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
         <>  
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Box as="main">
-                { notification.length > 0 && 
+                { notification?.length > 0 && 
                     <Flex 
                         display={broadcast ? 'flex' : 'none'} 
                         w={["100%","100%"]} 
