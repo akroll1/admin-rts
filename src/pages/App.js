@@ -23,7 +23,7 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') == 'true');
   return (
     <ChakraProvider theme={theme}>
-        <Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} >
+        <Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}>
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/about" element={<About />} />

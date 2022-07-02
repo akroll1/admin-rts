@@ -73,24 +73,25 @@ export const Layout = ({ children, isLoggedIn, setIsLoggedIn }) => {
     return (
         <>  
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-            { notification && 
+            {/* { notification &&  */}
                 <Flex 
-                    display={broadcast.displayName ? 'flex' : 'none'} 
-                    w={["100%","100%"]} 
-                    position="fixed" 
-                    top="1rem" 
-                    right="0" 
-                    flexDir="column" 
-                    zIndex="100000"
-                >
-                    <Notification
-                        id={notification}
-                        handleCloseNotification={handleCloseNotification}
-                        notification={notification} 
-                        displayName={displayName}
-                    /> 
-                </Flex>    
-            }
+                display={broadcast.displayName ? 'flex' : 'none'} 
+                opacity="1 !important"
+                w={["100%","100%"]} 
+                position="fixed" 
+                top="1rem" 
+                right="0" 
+                flexDir="column" 
+                zIndex="100000"
+            >
+                <Notification
+                    id={notification}
+                    handleCloseNotification={handleCloseNotification}
+                    notification={notification} 
+                    displayName={displayName}
+                /> 
+            </Flex>    
+            {/* } */}
             <Box as="main">
                 {children}
             </Box>

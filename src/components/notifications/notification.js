@@ -22,7 +22,7 @@ import {
         right="0" 
         initialScale={0.9} 
         in={notification}
-        opacity={1}
+        opacity={notification ? 1 : 0}
       >
         <Box as="section" p="1" m="1" my="0">
           <Flex direction="row-reverse">

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
 import { statsStore } from '../../../stores'
 import { capFirstLetters } from '../../../utils'
+import { DividerWithText } from '../../../chakra'
 
 export const FightStats = (props) => {
     const { label, value, ...boxProps } = props;
@@ -43,10 +44,21 @@ export const FightStats = (props) => {
             })
         },{[fighter1]: 0, [fighter2]: 0, even: 0});
     });
-    const fighter1Percentage = Math.floor(Number.parseFloat(totalObj[fighter1] / totalObj['total']).toFixed(2) * 100);
-    const fighter2Percentage = Math.floor(Number.parseFloat(totalObj[fighter2] / totalObj['total']).toFixed(2) * 100); 
+    console.log('totalObj: ', totalObj)
+    const getPercentages = totalObj => {
+        const fighter1Percentage = Math.floor(Number.parseFloat(totalObj[fighter1] / (totalObj['total'] - totalObj['even']).toFixed(2)) *100);
+        const fighter2Percentage = Math.floor(Number.parseFloat(totalObj[fighter2] / (totalObj['total'] - totalObj['even']).toFixed(2)) * 100); 
+        return ({
+            fighter1Percentage,
+            fighter2Percentage
+        })    
+    };
+    
+    const { fighter1Percentage, fighter2Percentage } = getPercentages(totalObj);
+    
     return (
         <Flex
+            flexDirection="column"
             px="2"
             bg="bg-surface"
             borderRadius="lg"
@@ -54,24 +66,29 @@ export const FightStats = (props) => {
             {...boxProps}
             alignItems="center"
             justifyContent="space-evenly"
-            my="-2"
         >
-            <Stack>
-                <Text m="auto" fontSize="sm" color="muted">
-                    {capFirstLetters(fighter1)}
-                </Text>
-                <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
-                    {fighter1Percentage ? fighter1Percentage : 0}&#37;	
-                </Heading>
-            </Stack>
-            <Stack>
-                <Text m="auto" fontSize="sm" color="muted">
-                    {capFirstLetters(fighter2)}
-                </Text>
-                <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
-                    {fighter2Percentage ? fighter2Percentage : 0}&#37;	
-                </Heading>
-            </Stack>
+            <DividerWithText text={`Group Results`} />
+            <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-evenly">
+
+                <Stack alignItems="center" justifyContent="center">
+                    <Text m="auto" fontSize="sm" color="muted">
+                        {capFirstLetters(fighter1)}
+                    </Text>
+                    <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
+                        {fighter1Percentage ? fighter1Percentage : 0}&#37;	
+                    </Heading>
+                </Stack>
+                <Stack alignItems="center" justifyContent="center">
+                    <Text m="auto" fontSize="sm" color="muted">
+                        {capFirstLetters(fighter2)}
+                    </Text>
+                    <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
+                        {fighter2Percentage ? fighter2Percentage : 0}&#37;	
+                    </Heading>
+                </Stack>
+
+            </Flex>
+            <DividerWithText text={`FightSync Chat`} />
         </Flex>
     )
 }
