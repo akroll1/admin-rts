@@ -16,9 +16,9 @@ import stateStore from '../state-store'
 const Dashboard = props => {
   const { type, showId } = useParams();
   const store = stateStore.getState();
-  console.log('store: ', store)
+  // console.log('store: ', store)
   const { user, setToken, setUser, setUserScorecards } = stateStore( state => state);
-  console.log('USER: ', user);
+  // console.log('USER: ', user);
   // const setTokenInUserStore = stateStore.getState().setToken;
   const [tokenConfig, setTokenConfig] = useState(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
