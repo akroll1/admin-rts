@@ -201,7 +201,9 @@ const Scoring = () => {
                 setTableData(s);
                 setStats(s)
             }; 
-            if(forceRender) return getTableData(scorecards);
+            if(forceRender){
+                getTableData(scorecards);
+            } 
             let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
             const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId)
             
@@ -340,7 +342,6 @@ const Scoring = () => {
 
     const handleAddMemberSubmit = async (email) => {
         setIsSubmitting(true);
-        console.log('email: ', email);
         const { groupScorecardId, groupScorecardName, fightId, username } = groupScorecard;
         const fighterIds = fighterData.map( ({ fighterId }) => fighterId);
         const update = {
