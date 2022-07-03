@@ -201,9 +201,7 @@ const Scoring = () => {
                 setTableData(s);
                 setStats(s)
             }; 
-            if(forceRender){
-                getTableData(scorecards);
-            } 
+
             let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
             const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId)
             
@@ -213,12 +211,9 @@ const Scoring = () => {
             setScorecards(updatedScorecards);
             
             setUserScorecard({ ...userScorecard, scores: tempScores });
-
-
-            
             getTableData(updatedScorecards);
         }
-    },[incomingScore, forceRender])
+    },[incomingScore])
 
     const submitRoundScores = () => {
         if(fightComplete) return; 
