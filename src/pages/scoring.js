@@ -341,7 +341,7 @@ const Scoring = () => {
     const handleAddMemberSubmit = async (email) => {
         setIsSubmitting(true);
         console.log('email: ', email);
-        const { groupScorecardId, groupScorecardName, fightId } = groupScorecard;
+        const { groupScorecardId, groupScorecardName, fightId, username } = groupScorecard;
         const fighterIds = fighterData.map( ({ fighterId }) => fighterId);
         const update = {
             email, 
