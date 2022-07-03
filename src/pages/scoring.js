@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Flex, Heading, useControllableState, useForceUpdate, useToast } from '@chakra-ui/react'
+import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
 import {  AddMemberModal, PredictionModal } from '../components/modals'
@@ -10,7 +10,7 @@ import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import { userStore, useChatScorecardStore, statsStore } from '../stores'
+import stateStore from '../state-store'
 
 const Scoring = () => {
     const location = useLocation();
@@ -18,17 +18,18 @@ const Scoring = () => {
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
     //////////////////  SCORE STATE /////////////////////////
-    const user = userStore( state => state.user);
-    const tokenConfig = userStore( state => state.tokenConfig);
+    // const stated = stateStore.getState();
+    // console.log('stated: ', stated);
+    const { chatScorecard, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
     const { sub, email, username } = user;
-    const setStats = statsStore( state => state.setStats)
-    const chatScorecardStore = useChatScorecardStore( state => state.chatScorecard);
+
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
         fighterA: '', 
         fighterB: '', 
         scorecardName: '',
     });
+    const [incomingScore, setIncomingScore] = useState({});
     const [scorecards, setScorecards] = useState(null);
     const [userScorecard, setUserScorecard] = useState({});
     const [tableData, setTableData] = useState([]);
@@ -55,7 +56,6 @@ const Scoring = () => {
     
     //////////////////  CHAT SIDEBAR   /////////////////////////
     const [updateCards, setUpdateCards] = useState(false);
-    const [chatScorecard, setChatScorecard] = useState(null);
     const [roundResults, setRoundResults] = useState(null);
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
@@ -72,11 +72,11 @@ const Scoring = () => {
     },[user.sub]) 
 
     useEffect(() => {
-        if(user.sub && groupscorecard_id){
 
             // 1. Fetch Group Scorecard.
             const fetchGroupScorecard = async () => {
-                const res = await axios.get(groupScorecardsUrl, tokenConfig);
+                const res = await axios.get(groupScorecardsUrl, tokenConfig)
+                    .then( res => res).catch( err => console.log(err));
                 console.log('res: ', res.data);
                 if(res.data === 'No scorecard found.'){
                     alert('No Scorecard Found');
@@ -100,6 +100,8 @@ const Scoring = () => {
                 console.log('thisUserScorecard', thisUserScorecard)
                 setUserScorecard(thisUserScorecard);
                 setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
+                
+                // Check if 
 
                 // Set prediction, if necessary
                 //TODO:// check for if time expired, too.
@@ -147,40 +149,28 @@ const Scoring = () => {
             //     if(sync) return;
             //     sync();
             // }, 30000);
-        } 
-    }, [user, groupscorecard_id]);
+
+    }, []);
     // take in the new scores from the store and organize them
     // then set them to the new scorecards and do the things.
     useEffect(() => {
-        if(scorecards?.length > 0){
-            if(userScorecard.scorecardId === chatScorecardStore.scorecardId) return;
-            let update = {};
-            for(const [key, value] of Object.entries(chatScorecardStore)){
-                if(key !== 'scorecardId'){
-                    update = {
-                        ...update,
-                        [key]: value
-                    }
-                }
-            }
-            const [scorecardToUpdate] = scorecards.filter( ({ scorecardId }) => scorecardId === chatScorecardStore.scorecardId );
-            const filtered = scorecards.filter( scorecard => scorecard.scorecardId !== chatScorecardStore.scorecardId)
-            const temp = scorecardToUpdate.scores.concat(update);
-            const newScores = {
-                ...scorecardToUpdate,
-                scores: temp
-            }
-            const updatedCards = [...filtered, newScores];
-            setScorecards(updatedCards);
-            setUpdateCards(prev => !prev)
-        }
-    },[chatScorecardStore])
-    // destructure scores...
-    useEffect(() => {
-        // handle the scorecards...
-        if(scorecards?.length > 0){
+        // console.log('incomingScore: ', incomingScore)
+        if(scorecards?.length > 0 && incomingScore.scorecardId){
+            // gotta get this going on the first render.
+            let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
+            const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId)
+            
+            const tempScores = scorecard.scores.concat(incomingScore);
+            scorecard.scores = tempScores;
+            const updatedScorecards = [...otherScorecards, scorecard];
+            setScorecards(updatedScorecards);
+            
+            setUserScorecard({ ...userScorecard, scores: tempScores });
+
+
             const getTableData = () => {
-                const s = scorecards.map( scorecard => {
+                // use this function in both effects...
+                const s = updatedScorecards.map( scorecard => {
                     let { username, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
                     const sortRoundAscending = (a, b) => a.round - b.round;
@@ -226,35 +216,29 @@ const Scoring = () => {
             }
             getTableData();
         }
-    },[scorecards, updateCards]);
+    },[incomingScore, scorecards])
 
     const submitRoundScores = () => {
-        if(fightComplete) return;
+        if(fightComplete){
+            return;
+        } 
         setIsSubmitting(true);
-        const { scores, scorecardId } = userScorecard;
-        const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== scorecardId)
-        const tempScores = scores.concat(sliderScores);
-        const tempScorecard = Object.assign(Object.create({}), { ...userScorecard, scores: tempScores });
-        const updatedScorecards = otherScorecards.concat(tempScorecard);
-
-        const isFightComplete = sliderScores.round + 1 > totalRounds;
-        setScoredRounds(sliderScores.round);
-        const held = Object.assign(Object.create({}),sliderScores);
-        setSliderScores({ ...sliderScores, round: sliderScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
-        setScorecards(updatedScorecards);
-        setUserScorecard({ ...userScorecard, scores: tempScores });
-        const url = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-        return axios.put(url, held, tokenConfig)
+        const submittedScores = Object.assign(Object.create({}),sliderScores);
+        setChatScorecard(submittedScores);
+        
+        const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
+        return axios.put(url, submittedScores, tokenConfig)
             .then( res => {
                 if(res.status === 200){
                     // UPDATES.
-                    
-                    setChatScorecard(held);
+                    setSliderScores({ ...sliderScores, round: sliderScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
+                    const isFightComplete = sliderScores.round + 1 > totalRounds;
+                    setScoredRounds(isFightComplete ? totalRounds : sliderScores.round);
+        
                     if(isFightComplete){
-                        alert('FIGHT COMPLETE')
                         setFightComplete(true);
-                        setScoredRounds(totalRounds)
                         setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
+                        alert('FIGHT COMPLETE')
                     }
                 }
             })
@@ -440,6 +424,7 @@ const Scoring = () => {
                     isSubmitting={isSubmitting}
                 />
                 <ChatSidebar 
+                    setIncomingScore={setIncomingScore}
                     fighterData={fighterData}
                     chatScorecard={chatScorecard}
                     tokenConfig={tokenConfig}
@@ -450,7 +435,7 @@ const Scoring = () => {
                     setNotificationTimeout={setNotificationTimeout}
                 />
             </Flex>   
-            <ScoringTable scoredRounds={scoredRounds} tableData={tableData} totalRounds={totalRounds} />
+            <ScoringTable tableData={tableData} scoredRounds={scoredRounds} totalRounds={totalRounds} />
         </Flex>
     )
 }

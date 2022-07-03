@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { Flex, Menu, MenuDivider, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Text, useColorModeValue } from '@chakra-ui/react'
 import { AccountSwitcherButton } from './account-switcher-button'
-import { userScorecardsStore } from '../../../stores'
 import { useNavigate } from 'react-router'
+import stateStore from '../../../state-store'
 
 export const AccountSwitcher = () => {
   const navigate = useNavigate();
-  const scorecards = userScorecardsStore( state => state.userScorecards);
-  // console.log('scorecards: ', scorecards)
-  const { groupScorecardId, label } = scorecards?.length > 0 ? scorecards : '';
+  const { userScorecards } = stateStore.getState();
+  // console.log('userScorecards: ', userScorecards)
+  const { groupScorecardId, label } = userScorecards?.length > 0 ? userScorecards : '';
   return (
     <Menu>
       <AccountSwitcherButton mb="2" groupScorecardId={groupScorecardId} label={label} />
@@ -17,7 +17,7 @@ export const AccountSwitcher = () => {
           All Scorecards
         </Text>
         <MenuOptionGroup defaultValue="chakra-ui">
-          { scorecards?.length > 0 && scorecards?.map( (scorecard, i) => {
+          { userScorecards?.length > 0 && userScorecards?.map( (scorecard, i) => {
             return (
               <MenuItemOption onClick={() => navigate(`/scoring/${scorecard.groupScorecardId}`)} as="button" key={i} value="chakra-ui" fontWeight="semibold" rounded="md">
                 {scorecard.label}

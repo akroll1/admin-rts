@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
-import axios from 'axios'
-
 import { capFirstLetters } from '../../utils'
-import { userStore } from '../../stores'
-import { Navigate, useLocation } from 'react-router'
+import axios from 'axios'
+import stateStore from '../../state-store'
 
 const initialDnDState = {
   draggedFrom: null,

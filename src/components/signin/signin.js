@@ -4,10 +4,10 @@ import { FaFacebook, FaGoogle } from 'react-icons/fa'
 import { DividerWithText, Card, Logo } from '../../chakra'
 import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
+import { ForcedPasswordChange } from './forced-password-change'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { userStore } from '../../stores'
-import { ForcedPasswordChange } from './forced-password-change'
+import stateStore from '../../state-store'
 
 export const SignIn = props => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -28,8 +28,8 @@ export const SignIn = props => {
   });
   const [isForcePasswordChange, setIsForcePasswordChange] = useState(false)
   const [forgotPassword, setForgotPassword] = useState(false);
-  const setUser = userStore( state => state.setUser);
-  
+  const setUser = stateStore.getState().setUser;
+
   Amplify.configure({
     Auth: {
       region: process.env.REACT_APP_REGION,
