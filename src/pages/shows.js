@@ -14,7 +14,7 @@ const Shows = props => {
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
-    const { user, tokenConfig } = stateStore.getState().user;
+    const { user, tokenConfig } = stateStore.getState();
     // gotta set these to user and tokenConfig.
     const { email, sub, username } = user;
 
