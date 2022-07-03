@@ -53,10 +53,8 @@ const Scoring = () => {
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
     const [toggleModal, setToggleModal] = useState(false);
-    
-    //////////////////  CHAT SIDEBAR   /////////////////////////
-    const [updateCards, setUpdateCards] = useState(false);
-    const [roundResults, setRoundResults] = useState(null);
+    const [forceRender, setForceRender] = useState(false);
+
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -73,100 +71,89 @@ const Scoring = () => {
 
     useEffect(() => {
 
-            // 1. Fetch Group Scorecard.
-            const fetchGroupScorecard = async () => {
-                const res = await axios.get(groupScorecardsUrl, tokenConfig)
-                    .then( res => res).catch( err => console.log(err));
-                console.log('res: ', res.data);
-                if(res.data === 'No scorecard found.'){
-                    alert('No Scorecard Found');
-                    return;
-                }
-                // 2. Set groupScorecard scorecards, showData, guestScorers, chatKey.
-                setGroupScorecard(res.data.groupScorecard);
-                setScorecards(res.data.scorecards);
-                setShowData({
-                    show: res.data.show,
-                    fight: res.data.fight
-                });
-                setShowGuestScorerIds(res.data.show.guestScorerIds);
-                setChatKey(res.data.groupScorecard.chatKey);
-                setQuickTitle(res.data.fight.fightQuickTitle)
-                setFighterData(res.data.fighterData);
-                setTotalRounds(res.data.fight.rounds);
-
-                // Get THIS USER'S scorecard.
-                const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
-                console.log('thisUserScorecard', thisUserScorecard)
-                setUserScorecard(thisUserScorecard);
-                setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
-                
-                // Check if 
-
-                // Set prediction, if necessary
-                //TODO:// check for if time expired, too.
-                const needsPrediction = !thisUserScorecard.prediction
-                if(needsPrediction){
-                    setTimeout(() => {
-                        setNeedsPrediction(true); 
-                        setToggleModal(true);
-                    },5000);
-                } else {
-                    const transformPredictionData = () => {
-                        const { prediction } = thisUserScorecard;
-                        const [fighter] = res.data.fighterData.filter( data => {
-                            const { fighterId, lastName } = data;
-                            const transformedPrediction = `${capFirstLetters(lastName)}, ${prediction.split(',')[1]}`; 
-                            if(prediction.includes(fighterId)){
-                                return setPrediction(transformedPrediction);
-                            }
-                        });
-                    }
-                    transformPredictionData();
-                }
-
-                const findScoredRounds = thisUserScorecard => {
-                    const scored = thisUserScorecard.scores.length;
-                    if(scored + 1 > res.data.fight.rounds){
-                        setFightComplete(true);
-                        return res.data.fight.rounds
-                    }
-                    return scored;
-                }
-                const round = findScoredRounds(thisUserScorecard);
-                setScoredRounds(round);
-                const [fighter1, fighter2] = res.data.fighterData.map( ({ lastName }) => {
-                    return ({
-                        [lastName]: 10
-                    })
-                })
-                setSliderScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId })
+        // 1. Fetch Group Scorecard.
+        const fetchGroupScorecard = async () => {
+            const res = await axios.get(groupScorecardsUrl, tokenConfig)
+                .then( res => res).catch( err => console.log(err));
+            console.log('res: ', res.data);
+            if(res.data === 'No scorecard found.'){
+                alert('No Scorecard Found');
+                return;
             }
-            fetchGroupScorecard();
+            // 2. Set groupScorecard scorecards, showData, guestScorers, chatKey.
+            setGroupScorecard(res.data.groupScorecard);
+            setScorecards(res.data.scorecards);
+            setShowData({
+                show: res.data.show,
+                fight: res.data.fight
+            });
+            setShowGuestScorerIds(res.data.show.guestScorerIds);
+            setChatKey(res.data.groupScorecard.chatKey);
+            setQuickTitle(res.data.fight.fightQuickTitle)
+            setFighterData(res.data.fighterData);
+            setTotalRounds(res.data.fight.rounds);
+
+            // Get THIS USER'S scorecard.
+            const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
+            console.log('thisUserScorecard', thisUserScorecard)
+            setUserScorecard(thisUserScorecard);
+            setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
             
-            // const sync = setInterval(() => {
-            //     fetchGroupScorecard();
-            //     if(sync) return;
-            //     sync();
-            // }, 30000);
+            // Check if 
+
+            // Set prediction, if necessary
+            //TODO:// check for if time expired, too.
+            const needsPrediction = !thisUserScorecard.prediction
+            if(needsPrediction){
+                setTimeout(() => {
+                    setNeedsPrediction(true); 
+                    setToggleModal(true);
+                },5000);
+            } else {
+                const transformPredictionData = () => {
+                    const { prediction } = thisUserScorecard;
+                    const [fighter] = res.data.fighterData.filter( data => {
+                        const { fighterId, lastName } = data;
+                        const transformedPrediction = `${capFirstLetters(lastName)}, ${prediction.split(',')[1]}`; 
+                        if(prediction.includes(fighterId)){
+                            return setPrediction(transformedPrediction);
+                        }
+                    });
+                }
+                transformPredictionData();
+            }
+
+            const findScoredRounds = thisUserScorecard => {
+                const scored = thisUserScorecard.scores.length;
+                if(scored + 1 > res.data.fight.rounds){
+                    setFightComplete(true);
+                    return res.data.fight.rounds
+                }
+                return scored;
+            }
+            const round = findScoredRounds(thisUserScorecard);
+            setScoredRounds(round);
+            const [fighter1, fighter2] = res.data.fighterData.map( ({ lastName }) => {
+                return ({
+                    [lastName]: 10
+                })
+            })
+            setSliderScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId })
+        }
+        fetchGroupScorecard();
+        
+        // const sync = setInterval(() => {
+        //     fetchGroupScorecard();
+        //     if(sync) return;
+        //     sync();
+        // }, 30000);
 
     }, []);
 
     useEffect(() => {
-        if(scorecards?.length > 0 && incomingScore.scorecardId && totalRounds > 0){
-            let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
-            const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId)
-            
-            const tempScores = scorecard.scores.concat(incomingScore);
-            scorecard.scores = tempScores;
-            const updatedScorecards = [...otherScorecards, scorecard];
-            setScorecards(updatedScorecards);
-            
-            setUserScorecard({ ...userScorecard, scores: tempScores });
-
-
-            const getTableData = () => {
-                const s = updatedScorecards.map( scorecard => {
+        if( (scorecards?.length > 0 && incomingScore.scorecardId) || forceRender){
+            const getTableData = scorecards => {
+                const s = scorecards.map( scorecard => {
                     let { username, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
                     const sortRoundAscending = (a, b) => a.round - b.round;
@@ -209,10 +196,23 @@ const Scoring = () => {
                 })
                 setTableData(s);
                 setStats(s)
-            }
-            getTableData();
+            }; 
+            if(forceRender) return getTableData(scorecards);
+            let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
+            const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId)
+            
+            const tempScores = scorecard.scores.concat(incomingScore);
+            scorecard.scores = tempScores;
+            const updatedScorecards = [...otherScorecards, scorecard];
+            setScorecards(updatedScorecards);
+            
+            setUserScorecard({ ...userScorecard, scores: tempScores });
+
+
+            
+            getTableData(updatedScorecards);
         }
-    },[incomingScore, totalRounds])
+    },[incomingScore, forceRender])
 
     const submitRoundScores = () => {
         if(fightComplete) return; 
@@ -418,8 +418,7 @@ const Scoring = () => {
                     isSubmitting={isSubmitting}
                 />
                 <ChatSidebar 
-                    setIncomingScore={setIncomingScore}
-                    fighterData={fighterData}
+                    setForceRender={setForceRender}
                     chatScorecard={chatScorecard}
                     tokenConfig={tokenConfig}
                     chatKey={chatKey}
