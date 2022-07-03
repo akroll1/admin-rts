@@ -216,7 +216,7 @@ const Scoring = () => {
             }
             getTableData();
         }
-    },[incomingScore, scorecards])
+    },[incomingScore])
 
     const submitRoundScores = () => {
         if(fightComplete){
