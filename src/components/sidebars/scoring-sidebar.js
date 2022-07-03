@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Box, Button, Flex, Stack, useColorModeValue as mode } from '@chakra-ui/react'
+import { Button, Flex, Stack, useColorModeValue as mode, useToast } from '@chakra-ui/react'
 import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiUser, BiEdit, BiStar, BiUserCheck, BiPlusCircle } from 'react-icons/bi'
 import { AccountSwitcher } from './scoring-sidebar/account-switcher'
 import { NavGroup } from './scoring-sidebar/nav-group'
@@ -10,6 +10,7 @@ import { parseEpoch, predictionIsLocked, transformedWeightclass } from '../../ut
 import { IoScaleOutline } from 'react-icons/io5'
 
 export const ScoringSidebar = ({ 
+    sub,
     setAddMemberModal,
     finalScore, 
     setToggleModal, 
@@ -20,6 +21,7 @@ export const ScoringSidebar = ({
     prediction, 
     groupScorecard 
 }) => {
+    const toast = useToast();
     const [showGuests, setShowGuests] = useState(null)
     const destructureData = showData => {
         const { show, fight } = showData;
@@ -41,7 +43,17 @@ export const ScoringSidebar = ({
     const handlePredictionToggle = () => {
         setToggleModal(true);
     };
-
+    const openMemberModal = () => {
+        // if(sub !== groupScorecard.ownerId){
+        //     return toast({ 
+        //         title: 'Only Group Admin can add members.',
+        //         duration: 3000,
+        //         status: 'info',
+        //         isClosable: true
+        //     })
+        // }
+        setAddMemberModal(true);
+    }
     const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? destructureData(showData) : '';
     finalScore = parseInt(finalScore);
     const { members } = groupScorecard;
@@ -140,7 +152,7 @@ export const ScoringSidebar = ({
                 <NavItem 
                     icon={<BiPlusCircle />} 
                     label={<Button 
-                        onClick={() => setAddMemberModal(true)}
+                        onClick={openMemberModal}
                         _focus={{bg:'transparent'}} 
                         _hover="transparent" 
                         variant="ghost" 

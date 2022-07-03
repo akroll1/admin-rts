@@ -8,7 +8,7 @@ import { predictionIsLocked } from '../utils/utils'
 import { useLocation, useNavigate } from 'react-router'
 import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
-import { FIGHT_SHOW_STATUS_CONSTANTS, capFirstLetters } from '../utils'
+import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS, triggerToast } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
 import stateStore from '../state-store'
 
@@ -95,8 +95,11 @@ const Scoring = () => {
 
             // Get THIS USER'S scorecard.
             const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
-            console.log('thisUserScorecard', thisUserScorecard)
+            console.log('thisUserScorecard', thisUserScorecard);
+            if(!thisUserScorecard) return alert('No scorecard found.')
             setUserScorecard(thisUserScorecard);
+            // this should really be kick off call for guestScorers with ID.
+            // OR just get them in the initial call.
             setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
             
             // Check if 
@@ -151,6 +154,7 @@ const Scoring = () => {
     }, []);
 
     useEffect(() => {
+        // getTabledata needs this to force initial render.
         if( (scorecards?.length > 0 && incomingScore.scorecardId) || forceRender){
             const getTableData = scorecards => {
                 const s = scorecards.map( scorecard => {
@@ -333,10 +337,22 @@ const Scoring = () => {
         setNotifications(filtered)
     };
     
-    const handleAddMemberSubmit = async email => {
+
+    const handleAddMemberSubmit = async (email) => {
         setIsSubmitting(true);
         console.log('email: ', email);
-        return await axios.put(groupScorecardsUrl, { email }, tokenConfig)
+        const { groupScorecardId, groupScorecardName, fightId } = groupScorecard;
+        const fighterIds = fighterData.map( ({ fighterId }) => fighterId);
+        const update = {
+            email, 
+            fighterIds,
+            fightId,
+            groupScorecardId,
+            groupScorecardName,
+            rounds: totalRounds,
+            username: email
+        }
+        return await axios.put(groupScorecardsUrl, update, tokenConfig)
             .then( res => console.log('res: ', res))
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false))
@@ -345,6 +361,7 @@ const Scoring = () => {
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
     // console.log('tableData: ', tableData)
+    // console.log('fighterData: ', fighterData)
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
     return (
