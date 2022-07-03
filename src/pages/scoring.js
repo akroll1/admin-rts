@@ -151,12 +151,9 @@ const Scoring = () => {
             // }, 30000);
 
     }, []);
-    // take in the new scores from the store and organize them
-    // then set them to the new scorecards and do the things.
+
     useEffect(() => {
-        // console.log('incomingScore: ', incomingScore)
-        if(scorecards?.length > 0 && incomingScore.scorecardId){
-            // gotta get this going on the first render.
+        if(scorecards?.length > 0 && incomingScore.scorecardId && totalRounds > 0){
             let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
             const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId)
             
@@ -169,7 +166,6 @@ const Scoring = () => {
 
 
             const getTableData = () => {
-                // use this function in both effects...
                 const s = updatedScorecards.map( scorecard => {
                     let { username, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
@@ -216,12 +212,10 @@ const Scoring = () => {
             }
             getTableData();
         }
-    },[incomingScore])
+    },[incomingScore, totalRounds])
 
     const submitRoundScores = () => {
-        if(fightComplete){
-            return;
-        } 
+        if(fightComplete) return; 
         setIsSubmitting(true);
         const submittedScores = Object.assign(Object.create({}),sliderScores);
         setChatScorecard(submittedScores);

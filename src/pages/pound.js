@@ -12,7 +12,7 @@ const initialDnDState = {
   originalOrder: [],
   updatedOrder: []
 }
-export const PoundPage = ({ accessTokenConfig }) => {
+export const PoundPage = () => {
   const toast = useToast();  
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
@@ -21,8 +21,7 @@ export const PoundPage = ({ accessTokenConfig }) => {
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   const baseUrl = process.env.REACT_APP_POUND_LIST;
   
-  const user = stateStore.getState.user;
-  const tokenConfig = stateStore.getState.tokenConfig;
+  const { user, tokenConfig } = stateStore.getState();
   ////////////////////////////////////////////////////////
   useEffect(() => {
       const getLists = async () => {
