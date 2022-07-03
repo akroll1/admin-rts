@@ -435,6 +435,7 @@ const Scoring = () => {
                     isSubmitting={isSubmitting}
                 />
                 <ChatSidebar 
+                    setIncomingScore={setIncomingScore}
                     setForceRender={setForceRender}
                     chatScorecard={chatScorecard}
                     tokenConfig={tokenConfig}
