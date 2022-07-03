@@ -1,6 +1,7 @@
-import React, { createRef, useEffect, useRef, useState } from 'react';
-import { Button, Input, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, ButtonGroup } from '@chakra-ui/react'
+import React, { useState } from 'react';
+import { Button, ButtonGroup, Input, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { isValidEmail } from '../../utils';
+
 const CustomOverlay = () => (
     <ModalOverlay
         bg='none'
@@ -11,24 +12,27 @@ const CustomOverlay = () => (
 )
 
 export const AddMemberModal = ({ addMemberModal, handleAddMemberSubmit, isSubmitting, setAddMemberModal }) => {
-    const { onClose } = useDisclosure();
     const [overlay, setOverlay] = React.useState(<CustomOverlay />)
     const [email, setEmail] = useState('');
     const isInvalid = isValidEmail(email) ? false : true;
     const addMember = () => {
         handleAddMemberSubmit(email);
     }
+    const closeModal = () => {
+        setEmail('');
+        setAddMemberModal(false)
+    }
     return ( 
         <Modal
             isCentered
-            onClose={onClose}
+            onClose={closeModal}
             isOpen={addMemberModal}
             motionPreset="slideInBottom"
         >
         <ModalOverlay />
         <ModalContent p="0.5rem">
             <ModalHeader fontSize="sm">Add Member to Group</ModalHeader>
-            <ModalCloseButton onClick={() => setAddMemberModal(false)} />
+            <ModalCloseButton onClick={closeModal} />
             <ModalBody>
                 <Input 
                     // isInvalid={ isInvalid ? 'red.300'} 
@@ -55,7 +59,7 @@ export const AddMemberModal = ({ addMemberModal, handleAddMemberSubmit, isSubmit
                 >
                     Add Member
                 </Button>
-                <Button minW="50%" variant="outline" onClick={() => setAddMemberModal(false)}>
+                <Button minW="50%" variant="outline" onClick={closeModal}>
                     Cancel
                 </Button>
             </ButtonGroup>

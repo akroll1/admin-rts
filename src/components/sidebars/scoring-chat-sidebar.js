@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { FightStats } from './chat-sidebar-components/fight-stats'
 import stateStore from '../../state-store'
 
-export const ChatSidebar = ({ 
+export const ChatSidebar = ({
+    setForceRender, 
     setIncomingScore,
     tokenConfig, 
     chatKey, 
@@ -72,7 +73,7 @@ export const ChatSidebar = ({
     
         axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, data, tokenConfig)
             .then( res => {
-                // console.log('res, 58: ', res)
+                setForceRender(true);
                 setChatToken(res.data);
                 initConnection(res.data);
             })
