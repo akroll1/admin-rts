@@ -8,18 +8,18 @@ import { CreateGroupScorecard } from './create-scorecard'
 import { MyAccountForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
 import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
-import { userStore, userScorecardsStore } from '../stores'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { capFirstLetters } from '../utils'
+import stateStore from '../state-store'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const user = userStore( state => state.user);
-  const setUser = userStore( state => state.setUser)
-  const setUserScorecards = userScorecardsStore( state => state.setUserScorecards)
-  const setTokenInUserStore = userStore( store => store.setToken);
-  
+  const store = stateStore.getState();
+  console.log('store: ', store)
+  const { user, setToken, setUser, setUserScorecards } = stateStore( state => state);
+  console.log('USER: ', user);
+  // const setTokenInUserStore = stateStore.getState().setToken;
   const [tokenConfig, setTokenConfig] = useState(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
@@ -34,42 +34,50 @@ const Dashboard = props => {
   const [scorecards, setScorecards] = useState(null);
 
   useEffect(() => {
-    const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}`;
-    const token = localStorage.getItem(`${localStorageString}.accessToken`);
-    const config = {
-      headers: { 
-        Authorization: `Bearer ${token}` 
+    if(user?.username){
+
+      const setAuth = async () => {
+        const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}`;
+        const token = await localStorage.getItem(`${localStorageString}.accessToken`);
+        const config = {
+          headers: { 
+            Authorization: `Bearer ${token}` 
+          }
+        };
+        setTokenConfig(config);
+        setToken(config);
+      
+        const decodedToken = await jwt_decode(token);
+        if(!user.sub){
+          const { sub } = decodedToken;
+          setUser({ ...user, sub });
+        }
+        const isSuperAdmin = decodedToken['cognito:groups'] ? decodedToken['cognito:groups'][0] === 'rts-admins' : false;
+        if(isSuperAdmin){
+          setUser({ ...user, isSuperAdmin })
+          setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+        } 
       }
-    };
-    setTokenConfig(config);
-    setTokenInUserStore(config);
-    
-    const setAuth = async () => {
-      const decodedToken = await jwt_decode(token);
-      if(!user.sub){
-        const { sub } = decodedToken;
-        setUser({ ...user, sub });
-      }
-      const isSuperAdmin = decodedToken['cognito:groups'] ? decodedToken['cognito:groups'][0] === 'rts-admins' : false;
-      if(isSuperAdmin){
-        setUser({ ...user, isSuperAdmin })
-        setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-      } 
+      setAuth()
     }
-    setAuth()
-  },[])
+  },[user?.username])
   // getScorecards && check if user exists.
   useEffect(() => {
     if(tokenConfig){
       const getUserScorecards = async () => {
         const url = process.env.REACT_APP_SCORECARDS + `/${user.sub}-${user.email}`;
-        const scorecards = await axios.get(url, tokenConfig)
+        return axios.get(url, tokenConfig)
           .then(res => {
             if(res.data.length > 0 ) setUserScorecards(res.data)
             // console.log('res: ',res);
             const data = res.data.map(obj => {
               const { fighterData, scorecard } = obj;
-              const { groupScorecardId, rounds, scores } = scorecard;
+              const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
+              if(ownerId.includes('@')){
+                const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
+                const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
+                  .then( res => console.log('PATCH: ', res)).catch( err => console.log(err));
+              }
               const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
               const setPrediction = prediction => {
                   if(prediction){
@@ -88,21 +96,22 @@ const Dashboard = props => {
                   isComplete
               })
             });
-            setScorecards(data)
             // put scorecard info in for scorecards switcher.
             if(res.data.length > 0){
+              setScorecards(data)
               setUserScorecards(data)
             }
           }).catch(err => console.log(err))
         }
         getUserScorecards();
+
+
         // put user data into DB.
         const updateUser = async () => {
           const url = process.env.REACT_APP_USERS + `/${user.sub}`;
           return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
             .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
         }
-
         updateUser();
     }
   },[tokenConfig])
@@ -144,7 +153,7 @@ const Dashboard = props => {
         <Stack spacing={6}>
           <Box fontSize="sm" lineHeight="tall">
             <Box as="a" href="#" p="3" display="block" transition="background 0.1s" rounded="xl" _hover={{ bg: 'whiteAlpha.200' }} whiteSpace="nowrap">
-              <UserInfo setForm={setForm} setActive={setActive} name={user.username} email={user.email} />
+              <UserInfo setForm={setForm} setActive={setActive} name={user?.username ? user.username : ''} email={user?.email ? user.email : ''} />
             </Box>
           </Box>
         </Stack>

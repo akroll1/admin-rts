@@ -3,8 +3,8 @@ import { Avatar, Box, Button, Checkbox, FormControl, FormHelperText, FormLabel, 
 import { HiCloudUpload } from 'react-icons/hi'
 import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect, FieldGroup } from '../../chakra'
+import useStore from '../../state-store';
 import axios from 'axios'
-import { useUserStore } from '../../stores'
 
 
 export const MyAccountForm = ({ user, tokenConfig }) => {
@@ -44,7 +44,7 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
   // console.log('userProfile: ', userProfile);
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
-      <form id="settings-form" onSubmit={(e) => {e.preventDefault()}}>
+      <form id="settings-form" onSubmit={e => e.preventDefault()}>
         <Stack spacing="4" divider={<StackDivider />}>
           <Heading size="lg" as="h1" paddingBottom="4">
             Account Settings

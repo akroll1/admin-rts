@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
+import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
-import { userStore } from '../stores'
 import { useLocation } from 'react-router'
 import { PagePoundList } from '../components/lists'
+import stateStore from '../state-store'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -13,7 +13,6 @@ const initialDnDState = {
   updatedOrder: []
 }
 export const PoundPage = ({ accessTokenConfig }) => {
-  const location = useLocation();
   const toast = useToast();  
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
@@ -22,8 +21,8 @@ export const PoundPage = ({ accessTokenConfig }) => {
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   const baseUrl = process.env.REACT_APP_POUND_LIST;
   
-  const user = userStore( state => state.user);
-  const tokenConfig = userStore( state => state.tokenConfig);
+  const user = stateStore.getState.user;
+  const tokenConfig = stateStore.getState.tokenConfig;
   ////////////////////////////////////////////////////////
   useEffect(() => {
       const getLists = async () => {

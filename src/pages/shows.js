@@ -4,18 +4,19 @@ import axios from 'axios'
 import { ShowsSidebar } from '../components/sidebars'
 import { v4 as uuidv4 } from 'uuid'
 import { ReviewFormModal } from '../components/modals'
-import { userStore } from '../stores'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import jwt_decode from 'jwt-decode'
+import stateStore from '../state-store'
 
 const Shows = props => {
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
-    const user = userStore( user => ({...user.user, tokenConfig: user.tokenConfig }));
-    const { email, sub, username, tokenConfig } = user;
+    const { user, tokenConfig } = stateStore.getState().user;
+    // gotta set these to user and tokenConfig.
+    const { email, sub, username } = user;
 
     const baseUrl = process.env.REACT_APP_SHOWS;
     const [shows, setShows] = useState([]);

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
-import { statsStore } from '../../../stores'
-import { capFirstLetters } from '../../../utils'
 import { DividerWithText } from '../../../chakra'
+import { capFirstLetters } from '../../../utils'
+import stateStore from '../../../state-store'
 
 export const FightStats = (props) => {
     const { label, value, ...boxProps } = props;
-    const stats = statsStore( state => state.stats);
+    const { stats } = stateStore.getState();
 
     const [fighters, setFighters] = useState(null);
     
@@ -44,7 +44,7 @@ export const FightStats = (props) => {
             })
         },{[fighter1]: 0, [fighter2]: 0, even: 0});
     });
-    console.log('totalObj: ', totalObj)
+    // console.log('totalObj: ', totalObj)
     const getPercentages = totalObj => {
         const fighter1Percentage = Math.floor(Number.parseFloat(totalObj[fighter1] / (totalObj['total'] - totalObj['even']).toFixed(2)) *100);
         const fighter2Percentage = Math.floor(Number.parseFloat(totalObj[fighter2] / (totalObj['total'] - totalObj['even']).toFixed(2)) * 100); 

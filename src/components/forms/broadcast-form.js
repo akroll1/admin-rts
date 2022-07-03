@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Stack, StackDivider, VStack } from '@chakra-ui/react'
-import { broadcastStore } from '../../stores';
+import useStore from '../../state-store'
 import { FieldGroup } from '../../chakra';
 
 export const BroadcastForm = () => {
     const [form, setForm] = useState({broadcast: ''});
-    const sendBroadcast = broadcastStore( ({ setBroadcast }) => setBroadcast)
+    const sendBroadcast = useStore( ({ setBroadcast }) => setBroadcast)
     const sendTheBroadcast = () => {
         sendBroadcast(form.broadcast);
         setForm({ broadcast: '' });

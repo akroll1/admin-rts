@@ -3,11 +3,10 @@ import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/reac
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { FightStats } from './chat-sidebar-components/fight-stats'
-import { DividerWithText } from '../../chakra'
-import { useChatScorecardStore } from '../../stores'
+import stateStore from '../../state-store'
 
 export const ChatSidebar = ({ 
-    chatScorecard,
+    setIncomingScore,
     tokenConfig, 
     chatKey, 
     username, 
@@ -15,14 +14,13 @@ export const ChatSidebar = ({
     setNotificationTimeout 
 }) => {
     // chatKey is room key for room ARN, required for chat metadata.
+    const { chatScorecard, setChatScorecard } = stateStore.getState();
     const [moderator, setModerator] = useState(false);
     const [avatar, setAvatar] = useState({});
     const [chatToken, setChatToken] = useState(null);
-    const [refreshTimer, setRefreshTimer] = useState({});
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
-    const [round, setRound] = useState('')
-    const [update, setUpdate] = useState(null);
+
     //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [powerShotDisabled, setPowerShotDisabled] = useState(false);
@@ -35,7 +33,6 @@ export const ChatSidebar = ({
     const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
-    const setChatScorecardStore = useChatScorecardStore(state => state.setChatScorecard)
     
     useEffect(() => {
         if(chatKey){
@@ -44,8 +41,8 @@ export const ChatSidebar = ({
     },[chatKey])
     
     useEffect(() => {
-        if(chatScorecard?.scorecardId && connection){
-            console.log('handleSendMesage')
+        if(chatScorecard?.scorecardId && socketActive()){
+            // console.log('handleSendMesage')
             handleSendMessage('UPDATE')
         }
     },[chatScorecard])
@@ -132,7 +129,7 @@ export const ChatSidebar = ({
             },10000)
         }
     };
-    const handleReceiveMessage = (data) => {
+    const handleReceiveMessage = data => {
         // console.log('data- 102: ', data)
         const { Attributes, Content, Sender, Type } = data;
         const { UserId } = Sender;
@@ -145,7 +142,8 @@ export const ChatSidebar = ({
             setChatMessages(prev => [{ message, username: UserId, type: Type }, ...prev ]);
         } else if(Content === 'UPDATE'){
             const update = JSON.parse(Attributes.UPDATE);
-            setChatScorecardStore(update)
+            setChatScorecard({})
+            setIncomingScore(update)
         }
     };
  

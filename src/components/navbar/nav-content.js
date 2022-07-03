@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Flex, HStack,useDisclosure } from '@chakra-ui/react'
 import { NavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
 import { ToggleButton, Submenu, Logo } from '../../chakra'
 import { links } from './navbar_data'
-import { Link as RRLink } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
+import stateStore from '../../state-store'
 
 const MobileNavContext = props => {
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
-  const { isLoggedIn, setIsLoggedIn } = props;
+  const isLoggedIn = true;
   const handleButtonClick = () => {
     if(isLoggedIn){
-      setIsLoggedIn(false);
       sessionStorage.clear();
       return navigate('/');
     }
@@ -46,10 +45,71 @@ const MobileNavContext = props => {
 
 const DesktopNavContent = props => {
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = props;
+
+  // const message = stateStore.getState().broadcast;
+  // const username = stateStore.getState().username;
+  // const [broadcast, setBroadcast] = useState('');
+  // const [broadcastConnection, setBroadcastConnection] = useState(null);
+  // const connectionRef = useRef(broadcastConnection);
+  // connectionRef.current = broadcastConnection;
+
+
+  // useEffect(() => {
+  //     const localStorageString = 'CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username;
+  //     const accessToken = localStorage.getItem(localStorageString + '.accessToken');
+  //     // initConnection(accessToken);
+  // },[])
+  
+  // useEffect(() => {
+  //     if(message){
+  //         broadcastConnection.send(JSON.stringify({ action: 'routeBroadcast', data: message }));
+  //     }
+  // },[message]);
+
+  // const initConnection = async (accessToken) => {
+  //     const socket = new WebSocket(process.env.REACT_APP_BROADCAST_URL);
+  //     setBroadcastConnection(socket);
+  
+  //     socket.onopen = (event) => {
+  //         console.info("Broadcast connected: ", event);
+  //     };
+  
+  //     socket.onclose = (event) => {
+  //         initConnection(accessToken);
+  //     };
+  
+  //     socket.onerror = (event) => {
+  //         console.error("Broadcast websocket error event:", event);
+  //     };
+  
+  //     socket.onmessage = (event) => {
+  //         // console.log('onmessage: ', event)
+  //         const update = {
+  //             notification: JSON.parse(event.data).data,
+  //             displayName: 'FightSync.live'
+  //         };
+  //         setBroadcast(update);
+  //         setTimeout(() => {
+  //             setBroadcast('')
+  //         },5000)
+  //     };
+  // };
+
+  // const socketActive = () => {
+  //     return broadcastConnection?.readyState === 1;
+  // }
+  // const handleCloseNotification = e => {
+  //     setBroadcast('');
+  // };
+
+  // const { notification, displayName } = broadcast ? broadcast : '';
+  // console.log('broadcast: ', broadcast)
+
+
+  // const isLoggedIn = socketActive() ? true : false;
+const isLoggedIn = true
   const handleButtonClick = () => {
     if(isLoggedIn){
-      setIsLoggedIn(false);
       sessionStorage.clear();
       return navigate('/');
     }
@@ -58,7 +118,7 @@ const DesktopNavContent = props => {
   return (
     <Flex className="nav-content__desktop" align="center" justify="space-between" {...props}>
       <Box as="a" href="#" rel="home">
-        <RRLink to="/">FightSync</RRLink>
+        <Button bg="transparent" to="/">FightSync</Button>
       </Box>
       <HStack as="ul" id="nav__primary-menu" aria-label="Main Menu" listStyleType="none">
         {links.map((link, idx) => (
