@@ -6,9 +6,7 @@ import { Box } from '@chakra-ui/react'
 export const Layout = ({ children }) => (
     <>  
         <Navbar />
-        <Box as="main">
-            {children}
-        </Box>
+        <Box as="main">{children}</Box>
         <Footer />
     </>
 )
