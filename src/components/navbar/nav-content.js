@@ -7,10 +7,11 @@ import { links } from './navbar_data'
 import { useNavigate } from 'react-router'
 import stateStore from '../../state-store'
 
+const { user } = stateStore.getState();
+const isLoggedIn = user?.isLoggedIn ? true : false
 const MobileNavContext = props => {
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
-  const isLoggedIn = true;
   const handleButtonClick = () => {
     if(isLoggedIn){
       sessionStorage.clear();
@@ -107,7 +108,6 @@ const DesktopNavContent = props => {
 
 
   // const isLoggedIn = socketActive() ? true : false;
-const isLoggedIn = true
   const handleButtonClick = () => {
     if(isLoggedIn){
       sessionStorage.clear();
