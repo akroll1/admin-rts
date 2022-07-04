@@ -5,15 +5,14 @@ import { NavMenu } from './nav-menu'
 import { ToggleButton, Submenu, Logo } from '../../chakra'
 import { links } from './navbar_data'
 import { useNavigate } from 'react-router'
-import stateStore from '../../state-store'
 
-const { user } = stateStore.getState();
-const isLoggedIn = user?.isLoggedIn ? true : false
 const MobileNavContext = props => {
+  const { isLoggedIn, setIsLoggedIn } = props;
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const handleButtonClick = () => {
     if(isLoggedIn){
+      setIsLoggedIn(false);
       sessionStorage.clear();
       return navigate('/');
     }
@@ -45,6 +44,7 @@ const MobileNavContext = props => {
 }
 
 const DesktopNavContent = props => {
+  const { isLoggedIn, setIsLoggedIn } = props;
   const navigate = useNavigate();
 
   // const message = stateStore.getState().broadcast;
@@ -110,6 +110,7 @@ const DesktopNavContent = props => {
   // const isLoggedIn = socketActive() ? true : false;
   const handleButtonClick = () => {
     if(isLoggedIn){
+      setIsLoggedIn(false);
       sessionStorage.clear();
       return navigate('/');
     }
