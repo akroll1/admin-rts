@@ -91,8 +91,11 @@ export const FightForm = ({ user, tokenConfig }) => {
             .finally(() => setIsSubmitting(false));
     };
     const handleAddGuestJudge = () => {
-        setGuestJudgeIds( prev => ([...prev, guestJudge]))
-        setGuestJudge('');
+        if(guestJudge.length === 36){
+            setGuestJudgeIds( prev => ([...prev, guestJudge]));
+            return setGuestJudge('');
+        }
+        return alert('Not a valid UUID');
     }
     const deleteJudge = e => {
         const { id } = e.currentTarget;
