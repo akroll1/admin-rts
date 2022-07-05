@@ -10,8 +10,8 @@ import { parseEpoch, predictionIsLocked, transformedWeightclass } from '../../ut
 import { IoScaleOutline } from 'react-icons/io5'
 
 export const ScoringSidebar = ({ 
-    sub,
-    setAddMemberModal,
+    setOpenAddGuestJudgeModal,
+    handleOpenAddMemberSubmitModal,
     finalScore, 
     setToggleModal, 
     showData, 
@@ -44,15 +44,7 @@ export const ScoringSidebar = ({
         setToggleModal(true);
     };
     const openMemberModal = () => {
-        // if(sub !== groupScorecard.ownerId){
-        //     return toast({ 
-        //         title: 'Only Group Admin can add members.',
-        //         duration: 3000,
-        //         status: 'info',
-        //         isClosable: true
-        //     })
-        // }
-        setAddMemberModal(true);
+        handleOpenAddMemberSubmitModal();
     }
     const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? destructureData(showData) : '';
     finalScore = parseInt(finalScore);
@@ -122,7 +114,7 @@ export const ScoringSidebar = ({
                     <NavItem 
                         icon={<FaPlusCircle />} 
                         label={<Button 
-                            onClick={() => setShowGuests(!showGuests)}
+                            onClick={() => setOpenAddGuestJudgeModal(true)}
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 
@@ -135,7 +127,7 @@ export const ScoringSidebar = ({
                             pl="0" 
                             m="0"
                         >                    
-                        Add Judge
+                        Add Guest Judge
                     </Button>} 
                     />
                     { showGuests && showGuestScorers && showGuestScorers.length > 0 && showGuestScorers.map( (guestScorer,i) => <NavItem id={guestScorer.guestScorerId} handleClick={handleAddGuestScorer} icon={<BiPlusCircle />} label={guestScorer.displayName} key={i} />)}
@@ -143,10 +135,8 @@ export const ScoringSidebar = ({
 
                 <NavGroup label="Group Members">
                     { members && members.length > 0 && members.map( (member, i) => {
-                            // return <NavItem icon={<BiStar />} label={member} key={i} />
-                        // } else {
-                            return <NavItem icon={<BiUser />} label={member.split('@')[0]} key={i} />
-                        // }
+                        const isAdmin = member === groupScorecard.admin;
+                        return <NavItem icon={isAdmin ? <BiStar /> : <BiUser />} label={member.split('@')[0]} key={i} />
                     })}
                 
                 <NavItem 
