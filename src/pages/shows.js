@@ -248,7 +248,7 @@ const Shows = props => {
         const scorecardObj = {
             fighterIds: selectedShow.fight.fighterIds,
             username,
-            email, // necessary to create a groupScorecard, membersArr.
+            admin: email, // necessary to create a groupScorecard, membersArr.
             ownerId: sub,
             fightId: selectedShow.fightIds[0],
             showId: selectedShow.showId,

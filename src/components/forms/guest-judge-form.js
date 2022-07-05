@@ -4,58 +4,71 @@ import { FieldGroup } from '../../chakra'
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid'
 
-export const GuestScorerForm = ({ user, tokenConfig }) => {
+export const GuestJudgeForm = ({ user, tokenConfig }) => {
     const toast = useToast();
-    const guestScorerUrl = process.env.REACT_APP_GUEST_SCORERS;
-    const [guestScorer, setGuestScorer] = useState({
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [search, setSearch] = useState('');
+    const [form, setForm] = useState({
+        guestJudgeId: '',
         bio: '',
         displayName: '',
         firstName: '',
-        guestScorerId: uuidv4(),
         img: '',
         lastName: '',
         link: '',
+        tagline: ''
     });
 
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
-        return setGuestScorer({...guestScorer, [id]: value });
+        return setForm({...form, [id]: value });
     }
-    const submitGuestScorer = () => {
-        const guestScorerPutUrl = guestScorerUrl + `/${guestScorer.guestScorerId}`;
-        return axios.put(guestScorerPutUrl, guestScorer, tokenConfig)
+    const searchForJudge = () => {
+        if(search){
+            setIsSubmitting(true);
+            const url = process.env.REACT_APP_GUEST_JUDGES + `/${search}`;
+            return axios.get(url, tokenConfig)
+                .then( res => setForm({ ...res.data }))
+                .catch( err => console.log(err))
+                .finally(() => setIsSubmitting(false));
+        }
+    };
+    const putGuestJudge = () => {
+        const url = process.env.REACT_APP_GUEST_JUDGES;
+        return axios.put(url, form, tokenConfig)
             .then(res => {
                 if(res.status === 200){
-                    toast({ title: 'Guest Scorer PUT good.',
+                    toast({ title: 'Guest Judge successful.',
                         status: 'success',
                         duration: 5000,
                         isClosable: true,})
                 }})
             .catch(err => console.log(err))
     }
-    // const deleteDiscussion = e => {
-    //     const { id } = e.currentTarget;
-    //     const newDiscussionsList = discussions.filter( discussion => discussion.discussionId !== id);
-    //     setDiscussions(newDiscussionsList);
-    // }
-    // const selectDiscussion = e => {
-    //     const { id } = e.currentTarget;
-    //     const selected = discussions.filter( discussion => discussion.discussionId ===  id);
-    //     setDiscussion({...selected[0]});
-    // };
-    // useEffect(() => {
-    //     console.log('discussion: ',discussion);
-    //     console.log('discussions: ',discussions);
-    // },[discussion, discussions])
-    const { bio, displayName, firstName, lastName, img, link, tagline } = guestScorer;
+
+    const { bio, displayName, firstName, guestJudgeId, lastName, img, links, tagline } = form;
+    // LINKS is an array | null;
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
-            <form id="discussions-form" onSubmit={(e) => {e.preventDefault()}}>
+            <form id="guest_judge_form" onSubmit={(e) => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4" mt="3rem">
-                        Guest Scorer Form
+                        Guest Judge Form
                     </Heading>
-                    <FieldGroup title="Guest Scorers">
+                    <FieldGroup title="Search for a Judge">
+                        <VStack width="full" spacing="6">
+                            <FormControl id="search">
+                                <FormLabel htmlFor="guestJudgeId">Judge ID</FormLabel>
+                                <Input value={search} onChange={ ({ currentTarget: {value} }) => setSearch(value.length == 36 ? value : '')} type="text" maxLength={36} />
+                            </FormControl>
+                            <HStack justifyContent="center" width="full">
+                                <Button disabled={!search}  minW="33%" isLoading={isSubmitting} loadingText="Searching..." onClick={searchForJudge} type="button" colorScheme="blue">
+                                    Search
+                                </Button>
+                            </HStack>
+                        </VStack>
+                    </FieldGroup>
+                    <FieldGroup title="Guest Judge">
                         <VStack width="full" spacing="6">
                             <FormControl isRequired id="firstName">
                                 <FormLabel htmlFor="firstName">First Name</FormLabel>
@@ -65,7 +78,7 @@ export const GuestScorerForm = ({ user, tokenConfig }) => {
                                 <FormLabel htmlFor="lastName">Last Name</FormLabel>
                                 <Input required value={lastName} onChange={e => handleFormChange(e)} type="text" maxLength={100} />
                             </FormControl>
-                            <FormControl isRequired id="displayName">
+                            <FormControl id="displayName">
                                 <FormLabel htmlFor="displayName">Display Name</FormLabel>
                                 <Input required value={displayName} onChange={e => handleFormChange(e)} type="text" maxLength={100} />
                             </FormControl>
@@ -73,9 +86,9 @@ export const GuestScorerForm = ({ user, tokenConfig }) => {
                                 <FormLabel htmlFor="img">Image Url</FormLabel>
                                 <Input value={img} onChange={e => handleFormChange(e)} type="text" maxLength={100} />
                             </FormControl>
-                            <FormControl id="link">
-                                <FormLabel htmlFor="link">Link Url</FormLabel>
-                                <Input value={link} onChange={e => handleFormChange(e)} type="text" maxLength={100} />
+                            <FormControl id="links">
+                                <FormLabel htmlFor="links">Link Url</FormLabel>
+                                <Input value={links} onChange={e => handleFormChange(e)} type="text" maxLength={100} />
                             </FormControl>
                             
                             <FormControl id="tagline">
@@ -99,8 +112,8 @@ export const GuestScorerForm = ({ user, tokenConfig }) => {
                 </Stack>
                 <FieldGroup mt="8">
                     <HStack width="full">
-                    <Button onClick={submitGuestScorer} type="submit" colorScheme="blue">
-                        Submit Guest Scorer
+                    <Button onClick={putGuestJudge} type="submit" colorScheme="blue">
+                        Submit
                     </Button>
                     <Button variant="outline">Cancel</Button>
                     </HStack>

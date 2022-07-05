@@ -4,7 +4,7 @@ import { capFirstLetters } from '../../../utils'
 
 export const ScoringTableInfo = ({ username, prediction }) => {
   const usernameCheck = username => {
-    if(username.includes('@')){
+    if(username?.includes('@')){
       return username.slice(0, username.indexOf('@'))
     } 
     return username; 

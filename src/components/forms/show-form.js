@@ -5,8 +5,6 @@ import axios from 'axios'
 import { ShowFormFightersTable, ShowFormShowsTable } from '../tables'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import '../../stylesheets/datepicker.css'
-import '../../stylesheets/datepicker.css'
 import { NETWORK_ENUMS, FIGHT_SHOW_STATUS_ENUMS, createTimestamp } from '../../utils'
 import parseISO from 'date-fns/parseISO'
 // import { addDays } from 'date-fns/addDays'
@@ -14,12 +12,10 @@ import parseISO from 'date-fns/parseISO'
 export const ShowForm = ({ user, tokenConfig }) => {
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [guestScorer, setGuestScorer] = useState('');
     // showId is kept out of the form for put/post logic.
     const [showId, setShowId] = useState(null);
     const [form, setForm] = useState({
         fightIds: '', // cast to string[] on submit.
-        guestScorerIds: [],
         location: '',
         network: '',
         promoter: '',
@@ -94,13 +90,6 @@ export const ShowForm = ({ user, tokenConfig }) => {
         return setForm({...form, [id]: value});
     };
 
-    const handleAddGuestScorer = () => {
-        console.log('guest: ',guestScorer);
-        const { guestScorerIds } = form;
-        const temp = guestScorerIds.concat(guestScorer)
-        setForm({...form, guestScorerIds: temp});
-        setGuestScorer('');
-    };
     const deleteShow = () => {
         setIsSubmitting(true);
         const url = process.env.REACT_APP_SHOWS + `/${showId}`;
@@ -198,23 +187,6 @@ export const ShowForm = ({ user, tokenConfig }) => {
                             </FormControl>
                         </VStack>
                     </FieldGroup>
-                    
-                    <FieldGroup title="Guest Scorers">
-                        <VStack width="full" spacing="6">
-                            <FormControl id="guestScorers">
-                                <FormLabel htmlFor="guestScorers">Guest Scorer ID's</FormLabel>
-                                <Input disabled={true} value={guestScorer} placeholder="guestScorerId:groupScorecardId" onChange={e => handleFormChange(e,'GUEST')}></Input>
-                            </FormControl>
-                            <FieldGroup mt="8">
-                                <HStack width="full">
-                                <Button minW="33%" disabled={true} onClick={() => handleAddGuestScorer()} type="button" colorScheme="blue">
-                                    Add Guest Scorer
-                                </Button>
-                                </HStack>
-                            </FieldGroup>
-                        </VStack>
-                    </FieldGroup>
-
                 </Stack>
                 <FieldGroup mt="8">
                     <ButtonGroup w="100%">

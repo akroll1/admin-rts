@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Select, Stack, StackDivider, Textarea, useToast, VStack } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, InputGroup, InputRightElement, Select, Stack, StackDivider, Textarea, useToast, VStack } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
+import { DeleteIcon } from '@chakra-ui/icons'
 import axios from 'axios'
 import { FIGHT_SHOW_STATUS_ENUMS, ROUND_LENGTH_ENUMS,  WEIGHTCLASS_ENUMS } from '../../utils'
 
@@ -10,26 +11,19 @@ export const FightForm = ({ user, tokenConfig }) => {
     const [fightId, setFightId] = useState(null);
     const [fighterAId, setFighterAId] = useState('');
     const [fighterBId, setFighterBId] = useState('');
-
+    const [guestJudge, setGuestJudge] = useState('');
+    const [guestJudgeIds, setGuestJudgeIds] = useState([]);
     const [form, setForm] = useState({
         fighterIds: [],
         fightQuickTitle: '',
-        weightclass: '',
-        rounds: 0,
+        fightStoryline: null,
         isMainEvent: false,
         isTitleFight: false,
         odds: null,
-        fightStoryline: null,
+        rounds: 0,
+        weightclass: '',
     });
-    // interface FightCreateDTO {
-    //     fighterIds: string[];
-    //     weightclass: WeightClass;
-    //     rounds: number;
-    //     isMainEvent: boolean;
-    //     isTitleFight: boolean;
-    //     odds?: string | null;
-    //     fightStoryline?: string | null;
-    // }
+
     const handleFormChange = e => {
         const { name, id, value, checked } = e.currentTarget;
         if(name === 'checkbox'){
@@ -41,11 +35,17 @@ export const FightForm = ({ user, tokenConfig }) => {
     
     const handlePutFight = () => {
         setIsSubmitting(true);
-        const fightObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId]})
+        const fightObj = Object.assign(Object.create({}), form, {fighterIds: [fighterAId, fighterBId]}, { guestJudgeIds })
         const url = process.env.REACT_APP_FIGHTS + `/${fightId}`;
         return axios.put(url, fightObj, tokenConfig)
-            .then( res => console.log('res: ', res))
-            .catch( err => console.log(err))
+            .then( res => {
+                if(res.status === 200){
+                    toast({ title: 'Fight updated!',
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,})  
+                }
+            }).catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));
         
     };
@@ -56,8 +56,14 @@ export const FightForm = ({ user, tokenConfig }) => {
         const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId]})
         console.log('postObj: ', postObj)
         return axios.post(url, postObj, tokenConfig)
-            .then( res => console.log('res: ', res))
-            .catch( err => console.log(err))
+            .then( res => {
+                if(res.status === 200){
+                    toast({ title: 'Fight created!',
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,})  
+                }
+            }).catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));
     };
     
@@ -84,6 +90,16 @@ export const FightForm = ({ user, tokenConfig }) => {
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));
     };
+    const handleAddGuestJudge = () => {
+        setGuestJudgeIds( prev => ([...prev, guestJudge]))
+        setGuestJudge('');
+    }
+    const deleteJudge = e => {
+        const { id } = e.currentTarget;
+        console.log('id: ', id)
+        const filtered = guestJudgeIds.filter( judge => judge !== id)
+        setGuestJudgeIds(filtered)
+    }
     const { fighterIds, fightQuickTitle, weightclass, rounds, isMainEvent, isTitleFight, odds, fightStoryline } = form;
 
     return (
@@ -174,21 +190,44 @@ export const FightForm = ({ user, tokenConfig }) => {
                             </VStack>
                         </FieldGroup>
                     }
+                    <FieldGroup title="Guest Judges">
+                        <VStack width="full" spacing="6">
+                            <FormControl id="guestJudge">
+                                <FormLabel htmlFor="guestJudge">Guest Judge ID's</FormLabel>
+                                <Input value={guestJudge} placeholder="Guest Judge ID" onChange={e => setGuestJudge(e.currentTarget.value)}></Input>
+                            </FormControl>
+                            <FieldGroup mt="8">
+                                <HStack width="full">
+                                <Button minW="33%" onClick={handleAddGuestJudge} type="button" colorScheme="blue">
+                                    Add Guest Judge
+                                </Button>
+                                </HStack>
+                            </FieldGroup>
+                            { guestJudgeIds.map( (judge, i) => {
+                                return (
+                                    <InputGroup>
+                                        <Input id={judge} onClick={deleteJudge} value={judge} key={judge} placeholder="Guest Judge ID" />
+                                    </InputGroup>
+                                )
+                            })}
+                        </VStack>
+                    </FieldGroup>
+
                     <FieldGroup mt="8">
-                    <ButtonGroup w="100%">
-                        <Button 
-                            minW="33%"
-                            onClick={fightId ? handlePutFight : handlePostFight} 
-                            type="button" 
-                            colorScheme="blue"
-                            isLoading={isSubmitting}
-                            loadingText="Submitting..."
-                        >
-                            Submit
-                        </Button>
-                        <Button minW="33%" disabled={!fightId} isLoading={isSubmitting} loadingText="Deleting" onClick={deleteFight} colorScheme="red" variant="outline">Delete</Button>
-                    </ButtonGroup>
-                </FieldGroup>
+                        <ButtonGroup w="100%">
+                            <Button 
+                                minW="33%"
+                                onClick={fightId ? handlePutFight : handlePostFight} 
+                                type="button" 
+                                colorScheme="blue"
+                                isLoading={isSubmitting}
+                                loadingText="Submitting..."
+                            >
+                                Submit
+                            </Button>
+                            <Button minW="33%" disabled={!fightId} isLoading={isSubmitting} loadingText="Deleting" onClick={deleteFight} colorScheme="red" variant="outline">Delete</Button>
+                        </ButtonGroup>
+                    </FieldGroup>
                 </Stack>
             </form>
         </Box>

@@ -43,7 +43,7 @@ export const ChatSidebar = ({
     
     useEffect(() => {
         if(chatScorecard?.scorecardId && socketActive()){
-            // console.log('handleSendMesage')
+            console.log('handleSendMesage')
             handleSendMessage('UPDATE')
         }
     },[chatScorecard])
@@ -97,6 +97,7 @@ export const ChatSidebar = ({
         connectionInit.onclose = (event) => {
             // If the websocket closes, remove the current chat token
             setChatToken(null);
+            handleRequestToken(username)
         };
     
         connectionInit.onerror = (event) => {

@@ -5,7 +5,7 @@ import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
 import { MyScorecards } from './my-scorecards'
 import { CreateGroupScorecard } from './create-scorecard'
-import { MyAccountForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestScorerForm, PoundForm, ShowForm } from '../components/forms'
+import { MyAccountForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestJudgeForm, PoundForm, ShowForm } from '../components/forms'
 import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
@@ -15,11 +15,7 @@ import stateStore from '../state-store'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const store = stateStore.getState();
-  // console.log('store: ', store)
   const { user, setToken, setUser, setUserScorecards } = stateStore( state => state);
-  // console.log('USER: ', user);
-  // const setTokenInUserStore = stateStore.getState().setToken;
   const [tokenConfig, setTokenConfig] = useState(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [active, setActive] = useState(type.toUpperCase());
@@ -126,7 +122,7 @@ const Dashboard = props => {
     { value: "POUNDFORM", label:"P4P Form", type: 'P4P Form', icon: FaEdit, link: '/dashboard/pound-form' },
     { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
-    { value: "GUEST-SCORERS", label:"Guest Scorers Form", type: 'Guest Scorers', icon: FaEdit, link: '/dashboard/guest-scorers' },
+    { value: "GUEST-JUDGES", label:"Guest Judges Form", type: 'Guest Judges', icon: FaEdit, link: '/dashboard/guest-judges' },
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
     { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
   ];
@@ -187,7 +183,7 @@ const Dashboard = props => {
         { form === 'SHOW-FORM' && <ShowForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'FIGHTERS' && <FightersForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'DISCUSSIONS' && <DiscussionsForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'GUEST-SCORERS' && <GuestScorerForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'GUEST-JUDGES' && <GuestJudgeForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'BROADCAST' && <BroadcastForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'FIGHT-FORM' && <FightForm tokenConfig={tokenConfig} user={user} /> }
       </Box>

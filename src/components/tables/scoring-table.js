@@ -47,6 +47,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                 my="4" 
                 borderWidth="1px" 
                 fontSize="sm"
+                bg="whiteAlpha.50"
             >
                 {/* { fightResult && <caption style={{margin: '1rem auto',width: '100%', captionSide:"top"}}>Official: {fightResult} </caption> } */}
                 <Thead bg={mode('gray.50', 'gray.800')}>
@@ -125,22 +126,21 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                                                             color={i >= mappedScores.length ? 'transparent' : "black"}
                                                             borderRadius="2px"
                                                             // borderX={(i) % 2 == 0 ? (i) >= currentRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
-                                                            borderX={"3px solid #2e3648"}
                                                             w="100%"
                                                             p="1"
                                                             bg={roundScores[fighter1] ? "gray.500" : "gray.600"} 
                                                             flexDirection="column" 
                                                             alignItems="center" 
                                                             justifyContent="center" 
-                                                            style={(i+1) == roundKO && (transformedPrediction == fighter1) ? {border:'1px solid red', fontSize: '1.2rem'} : null} 
+                                                            style={(i+1) == roundKO && (transformedPrediction == fighter1) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: '1px solid #2e3648'} }
                                                         >   
                                                             {roundScores[fighter1]}
                                                         </Flex>
                                                         <Flex 
                                                             w="100%"
-                                                            style={(i+1) == roundKO && (transformedPrediction == fighter2) ? {border:'1px solid red', fontSize: '1.2rem'} : null} 
+                                                            style={(i+1) == roundKO && (transformedPrediction == fighter2) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: "1px solid RGBA(0, 0, 0, 0.36)"} } 
                                                             color={i >= mappedScores.length ? 'transparent' : "whiteAlpha.900"}
-                                                            // borderX={(i+1) <= totalRounds ? (i+1) % 2 !== 0 ? "3px solid #2e3648" : "3px solid tranparent" : "3px solid #1a202c"}
+
                                                             flexDirection="column" 
                                                             alignItems="center" 
                                                             justifyContent="center" 

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import {  AddMemberModal, PredictionModal } from '../components/modals'
+import { AddGuestJudgeModal, AddMemberModal, PredictionModal } from '../components/modals'
 import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils'
 import { useLocation, useNavigate } from 'react-router'
@@ -11,6 +11,7 @@ import { Notification } from '../components/notifications'
 import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS, triggerToast } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
 import stateStore from '../state-store'
+import { RiSideBarFill } from 'react-icons/ri'
 
 const Scoring = () => {
     const location = useLocation();
@@ -42,6 +43,7 @@ const Scoring = () => {
     const [fightStatus, setFightStatus] = useState(null);
     const [fightComplete, setFightComplete] = useState(false);
     //////////////////  SIDEBAR  /////////////////////////
+    const [openAddGuestJudgeModal, setOpenAddGuestJudgeModal] = useState(false);
     const [showGuestScorerIds, setShowGuestScorerIds] = useState(null);
     const [showGuestScorers, setShowGuestScorers] = useState(null);
     const [myGuestScorerIds, setMyGuestScorerIds] = useState(null);
@@ -98,12 +100,6 @@ const Scoring = () => {
             console.log('thisUserScorecard', thisUserScorecard);
             if(!thisUserScorecard) return alert('No scorecard found.')
             setUserScorecard(thisUserScorecard);
-            // this should really be kick off call for guestScorers with ID.
-            // OR just get them in the initial call.
-            setMyGuestScorerIds(thisUserScorecard.guestScorerIds);
-            
-            // Check if 
-
             // Set prediction, if necessary
             //TODO:// check for if time expired, too.
             const needsPrediction = !thisUserScorecard.prediction
@@ -141,7 +137,7 @@ const Scoring = () => {
                     [lastName]: 10
                 })
             })
-            setSliderScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId })
+            setSliderScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId });
         }
         fetchGroupScorecard();
         
@@ -154,8 +150,7 @@ const Scoring = () => {
     }, []);
 
     useEffect(() => {
-        // getTabledata needs this to force initial render.
-        if( (scorecards?.length > 0 && incomingScore.scorecardId) || forceRender){
+        if(scorecards?.length > 0){
             const getTableData = scorecards => {
                 const s = scorecards.map( scorecard => {
                     let { username, prediction, scores } = scorecard;
@@ -201,19 +196,20 @@ const Scoring = () => {
                 setTableData(s);
                 setStats(s)
             }; 
-
-            let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
-            const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId)
-            
-            const tempScores = scorecard.scores.concat(incomingScore);
-            scorecard.scores = tempScores;
-            const updatedScorecards = [...otherScorecards, scorecard];
-            setScorecards(updatedScorecards);
-            
-            setUserScorecard({ ...userScorecard, scores: tempScores });
-            getTableData(updatedScorecards);
+            if(incomingScore.scorecardId){     
+                let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
+                const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId) 
+                const tempScores = scorecard.scores.concat(incomingScore);
+                scorecard.scores = tempScores;
+                setUserScorecard({ ...userScorecard, scores: tempScores });
+                const updatedScorecards = [...otherScorecards, scorecard];
+                getTableData(updatedScorecards)
+            }
+            if(!incomingScore.scorecardId){
+                getTableData(scorecards)
+            }
         }
-    },[incomingScore])
+    },[scorecards, incomingScore])
 
     const submitRoundScores = () => {
         if(fightComplete) return; 
@@ -287,19 +283,18 @@ const Scoring = () => {
         }
     }
     // submit fight prediction.
-    const handleSubmitPrediction = value => {
-
+    const handleSubmitPrediction = prediction => {
         if(predictionIsLocked(showData.show.showTime)) {
             setPredictionLock(true);
             return alert('Predictions are now locked!');
         }
         const [fighter] = fighterData.filter( data => {
             const { fighterId, lastName } = data;
-            const transformedPrediction = `${capFirstLetters(lastName)}, ${value.split(',')[1]}`; 
-            return value.includes(fighterId) ? setPrediction(transformedPrediction) : setNeedsPrediction(true);
+            const transformedPrediction = `${capFirstLetters(lastName)}, ${prediction.split(',')[1]}`; 
+            return prediction.includes(fighterId) ? setPrediction(transformedPrediction) : setNeedsPrediction(true);
         });
         const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
-        return axios.patch(url, {prediction: value}, tokenConfig)
+        return axios.patch(url, {prediction: prediction}, tokenConfig)
             .then(res => {
                 if(res.data === 'Updated prediction'){
                     setNeedsPrediction(false);
@@ -333,11 +328,20 @@ const Scoring = () => {
         const filtered = temp.filter( ({ notification }) => notification !== id);
         setNotifications(filtered)
     };
-    
-
-    const handleAddMemberSubmit = async (email) => {
+    const handleOpenAddMemberSubmitModal = async (email) => {
+        if(userScorecard.ownerId !== groupScorecard.ownerId){
+            return toast({ 
+                title: `Only group admin can add members.`,
+                duration: 5000,
+                status: 'info',
+                isClosable: true
+            })
+        }
+        setAddMemberModal(true)
+    }
+    const handleAddMemberSubmit = async email => {
         setIsSubmitting(true);
-        const { groupScorecardId, groupScorecardName, fightId, username } = groupScorecard;
+        const { groupScorecardId, groupScorecardName, fightId } = groupScorecard;
         const fighterIds = fighterData.map( ({ fighterId }) => fighterId);
         const update = {
             email, 
@@ -349,11 +353,22 @@ const Scoring = () => {
             username: email
         }
         return await axios.put(groupScorecardsUrl, update, tokenConfig)
-            .then( res => console.log('res: ', res))
-            .catch( err => console.log(err))
+            .then( res => {
+                if(res.status === 200){
+                    return toast({ 
+                        title: `Email invite was sent to member.`,
+                        duration: 5000,
+                        status: 'success',
+                        isClosable: true
+                    })
+                }
+            }).catch( err => console.log(err))
             .finally(() => setIsSubmitting(false))
     };
 
+    const handleAddGuestJudge = async guestJudgeId => {
+        console.log('guestJudgeId: ', guestJudgeId);
+    }
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
     // console.log('tableData: ', tableData)
@@ -362,6 +377,12 @@ const Scoring = () => {
     // console.log('roundResults: ', roundResults);
     return (
         <Flex flexDir="column" position="relative">
+            <AddGuestJudgeModal 
+                handleAddGuestJudge={handleAddGuestJudge}
+                isSubmitting={isSubmitting}
+                openAddGuestJudgeModal={openAddGuestJudgeModal}
+                setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
+            />
             <AddMemberModal 
                 handleAddMemberSubmit={handleAddMemberSubmit}
                 isSubmitting={isSubmitting}
@@ -409,8 +430,8 @@ const Scoring = () => {
                 py={8
             }>    
                 <ScoringSidebar 
-                    setAddMemberModal={setAddMemberModal}
-                    sub={sub}
+                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
+                    setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
                     showData={showData}
                     showGuestScorers={showGuestScorers}
                     myGuestScorers={myGuestScorers}
@@ -442,7 +463,7 @@ const Scoring = () => {
                     setNotificationTimeout={setNotificationTimeout}
                 />
             </Flex>   
-            <ScoringTable tableData={tableData} scoredRounds={scoredRounds} totalRounds={totalRounds} />
+            <ScoringTable username={username} tableData={tableData} scoredRounds={scoredRounds} totalRounds={totalRounds} />
         </Flex>
     )
 }
