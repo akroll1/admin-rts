@@ -7,14 +7,12 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
   // console.log('href: ',href);
   return (
     <Link
-      as={RRLink}
-      to={href}
       ref={ref}
       display="inline-block"
       px="4"
       py="6"
       fontWeight="semibold"
-       aria-current={active ? 'page' : undefined}
+      aria-current={active ? 'page' : undefined}
       color={mode('gray.400', 'gray.400')}
       transition="all 0.2s"
       {...rest}

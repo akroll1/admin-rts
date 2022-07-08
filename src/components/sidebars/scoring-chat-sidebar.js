@@ -6,7 +6,6 @@ import { FightStats } from './chat-sidebar-components/fight-stats'
 import stateStore from '../../state-store'
 
 export const ChatSidebar = ({
-    setForceRender, 
     setIncomingScore,
     tokenConfig, 
     chatKey, 
@@ -73,7 +72,6 @@ export const ChatSidebar = ({
     
         axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, data, tokenConfig)
             .then( res => {
-                setForceRender(true);
                 setChatToken(res.data);
                 initConnection(res.data);
             })
@@ -134,7 +132,7 @@ export const ChatSidebar = ({
     const handleReceiveMessage = data => {
         // console.log('data- 102: ', data)
         const { Attributes, Content, Sender, Type } = data;
-        const { UserId } = Sender;
+        const UserId = Sender?.Attributes ? Sender.Attributes.UserId : '';
         const message = JSON.parse(Attributes[Content]);
         if(Content === 'CHAT'){
             setChatMessages(prev => [{ message, username: UserId, type: Type }, ...prev ]);

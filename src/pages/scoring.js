@@ -12,6 +12,7 @@ import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS, triggerToast } from '../u
 import { ScoringMain } from '../components/scoring-main'
 import stateStore from '../state-store'
 import { RiSideBarFill } from 'react-icons/ri'
+import { GuestJudgeForm } from '../components/forms'
 
 const Scoring = () => {
     const location = useLocation();
@@ -19,9 +20,7 @@ const Scoring = () => {
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
     //////////////////  SCORE STATE /////////////////////////
-    // const stated = stateStore.getState();
-    // console.log('stated: ', stated);
-    const { chatScorecard, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
+    const { chatScorecard, myGuestJudges, setAvailableGuestJudges, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
     const { sub, email, username } = user;
 
     const [groupScorecard, setGroupScorecard] = useState({
@@ -39,15 +38,10 @@ const Scoring = () => {
     const [sliderScores, setSliderScores] = useState({});
     const [onlyShowToCurrentRound, setOnlyShowToCurrentRound] = useState(false);
     const [chatKey, setChatKey] = useState(null);
-    const [quickTitle, setQuickTitle] = useState('');
     const [fightStatus, setFightStatus] = useState(null);
     const [fightComplete, setFightComplete] = useState(false);
     //////////////////  SIDEBAR  /////////////////////////
     const [openAddGuestJudgeModal, setOpenAddGuestJudgeModal] = useState(false);
-    const [showGuestScorerIds, setShowGuestScorerIds] = useState(null);
-    const [showGuestScorers, setShowGuestScorers] = useState(null);
-    const [myGuestScorerIds, setMyGuestScorerIds] = useState(null);
-    const [myGuestScorers, setMyGuestScorers] = useState(null)
     const [needsPrediction, setNeedsPrediction] = useState(false);
     const [prediction, setPrediction] = useState('');
     const [predictionLock, setPredictionLock] = useState(true);
@@ -55,7 +49,6 @@ const Scoring = () => {
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
     const [toggleModal, setToggleModal] = useState(false);
-    const [forceRender, setForceRender] = useState(false);
 
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
@@ -72,7 +65,6 @@ const Scoring = () => {
     },[user.sub]) 
 
     useEffect(() => {
-
         // 1. Fetch Group Scorecard.
         const fetchGroupScorecard = async () => {
             const res = await axios.get(groupScorecardsUrl, tokenConfig)
@@ -89,9 +81,8 @@ const Scoring = () => {
                 show: res.data.show,
                 fight: res.data.fight
             });
-            setShowGuestScorerIds(res.data.show.guestScorerIds);
+            setAvailableGuestJudges(res.data.guestJudges ? res.data.guestJudges : null);
             setChatKey(res.data.groupScorecard.chatKey);
-            setQuickTitle(res.data.fight.fightQuickTitle)
             setFighterData(res.data.fighterData);
             setTotalRounds(res.data.fight.rounds);
 
@@ -147,7 +138,7 @@ const Scoring = () => {
         //     sync();
         // }, 30000);
 
-    }, []);
+    },[]);
 
     useEffect(() => {
         if(scorecards?.length > 0){
@@ -365,9 +356,15 @@ const Scoring = () => {
             }).catch( err => console.log(err))
             .finally(() => setIsSubmitting(false))
     };
-
-    const handleAddGuestJudge = async guestJudgeId => {
-        console.log('guestJudgeId: ', guestJudgeId);
+    const fetchGuestJudgeScorecards = async () => {
+        const getJudges = await myGuestJudges.map( async ({ guestJudgeId }) => {
+            const url = process.env.REACT_APP_SCORECARDS + `/${guestJudgeId}/${showData.fight.fightId}`;
+            return axios(url, tokenConfig)
+                .then( res => res.data)
+                .catch( err => console.log(err));
+        });
+        const judgeScorecards = await Promise.all(getJudges);
+        console.log('judgeScorecards: ', judgeScorecards);
     }
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
@@ -378,8 +375,7 @@ const Scoring = () => {
     return (
         <Flex flexDir="column" position="relative">
             <AddGuestJudgeModal 
-                handleAddGuestJudge={handleAddGuestJudge}
-                isSubmitting={isSubmitting}
+                fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
                 openAddGuestJudgeModal={openAddGuestJudgeModal}
                 setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
             />
@@ -396,7 +392,7 @@ const Scoring = () => {
                 fighterData={fighterData}
                 handleSubmitPrediction={handleSubmitPrediction} 
             />
-            <SliderHeading quickTitle={quickTitle} />
+            <SliderHeading fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
             <Flex 
                 w={["100%","auto"]} 
                 position="fixed" 
@@ -433,13 +429,10 @@ const Scoring = () => {
                     handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
                     setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
                     showData={showData}
-                    showGuestScorers={showGuestScorers}
-                    myGuestScorers={myGuestScorers}
                     prediction={prediction}
                     finalScore={finalScore}
                     groupScorecard={groupScorecard}
                     handleAddGuestScorer={handleAddGuestScorer}
-                    setShowGuestScorers={setShowGuestScorers}
                     setToggleModal={setToggleModal}
                 />
                 <ScoringMain
@@ -453,7 +446,6 @@ const Scoring = () => {
                 />
                 <ChatSidebar 
                     setIncomingScore={setIncomingScore}
-                    setForceRender={setForceRender}
                     chatScorecard={chatScorecard}
                     tokenConfig={tokenConfig}
                     chatKey={chatKey}
@@ -469,6 +461,6 @@ const Scoring = () => {
 }
 export default Scoring
 
-const SliderHeading = ({ quickTitle }) => (
-    <Heading textAlign="center" as="h2" size="lg">{quickTitle}</Heading>
+const SliderHeading = ({ fightQuickTitle }) => (
+    <Heading textAlign="center" as="h2" size="lg">{fightQuickTitle}</Heading>
 )
