@@ -31,12 +31,8 @@ const Dashboard = props => {
 
   useEffect(() => {
     if(user?.username){
-      console.log('line 34, user: ',  user)
-      console.log('line 34, user?.username: ',  user?.username)
       const setAuth = async () => {
         const token = await localStorage.getItem(`CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}.accessToken`);
-        // const token = await localStorage.getItem(`${localStorageString}.accessToken`);
-        console.log('token, 38: ', token)
         const config = {
           headers: { 
             Authorization: `Bearer ${token}` 
@@ -63,7 +59,6 @@ const Dashboard = props => {
   useEffect(() => {
     if(tokenConfig?.headers){
       const getUserScorecards = async () => {
-        console.log('tokenConfig, 65: ', tokenConfig);
         const url = process.env.REACT_APP_SCORECARDS + (`/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`);
         return axios.get(url, tokenConfig)
           .then(res => {
@@ -111,7 +106,7 @@ const Dashboard = props => {
           return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
             .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
         }
-        updateUser();
+        // updateUser();
     }
   },[tokenConfig])
 
