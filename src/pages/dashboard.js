@@ -31,7 +31,8 @@ const Dashboard = props => {
 
   useEffect(() => {
     if(user?.username){
-
+      console.log('line 34, user: ',  user)
+      console.log('line 34, user?.username: ',  user?.username)
       const setAuth = async () => {
         const token = await localStorage.getItem(`CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}.accessToken`);
         // const token = await localStorage.getItem(`${localStorageString}.accessToken`);
