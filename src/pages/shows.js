@@ -58,6 +58,7 @@ const Shows = props => {
     /**
      * 1. Get the shows, all or if ID in params.
      * **/
+
     useEffect(() => {
         if(id && sub){ 
             const getShow = id => {
@@ -226,7 +227,7 @@ const Shows = props => {
             const getFighters = async fighterIds => {
                 const fighters = await Promise.all(fighterIds.map( async fighterId => {
                     const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
-                    return axios.get(url, tokenConfig)
+                    return await axios.get(url, tokenConfig)
                         .then( res => res.data)
                         .catch( err => console.log(err));
                 }))
@@ -238,7 +239,7 @@ const Shows = props => {
 
     const handleCreateGroupScorecard = async () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
-        const idToken = localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.idToken'); 
+        const idToken = await localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.idToken'); 
         const decodedIdToken = await jwt_decode(idToken)
         const { email } = decodedIdToken;
         const tempMembersArr = members.concat(email);

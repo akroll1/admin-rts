@@ -99,7 +99,6 @@ export const FightForm = ({ user, tokenConfig }) => {
     }
     const deleteJudge = e => {
         const { id } = e.currentTarget;
-        console.log('id: ', id)
         const filtered = guestJudgeIds.filter( judge => judge !== id)
         setGuestJudgeIds(filtered)
     }

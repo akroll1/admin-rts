@@ -118,9 +118,7 @@ const DesktopNavContent = props => {
   }
   return (
     <Flex className="nav-content__desktop" align="center" justify="space-between" {...props}>
-      <Box as="a" href="#" rel="home">
-        <Button bg="transparent" to="/">FightSync</Button>
-      </Box>
+      <Button onClick={() => navigate('/')} bg="transparent" to="/">FightSync</Button>
       <HStack as="ul" id="nav__primary-menu" aria-label="Main Menu" listStyleType="none">
         {links.map((link, idx) => (
           <Box as="li" key={idx} id={`nav__menuitem-${idx}`}>
