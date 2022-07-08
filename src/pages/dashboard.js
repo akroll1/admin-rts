@@ -33,8 +33,8 @@ const Dashboard = props => {
     if(user?.username){
 
       const setAuth = async () => {
-        const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}`;
-        const token = await localStorage.getItem(`${localStorageString}.accessToken`);
+        const token = await localStorage.getItem(`CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}.accessToken`);
+        // const token = await localStorage.getItem(`${localStorageString}.accessToken`);
         console.log('token, 38: ', token)
         const config = {
           headers: { 
