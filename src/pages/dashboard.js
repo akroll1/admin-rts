@@ -35,6 +35,7 @@ const Dashboard = props => {
       const setAuth = async () => {
         const localStorageString = `CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}`;
         const token = await localStorage.getItem(`${localStorageString}.accessToken`);
+        console.log('token, 38: ', token)
         const config = {
           headers: { 
             Authorization: `Bearer ${token}` 
@@ -59,14 +60,15 @@ const Dashboard = props => {
   },[user?.username])
   // getScorecards && check if user exists.
   useEffect(() => {
-    if(tokenConfig){
+    if(tokenConfig?.headers){
       const getUserScorecards = async () => {
+        console.log('tokenConfig, 65: ', tokenConfig);
         const url = process.env.REACT_APP_SCORECARDS + `/${user.sub}-${user.email}`;
         return axios.get(url, tokenConfig)
           .then(res => {
-            if(res.data.length > 0 ) setUserScorecards(res.data)
+            if(res.data?.length > 0 ) setUserScorecards(res.data)
             // console.log('res: ',res);
-            const data = res.data.map(obj => {
+            const data = res.data?.map(obj => {
               const { fighterData, scorecard } = obj;
               const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
               if(ownerId.includes('@')){
