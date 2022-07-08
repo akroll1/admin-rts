@@ -15,7 +15,6 @@ const Shows = props => {
     const { id } = useParams();
     const toast = useToast();
     const { user, tokenConfig } = stateStore.getState();
-    // gotta set these to user and tokenConfig.
     const { email, sub, username } = user;
 
     const baseUrl = process.env.REACT_APP_SHOWS;
@@ -239,9 +238,7 @@ const Shows = props => {
 
     const handleCreateGroupScorecard = async () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
-        const idToken = await localStorage.getItem('CognitoIdentityServiceProvider.' + process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.idToken'); 
-        const decodedIdToken = await jwt_decode(idToken)
-        const { email } = decodedIdToken;
+
         const tempMembersArr = members.concat(email);
         const goodEmails = removeBadEmails(tempMembersArr);
         const dedupedEmails = [...new Set(goodEmails)];
