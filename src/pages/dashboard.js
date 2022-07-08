@@ -59,19 +59,19 @@ const Dashboard = props => {
   useEffect(() => {
     if(tokenConfig?.headers){
       const getUserScorecards = async () => {
-        const url = process.env.REACT_APP_SCORECARDS + (`/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}/`);
+        const url = process.env.REACT_APP_SCORECARDS + (`/${user.sub}/`);
         return axios.get(url, tokenConfig)
           .then(res => {
             if(res.data?.length > 0 ) setUserScorecards(res.data)
-            // console.log('res: ',res);
+            console.log('res: ',res);
             const data = res.data?.map(obj => {
               const { fighterData, scorecard } = obj;
               const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
-              if(ownerId.includes('@')){
-                const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-                const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
-                  .then( res => console.log('PATCH: ', res)).catch( err => console.log(err));
-              }
+              // if(ownerId.includes('@')){
+              //   const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
+              //   const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
+              //     .then( res => console.log('PATCH: ', res)).catch( err => console.log(err));
+              // }
               const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
               const setPrediction = prediction => {
                   if(prediction){
