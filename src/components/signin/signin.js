@@ -28,7 +28,7 @@ export const SignIn = props => {
   });
   const [isForcePasswordChange, setIsForcePasswordChange] = useState(false)
   const [forgotPassword, setForgotPassword] = useState(false);
-  const setUser = stateStore.getState().setUser;
+  const { setUser, setToken } = stateStore.getState();
 
   Amplify.configure({
     Auth: {
@@ -55,7 +55,7 @@ export const SignIn = props => {
       password
     })
     .then((user) => {
-      // console.log('user: ', user);
+      // console.log('USER: ', user);
       const { attributes } = user;
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
         setIsForcePasswordChange(true);
@@ -63,6 +63,10 @@ export const SignIn = props => {
         setIsSignin(false)
       } else {
         setUser({ ...attributes, username, isLoggedIn: true });
+        const token = user.signInUserSession.accessToken.jwtToken;
+        setToken({headers: {
+          Authorization: `Bearer ${token}`
+        }})
         sessionStorage.setItem('isLoggedIn',true);
         return navigate('/dashboard/scorecards', { username });
       }

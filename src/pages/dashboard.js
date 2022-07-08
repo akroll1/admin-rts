@@ -15,9 +15,8 @@ import stateStore from '../state-store'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const { user, setToken, setUser, setUserScorecards } = stateStore( state => state);
-  const [tokenConfig, setTokenConfig] = useState(null);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const { user, setUser, setUserScorecards, tokenConfig } = stateStore( state => state);
+  console.log('tokenConfig: ', tokenConfig);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
@@ -33,13 +32,7 @@ const Dashboard = props => {
     if(user?.username){
       const setAuth = async () => {
         const token = await localStorage.getItem(`CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}.accessToken`);
-        const config = {
-          headers: { 
-            Authorization: `Bearer ${token}` 
-          }
-        };
-        setTokenConfig(config);
-        setToken(config);
+
       
         const decodedToken = await jwt_decode(token);
         if(!user.sub){
