@@ -130,16 +130,16 @@ export const ChatSidebar = ({
         }
     };
     const handleReceiveMessage = data => {
-        // console.log('data- 102: ', data)
+        console.log('data- 102: ', data)
         const { Attributes, Content, Sender, Type } = data;
-        const UserId = Sender?.Attributes ? Sender.Attributes.UserId : '';
+        const user = Sender?.Attributes ? Sender.Attributes.username : '';
         const message = JSON.parse(Attributes[Content]);
         if(Content === 'CHAT'){
-            setChatMessages(prev => [{ message, username: UserId, type: Type }, ...prev ]);
+            setChatMessages(prev => [{ message, username: user, type: Type }, ...prev ]);
         } else if(Content === 'PREDICTION'){
-            setNotifications(prev => [ ...prev, {notification: message, username: UserId} ]);
+            setNotifications(prev => [ ...prev, {notification: message, username: user} ]);
             setNotificationTimeout(prev => !prev);
-            setChatMessages(prev => [{ message, username: UserId, type: Type }, ...prev ]);
+            setChatMessages(prev => [{ message, username: user, type: Type }, ...prev ]);
         } else if(Content === 'UPDATE'){
             const update = JSON.parse(Attributes.UPDATE);
             setChatScorecard({})

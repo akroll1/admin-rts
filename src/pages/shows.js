@@ -2,12 +2,10 @@ import React, {useState, useEffect} from 'react'
 import { Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ShowsSidebar } from '../components/sidebars'
-import { v4 as uuidv4 } from 'uuid'
 import { ReviewFormModal } from '../components/modals'
 import { useNavigate, useParams } from 'react-router'
 import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
-import jwt_decode from 'jwt-decode'
 import stateStore from '../state-store'
 
 const Shows = props => {
@@ -27,26 +25,15 @@ const Shows = props => {
     const [fighters, setFighters] = useState([]);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
-        admin: sub,
-        featuredShowId: '',
-        fightDateTime: '',
-        fighterA: '',
-        fighterB: '',
-        fighterAId: '',
-        fighterBId: '',
-        fighterStatus: 'pro',
+        admin: email, // human readable form.
         fightId: '',
-        fightResult: null,
-        groupScorecardId:  uuidv4(),
+        fighterIds: [], // for scorecards creation.
         groupScorecardName: '',
-        groupScorecardNotes: '',
-        location: '',
         members: [email],
-        username,
-        ownerId: sub, 
+        ownerId: sub,
+        rounds: 0, // for scorecards creation.
         showId: '',
-        totalRounds: 0,
-        weightclass: '',
+        username, // for email invites && scorecards username.
     });
     const [reviewForm, setReviewForm] = useState({
         reviewId: null,
@@ -244,15 +231,15 @@ const Shows = props => {
         const dedupedEmails = [...new Set(goodEmails)];
 
         const scorecardObj = {
-            fighterIds: selectedShow.fight.fighterIds,
-            username,
             admin: email, // necessary to create a groupScorecard, membersArr.
-            ownerId: sub,
+            fighterIds: selectedShow.fight.fighterIds,
             fightId: selectedShow.fightIds[0],
-            showId: selectedShow.showId,
             groupScorecardName: selectedShow.fight.fightQuickTitle,
             members: dedupedEmails,
-            rounds: selectedShow.fight.rounds
+            ownerId: sub,
+            rounds: selectedShow.fight.rounds,
+            showId: selectedShow.showId,
+            username
         };
 
         /////////////////////////////////////////////

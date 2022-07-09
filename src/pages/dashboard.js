@@ -51,11 +51,11 @@ const Dashboard = props => {
             const data = res.data?.map(obj => {
               const { fighterData, scorecard } = obj;
               const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
-              // if(ownerId.includes('@')){
-              //   const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-              //   const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
-              //     .then( res => console.log('PATCH: ', res)).catch( err => console.log(err));
-              // }
+              if(ownerId.includes('@')){
+                const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
+                const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
+                  .then( res => console.log('PATCH: ', res)).catch( err => console.log(err));
+              }
               const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
               const setPrediction = prediction => {
                   if(prediction){
@@ -90,7 +90,7 @@ const Dashboard = props => {
           return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
             .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
         }
-        // updateUser();
+        updateUser();
     }
   },[tokenConfig])
 

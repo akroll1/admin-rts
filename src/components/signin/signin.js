@@ -102,7 +102,6 @@ export const SignIn = props => {
     const { username, password, user, email } = form;
     Auth.completeNewPassword( user, password )
       .then( user => { 
-        console.log('NEW_USER: ', user)
         const { username, challengeParam: {  userAttributes } } = user;
         setUser({ username, ...userAttributes, groups: [], sub: user.signInUserSession.idToken.payload.sub })
         const token = user.signInUserSession.accessToken.jwtToken;
