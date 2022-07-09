@@ -319,7 +319,7 @@ const Scoring = () => {
         const filtered = temp.filter( ({ notification }) => notification !== id);
         setNotifications(filtered)
     };
-    const handleOpenAddMemberSubmitModal = async (email) => {
+    const handleOpenAddMemberSubmitModal = () => {
         if(userScorecard.ownerId !== groupScorecard.ownerId){
             return toast({ 
                 title: `Only group admin can add members.`,
@@ -332,14 +332,15 @@ const Scoring = () => {
     }
     const handleAddMemberSubmit = async email => {
         setIsSubmitting(true);
-        const { groupScorecardId, groupScorecardName, fightId } = groupScorecard;
+        const { admin, groupScorecardId, groupScorecardName, fightId } = groupScorecard;
         const fighterIds = fighterData.map( ({ fighterId }) => fighterId);
         const update = {
-            email, 
+            admin,
             fighterIds,
             fightId,
             groupScorecardId,
-            groupScorecardName,
+            groupScorecardName, // for email.
+            members: [email], // for alignment of createMemberScorecards, server.
             rounds: totalRounds,
             username: email
         }

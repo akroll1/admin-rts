@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Button, Flex, Stack, useColorModeValue as mode, useToast } from '@chakra-ui/react'
+import { Button, Flex, Stack } from '@chakra-ui/react'
 import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiUser, BiEdit, BiStar, BiUserCheck, BiPlusCircle } from 'react-icons/bi'
 import { AccountSwitcher } from './scoring-sidebar/account-switcher'
 import { NavGroup } from './scoring-sidebar/nav-group'
@@ -21,7 +21,6 @@ export const ScoringSidebar = ({
     prediction, 
     groupScorecard 
 }) => {
-    const toast = useToast();
     const [showGuests, setShowGuests] = useState(null)
     const destructureData = showData => {
         const { show, fight } = showData;
