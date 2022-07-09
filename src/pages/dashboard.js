@@ -16,7 +16,6 @@ import stateStore from '../state-store'
 const Dashboard = props => {
   const { type, showId } = useParams();
   const { user, setUser, setUserScorecards, tokenConfig } = stateStore( state => state);
-  console.log('tokenConfig: ', tokenConfig);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
@@ -29,25 +28,17 @@ const Dashboard = props => {
   const [scorecards, setScorecards] = useState(null);
 
   useEffect(() => {
-    if(user?.username){
-      const setAuth = async () => {
-        const token = await localStorage.getItem(`CognitoIdentityServiceProvider.${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}.${user.username}.accessToken`);
-
-      
-        const decodedToken = await jwt_decode(token);
-        if(!user.sub){
-          const { sub } = decodedToken;
-          setUser({ ...user, sub });
-        }
-        const isSuperAdmin = decodedToken['cognito:groups'] ? decodedToken['cognito:groups'][0] === 'rts-admins' : false;
-        if(isSuperAdmin){
-          setUser({ ...user, isSuperAdmin })
-          setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-        } 
-      }
-      setAuth()
+    const setAuth = () => {
+      // const isSuperAdmin = decodedToken['cognito:groups'] ? decodedToken['cognito:groups'][0] === 'rts-admins' : false;
+      const isSuperAdmin = user.groups[0] === 'rts-admins';
+      console.log(isSuperAdmin)
+      if(isSuperAdmin){
+        setUser({ ...user, isSuperAdmin })
+        setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+      } 
     }
-  },[user?.username])
+    setAuth()
+  },[])
   // getScorecards && check if user exists.
   useEffect(() => {
     if(tokenConfig?.headers){

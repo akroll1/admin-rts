@@ -55,14 +55,15 @@ export const SignIn = props => {
       password
     })
     .then((user) => {
-      // console.log('USER: ', user);
+
       const { attributes } = user;
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
         setIsForcePasswordChange(true);
         setForm({ ...form, password: '', user });
         setIsSignin(false)
       } else {
-        setUser({ ...attributes, username, isLoggedIn: true });
+        const groups = user.signInUserSession.accessToken.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
+        setUser({ ...attributes, username, isLoggedIn: true, groups });
         const token = user.signInUserSession.accessToken.jwtToken;
         setToken({headers: {
           Authorization: `Bearer ${token}`
@@ -100,11 +101,14 @@ export const SignIn = props => {
   const handleForcePWChange = () => {
     const { username, password, user, email } = form;
     Auth.completeNewPassword( user, password )
-      .then( res => { 
-        // console.log('res: ', res);
-        const { username, challengeParam: {  userAttributes } } = res;
-        const { email_verified, email } = userAttributes;
-        setUser({ username, email_verified, email })
+      .then( user => { 
+        console.log('NEW_USER: ', user)
+        const { username, challengeParam: {  userAttributes } } = user;
+        setUser({ username, ...userAttributes, groups: [], sub: user.signInUserSession.idToken.payload.sub })
+        const token = user.signInUserSession.accessToken.jwtToken;
+        setToken({headers: {
+          Authorization: `Bearer ${token}`
+        }})
         sessionStorage.setItem('isLoggedIn',true);
         return navigate('/dashboard/scorecards', { user });
       }).catch( err => {
