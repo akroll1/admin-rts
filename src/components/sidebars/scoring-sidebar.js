@@ -93,7 +93,21 @@ export const ScoringSidebar = ({
                             { prediction ? prediction : 'Set Prediction' }
                         </Button>} 
                     /> 
-                    <NavItem button="button" icon={<FaTrophy />} label={<Button justifyContent="flex-start" textAlign="left" fontSize="md" _focus={{bg:'transparent'}} _hover="transparent" variant="ghost" size="sm" pl="0">Score&#58; { 87 }</Button>} /> 
+                    <NavItem 
+                        button="button" 
+                        icon={<FaTrophy />} 
+                        label={<Button 
+                            justifyContent="flex-start" 
+                            textAlign="left" 
+                            fontSize="md" 
+                            _focus={{bg:'transparent'}} 
+                            _hover="transparent" 
+                            variant="ghost" 
+                            size="sm" pl="0"
+                        >
+                            Score&#58; { 0 }
+                        </Button>} 
+                    /> 
                 </NavGroup>
                
                 <NavGroup label="Show">

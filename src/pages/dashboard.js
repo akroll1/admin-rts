@@ -90,7 +90,7 @@ const Dashboard = props => {
           return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
             .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
         }
-        // updateUser();
+        updateUser();
     }
   },[tokenConfig])
 

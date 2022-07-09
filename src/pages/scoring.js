@@ -21,7 +21,7 @@ const Scoring = () => {
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
     //////////////////  SCORE STATE /////////////////////////
     const { chatScorecard, myGuestJudges, setAvailableGuestJudges, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
-    const { sub, email, username } = user;
+    const { sub, email, username } = user?.sub ? user : '';
 
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
@@ -59,10 +59,10 @@ const Scoring = () => {
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
     useEffect(() => {
-        if(!user.sub){
+        if(!user?.sub){
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
         } 
-    },[user.sub]) 
+    },[user]) 
 
     useEffect(() => {
         // 1. Fetch Group Scorecard.
@@ -346,6 +346,7 @@ const Scoring = () => {
         }
         return await axios.put(groupScorecardsUrl, update, tokenConfig)
             .then( res => {
+                setAddMemberModal(false);
                 if(res.status === 200){
                     return toast({ 
                         title: `Email invite was sent to member.`,
