@@ -81,7 +81,7 @@ const Scoring = () => {
                 show: res.data.show,
                 fight: res.data.fight
             });
-            setAvailableGuestJudges(res.data.guestJudges ? res.data.guestJudges : null);
+            setAvailableGuestJudges(res.data.guestJudges.length > 0 ? res.data.guestJudges : null);
             setChatKey(res.data.groupScorecard.chatKey);
             setFighterData(res.data.fighterData);
             setTotalRounds(res.data.fight.rounds);
@@ -227,52 +227,6 @@ const Scoring = () => {
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));
     };
-
-    // get GUEST SCORER ID's.
-    // useEffect(() => {
-    //     if(showGuestScorerIds && showGuestScorerIds.length > 0){
-    //         const getShowGuestScorers = () => {
-    //             return axios.post(guestScorersUrl, showGuestScorerIds, tokenConfig)
-    //                 .then(res => setShowGuestScorers(res.data))
-    //                 .catch(err => console.log(err))
-    //         }
-    //         getShowGuestScorers();
-    //     }
-    // },[showGuestScorerIds]);
-    // // these can probably be combined???
-    // useEffect(() => {
-    //     if(myGuestScorerIds && myGuestScorerIds.length > 0){
-    //         const getMyGuestScorers = () => {
-    //             return axios.post(guestScorersUrl, myGuestScorerIds, tokenConfig)
-    //                 .then(res => setMyGuestScorers(res.data))
-    //                 .catch(err => console.log(err))
-    //         }
-    //         getMyGuestScorers()
-    //     }
-    // },[myGuestScorerIds]);
-    // add guest scorer.
-    const handleAddGuestScorer = e => {
-        const { id, value } = e.currentTarget;
-        const { guestScorerIds } = userScorecard;
-        // getGuestScorer checks to see if guestScorer is already in the guestScorers array...
-        const isGuestScorerAlreadyInArray = guestScorerIds.filter(guestScorerId => guestScorerId === id);
-        if(isGuestScorerAlreadyInArray.length > 0){
-            alert('Guest Scorer already present.');
-            return;
-        } else {
-            const updatedGuestScorerArr = guestScorerIds.concat(id);
-            // console.log('updatedGuestScorerArr: ',updatedGuestScorerArr);
-            const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
-            return axios.patch(url, { updatedGuestScorerArr }, tokenConfig)
-                .then(res => {
-                    console.log('res: ',res);
-                    if(res.status === 200){
-                        // add to current state.
-                    }
-                })
-                .catch(err => console.log(err))
-        }
-    }
     // submit fight prediction.
     const handleSubmitPrediction = prediction => {
         if(predictionIsLocked(showData.show.showTime)) {
@@ -358,15 +312,18 @@ const Scoring = () => {
             }).catch( err => console.log(err))
             .finally(() => setIsSubmitting(false))
     };
-    const fetchGuestJudgeScorecards = async () => {
-        const getJudges = await myGuestJudges.map( async ({ guestJudgeId }) => {
-            const url = process.env.REACT_APP_SCORECARDS + `/${guestJudgeId}/${showData.fight.fightId}`;
+    // this method can also be used in the initial useEffect to get the guest judges.
+    const fetchGuestJudgeScorecards = async guestJudgeIds => {
+        const getJudges = await guestJudgeIds.map( async id => {
+            const url = process.env.REACT_APP_SCORECARDS + `/${id}/${showData.fight.fightId}`;
             return axios(url, tokenConfig)
-                .then( res => res.data)
+                .then( res => res.data )
                 .catch( err => console.log(err));
         });
         const judgeScorecards = await Promise.all(getJudges);
         console.log('judgeScorecards: ', judgeScorecards);
+        // no! I have to filter here.
+        setScorecards(prev => ([ ...prev, ...judgeScorecards ]))
     }
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
@@ -428,14 +385,13 @@ const Scoring = () => {
                 py={8
             }>    
                 <ScoringSidebar 
-                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
-                    setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
-                    showData={showData}
-                    prediction={prediction}
                     finalScore={finalScore}
                     groupScorecard={groupScorecard}
-                    handleAddGuestScorer={handleAddGuestScorer}
+                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
+                    prediction={prediction}
+                    setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
                     setToggleModal={setToggleModal}
+                    showData={showData}
                 />
                 <ScoringMain
                     totalRounds={totalRounds}

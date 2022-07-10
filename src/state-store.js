@@ -32,15 +32,6 @@ const stateStore = create(persist(
         myGuestJudges: [],
         setMyGuestJudges: myGuestJudges => {
             set( state => ({ myGuestJudges }))
-        },
-        addGuestJudge: guestJudge => { 
-            set( prevState => ({ myGuestJudges: [...prevState.myGuestJudges, guestJudge] }))
-        },
-        removeGuestJudge: guestJudgeId => {
-            set( state => {
-                const updated = state.myGuestJudges.filter( judge => judge.guestJudgeId !== guestJudgeId);
-                state.setMyGuestJudges(updated);
-            })
         }
     }),
     {
