@@ -76,14 +76,14 @@ const Scoring = () => {
             }
             // 2. Set groupScorecard scorecards, showData, guestScorers, chatKey.
             setGroupScorecard(res.data.groupScorecard);
+            setFighterData(res.data.fighterData);
             setScorecards(res.data.scorecards);
             setShowData({
                 show: res.data.show,
                 fight: res.data.fight
             });
-            setAvailableGuestJudges(res.data.guestJudges.length > 0 ? res.data.guestJudges : null);
+            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : null);
             setChatKey(res.data.groupScorecard.chatKey);
-            setFighterData(res.data.fighterData);
             setTotalRounds(res.data.fight.rounds);
 
             // Get THIS USER'S scorecard.
