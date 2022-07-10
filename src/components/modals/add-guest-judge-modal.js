@@ -15,41 +15,40 @@ const CustomOverlay = () => (
 )
 
 export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudgeModal, setOpenAddGuestJudgeModal }) => {
-    const { addGuestJudge, availableGuestJudges, myGuestJudges, removeGuestJudge } = stateStore.getState();
-    const [myJudges, setMyJudges] = useState(myGuestJudges);
-    const [allJudges, setAllJudges] = useState([]);
+    const { setMyGuestJudges, availableGuestJudges, myGuestJudges } = stateStore.getState();
+    const [myJudges, setMyJudges] = useState([]);
     const [overlay, setOverlay] = React.useState(<CustomOverlay />)
+    
     useEffect(() => {
+        if(openAddGuestJudgeModal){
+            const currentJudges = availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))
+            setMyJudges(currentJudges);
+        }
+    },[openAddGuestJudgeModal])
 
-            setAllJudges(availableGuestJudges)
-    },[setOpenAddGuestJudgeModal])
     const closeModal = () => {
+        setMyJudges([]);
         setOpenAddGuestJudgeModal(false);
     }
     const localAddGuestJudge = e => {
         const { id } = e.currentTarget;
-        const isCurrentJudge = myJudges.some( ({ guestJudgeId }) => guestJudgeId === id);
-        if(isCurrentJudge) return;
-
-        const [judge] = availableGuestJudges.filter( judge => judge.guestJudgeId === id);
-        // remove from allJudges.
-        const newAllJudges = allJudges.filter( judge => judge.guestJudgeId !== id);
-        addGuestJudge(judge);
-        setMyJudges(prev => [...prev, judge]);
-        setAllJudges(newAllJudges);
+        const judgeToAdd = availableGuestJudges.filter( judge => judge.guestJudgeId === id);
+        const check = myJudges.filter( judge => judge.guestJudgeId === id);
+        if(check.length === 0){
+            setMyJudges(prev => [...prev, ...judgeToAdd]);
+        }
     }
     const localRemoveGuestJudge = e => {
         const { id } = e.currentTarget;
-        const updated = myJudges.filter( judge => judge.guestJudgeId !== id);
-        const [putBack] = myJudges.filter( judge => judge.guestJudgeId == id);
-        removeGuestJudge(id);
-        setMyJudges(updated);
-        setAllJudges(prev => [...prev, putBack]);
+        const filtered = myJudges.filter( judge => judge.guestJudgeId !== id);
+        setMyJudges(filtered);
+        setMyGuestJudges(filtered);
     }
-    const fetchJudges = () => {
-        if(myJudges.length > 0){
-            fetchGuestJudgeScorecards();
-        } 
+    
+    const setJudges = () => {
+        const judges = myJudges.map( judge => judge.guestJudgeId);
+        setMyGuestJudges(judges)
+        fetchGuestJudgeScorecards(judges);
         closeModal();
     }
     return ( 
@@ -64,7 +63,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudg
                 <ModalHeader fontSize="sm">Available Guest Judges</ModalHeader>
                 <ModalCloseButton onClick={closeModal} />
                 <ModalBody m="auto" w="100%"> 
-                    { allJudges.map( judge => {
+                    { availableGuestJudges?.length > 0 && availableGuestJudges.map( judge => {
                         return (
                             <InputGroup 
                                 size="sm"
@@ -85,8 +84,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudg
                         )
                     })}
                     <DividerWithText text="My Judges" />
-                    { myJudges?.map( judge => {
-                        const isCurrentJudge = availableGuestJudges.includes(judge);
+                    { myJudges.length > 0 && myJudges.map( judge => {
                         return (
                             <InputGroup 
                                 size="sm"
@@ -115,11 +113,11 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudg
                 >
                 <ButtonGroup m="auto" spacing="4">
                     <Button 
-                        onClick={fetchJudges}
+                        onClick={setJudges}
                         loadingText="Submitting"  
                         colorScheme="blue"
                     >
-                        Add Guest Judges
+                        Set Judges
                     </Button>
                     <Button variant="outline" onClick={closeModal}>
                         Cancel

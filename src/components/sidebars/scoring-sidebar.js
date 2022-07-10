@@ -6,22 +6,21 @@ import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
 import { PredictionPopover } from '../../components/prediction-popover'
 import { FaUserFriends, FaTv, FaRegMoneyBillAlt, FaMapMarkerAlt, FaRegClock, FaLock, FaLockOpen, FaPlusCircle, FaTrophy } from 'react-icons/fa'
-import { parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
+import { capFirstLetters, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
+import stateStore from '../../state-store'
 
 export const ScoringSidebar = ({ 
-    setOpenAddGuestJudgeModal,
-    handleOpenAddMemberSubmitModal,
     finalScore, 
+    groupScorecard,
+    handleOpenAddMemberSubmitModal,
+    prediction, 
+    setOpenAddGuestJudgeModal,
     setToggleModal, 
     showData, 
-    handleAddGuestScorer, 
-    showGuestScorers, 
-    myGuestScorers, 
-    prediction, 
-    groupScorecard 
 }) => {
     const [showGuests, setShowGuests] = useState(null)
+    const { availableGuestJudges } = stateStore.getState();
     const destructureData = showData => {
         const { show, fight } = showData;
         const { location, network, showTime } = show;
@@ -123,7 +122,7 @@ export const ScoringSidebar = ({
                 </NavGroup>
                 
                 <NavGroup active={true} label="Official Judges">
-                    { myGuestScorers && myGuestScorers.length > 0 && myGuestScorers.map( (guestScorer,i) => <NavItem id={guestScorer.guestScorerId} icon={<BiUserCircle />} label={guestScorer.displayName} key={guestScorer.guestScorerId} />) }
+                    { availableGuestJudges?.length > 0 && availableGuestJudges.map( (judge, i) => <NavItem id={judge.guestJudgeId} icon={<BiUserCircle />} label={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`}  key={judge.guestJudgeId} />) }
                     <NavItem 
                         icon={<FaPlusCircle />} 
                         label={<Button 
@@ -143,7 +142,6 @@ export const ScoringSidebar = ({
                         Add Guest Judge
                     </Button>} 
                     />
-                    { showGuests && showGuestScorers && showGuestScorers.length > 0 && showGuestScorers.map( (guestScorer,i) => <NavItem id={guestScorer.guestScorerId} handleClick={handleAddGuestScorer} icon={<BiPlusCircle />} label={guestScorer.displayName} key={i} />)}
                 </NavGroup>
 
                 <NavGroup label="Group Members">
