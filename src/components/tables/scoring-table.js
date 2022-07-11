@@ -92,7 +92,7 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
                     {sortedTable?.length > 0 && sortedTable?.map( (row, idx) => {
                         const { mappedScores, prediction, totals, username } = row;;
                         let filledMappedScores;   
-                        if(mappedScores.length < totalRounds){
+                        if(mappedScores.length <= totalRounds){
                             const numberToFill = totalRounds - (mappedScores.length);
                             const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1]:0, [fighter2]: 0}));
                             filledMappedScores = mappedScores.concat(addingRounds)

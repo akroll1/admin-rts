@@ -2,17 +2,15 @@ import React, {useEffect, useState} from 'react'
 import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import { AddGuestJudgeModal, AddMemberModal, PredictionModal } from '../components/modals'
+import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
 import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils'
 import { useLocation, useNavigate } from 'react-router'
 import { ChatSidebar } from '../components/sidebars'
 import { Notification } from '../components/notifications'
-import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS, triggerToast } from '../utils'
+import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
-import stateStore from '../state-store'
-import { RiSideBarFill } from 'react-icons/ri'
-import { GuestJudgeForm } from '../components/forms'
+import { stateStore } from '../stores'
 
 const Scoring = () => {
     const location = useLocation();
@@ -23,6 +21,7 @@ const Scoring = () => {
     const { chatScorecard, myGuestJudges, setAvailableGuestJudges, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
     const { sub, email, username } = user?.sub ? user : '';
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
         fighterA: '', 
@@ -40,21 +39,22 @@ const Scoring = () => {
     const [chatKey, setChatKey] = useState(null);
     const [fightStatus, setFightStatus] = useState(null);
     const [fightComplete, setFightComplete] = useState(false);
+    //////////////////  MODALS  /////////////////////////
+    const [addGuestJudgeModal, setAddGuestJudgeModal] = useState(false);
+    const [predictionModal, setPredictionModal] = useState(false);
+    const [addMemberModal, setAddMemberModal] = useState(false);
+    const [expiredTokenModal, setExpiredTokenModal] = useState(false);
     //////////////////  SIDEBAR  /////////////////////////
-    const [openAddGuestJudgeModal, setOpenAddGuestJudgeModal] = useState(false);
     const [needsPrediction, setNeedsPrediction] = useState(false);
     const [prediction, setPrediction] = useState('');
     const [predictionLock, setPredictionLock] = useState(true);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
-    const [toggleModal, setToggleModal] = useState(false);
 
     //////////////////  NOTIFICATIONS /////////////////////////
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
-    //////////////////  ADD MEMBER MODAL /////////////////////////
-    const [addMemberModal, setAddMemberModal] = useState(false);
+
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
@@ -69,7 +69,11 @@ const Scoring = () => {
         const fetchGroupScorecard = async () => {
             const res = await axios.get(groupScorecardsUrl, tokenConfig)
                 .then( res => res).catch( err => console.log(err));
-            console.log('res: ', res.data);
+            console.log('res.data: ', res.data);
+            if(typeof res.data === 'string' && res.data.includes('Token expired')){
+                console.log('Token is expired.')
+                return;
+            }
             if(res.data === 'No scorecard found.'){
                 alert('No Scorecard Found');
                 return;
@@ -82,24 +86,21 @@ const Scoring = () => {
                 show: res.data.show,
                 fight: res.data.fight
             });
-            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : null);
-            setChatKey(res.data.groupScorecard.chatKey);
-            setTotalRounds(res.data.fight.rounds);
-
+            
             // Get THIS USER'S scorecard.
-            const [thisUserScorecard] = res.data.scorecards.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
+            const [thisUserScorecard] = res.data.scorecards?.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
             console.log('thisUserScorecard', thisUserScorecard);
             if(!thisUserScorecard) return alert('No scorecard found.')
             setUserScorecard(thisUserScorecard);
-            // Set prediction, if necessary
-            //TODO:// check for if time expired, too.
-            const needsPrediction = !thisUserScorecard.prediction
+            // predictions.
+            const needsPrediction = !thisUserScorecard.prediction && (res.data.show.showTime > Date.now());
             if(needsPrediction){
                 setTimeout(() => {
                     setNeedsPrediction(true); 
-                    setToggleModal(true);
+                    setPredictionModal(true);
                 },5000);
-            } else {
+            }
+            if(thisUserScorecard.prediction){
                 const transformPredictionData = () => {
                     const { prediction } = thisUserScorecard;
                     const [fighter] = res.data.fighterData.filter( data => {
@@ -112,6 +113,10 @@ const Scoring = () => {
                 }
                 transformPredictionData();
             }
+            
+            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : null);
+            setChatKey(res.data.groupScorecard.chatKey);
+            setTotalRounds(res.data.fight.rounds);
 
             const findScoredRounds = thisUserScorecard => {
                 const scored = thisUserScorecard.scores.length;
@@ -323,7 +328,7 @@ const Scoring = () => {
         const judgeScorecards = await Promise.all(getJudges);
         console.log('judgeScorecards: ', judgeScorecards);
         // no! I have to filter here.
-        setScorecards(prev => ([ ...prev, ...judgeScorecards ]))
+        // setScorecards(prev => ([ ...prev, ...judgeScorecards ]))
     }
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
@@ -333,10 +338,14 @@ const Scoring = () => {
     // console.log('roundResults: ', roundResults);
     return (
         <Flex flexDir="column" position="relative">
+            <ExpiredTokenModal 
+                expiredTokenModal={expiredTokenModal}
+                setExpiredTokenModal={setExpiredTokenModal}
+            />
             <AddGuestJudgeModal 
                 fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
-                openAddGuestJudgeModal={openAddGuestJudgeModal}
-                setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
+                addGuestJudgeModal={addGuestJudgeModal}
+                setAddGuestJudgeModal={setAddGuestJudgeModal}
             />
             <AddMemberModal 
                 handleAddMemberSubmit={handleAddMemberSubmit}
@@ -346,8 +355,8 @@ const Scoring = () => {
             />
             <PredictionModal 
                 rounds={rounds}
-                setToggleModal={setToggleModal}
-                toggleModal={toggleModal}
+                setPredictionModal={setPredictionModal}
+                predictionModal={predictionModal}
                 fighterData={fighterData}
                 handleSubmitPrediction={handleSubmitPrediction} 
             />
@@ -389,8 +398,8 @@ const Scoring = () => {
                     groupScorecard={groupScorecard}
                     handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
                     prediction={prediction}
-                    setOpenAddGuestJudgeModal={setOpenAddGuestJudgeModal}
-                    setToggleModal={setToggleModal}
+                    setAddGuestJudgeModal={setAddGuestJudgeModal}
+                    setPredictionModal={setPredictionModal}
                     showData={showData}
                 />
                 <ScoringMain

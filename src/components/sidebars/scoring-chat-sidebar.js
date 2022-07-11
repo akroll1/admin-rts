@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/reac
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { FightStats } from './chat-sidebar-components/fight-stats'
-import stateStore from '../../state-store'
+import { stateStore } from '../../stores'
 
 export const ChatSidebar = ({
     setIncomingScore,

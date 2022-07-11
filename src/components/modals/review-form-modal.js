@@ -1,5 +1,5 @@
 import React from 'react'
-import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack, useColorModeValue } from '@chakra-ui/react'
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack, useColorModeValue } from '@chakra-ui/react'
 import { ReviewForm } from '../forms'
 
 export const ReviewFormModal = ({ 

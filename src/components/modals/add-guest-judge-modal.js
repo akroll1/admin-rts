@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
-import stateStore from '../../state-store'
+import { stateStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
 
 const CustomOverlay = () => (
@@ -14,21 +14,21 @@ const CustomOverlay = () => (
     />
 )
 
-export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudgeModal, setOpenAddGuestJudgeModal }) => {
+export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeModal, setAddGuestJudgeModal }) => {
     const { setMyGuestJudges, availableGuestJudges, myGuestJudges } = stateStore.getState();
     const [myJudges, setMyJudges] = useState([]);
     const [overlay, setOverlay] = React.useState(<CustomOverlay />)
     
     useEffect(() => {
-        if(openAddGuestJudgeModal){
+        if(addGuestJudgeModal){
             const currentJudges = availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))
             setMyJudges(currentJudges);
         }
-    },[openAddGuestJudgeModal])
+    },[addGuestJudgeModal])
 
     const closeModal = () => {
         setMyJudges([]);
-        setOpenAddGuestJudgeModal(false);
+        setAddGuestJudgeModal(false);
     }
     const localAddGuestJudge = e => {
         const { id } = e.currentTarget;
@@ -55,7 +55,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudg
         <Modal
             isCentered
             onClose={closeModal}
-            isOpen={openAddGuestJudgeModal}
+            isOpen={addGuestJudgeModal}
             motionPreset="slideInBottom"
         >
             <ModalOverlay />
@@ -66,6 +66,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudg
                     { availableGuestJudges?.length > 0 && availableGuestJudges.map( judge => {
                         return (
                             <InputGroup 
+                                key={judge.guestJudgeId}
                                 size="sm"
                                 m="2" 
                                 id={judge.guestJudgeId} 
@@ -87,6 +88,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, openAddGuestJudg
                     { myJudges.length > 0 && myJudges.map( judge => {
                         return (
                             <InputGroup 
+                                key={judge.guestJudgeId}
                                 size="sm"
                                 m="2" 
                                 id={judge.guestJudgeId} 

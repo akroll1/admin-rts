@@ -7,7 +7,7 @@ import { FightersPageFightersTable } from '../components/tables'
 import { FighterStats } from '../components/fighter-stats'
 import { FightersSidebar } from '../components/sidebars'
 import { FightersPageFighterProfile } from '../components/sidebars'
-import stateStore from '../state-store'
+import { stateStore } from '../stores'
 
 const Fighters = () => {
     const location = useLocation();

@@ -1,8 +1,7 @@
 import create from "zustand"
 import { persist } from 'zustand/middleware'
 
-
-const stateStore = create(persist(
+export const stateStore = create(persist(
     (set, get) => ({
         setUser: user => {
             set( state => ({ user }))
@@ -32,11 +31,10 @@ const stateStore = create(persist(
         myGuestJudges: [],
         setMyGuestJudges: myGuestJudges => {
             set( state => ({ myGuestJudges }))
-        }
+        },
     }),
     {
         name: 'fsl',
         getStorage: () => sessionStorage
     }
 ))
-export default stateStore;

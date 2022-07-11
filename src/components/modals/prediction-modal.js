@@ -13,8 +13,8 @@ const CustomOverlay = () => (
 )
 export const PredictionModal = ({ 
     rounds,
-    setToggleModal, 
-    toggleModal,
+    setPredictionModal, 
+    predictionModal,
     fighterData,
     handleSubmitPrediction 
 }) => {
@@ -39,14 +39,14 @@ export const PredictionModal = ({
     if(!fighter || !result) return alert('Please select a value!');
     const predictionString = localPrediction.fighter +','+ localPrediction.result;
     handleSubmitPrediction(predictionString);
-    setToggleModal(false)
+    setPredictionModal(false)
   }
 
   return (
     <Modal 
       blockScrollOnMount={false} 
       isCentered 
-      isOpen={toggleModal} 
+      isOpen={predictionModal} 
       motionPreset="slideInBottom"
     >
       <ModalOverlay/>
@@ -98,7 +98,7 @@ export const PredictionModal = ({
           <Button onClick={() => handleLocalPredictionSubmit()} colorScheme="blue" mr={3}>
             Save Prediction
           </Button>
-          <Button variant="outline" onClick={() => setToggleModal(false)} colorScheme="blue" mr={3}>
+          <Button variant="outline" onClick={() => setPredictionModal(false)} colorScheme="blue" mr={3}>
             Cancel
           </Button>
         </ModalFooter>

@@ -7,7 +7,7 @@ import { SignInForm } from './signin-form'
 import { ForcedPasswordChange } from './forced-password-change'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import stateStore from '../../state-store'
+import { stateStore } from '../../stores'
 
 export const SignIn = props => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -28,6 +28,7 @@ export const SignIn = props => {
   });
   const [isForcePasswordChange, setIsForcePasswordChange] = useState(false)
   const [forgotPassword, setForgotPassword] = useState(false);
+
   const { setUser, setToken } = stateStore.getState();
 
   Amplify.configure({
@@ -55,7 +56,6 @@ export const SignIn = props => {
       password
     })
     .then((user) => {
-
       const { attributes } = user;
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
         setIsForcePasswordChange(true);

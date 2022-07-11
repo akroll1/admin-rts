@@ -8,10 +8,9 @@ import { CreateGroupScorecard } from './create-scorecard'
 import { MyAccountForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestJudgeForm, PoundForm, ShowForm } from '../components/forms'
 import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
-import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { capFirstLetters } from '../utils'
-import stateStore from '../state-store'
+import { stateStore } from '../stores'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
@@ -29,9 +28,7 @@ const Dashboard = props => {
 
   useEffect(() => {
     const setAuth = () => {
-      // const isSuperAdmin = decodedToken['cognito:groups'] ? decodedToken['cognito:groups'][0] === 'rts-admins' : false;
       const isSuperAdmin = user.groups[0] === 'rts-admins';
-      console.log(isSuperAdmin)
       if(isSuperAdmin){
         setUser({ ...user, isSuperAdmin })
         setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
@@ -47,7 +44,7 @@ const Dashboard = props => {
         return axios.get(url, tokenConfig)
           .then(res => {
             if(res.data?.length > 0 ) setUserScorecards(res.data)
-            console.log('res: ',res);
+            // console.log('res: ',res);
             const data = res.data?.map(obj => {
               const { fighterData, scorecard } = obj;
               const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;

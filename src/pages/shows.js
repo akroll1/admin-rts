@@ -6,7 +6,7 @@ import { ReviewFormModal } from '../components/modals'
 import { useNavigate, useParams } from 'react-router'
 import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
-import stateStore from '../state-store'
+import { stateStore } from '../stores'
 
 const Shows = props => {
     const navigate = useNavigate();
