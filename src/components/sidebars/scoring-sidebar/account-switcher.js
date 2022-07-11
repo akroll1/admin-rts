@@ -17,7 +17,7 @@ export const AccountSwitcher = () => {
         <MenuOptionGroup defaultValue="chakra-ui">
           { userScorecards?.length > 0 && userScorecards?.map( (scorecard, i) => {
             return (
-              <MenuItemOption onClick={() => navigate(`/scoring/${scorecard.groupScorecardId}`)} as="button" key={i} value="chakra-ui" fontWeight="semibold" rounded="md">
+              <MenuItemOption onClick={() => navigate(`/scoring/${scorecard.groupScorecardId}`, {replace: true})} key={i} value="chakra-ui" fontWeight="semibold" rounded="md">
                 {scorecard.label}
               </MenuItemOption>
             )
