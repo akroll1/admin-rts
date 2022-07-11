@@ -8,15 +8,15 @@ import { PredictionPopover } from '../../components/prediction-popover'
 import { FaUserFriends, FaTv, FaRegMoneyBillAlt, FaMapMarkerAlt, FaRegClock, FaLock, FaLockOpen, FaPlusCircle, FaTrophy } from 'react-icons/fa'
 import { capFirstLetters, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
-import stateStore from '../../state-store'
+import { stateStore } from '../../stores'
 
 export const ScoringSidebar = ({ 
     finalScore, 
     groupScorecard,
     handleOpenAddMemberSubmitModal,
     prediction, 
-    setOpenAddGuestJudgeModal,
-    setToggleModal, 
+    setAddGuestJudgeModal,
+    setPredictionModal, 
     showData, 
 }) => {
     const [showGuests, setShowGuests] = useState(null)
@@ -39,7 +39,10 @@ export const ScoringSidebar = ({
         });
     }
     const handlePredictionToggle = () => {
-        setToggleModal(true);
+        if(isLocked){
+            return alert('Predictions are locked.')
+        }
+        setPredictionModal(true);
     };
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
@@ -126,7 +129,7 @@ export const ScoringSidebar = ({
                     <NavItem 
                         icon={<FaPlusCircle />} 
                         label={<Button 
-                            onClick={() => setOpenAddGuestJudgeModal(true)}
+                            onClick={() => setAddGuestJudgeModal(true)}
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 

@@ -3,7 +3,7 @@ import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { useLocation } from 'react-router'
 import { PagePoundList } from '../components/lists'
-import stateStore from '../state-store'
+import { stateStore } from '../stores'
 
 const initialDnDState = {
   draggedFrom: null,

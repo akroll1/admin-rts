@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
 import { DividerWithText } from '../../../chakra'
 import { capFirstLetters } from '../../../utils'
-import stateStore from '../../../state-store'
+import { stateStore } from '../../../stores'
 
 export const FightStats = (props) => {
     const { label, value, ...boxProps } = props;

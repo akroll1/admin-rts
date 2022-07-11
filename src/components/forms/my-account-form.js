@@ -3,7 +3,6 @@ import { Avatar, Box, Button, Checkbox, FormControl, FormHelperText, FormLabel, 
 import { HiCloudUpload } from 'react-icons/hi'
 import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect, FieldGroup } from '../../chakra'
-import useStore from '../../state-store';
 import axios from 'axios'
 
 
