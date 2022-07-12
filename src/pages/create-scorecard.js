@@ -66,7 +66,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
             scorecardName: createFullName(fighterAData) + ' vs ' + createFullName(fighterBData),
             weightclass,
             totalRounds,
-            location,
+            // location,
             fightDateTime: parseISO(time),
             groupScorecardNotes: showStoryline
         })
