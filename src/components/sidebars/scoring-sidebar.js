@@ -6,7 +6,7 @@ import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
 // import { PredictionPopover } from '../../components/prediction-popover'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
-import { capFirstLetters, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
+import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { stateStore } from '../../stores'
 
@@ -21,23 +21,7 @@ export const ScoringSidebar = ({
 }) => {
     const [showGuests, setShowGuests] = useState(null)
     const { availableGuestJudges } = stateStore.getState();
-    const destructureData = showData => {
-        const { show, fight } = showData;
-        const { location, network, showTime } = show;
-        const { odds, rounds, weightclass } = fight;
-        const transformedOdds = odds ? odds.split(',').join(',') : 'TBD';
-        const isLocked = predictionIsLocked(showTime);
-
-        return ({
-            location,
-            isLocked, 
-            network, 
-            odds: transformedOdds, 
-            rounds, 
-            showTime: parseEpoch(showTime),
-            weightclass: transformedWeightclass(weightclass)
-        });
-    }
+  
     const handlePredictionToggle = () => {
         if(isLocked){
             return alert('Predictions are locked.')
@@ -47,13 +31,13 @@ export const ScoringSidebar = ({
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
     }
-    const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? destructureData(showData) : '';
+    const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? getSidebarData(showData) : '';
     finalScore = parseInt(finalScore);
     const { members } = groupScorecard;
 
     return (
         <Flex 
-            id="scoring-sidebar" 
+            id="scoring_sidebar" 
             w="100%" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             minH={["22rem"]} 

@@ -48,7 +48,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
         const { fightId, fightOdds, result, weightclass, totalRounds } = mainEventFight[0];
         const [fighterAData, fighterBData] = mainEventFight[0].fighters;
         const createFullName = fighterData => {
-            return fighterData.firstName + ' ' + fighterData.lastName;
+            return `${fighterData.firstName} ${fighterData.lastName}`;
         };
         const getFighterId = fighterData => {
             return fighterData.fighterId;
