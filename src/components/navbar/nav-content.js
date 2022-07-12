@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Flex, HStack,useDisclosure } from '@chakra-ui/react'
 import { NavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
-import { ToggleButton, Submenu, Logo } from '../../chakra'
+import { ToggleButton, Submenu } from '../../chakra'
 import { links } from './navbar_data'
 import { useNavigate } from 'react-router'
 

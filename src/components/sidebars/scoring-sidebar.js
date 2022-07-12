@@ -4,8 +4,8 @@ import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiUser, BiEdit, BiSt
 import { AccountSwitcher } from './scoring-sidebar/account-switcher'
 import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
-import { PredictionPopover } from '../../components/prediction-popover'
-import { FaUserFriends, FaTv, FaRegMoneyBillAlt, FaMapMarkerAlt, FaRegClock, FaLock, FaLockOpen, FaPlusCircle, FaTrophy } from 'react-icons/fa'
+// import { PredictionPopover } from '../../components/prediction-popover'
+import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
 import { capFirstLetters, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { stateStore } from '../../stores'
@@ -150,7 +150,7 @@ export const ScoringSidebar = ({
                 <NavGroup label="Group Members">
                     { members && members.length > 0 && members.map( (member, i) => {
                         const isAdmin = member === groupScorecard.admin;
-                        return <NavItem icon={isAdmin ? <BiStar /> : <BiUser />} label={member.split('@')[0]} key={i} />
+                        return <NavItem icon={isAdmin ? <FaUserCog /> : <BiUser />} label={member.split('@')[0]} key={i} />
                     })}
                 
                 <NavItem 

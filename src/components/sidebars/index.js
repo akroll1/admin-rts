@@ -1,5 +1,6 @@
-export * from './scoring-chat-sidebar'
+export * from './analytics-sidebar'
 export * from './fighter-page-fighter-profile'
 export * from './fighters-sidebar'
+export * from './scoring-chat-sidebar'
 export * from './scoring-sidebar'
 export * from './shows-sidebar'
