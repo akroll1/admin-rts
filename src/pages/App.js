@@ -14,6 +14,7 @@ import CounterPunch from './counterpunch'
 import { Blog, BlogArticle } from '../components/blog'
 import Fighters from './fighters'
 import Discussion from './discussions'
+import Analytics from './analytics'
 import Shows from './shows'
 import theme from '../theme'
 import { PoundPage } from './pound'
@@ -39,11 +40,21 @@ const App = () => {
             <Route exact path="/counterpunch" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
+            <Route exact path="/analytics" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <Analytics /> 
+              </PrivateRoute>
+            }/>
+            <Route exact path="/analytics/:id" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <Analytics /> 
+              </PrivateRoute>
+            }/>
             <Route exact path="/shows" element={
-               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
-               <Shows /> 
-             </PrivateRoute>
-           }/>
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <Shows /> 
+              </PrivateRoute>
+            }/>
             <Route exact path="/shows/:id" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Shows /> 
