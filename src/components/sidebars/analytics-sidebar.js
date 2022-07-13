@@ -8,7 +8,10 @@ import { BiChevronRightCircle, BiCog, BiBuoy } from 'react-icons/bi'
 import { IoScaleOutline } from 'react-icons/io5'
 import { getSidebarData } from '../../utils'
 import { DividerWithText } from '../../chakra'
-
+/**
+ * THIS NEEDS TO SWITCH BETWEEN A LIST OF SHOWS 
+ * AND THE SHOW STATS IF THERE IS A /:fightId PARAM.
+ */
 export const AnalyticsSidebar = ({ showData }) => {
     const handleSearch = () => {
         console.log('handleSearch')

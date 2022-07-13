@@ -11,7 +11,9 @@ import { Notification } from '../components/notifications'
 import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
 import { stateStore } from '../stores'
-
+import { HiOutlineChatAlt2 } from 'react-icons/hi'
+import { TiChartBarOutline, TiChartLineOutline, TiMessages, TiNews } from 'react-icons/ti'
+import { GiBoxingRing } from 'react-icons/gi'
 const Scoring = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -20,7 +22,10 @@ const Scoring = () => {
     //////////////////  SCORE STATE /////////////////////////
     const { chatScorecard, myGuestJudges, setAvailableGuestJudges, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
     const { sub, email, username } = user?.sub ? user : '';
-
+    const [tabs, setTabs] = useState({
+        sidebar: true,
+        
+    })
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 

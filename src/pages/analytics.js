@@ -25,7 +25,7 @@ const Analytics = () => {
     },[]);
     console.log('showData: ', showData);
     return(
-        <Flex>
+        <Flex flexDirection={["column", "column", "row"]}>
             <AnalyticsSidebar showData={showData} />
             <AnalyticsMain />
         </Flex>
