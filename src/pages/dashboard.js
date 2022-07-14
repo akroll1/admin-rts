@@ -14,7 +14,7 @@ import { stateStore } from '../stores'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const { user, setUser, setUserScorecards, tokenConfig } = stateStore( state => state);
+  const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = stateStore( state => state);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
@@ -36,9 +36,10 @@ const Dashboard = props => {
     }
     setAuth()
   },[])
+  console.log('userScorecards: ', userScorecards)
   // getScorecards && check if user exists.
   useEffect(() => {
-    if(tokenConfig?.headers){
+    if(userScorecards.length === 0){
       const getUserScorecards = async () => {
         const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
         return axios.get(url, tokenConfig)
@@ -77,19 +78,22 @@ const Dashboard = props => {
               setUserScorecards(data)
             }
           }).catch(err => console.log(err))
-        }
+        } 
         getUserScorecards();
 
+      } else {
+          setScorecards(userScorecards)
+      }
+      // put user data into DB.
+      const updateUser = async () => {
+        // put a check on here so this isn't called every time.
+        const url = process.env.REACT_APP_USERS + `/${user.sub}`;
+        return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
+          .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
+      }
+      updateUser();
 
-        // put user data into DB.
-        const updateUser = async () => {
-          const url = process.env.REACT_APP_USERS + `/${user.sub}`;
-          return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
-            .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
-        }
-        updateUser();
-    }
-  },[tokenConfig])
+  },[])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
