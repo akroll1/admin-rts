@@ -40,7 +40,7 @@ const Dashboard = props => {
   useEffect(() => {
     if(tokenConfig?.headers){
       const getUserScorecards = async () => {
-        const url = process.env.REACT_APP_SCORECARDS + (`/${user.sub}-${user.email}`);
+        const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
         return axios.get(url, tokenConfig)
           .then(res => {
             if(res.data?.length > 0 ) setUserScorecards(res.data)
