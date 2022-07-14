@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
 import { stateStore } from '../../stores'
@@ -15,13 +15,15 @@ const CustomOverlay = () => (
 )
 
 export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeModal, setAddGuestJudgeModal }) => {
-    const { setMyGuestJudges, availableGuestJudges, myGuestJudges } = stateStore.getState();
+    const { myGuestJudges, setMyGuestJudges } = stateStore.getState();
+    const state = stateStore.getState();
+    const availableGuestJudges = stateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
     const [overlay, setOverlay] = React.useState(<CustomOverlay />)
     
     useEffect(() => {
         if(addGuestJudgeModal){
-            const currentJudges = availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))
+            const currentJudges = availableGuestJudges.length > 0 && availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))
             setMyJudges(currentJudges);
         }
     },[addGuestJudgeModal])
@@ -63,28 +65,34 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeMod
                 <ModalHeader fontSize="sm">Available Guest Judges</ModalHeader>
                 <ModalCloseButton onClick={closeModal} />
                 <ModalBody m="auto" w="100%"> 
-                    { availableGuestJudges?.length > 0 && availableGuestJudges.map( judge => {
+                    {availableGuestJudges?.length > 0 
+                        
+                    ? availableGuestJudges.map( judge => {
                         return (
-                            <InputGroup 
-                                key={judge.guestJudgeId}
-                                size="sm"
-                                m="2" 
-                                id={judge.guestJudgeId} 
-                                onClick={localAddGuestJudge}
-                            >
-                                <Input 
-                                    p="2" 
-                                    readOnly 
-                                    _hover={{ background: '#3b4962', cursor: 'pointer' }} 
-                                    value={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`} 
-                                    key={judge.guestJudgeId} 
-                                />
-                                <InputRightElement children={ <AddIcon /> } />
+                            <>    
+                                <InputGroup 
+                                    key={judge.guestJudgeId}
+                                    size="sm"
+                                    m="2" 
+                                    id={judge.guestJudgeId} 
+                                    onClick={localAddGuestJudge}
+                                >
+                                    <Input 
+                                        p="2" 
+                                        readOnly 
+                                        _hover={{ background: '#3b4962', cursor: 'pointer' }} 
+                                        value={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`} 
+                                        key={judge.guestJudgeId} 
+                                    />
+                                    <InputRightElement children={ <AddIcon /> } />
 
-                            </InputGroup>
-                        )
-                    })}
-                    <DividerWithText text="My Judges" />
+                                </InputGroup>
+                                <DividerWithText text="My Judges" />
+                            </>
+                        )})
+                    :   <Text textAlign="center">There are no guest judges for this fight.</Text>
+                    
+                    }
                     { myJudges.length > 0 && myJudges.map( judge => {
                         return (
                             <InputGroup 
@@ -95,7 +103,6 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeMod
                                 onClick={localRemoveGuestJudge}
                             >
                                 <Input 
-
                                     p="2" 
                                     readOnly 
                                     _hover={{ background: '#3b4962', cursor: 'pointer' }} 
@@ -113,18 +120,20 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeMod
                     alignItems="center" 
                     justifyContent="center"
                 >
-                <ButtonGroup m="auto" spacing="4">
-                    <Button 
-                        onClick={setJudges}
-                        loadingText="Submitting"  
-                        colorScheme="blue"
-                    >
-                        Set Judges
-                    </Button>
-                    <Button variant="outline" onClick={closeModal}>
-                        Cancel
-                    </Button>
-                </ButtonGroup>
+                    <ButtonGroup m="auto" spacing="4">
+                        { availableGuestJudges.length > 0 && 
+                            <Button 
+                                onClick={setJudges}
+                                loadingText="Submitting"  
+                                colorScheme="blue"
+                            >
+                                Set Judges
+                            </Button>
+                        }
+                        <Button variant="outline" onClick={closeModal}>
+                            Cancel
+                        </Button>
+                    </ButtonGroup>
                 </ModalFooter>
             </ModalContent>
         </Modal>

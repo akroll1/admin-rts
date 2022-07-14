@@ -140,7 +140,7 @@ const Scoring = () => {
                 transformPredictionData();
             }
             
-            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : null);
+            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : []);
             setChatKey(res.data.groupScorecard.chatKey);
             setTotalRounds(res.data.fight.rounds);
 
@@ -328,7 +328,7 @@ const Scoring = () => {
     };
     // this method can also be used in the initial useEffect to get the guest judges.
     const fetchGuestJudgeScorecards = async guestJudgeIds => {
-        const getJudges = await guestJudgeIds.map( async id => {
+        const getJudges = await guestJudgeIds.length > 0 && guestJudgeIds.map( async id => {
             const url = process.env.REACT_APP_SCORECARDS + `/${id}/${showData.fight.fightId}`;
             return axios(url, tokenConfig)
                 .then( res => res.data )

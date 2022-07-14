@@ -35,6 +35,7 @@ export const stateStore = create(persist(
     }),
     {
         name: 'fsl',
+        version: 1,
         getStorage: () => sessionStorage
     }
 ))
