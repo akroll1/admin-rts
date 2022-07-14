@@ -4,7 +4,7 @@ import { Stat } from './stat'
 const stats = [
   {
     label: 'Total Scorecards',
-    value: '71,887',
+    value: '143,887',
     delta: {
       value: '4.3%',
       isUpwardsTrend: true,
