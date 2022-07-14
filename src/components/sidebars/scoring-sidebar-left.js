@@ -10,7 +10,7 @@ import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transf
 import { IoScaleOutline } from 'react-icons/io5'
 import { stateStore } from '../../stores'
 
-export const ScoringSidebar = ({ 
+export const ScoringSidebarLeft = ({ 
     finalScore, 
     groupScorecard,
     handleOpenAddMemberSubmitModal,

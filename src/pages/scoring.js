@@ -3,14 +3,14 @@ import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
 import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
-import { ScoringSidebar } from '../components/sidebars'
-import { predictionIsLocked } from '../utils/utils'
+import {  } from '../components/sidebars'
+import { predictionIsLocked } from '../utils'
 import { useLocation, useNavigate } from 'react-router'
-import { ChatSidebarRight } from '../components/sidebars'
+import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
 import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS } from '../utils'
-import { ScoringMain } from '../components/scoring-main'
-import { ScoringTabs } from '../components/scoring-main'
+import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { stateStore } from '../stores'
+import { useWindowResize } from '../hooks'
 
 const Scoring = () => {
     const location = useLocation();
@@ -27,6 +27,7 @@ const Scoring = () => {
         chat: false,
         analytics: false
     });
+    const windowWidth = useWindowResize();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
@@ -65,7 +66,30 @@ const Scoring = () => {
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
         } 
     },[user]) 
-
+    useEffect(() => {
+        // get window width size for scoring tabs.
+        const getWindowWidth = () => {
+            if(windowWidth >= 768){
+                console.log('inside windowWidth')
+                setTabs({
+                    sidebar: true,
+                    scoring: true, 
+                    table: true,
+                    chat: true,
+                    analytics: true
+                })
+            } else {
+                setTabs({
+                    sidebar: false,
+                    scoring: true, 
+                    table: false,
+                    chat: false,
+                    analytics: false
+                })
+            }
+        }
+        getWindowWidth();
+    },[windowWidth])
     useEffect(() => {
         // 1. Fetch Group Scorecard.
         const fetchGroupScorecard = async () => {
@@ -74,7 +98,7 @@ const Scoring = () => {
             console.log('res.data: ', res.data);
             if(typeof res.data === 'string' && res.data.includes('Token expired')){
                 console.log('Token is expired.')
-                return;
+                return setExpiredTokenModal(true)
             }
             if(res.data === 'No scorecard found.'){
                 alert('No Scorecard Found');
@@ -358,7 +382,7 @@ const Scoring = () => {
                 />
             </Flex>
             <Flex w="100%" mb="3.5rem">
-                <ScoringSidebar 
+                <ScoringSidebarLeft
                     tabs={tabs}
                     finalScore={finalScore}
                     groupScorecard={groupScorecard}
@@ -378,7 +402,7 @@ const Scoring = () => {
                     setSliderScores={setSliderScores} 
                     isSubmitting={isSubmitting}
                 />
-                <ChatSidebarRight
+                <ScoringSidebarRight
                     tabs={tabs}
                     setIncomingScore={setIncomingScore}
                     chatScorecard={chatScorecard}

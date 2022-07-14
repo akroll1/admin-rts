@@ -68,7 +68,7 @@ export const FightStats = (props) => {
             alignItems="center"
             justifyContent="space-evenly"
         >
-            <DividerWithText text={`Group Results`} />
+            <DividerWithText text={`Group Analytics`} />
             <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-evenly">
 
                 <Stack alignItems="center" justifyContent="center">
