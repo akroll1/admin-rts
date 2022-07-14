@@ -49,7 +49,7 @@ export const ScoringSidebarRight = ({
                     <Flex 
                         w={["100%","auto"]} 
                         position="fixed" 
-                        top="1rem" 
+                        top="3rem" 
                         right="0" 
                         flexDir="column" 
                         zIndex="10000"

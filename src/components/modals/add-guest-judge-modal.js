@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
+import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
 import { stateStore } from '../../stores'
@@ -15,23 +15,23 @@ const CustomOverlay = () => (
 )
 
 export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeModal, setAddGuestJudgeModal }) => {
+    const toast = useToast();
     const { myGuestJudges, setMyGuestJudges } = stateStore.getState();
-    const state = stateStore.getState();
     const availableGuestJudges = stateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
     const [overlay, setOverlay] = React.useState(<CustomOverlay />)
-    
     useEffect(() => {
         if(addGuestJudgeModal){
             const currentJudges = availableGuestJudges.length > 0 && availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))
             setMyJudges(currentJudges);
         }
     },[addGuestJudgeModal])
-
+    
     const closeModal = () => {
         setMyJudges([]);
         setAddGuestJudgeModal(false);
     }
+ 
     const localAddGuestJudge = e => {
         const { id } = e.currentTarget;
         const judgeToAdd = availableGuestJudges.filter( judge => judge.guestJudgeId === id);
@@ -65,33 +65,32 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeMod
                 <ModalHeader fontSize="sm">Available Guest Judges</ModalHeader>
                 <ModalCloseButton onClick={closeModal} />
                 <ModalBody m="auto" w="100%"> 
-                    {availableGuestJudges?.length > 0 
-                        
-                    ? availableGuestJudges.map( judge => {
-                        return (
-                            <>    
-                                <InputGroup 
-                                    key={judge.guestJudgeId}
-                                    size="sm"
-                                    m="2" 
-                                    id={judge.guestJudgeId} 
-                                    onClick={localAddGuestJudge}
-                                >
-                                    <Input 
-                                        p="2" 
-                                        readOnly 
-                                        _hover={{ background: '#3b4962', cursor: 'pointer' }} 
-                                        value={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`} 
-                                        key={judge.guestJudgeId} 
-                                    />
-                                    <InputRightElement children={ <AddIcon /> } />
+                    {availableGuestJudges?.length > 0  
+                        ?   availableGuestJudges.map( judge => {
+                                return (
+                                    <>    
+                                        <InputGroup 
+                                            key={judge.guestJudgeId}
+                                            size="sm"
+                                            m="2" 
+                                            id={judge.guestJudgeId} 
+                                            onClick={localAddGuestJudge}
+                                        >
+                                            <Input 
+                                                p="2" 
+                                                readOnly 
+                                                _hover={{ background: '#3b4962', cursor: 'pointer' }} 
+                                                value={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`} 
+                                                key={judge.guestJudgeId} 
+                                            />
+                                            <InputRightElement children={ <AddIcon /> } />
 
-                                </InputGroup>
-                                <DividerWithText text="My Judges" />
-                            </>
-                        )})
-                    :   <Text textAlign="center">There are no guest judges for this fight.</Text>
-                    
+                                        </InputGroup>
+                                        <DividerWithText text="My Judges" />
+                                    </>
+                            )})
+
+                        :   <Text textAlign="center">There are no guest judges for this fight.</Text>
                     }
                     { myJudges.length > 0 && myJudges.map( judge => {
                         return (

@@ -16,7 +16,7 @@ import {
   export const Notification = ({ id, notification, displayName, handleCloseNotification }) => {
     return (
       <ScaleFade 
-        position="absolute" 
+        position="fixed" 
         top="0" 
         right="0" 
         initialScale={0.9} 

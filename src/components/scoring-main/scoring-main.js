@@ -25,8 +25,8 @@ export const ScoringMain = ({
 
     return (
         <Flex 
-        display={window.innerWidth <= 768 && tabs.scoring ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
-        id="scoring-main"
+            display={window.innerWidth <= 768 && tabs.scoring ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
+            id="scoring-main"
             p={["0", "2"]} 
             m={['auto', 'auto', 'unset']} 
             flex={["1 0 40%", "1 0 40%", "1 0 40%", "1 0 50%"]}
