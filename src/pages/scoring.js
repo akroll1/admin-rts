@@ -345,7 +345,6 @@ const Scoring = () => {
     // console.log('fighterData: ', fighterData)
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
-    console.log('tabs: ', tabs)
     return (
         <Flex 
             w="100%" 

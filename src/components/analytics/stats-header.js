@@ -29,15 +29,13 @@ const stats = [
 ]
 
 export const StatsHeader = () => (
-  <Flex
-    flexWrap="wrap"
-    w="100%"
-    flexDirection="row"
-    as="section"
-    py={{base: '4', md: '8'}}
-  >
-    {stats.map((stat, id) => (
-      <Stat key={id} {...stat} />
-    ))}
-  </Flex>
+  <Box as="section" py={{ base: '4', md: '8' }}>
+    <Container maxWidth="100%">
+      <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: '5', md: '6' }}>
+        {stats.map((stat, id) => (
+          <Stat key={id} {...stat} />
+        ))}
+      </SimpleGrid>
+    </Container>
+  </Box>
 )
