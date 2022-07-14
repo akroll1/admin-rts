@@ -10,6 +10,7 @@ export const FightersForm = ({ user, tokenConfig }) => {
     const fightersUrl = process.env.REACT_APP_FIGHTERS;
     const [fighters, setFighters] = useState([]);
     const [fighter, setFighter] = useState({
+        fighterId: '',
         firstName: '',
         lastName: '',
         ringname: '',
@@ -38,7 +39,8 @@ export const FightersForm = ({ user, tokenConfig }) => {
                     status: 'success',
                     duration: 5000,
                     isClosable: true,});
-                    setFighter({fighterId: uuidv4(),
+                    setFighter({
+                        fighterId: '',
                         firstName: '',
                         lastName: '',
                         ringname: '',
@@ -48,7 +50,8 @@ export const FightersForm = ({ user, tokenConfig }) => {
                         kos: 0,
                         dq: 0,
                         socials: [],
-                        home: ''})
+                        home: ''
+                    })
                 }
             })
             .catch(err => console.log(err))

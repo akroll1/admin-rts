@@ -12,10 +12,11 @@ export const ChatSidebar = ({
     setNotificationTimeout,
     setIncomingScore,
     tabs,
-    tokenConfig
 }) => {
+
     // chatKey is room key for room ARN, required for chat metadata.
-    const { chatScorecard, setChatScorecard } = stateStore.getState();
+
+    const { chatScorecard, setChatScorecard, tokenConfig } = stateStore.getState();
     const [moderator, setModerator] = useState(false);
     const [avatar, setAvatar] = useState({});
     const [chatToken, setChatToken] = useState(null);
@@ -187,98 +188,100 @@ export const ChatSidebar = ({
    
     return (
         <Flex 
-        id="chat-sidebar"
-        flexDir="column" 
-        flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
-        w="100%" 
-        minH={["22rem"]} 
-        maxH={["40vh", "40vh", "60vh"]}
-        p="2" 
-        bg="gray.900" 
-        borderRadius="md" 
-        overflowY="scroll"
-    >
-        <Input
-            as="input"
-            m="1"
-            p="2"
-            size="sm"
-            ref={chatRef}
-            type="text"
-            color="whiteAlpha.800"
-            _placeholder={{color: 'whiteAlpha.400'}}
-            placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
-            isDisabled={!socketActive()}
-            value={chatMessage}
-            maxLength={150}
-            onChange={handleChatChange}
-            onKeyDown={handleChatKeydown}
-        />
-        <ButtonGroup p="2" pt="0" pb="0">
-            { socketActive() 
-                ?
-                    <Button     
-                        w="100%"
-                        minH="1.5rem"
-                        m="1"
-                        p="1"
-                        size="sm"
-                        isLoading={isSubmitting} 
-                        loadingText="Joining..." 
-                        onClick={() => handleSendMessage('CHAT')} 
-                        variant="solid"
-                        colorScheme="teal"
-                    >
-                        Send
-                    </Button>
-                :
-                    <Button     
-                        w="100%"
-                        minH="1.5rem"
-                        m="1"
-                        p="1"
-                        size="sm"
-                        isLoading={isSubmitting} 
-                        loadingText="Joining..." 
-                        onClick={handleRequestToken} 
-                        variant="solid"
-                        colorScheme="teal"
-                    >
-                        Join Chat
-                    </Button>
-            }
-            <Button     
-                w="100%"
-                minH="1.5rem"
+            display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
+            id="chat-sidebar"
+            flexDir="column" 
+            flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
+            w="100%" 
+            minH={["22rem"]} 
+            maxH={["40vh", "40vh", "60vh"]}
+            p="2" 
+            bg="gray.900" 
+            borderRadius="md" 
+            overflowY="scroll"
+        >
+            <DividerWithText text={"Group Chat"} />
+            <Input
+                as="input"
                 m="1"
-                p="1"
+                p="2"
                 size="sm"
-                disabled={!socketActive() || powerShotDisabled}
-                loadingText="Joining..." 
-                onClick={() => handleSendMessage('PREDICTION')} 
-                variant="outline"
-                colorScheme="red"
-            >
-                PowerShot
-            </Button>
-        </ButtonGroup>
-        <Divider p="1" w="50%" marginX="auto"/>
+                ref={chatRef}
+                type="text"
+                color="whiteAlpha.800"
+                _placeholder={{color: 'whiteAlpha.400'}}
+                placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
+                isDisabled={!socketActive()}
+                value={chatMessage}
+                maxLength={150}
+                onChange={handleChatChange}
+                onKeyDown={handleChatKeydown}
+            />
+            <ButtonGroup p="2" pt="0" pb="0">
+                { socketActive() 
+                    ?
+                        <Button     
+                            w="100%"
+                            minH="1.5rem"
+                            m="1"
+                            p="1"
+                            size="sm"
+                            isLoading={isSubmitting} 
+                            loadingText="Joining..." 
+                            onClick={() => handleSendMessage('CHAT')} 
+                            variant="solid"
+                            colorScheme="teal"
+                        >
+                            Send
+                        </Button>
+                    :
+                        <Button     
+                            w="100%"
+                            minH="1.5rem"
+                            m="1"
+                            p="1"
+                            size="sm"
+                            isLoading={isSubmitting} 
+                            loadingText="Joining..." 
+                            onClick={handleRequestToken} 
+                            variant="solid"
+                            colorScheme="teal"
+                        >
+                            Join Chat
+                        </Button>
+                }
+                <Button     
+                    w="100%"
+                    minH="1.5rem"
+                    m="1"
+                    p="1"
+                    size="sm"
+                    disabled={!socketActive() || powerShotDisabled}
+                    loadingText="Joining..." 
+                    onClick={() => handleSendMessage('PREDICTION')} 
+                    variant="outline"
+                    colorScheme="red"
+                >
+                    PowerShot
+                </Button>
+            </ButtonGroup>
+            <Divider p="1" w="50%" marginX="auto"/>
 
-        { chatMessages && 
-            <Flex
-                maxW="100%"
-                flexDir="column" 
-                borderRadius="md"
-                bg="gray.900" 
-                p="4"
-                color="white" 
-                fontSize="sm"
-                overflow="scroll"
-                wordBreak="break-all"
-            >    
-                {renderMessages()}                    
-            </Flex>
-        }
-    </Flex>
+            { chatMessages && 
+                <Flex
+                    maxW="100%"
+                    flexDir="column" 
+                    borderRadius="md"
+                    bg="gray.900" 
+                    p="4"
+                    color="white" 
+                    fontSize="sm"
+                    overflow="scroll"
+                    wordBreak="break-all"
+                >    
+                    {renderMessages()}                    
+                </Flex>
+            }
+        </Flex>
     )
 }

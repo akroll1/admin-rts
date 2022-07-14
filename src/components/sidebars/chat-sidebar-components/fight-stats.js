@@ -58,7 +58,7 @@ export const FightStats = (props) => {
     
     return (
         <Flex
-            display={tabs.analytics ? 'flex' :  'none'}
+            display={window.innerWidth <= 768 && tabs.analytics ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
             flexDirection="column"
             px="2"
             bg="bg-surface"

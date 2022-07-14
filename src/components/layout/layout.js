@@ -8,7 +8,7 @@ export const Layout = props => {
     return (
         <Flex flexDirection="column" position="relative">  
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-            <Box h="90vh" as="main">{children}</Box>
+            <Box as="main">{children}</Box>
             <Footer />
         </Flex>
     )

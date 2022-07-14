@@ -38,12 +38,13 @@ export const ScoringSidebar = ({
 
     return (
         <Flex 
-        display={window.innerWidth <= 768 && tabs.sidebar ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
-        id="scoring_sidebar" 
+            display={window.innerWidth <= 768 && tabs.sidebar ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
+            id="scoring_sidebar" 
+            mb="3rem"
             w="100%" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             minH={["22rem"]} 
-            maxH={["35vh", "40vh", "60vh"]}
+            maxH={["80vh", "60vh", "60vh"]}
             overflowY="scroll" 
             position="relative" 
             alignItems="center" 
@@ -62,7 +63,6 @@ export const ScoringSidebar = ({
                         id="prediction"
                         icon={isLocked ? <FaLock /> : <FaLockOpen />} 
                         handlePredictionToggle={handlePredictionToggle}
-
                         label={<Button 
                             // disabled={isLocked} 
                             button={'button'}

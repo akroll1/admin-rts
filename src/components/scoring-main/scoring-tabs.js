@@ -54,7 +54,7 @@ export const ScoringTabs = ({ tabs, setTabs }) => {
             bg="gray.600" 
             flexDirection="row" 
             w="100%"
-            position="absolute"
+            position="fixed"
             bottom="0"
         >
             { tab_data.map( tab => {

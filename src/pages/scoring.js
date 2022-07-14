@@ -7,7 +7,6 @@ import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils'
 import { useLocation, useNavigate } from 'react-router'
 import { ChatSidebarRight } from '../components/sidebars'
-import { Notification } from '../components/notifications'
 import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
 import { ScoringTabs } from '../components/scoring-main'
@@ -57,10 +56,6 @@ const Scoring = () => {
     const [predictionLock, setPredictionLock] = useState(true);
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
-
-    //////////////////  NOTIFICATIONS /////////////////////////
-    const [notificationTimeout, setNotificationTimeout] = useState(false);
-    const [notifications, setNotifications] = useState([]);
 
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
@@ -267,24 +262,7 @@ const Scoring = () => {
             .catch(err => console.log(err));
     };
     // useEffect for removing notifications.
-    useEffect(() => {
-        if(notifications.length > 0){
-            const timer = setTimeout(() => {
-                const temp = notifications;
-                temp.shift(temp.length -1)
-                setNotifications(temp);
-                setNotificationTimeout(prev => !prev);
-            }, 3000)
-            return () => clearTimeout(timer);
-        }
-    },[notificationTimeout])
 
-    const handleCloseNotification = e => {
-        const { id } = e.currentTarget;
-        const temp = notifications
-        const filtered = temp.filter( ({ notification }) => notification !== id);
-        setNotifications(filtered)
-    };
     const handleOpenAddMemberSubmitModal = () => {
         if(userScorecard.ownerId !== groupScorecard.ownerId){
             return toast({ 
@@ -378,26 +356,6 @@ const Scoring = () => {
                     fighterData={fighterData}
                     handleSubmitPrediction={handleSubmitPrediction} 
                 />
-                {notifications.length > 0 && notifications.map( ({notification, username}) => {
-                    <Flex 
-                        w={["100%","auto"]} 
-                        position="fixed" 
-                        top="1rem" 
-                        right="0" 
-                        flexDir="column" 
-                        zIndex="10000"
-                    >
-                        return (
-                            <Notification
-                            key={notification}
-                            id={notification}
-                            handleCloseNotification={handleCloseNotification}
-                            notification={notification} 
-                            username={username}
-                            /> 
-                            )
-                    </Flex>    
-                })}
             </Flex>
             <Flex w="100%" mb="3.5rem">
                 <ScoringSidebar 
@@ -427,9 +385,7 @@ const Scoring = () => {
                     tokenConfig={tokenConfig}
                     chatKey={chatKey}
                     username={username}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                    setNotificationTimeout={setNotificationTimeout}
+
                 />
             </Flex>
 
