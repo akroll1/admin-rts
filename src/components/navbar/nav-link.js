@@ -4,7 +4,6 @@ import { Link as RRLink } from 'react-router-dom'
 
 const DesktopNavLink = React.forwardRef((props, ref) => {
   const { active, href, ...rest } = props;
-  // console.log('href: ',href);
   return (
     <Link
       as={RRLink}
@@ -14,7 +13,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
       px="4"
       py="6"
       fontWeight="semibold"
-       aria-current={active ? 'page' : undefined}
+      aria-current={active ? 'page' : undefined}
       color={mode('gray.400', 'gray.400')}
       transition="all 0.2s"
       {...rest}
@@ -29,12 +28,13 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
         fontWeight: 'bold',
       }}
     />
-  )
-})
-DesktopNavLink.displayName = 'DesktopNavLink'
-
-export const MobileNavLink = props => {
-  const { active, ...rest } = props
+    )
+  })
+  DesktopNavLink.displayName = 'DesktopNavLink'
+  
+  export const MobileNavLink = props => {
+    const { active, ...rest } = props
+    // console.log('rest: ', rest);
   return (
     <Link
       aria-current={active ? 'page' : undefined}
