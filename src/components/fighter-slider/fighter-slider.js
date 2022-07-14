@@ -12,11 +12,11 @@ export const FighterSlider = ({ fighter, sliderScores, setSliderScores }) => {
     },[sliderScores])
 
     return (
-        <Flex m="1" p="1" boxSizing="border-box" flex="1 0 40%" flexDirection="column">
-            <Center m="1rem">
+        <Flex p="1" boxSizing="border-box" flex="1 0 40%" flexDirection="column">
+            <Center m="2">
                 <Avatar size="md" _hover={{cursor: 'pointer'}} />
             </Center>
-            <Heading textAlign="center" mb="3" as="h2" size="md">{capFirstLetters(firstName)} {capFirstLetters(lastName)}&#58;&nbsp;{score ? score : 10}</Heading>
+            <Heading textAlign="center" mb="2" as="h2" size="md">{capFirstLetters(firstName)} {capFirstLetters(lastName)}&#58;&nbsp;{score ? score : 10}</Heading>
             <Slider 
                 m="auto"
                 w={["90%", "75%"]}

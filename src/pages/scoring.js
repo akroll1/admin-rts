@@ -6,14 +6,13 @@ import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, PredictionModal 
 import { ScoringSidebar } from '../components/sidebars'
 import { predictionIsLocked } from '../utils/utils'
 import { useLocation, useNavigate } from 'react-router'
-import { ChatSidebar } from '../components/sidebars'
+import { ChatSidebarRight } from '../components/sidebars'
 import { Notification } from '../components/notifications'
 import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain } from '../components/scoring-main'
+import { ScoringTabs } from '../components/scoring-main'
 import { stateStore } from '../stores'
-import { HiOutlineChatAlt2 } from 'react-icons/hi'
-import { TiChartBarOutline, TiChartLineOutline, TiMessages, TiNews } from 'react-icons/ti'
-import { GiBoxingRing } from 'react-icons/gi'
+
 const Scoring = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -23,9 +22,12 @@ const Scoring = () => {
     const { chatScorecard, myGuestJudges, setAvailableGuestJudges, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
     const { sub, email, username } = user?.sub ? user : '';
     const [tabs, setTabs] = useState({
-        sidebar: true,
-        
-    })
+        sidebar: false,
+        scoring: true, 
+        table: false,
+        chat: false,
+        analytics: false
+    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
@@ -341,64 +343,65 @@ const Scoring = () => {
     // console.log('fighterData: ', fighterData)
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
+    console.log('tabs: ', tabs)
     return (
-        <Flex flexDir="column" position="relative">
-            <ExpiredTokenModal 
-                expiredTokenModal={expiredTokenModal}
-                setExpiredTokenModal={setExpiredTokenModal}
-            />
-            <AddGuestJudgeModal 
-                fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
-                addGuestJudgeModal={addGuestJudgeModal}
-                setAddGuestJudgeModal={setAddGuestJudgeModal}
-            />
-            <AddMemberModal 
-                handleAddMemberSubmit={handleAddMemberSubmit}
-                isSubmitting={isSubmitting}
-                addMemberModal={addMemberModal}
-                setAddMemberModal={setAddMemberModal}
-            />
-            <PredictionModal 
-                rounds={rounds}
-                setPredictionModal={setPredictionModal}
-                predictionModal={predictionModal}
-                fighterData={fighterData}
-                handleSubmitPrediction={handleSubmitPrediction} 
-            />
+        <Flex 
+            w="100%" 
+            flexDirection="column" 
+            color="white" 
+            alignItems="center" 
+            justifyContent="center" 
+            margin="auto" 
+            p="4"
+        >         
             <SliderHeading fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
-            <Flex 
-                w={["100%","auto"]} 
-                position="fixed" 
-                top="1rem" 
-                right="0" 
-                flexDir="column" 
-                zIndex="10000"
-            >
+            <Flex>
+                <ExpiredTokenModal 
+                    expiredTokenModal={expiredTokenModal}
+                    setExpiredTokenModal={setExpiredTokenModal}
+                />
+                <AddGuestJudgeModal 
+                    fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
+                    addGuestJudgeModal={addGuestJudgeModal}
+                    setAddGuestJudgeModal={setAddGuestJudgeModal}
+                />
+                <AddMemberModal 
+                    handleAddMemberSubmit={handleAddMemberSubmit}
+                    isSubmitting={isSubmitting}
+                    addMemberModal={addMemberModal}
+                    setAddMemberModal={setAddMemberModal}
+                />
+                <PredictionModal 
+                    rounds={rounds}
+                    setPredictionModal={setPredictionModal}
+                    predictionModal={predictionModal}
+                    fighterData={fighterData}
+                    handleSubmitPrediction={handleSubmitPrediction} 
+                />
                 {notifications.length > 0 && notifications.map( ({notification, username}) => {
-                    return (
-                        <Notification
+                    <Flex 
+                        w={["100%","auto"]} 
+                        position="fixed" 
+                        top="1rem" 
+                        right="0" 
+                        flexDir="column" 
+                        zIndex="10000"
+                    >
+                        return (
+                            <Notification
                             key={notification}
                             id={notification}
                             handleCloseNotification={handleCloseNotification}
                             notification={notification} 
                             username={username}
-                        /> 
-                    )
+                            /> 
+                            )
+                    </Flex>    
                 })}
-            </Flex>    
-            <Flex 
-                w="100%" 
-                height="auto" 
-                maxW="100%" 
-                direction={["column", "column", "row" ]} 
-                color="white" 
-                alignItems="flex-start" 
-                justifyContent="center" 
-                margin="auto" 
-                px={6} 
-                py={8
-            }>    
+            </Flex>
+            <Flex w="100%" mb="3.5rem">
                 <ScoringSidebar 
+                    tabs={tabs}
                     finalScore={finalScore}
                     groupScorecard={groupScorecard}
                     handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
@@ -408,6 +411,7 @@ const Scoring = () => {
                     showData={showData}
                 />
                 <ScoringMain
+                    tabs={tabs}
                     totalRounds={totalRounds}
                     fightComplete={fightComplete}
                     submitRoundScores={submitRoundScores}
@@ -416,7 +420,8 @@ const Scoring = () => {
                     setSliderScores={setSliderScores} 
                     isSubmitting={isSubmitting}
                 />
-                <ChatSidebar 
+                <ChatSidebarRight
+                    tabs={tabs}
                     setIncomingScore={setIncomingScore}
                     chatScorecard={chatScorecard}
                     tokenConfig={tokenConfig}
@@ -426,10 +431,19 @@ const Scoring = () => {
                     setNotifications={setNotifications}
                     setNotificationTimeout={setNotificationTimeout}
                 />
-            </Flex>   
-            <ScoringTable username={username} tableData={tableData} scoredRounds={scoredRounds} totalRounds={totalRounds} />
+            </Flex>
+
+            <ScoringTable 
+                tabs={tabs} 
+                username={username} 
+                tableData={tableData} 
+                scoredRounds={scoredRounds} 
+                totalRounds={totalRounds} 
+            />
+            <ScoringTabs tabs={tabs} setTabs={setTabs} />
         </Flex>
     )
+
 }
 export default Scoring
 

@@ -18,6 +18,7 @@ export const ScoringSidebar = ({
     setAddGuestJudgeModal,
     setPredictionModal, 
     showData, 
+    tabs
 }) => {
     const [showGuests, setShowGuests] = useState(null)
     const { availableGuestJudges } = stateStore.getState();
@@ -37,7 +38,8 @@ export const ScoringSidebar = ({
 
     return (
         <Flex 
-            id="scoring_sidebar" 
+        display={window.innerWidth <= 768 && tabs.sidebar ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
+        id="scoring_sidebar" 
             w="100%" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             minH={["22rem"]} 
