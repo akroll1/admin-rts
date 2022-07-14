@@ -6,7 +6,7 @@ export const MyScorecards = ({ scorecards, handleFormSelect }) => {
     return (
         <>
             <Center>
-                <Heading my="4" as="h1" size="2xl">My Scorecards</Heading>
+                <Heading p="4" as="h1" size="xl">My Scorecards</Heading>
             </Center>
             <MyScorecardsTable handleFormSelect={handleFormSelect} scorecards={scorecards} />
         </>
