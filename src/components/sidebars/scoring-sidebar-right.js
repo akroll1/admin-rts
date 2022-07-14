@@ -4,7 +4,7 @@ import { ChatSidebar, FightStats } from './chat-sidebar-components'
 import { stateStore } from '../../stores'
 import { Notification } from '../notifications'
 
-export const ChatSidebarRight = ({
+export const ScoringSidebarRight = ({
     chatKey, 
     username, 
     setIncomingScore,
