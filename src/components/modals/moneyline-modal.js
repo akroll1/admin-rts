@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
-import { Flex, Select, Icon, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
-import { capFirstLetters } from '../../utils'
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { ScoringMoneylineTable } from '../tables'
 
 const CustomOverlay = () => (
   <ModalOverlay
@@ -25,15 +25,9 @@ export const MoneylineModal = ({
     >
       <ModalOverlay/>
       <ModalContent>
-        <ModalHeader 
-          display="flex" 
-          flexDirection="row" 
-          textAlign="center" 
-          justifyContent="space-around"
-        >
-        </ModalHeader>
+        <ModalHeader textAlign="center">Scoring Props</ModalHeader>
         <ModalBody>
-            <p>Modal body</p>
+            <ScoringMoneylineTable />
         </ModalBody>
         <ModalFooter 
           display="flex" 
@@ -41,11 +35,8 @@ export const MoneylineModal = ({
           alignItems="center" 
           justifyContent="center"
         >
-          <Button onClick={() => console.log('Save Prediction')} colorScheme="blue" mr={3}>
-            Save Prediction
-          </Button>
-          <Button variant="outline" onClick={() => setModals(modals => ({ ...modals, moneylineModal: false}))} colorScheme="blue" mr={3}>
-            Cancel
+          <Button minW="40%" onClick={() => setModals(modals => ({ ...modals, moneylineModal: false}))} colorScheme="blue">
+            Close
           </Button>
         </ModalFooter>
       </ModalContent>

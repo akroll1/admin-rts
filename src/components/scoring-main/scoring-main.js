@@ -25,7 +25,7 @@ export const ScoringMain = ({
 
     return (
         <Flex 
-            display={window.innerWidth <= 768 && tabs.scoring ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
+            display={tabs.scoring ? 'flex' : 'none'}
             id="scoring-main"
             p={["0", "2"]} 
             m={['auto', 'auto', 'unset']} 
@@ -53,6 +53,7 @@ export const ScoringMain = ({
             }
             </Flex>
             <Button
+                minH="2.5rem"
                 onClick={submitRoundScores}
                 disabled={isSubmitting || isDisabled } 
                 variant="outline" 

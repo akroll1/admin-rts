@@ -73,7 +73,6 @@ const Scoring = () => {
         // get window width size for scoring tabs.
         const getWindowWidth = () => {
             if(windowWidth >= 768){
-                console.log('inside windowWidth')
                 setTabs({
                     sidebar: true,
                     scoring: true, 
@@ -351,6 +350,7 @@ const Scoring = () => {
     // console.log('modals: ', modals)
     return (
         <Flex 
+            id="scoring"
             w="100%" 
             flexDirection="column" 
             color="white" 
@@ -359,7 +359,7 @@ const Scoring = () => {
             margin="auto" 
             p="4"
         >         
-            <SliderHeading fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
+            <SliderHeading mb="5rem" fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
             <Flex>
                 
                 <AddGuestJudgeModal 
@@ -389,7 +389,7 @@ const Scoring = () => {
                     handleSubmitPrediction={handleSubmitPrediction} 
                 />
             </Flex>
-            <Flex w="100%" mb="3.5rem">
+            <Flex display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} w="100%" minH="60vh"  maxH="60vh">
                 <ScoringSidebarLeft
                     modals={modals}
                     setModals={setModals}
@@ -420,7 +420,6 @@ const Scoring = () => {
 
                 />
             </Flex>
-
             <ScoringTable 
                 tabs={tabs} 
                 username={username} 
@@ -428,6 +427,7 @@ const Scoring = () => {
                 scoredRounds={scoredRounds} 
                 totalRounds={totalRounds} 
             />
+
             <ScoringTabs tabs={tabs} setTabs={setTabs} />
         </Flex>
     )

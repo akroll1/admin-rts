@@ -32,13 +32,12 @@ export const ScoringSidebarRight = ({
     };
     return (
         <Flex 
-            display={window.innerWidth <= 768 && tabs.chat || window.innerWidth <= 768 && tabs.analytics ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
-            id="chat-sidebar"
+            display={tabs.chat || tabs.analytics ? 'flex' : 'none'}
+            id="scoring-sidebar-right"
             flexDir="column" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             w="100%" 
-            minH={["22rem"]} 
-            maxH={["80vh", "60vh", "60vh"]}
+            minH="100%"
             p="2" 
             bg="gray.900" 
             borderRadius="md" 

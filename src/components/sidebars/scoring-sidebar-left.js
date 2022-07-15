@@ -9,7 +9,6 @@ import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMone
 import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { stateStore } from '../../stores'
-import { ConsoleLogger } from '@aws-amplify/core'
 
 export const ScoringSidebarLeft = ({ 
     modals, 
@@ -40,14 +39,10 @@ export const ScoringSidebarLeft = ({
 
     return (
         <Flex 
-            display={window.innerWidth <= 768 && tabs.sidebar ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
-            id="scoring_sidebar" 
-            mb="3rem"
+            display={tabs.sidebar ? 'flex' : 'none'}
+            id="scoring_sidebar_left" 
             w="100%" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
-            minH={["22rem"]} 
-            maxH={["80vh", "60vh", "60vh"]}
-            overflowY="scroll" 
             position="relative" 
             alignItems="center" 
             justifyContent="center"
@@ -57,9 +52,18 @@ export const ScoringSidebarLeft = ({
             bg="gray.900" 
             color="white" 
             fontSize="sm"
+            minH="100%"
         >
             <AccountSwitcher />
-            <Stack w="full" spacing="4" flex="1" overflow="auto" pt="8" p="2">
+            <Stack 
+                h="auto" 
+                w="full" 
+                spacing="4" 
+                flex="1" 
+                overflowY="scroll" 
+                pt="8" 
+                p="2"
+            >
                 <NavGroup label="Prediction">
                     <NavItem 
                         id="prediction"
@@ -90,10 +94,11 @@ export const ScoringSidebarLeft = ({
                             justifyContent="flex-start" 
                             textAlign="left" 
                             fontSize="md" 
-                            _focus={{bg:'transparent'}} 
+                            _focus={{bg:'transparent', border: 'none'}} 
                             _hover="transparent" 
                             variant="ghost" 
-                            size="sm" pl="0"
+                            size="sm" 
+                            pl="0"
                         >
                             Score&#58; { 0 }
                         </Button>} 
@@ -109,7 +114,26 @@ export const ScoringSidebarLeft = ({
                 <NavGroup label="Fight">
                     <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
                     <NavItem icon={<IoScaleOutline />} label={ weightclass } />
-                    <NavItem icon={<FaRegMoneyBillAlt />} label={ odds } /> 
+                    <NavItem 
+                        icon={<FaRegMoneyBillAlt />} 
+                        label={<Button 
+                            onClick={() => setModals( modals => ({ ...modals, moneylineModal: true }))}
+                            button={'button'}
+                            justifyContent="flex-start" 
+                            textAlign="left" 
+                            fontSize="md" 
+                            w="100%" 
+                            my="-2" 
+                            _hover={{background: 'transparent'}} 
+                            variant="ghost" 
+                            size="sm" 
+                            pl="0" 
+                            m="0"
+                            _focus={{border: 'none'}}
+                        >                    
+                            { odds }
+                        </Button>} 
+                    />
                 </NavGroup>
                 
                 <NavGroup active={true} label="Official Judges">
@@ -129,9 +153,10 @@ export const ScoringSidebarLeft = ({
                             size="sm" 
                             pl="0" 
                             m="0"
+                            _focus={{border: 'none'}}
                         >                    
-                        Add Guest Judge
-                    </Button>} 
+                            Add Guest Judge
+                        </Button>} 
                     />
                 </NavGroup>
 
@@ -145,7 +170,7 @@ export const ScoringSidebarLeft = ({
                     icon={<BiPlusCircle />} 
                     label={<Button 
                         onClick={openMemberModal}
-                        _focus={{bg:'transparent'}} 
+                        _focus={{bg:'transparent', border: 'none'}} 
                         _hover="transparent" 
                         variant="ghost" 
                         size="sm" 
