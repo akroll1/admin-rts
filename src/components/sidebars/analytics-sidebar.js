@@ -16,7 +16,7 @@ export const AnalyticsSidebar = ({ showData }) => {
     const handleSearch = () => {
         console.log('handleSearch')
     }
-    const { fightQuickTitle, location, network, odds, rounds, showTime, weightclass } = showData?.fight ? getSidebarData(showData) : '';
+    const { fightQuickTitle, location, network, odds, rounds, showTime, weightclass } = showData?.show ? getSidebarData(showData) : '';
     return (
         <Flex 
             id="analytics_sidebar" 
