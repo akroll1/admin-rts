@@ -14,7 +14,7 @@ const Analytics = () => {
             fightQuickTitle: ''
         }
     });
-    const { showId } = useParams(); // 3d2ad8d8-f9a2-4ea6-9038-5eea0bc61083
+    const { showId } = useParams(); // showId: /c8734c80-16e6-46d1-90f4-c103de4b8b92
 
     useEffect(() => {
         if(showId){
