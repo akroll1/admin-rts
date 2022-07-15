@@ -2,14 +2,17 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Heading, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
 
-export const ExpiredTokenModal = ({ expiredTokenModal }) => {
+export const ExpiredTokenModal = ({
+  modals, 
+  setModals
+ }) => {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Modal
       isCentered
       onClose={onClose}
-      isOpen={expiredTokenModal}
+      isOpen={modals.expiredTokenModal}
       motionPreset="slideInBottom"
     >
       <ModalOverlay />
