@@ -113,6 +113,9 @@ export const getGameType = (path) => {
 export const transformedWeightclass = weightclass => {
     let temp;
     if(weightclass.includes('LIGHT')){
+        if(weightclass.includes('LIGHTWEIGHT')){
+            return `${weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
+        }
         temp = weightclass
             .slice(5).
             toLowerCase();

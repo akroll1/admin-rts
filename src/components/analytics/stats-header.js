@@ -29,9 +29,9 @@ const stats = [
 ]
 
 export const StatsHeader = () => (
-  <Box as="section" py={{ base: '4', md: '8' }}>
+  <Box as="section" py={{base: '4'}}>
     <Container maxWidth="100%">
-      <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: '5', md: '6' }}>
+      <SimpleGrid columns={{base: 1, md: 3}} gap={{base: '5', md: '6'}}>
         {stats.map((stat, id) => (
           <Stat key={id} {...stat} />
         ))}
