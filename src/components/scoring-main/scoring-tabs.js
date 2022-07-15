@@ -42,7 +42,6 @@ export const ScoringTabs = ({ tabs, setTabs }) => {
 
     const handleTabClick = e => {
         const { id } = e.currentTarget;
-        console.log('id: ', id);
         setTabs({ ...resetTabs, [id]: true })
     }
 

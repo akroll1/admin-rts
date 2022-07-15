@@ -39,14 +39,10 @@ export const ScoringSidebarLeft = ({
 
     return (
         <Flex 
-            display={window.innerWidth <= 768 && tabs.sidebar ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
-            id="scoring_sidebar" 
-            mb="3rem"
+            display={tabs.sidebar ? 'flex' : 'none'}
+            id="scoring_sidebar_left" 
             w="100%" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
-            minH={["22rem"]} 
-            maxH={["80vh", "60vh", "60vh"]}
-            overflowY="scroll" 
             position="relative" 
             alignItems="center" 
             justifyContent="center"
@@ -56,9 +52,18 @@ export const ScoringSidebarLeft = ({
             bg="gray.900" 
             color="white" 
             fontSize="sm"
+            minH="100%"
         >
             <AccountSwitcher />
-            <Stack w="full" spacing="4" flex="1" overflow="auto" pt="8" p="2">
+            <Stack 
+                h="auto" 
+                w="full" 
+                spacing="4" 
+                flex="1" 
+                overflowY="scroll" 
+                pt="8" 
+                p="2"
+            >
                 <NavGroup label="Prediction">
                     <NavItem 
                         id="prediction"

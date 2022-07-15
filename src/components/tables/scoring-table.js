@@ -32,12 +32,12 @@ export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => 
     return (      
         <Flex 
             overflow="scroll"
-            display={window.innerWidth <= 768 && tabs.table ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
+            display={tabs.table ? 'flex' : 'none'}
             id="score_table" 
             w="100%" 
-            m="auto"
             p="8"
             pt="2"
+            my="auto"
         >      
             <Table 
                 style={{tableLayout:'auto', width: '100%'}} 
