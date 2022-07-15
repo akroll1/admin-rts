@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
+import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, MoneylineModal, PredictionModal } from '../components/modals'
 import {  } from '../components/sidebars'
 import { predictionIsLocked } from '../utils'
 import { useLocation, useNavigate } from 'react-router'
@@ -47,10 +47,13 @@ const Scoring = () => {
     const [fightStatus, setFightStatus] = useState(null);
     const [fightComplete, setFightComplete] = useState(false);
     //////////////////  MODALS  /////////////////////////
-    const [addGuestJudgeModal, setAddGuestJudgeModal] = useState(false);
-    const [predictionModal, setPredictionModal] = useState(false);
-    const [addMemberModal, setAddMemberModal] = useState(false);
-    const [expiredTokenModal, setExpiredTokenModal] = useState(false);
+    const [modals, setModals] = useState({
+        addMemberModal: false,
+        addGuestJudgeModal: false,
+        expiredTokenModal: false,
+        moneylineModal: false,
+        predictionModal: false,
+    })
     //////////////////  SIDEBAR  /////////////////////////
     const [needsPrediction, setNeedsPrediction] = useState(false);
     const [prediction, setPrediction] = useState('');
@@ -98,7 +101,7 @@ const Scoring = () => {
             console.log('res.data: ', res.data);
             if(typeof res.data === 'string' && res.data.includes('Token expired')){
                 console.log('Token is expired.')
-                return setExpiredTokenModal(true)
+                return setModals( modals => ({ ...modals, expiredTokenModal: true }))
             }
             if(res.data === 'No scorecard found.'){
                 alert('No Scorecard Found');
@@ -123,7 +126,7 @@ const Scoring = () => {
             if(needsPrediction){
                 setTimeout(() => {
                     setNeedsPrediction(true); 
-                    setPredictionModal(true);
+                    setModals( modals => ({ ...modals, predictionModal: true })) 
                 },5000);
             }
             if(thisUserScorecard.prediction){
@@ -296,7 +299,7 @@ const Scoring = () => {
                 isClosable: true
             })
         }
-        setAddMemberModal(true)
+        setModals({ ...modals, addMemberModal: true });
     }
     const handleAddMemberSubmit = async email => {
         setIsSubmitting(true);
@@ -314,7 +317,7 @@ const Scoring = () => {
         }
         return await axios.put(groupScorecardsUrl, update, tokenConfig)
             .then( res => {
-                setAddMemberModal(false);
+                setModals( modals => ({ ...modals, addMemberModal: false }));
                 if(res.status === 200){
                     return toast({ 
                         title: `Email invite was sent to member.`,
@@ -345,6 +348,7 @@ const Scoring = () => {
     // console.log('fighterData: ', fighterData)
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
+    // console.log('modals: ', modals)
     return (
         <Flex 
             w="100%" 
@@ -357,39 +361,44 @@ const Scoring = () => {
         >         
             <SliderHeading fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
             <Flex>
-                <ExpiredTokenModal 
-                    expiredTokenModal={expiredTokenModal}
-                    setExpiredTokenModal={setExpiredTokenModal}
-                />
+                
                 <AddGuestJudgeModal 
+                    modals={modals}
+                    setModals={setModals} 
                     fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
-                    addGuestJudgeModal={addGuestJudgeModal}
-                    setAddGuestJudgeModal={setAddGuestJudgeModal}
                 />
                 <AddMemberModal 
+                    modals={modals}
+                    setModals={setModals} 
                     handleAddMemberSubmit={handleAddMemberSubmit}
                     isSubmitting={isSubmitting}
-                    addMemberModal={addMemberModal}
-                    setAddMemberModal={setAddMemberModal}
+                />
+                <ExpiredTokenModal 
+                    modals={modals}
+                    setModals={setModals} 
+                />
+                <MoneylineModal
+                    modals={modals}
+                    setModals={setModals} 
                 />
                 <PredictionModal 
+                    modals={modals}
+                    setModals={setModals} 
                     rounds={rounds}
-                    setPredictionModal={setPredictionModal}
-                    predictionModal={predictionModal}
                     fighterData={fighterData}
                     handleSubmitPrediction={handleSubmitPrediction} 
                 />
             </Flex>
             <Flex w="100%" mb="3.5rem">
                 <ScoringSidebarLeft
+                    modals={modals}
+                    setModals={setModals}
                     tabs={tabs}
                     finalScore={finalScore}
                     groupScorecard={groupScorecard}
-                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
                     prediction={prediction}
-                    setAddGuestJudgeModal={setAddGuestJudgeModal}
-                    setPredictionModal={setPredictionModal}
                     showData={showData}
+                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
                 />
                 <ScoringMain
                     tabs={tabs}

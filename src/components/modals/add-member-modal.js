@@ -11,7 +11,13 @@ const CustomOverlay = () => (
     />
 )
 
-export const AddMemberModal = ({ addMemberModal, handleAddMemberSubmit, isSubmitting, setAddMemberModal }) => {
+export const AddMemberModal = ({ 
+    modals,
+    setModals,
+    handleAddMemberSubmit, 
+    handleOpenAddMemberSubmitModal,
+    isSubmitting, 
+}) => {
     const [overlay, setOverlay] = React.useState(<CustomOverlay />)
     const [email, setEmail] = useState('');
     const isInvalid = isValidEmail(email) ? false : true;
@@ -20,13 +26,13 @@ export const AddMemberModal = ({ addMemberModal, handleAddMemberSubmit, isSubmit
     }
     const closeModal = () => {
         setEmail('');
-        setAddMemberModal(false)
+        setModals({ ...modals, addMemberModal: false })
     }
     return ( 
         <Modal
             isCentered
             onClose={closeModal}
-            isOpen={addMemberModal}
+            isOpen={modals.addMemberModal}
             motionPreset="slideInBottom"
         >
         <ModalOverlay />

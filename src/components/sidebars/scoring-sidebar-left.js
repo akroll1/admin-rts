@@ -9,14 +9,15 @@ import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMone
 import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { stateStore } from '../../stores'
+import { ConsoleLogger } from '@aws-amplify/core'
 
 export const ScoringSidebarLeft = ({ 
+    modals, 
+    setModals,
     finalScore, 
     groupScorecard,
     handleOpenAddMemberSubmitModal,
     prediction, 
-    setAddGuestJudgeModal,
-    setPredictionModal, 
     showData, 
     tabs
 }) => {
@@ -24,10 +25,11 @@ export const ScoringSidebarLeft = ({
     const { availableGuestJudges } = stateStore.getState();
   
     const handlePredictionToggle = () => {
+        console.log('handlePredictionToggle');
         if(isLocked){
             return alert('Predictions are locked.')
         }
-        setPredictionModal(true);
+        setModals({ ...modals, predictionModal: true });
     };
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
@@ -115,7 +117,7 @@ export const ScoringSidebarLeft = ({
                     <NavItem 
                         icon={<FaPlusCircle />} 
                         label={<Button 
-                            onClick={() => setAddGuestJudgeModal(true)}
+                            onClick={() => setModals( modals => ({ ...modals, addGuestJudgeModal: true }))}
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 

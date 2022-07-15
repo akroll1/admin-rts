@@ -14,22 +14,22 @@ const CustomOverlay = () => (
     />
 )
 
-export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeModal, setAddGuestJudgeModal }) => {
+export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModals }) => {
     const toast = useToast();
     const { myGuestJudges, setMyGuestJudges } = stateStore.getState();
     const availableGuestJudges = stateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
     const [overlay, setOverlay] = React.useState(<CustomOverlay />)
     useEffect(() => {
-        if(addGuestJudgeModal){
+        if(modals.addGuestJudgeModal){
             const currentJudges = availableGuestJudges.length > 0 && availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))
             setMyJudges(currentJudges);
         }
-    },[addGuestJudgeModal])
+    },[modals.addGuestJudgeModal])
     
     const closeModal = () => {
         setMyJudges([]);
-        setAddGuestJudgeModal(false);
+        setModals( modals => ({ ...modals, addGuestJudgeModal: false }))
     }
  
     const localAddGuestJudge = e => {
@@ -57,7 +57,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, addGuestJudgeMod
         <Modal
             isCentered
             onClose={closeModal}
-            isOpen={addGuestJudgeModal}
+            isOpen={modals.addGuestJudgeModal}
             motionPreset="slideInBottom"
         >
             <ModalOverlay />
