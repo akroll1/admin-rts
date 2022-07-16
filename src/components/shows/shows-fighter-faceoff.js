@@ -23,7 +23,7 @@ export const ShowsFighterFaceoff = ({ fighters, showTime }) => {
         maxW={["100%", "90%", "80%"]}
       >
         { fighters?.length > 0 && fighters?.map( fighter => {
-          console.log('fighter: ', fighter)
+          // console.log('fighter: ', fighter)
           const { firstName, lastName, ringname } = fighter;
           return (
             <Flex 
