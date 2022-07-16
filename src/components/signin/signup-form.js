@@ -68,7 +68,8 @@ export const SignUpForm = ({
             loadingText="Submitting..."
             _hover={{cursor: 'pointer'}} 
             as="a" 
-            onClick={handleSignUp} 
+            disabled
+            // onClick={handleSignUp} 
             type="button" 
             colorScheme="blue" 
             size="lg" 

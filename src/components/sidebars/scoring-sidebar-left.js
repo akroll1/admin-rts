@@ -6,59 +6,43 @@ import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
 // import { PredictionPopover } from '../../components/prediction-popover'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
-import { capFirstLetters, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
+import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { stateStore } from '../../stores'
 
-export const ScoringSidebar = ({ 
+export const ScoringSidebarLeft = ({ 
+    modals, 
+    setModals,
     finalScore, 
     groupScorecard,
     handleOpenAddMemberSubmitModal,
     prediction, 
-    setAddGuestJudgeModal,
-    setPredictionModal, 
     showData, 
+    tabs
 }) => {
     const [showGuests, setShowGuests] = useState(null)
     const { availableGuestJudges } = stateStore.getState();
-    const destructureData = showData => {
-        const { show, fight } = showData;
-        const { location, network, showTime } = show;
-        const { odds, rounds, weightclass } = fight;
-        const transformedOdds = odds ? odds.split(',').join(',') : 'TBD';
-        const isLocked = predictionIsLocked(showTime);
-
-        return ({
-            location,
-            isLocked, 
-            network, 
-            odds: transformedOdds, 
-            rounds, 
-            showTime: parseEpoch(showTime),
-            weightclass: transformedWeightclass(weightclass)
-        });
-    }
+  
     const handlePredictionToggle = () => {
+        console.log('handlePredictionToggle');
         if(isLocked){
             return alert('Predictions are locked.')
         }
-        setPredictionModal(true);
+        setModals({ ...modals, predictionModal: true });
     };
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
     }
-    const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? destructureData(showData) : '';
+    const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? getSidebarData(showData) : '';
     finalScore = parseInt(finalScore);
     const { members } = groupScorecard;
 
     return (
         <Flex 
-            id="scoring-sidebar" 
+            display={tabs.sidebar ? 'flex' : 'none'}
+            id="scoring_sidebar_left" 
             w="100%" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
-            minH={["22rem"]} 
-            maxH={["35vh", "40vh", "60vh"]}
-            overflowY="scroll" 
             position="relative" 
             alignItems="center" 
             justifyContent="center"
@@ -68,15 +52,23 @@ export const ScoringSidebar = ({
             bg="gray.900" 
             color="white" 
             fontSize="sm"
+            minH="100%"
         >
             <AccountSwitcher />
-            <Stack w="full" spacing="4" flex="1" overflow="auto" pt="8" p="2">
+            <Stack 
+                h="auto" 
+                w="full" 
+                spacing="4" 
+                flex="1" 
+                overflowY="scroll" 
+                pt="8" 
+                p="2"
+            >
                 <NavGroup label="Prediction">
                     <NavItem 
                         id="prediction"
                         icon={isLocked ? <FaLock /> : <FaLockOpen />} 
                         handlePredictionToggle={handlePredictionToggle}
-
                         label={<Button 
                             // disabled={isLocked} 
                             button={'button'}
@@ -102,10 +94,11 @@ export const ScoringSidebar = ({
                             justifyContent="flex-start" 
                             textAlign="left" 
                             fontSize="md" 
-                            _focus={{bg:'transparent'}} 
+                            _focus={{bg:'transparent', border: 'none'}} 
                             _hover="transparent" 
                             variant="ghost" 
-                            size="sm" pl="0"
+                            size="sm" 
+                            pl="0"
                         >
                             Score&#58; { 0 }
                         </Button>} 
@@ -121,7 +114,26 @@ export const ScoringSidebar = ({
                 <NavGroup label="Fight">
                     <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
                     <NavItem icon={<IoScaleOutline />} label={ weightclass } />
-                    <NavItem icon={<FaRegMoneyBillAlt />} label={ odds } /> 
+                    <NavItem 
+                        icon={<FaRegMoneyBillAlt />} 
+                        label={<Button 
+                            onClick={() => setModals( modals => ({ ...modals, moneylineModal: true }))}
+                            button={'button'}
+                            justifyContent="flex-start" 
+                            textAlign="left" 
+                            fontSize="md" 
+                            w="100%" 
+                            my="-2" 
+                            _hover={{background: 'transparent'}} 
+                            variant="ghost" 
+                            size="sm" 
+                            pl="0" 
+                            m="0"
+                            _focus={{border: 'none'}}
+                        >                    
+                            { odds }
+                        </Button>} 
+                    />
                 </NavGroup>
                 
                 <NavGroup active={true} label="Official Judges">
@@ -129,7 +141,7 @@ export const ScoringSidebar = ({
                     <NavItem 
                         icon={<FaPlusCircle />} 
                         label={<Button 
-                            onClick={() => setAddGuestJudgeModal(true)}
+                            onClick={() => setModals( modals => ({ ...modals, addGuestJudgeModal: true }))}
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 
@@ -141,9 +153,10 @@ export const ScoringSidebar = ({
                             size="sm" 
                             pl="0" 
                             m="0"
+                            _focus={{border: 'none'}}
                         >                    
-                        Add Guest Judge
-                    </Button>} 
+                            Add Guest Judge
+                        </Button>} 
                     />
                 </NavGroup>
 
@@ -157,7 +170,7 @@ export const ScoringSidebar = ({
                     icon={<BiPlusCircle />} 
                     label={<Button 
                         onClick={openMemberModal}
-                        _focus={{bg:'transparent'}} 
+                        _focus={{bg:'transparent', border: 'none'}} 
                         _hover="transparent" 
                         variant="ghost" 
                         size="sm" 

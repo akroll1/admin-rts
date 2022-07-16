@@ -1,5 +1,28 @@
 import parseISO from 'date-fns/parseISO'
 
+export const predictionIsLocked = epoch => {
+    return Date.now() > epoch ? true : false;
+};
+
+export const getSidebarData = showData => {
+    const { show, fight } = showData;
+    const { location, network, showTime } = show;
+    const { fightQuickTitle, odds, rounds, weightclass } = fight;
+    const transformedOdds = odds ? odds.split(',').join(',') : 'TBD';
+    const isLocked = predictionIsLocked(showTime);
+
+    return ({
+        fightQuickTitle,
+        location,
+        isLocked, 
+        network, 
+        odds: transformedOdds, 
+        rounds, 
+        showTime: parseEpoch(showTime),
+        weightclass: transformedWeightclass(weightclass)
+    });
+};
+
 export const parseUrls = (userInput) => {
     var urlRegExp = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_.~#?&//=]*)/g;
     let formattedMessage = userInput.replace(urlRegExp, (match) => {
@@ -11,9 +34,7 @@ export const parseUrls = (userInput) => {
     });
     return formattedMessage;
 };
-export const predictionIsLocked = epoch => {
-    return Date.now() > epoch ? true : false;
-}
+
 export const parseEpoch = (epoch, form) => {
     // time needs to be set toLocale stuff...
     epoch = parseInt(epoch)
@@ -92,6 +113,9 @@ export const getGameType = (path) => {
 export const transformedWeightclass = weightclass => {
     let temp;
     if(weightclass.includes('LIGHT')){
+        if(weightclass.includes('LIGHTWEIGHT')){
+            return `${weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
+        }
         temp = weightclass
             .slice(5).
             toLowerCase();

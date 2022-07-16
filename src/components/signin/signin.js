@@ -185,17 +185,17 @@ export const SignIn = props => {
                 handleFormChange={handleFormChange} 
                 form={form} 
               />
-               <DividerWithText mt="6">or continue with</DividerWithText>
+              <DividerWithText mt="6">or continue with</DividerWithText>
               <SimpleGrid mt="6" columns={2} spacing="3">
-              <Button color="currentColor" variant="outline">
-                <VisuallyHidden>Login with Facebook</VisuallyHidden>
-                <FaFacebook />
-              </Button>
-              <Button color="currentColor" variant="outline">
-                <VisuallyHidden>Login with Google</VisuallyHidden>
-                <FaGoogle />
-              </Button>
-            </SimpleGrid>
+                <Button color="currentColor" variant="outline">
+                  <VisuallyHidden>Login with Facebook</VisuallyHidden>
+                  <FaFacebook />
+                </Button>
+                <Button color="currentColor" variant="outline">
+                  <VisuallyHidden>Login with Google</VisuallyHidden>
+                  <FaGoogle />
+                </Button>
+              </SimpleGrid>
             </Card>
           }
           { !isSignin && !isForcePasswordChange && 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 
-export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
+export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => {
     // console.log('tableData: ', tableData)
     const sort = (a, b) => a.username - b.username;
     const sortedTable = tableData.sort( sort )
@@ -31,12 +31,13 @@ export const ScoringTable = ({ scoredRounds, tableData, totalRounds }) => {
     const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : '';
     return (      
         <Flex 
+            overflow="scroll"
+            display={tabs.table ? 'flex' : 'none'}
             id="score_table" 
-            overflow="auto" 
             w="100%" 
-            m="auto"
             p="8"
             pt="2"
+            my="auto"
         >      
             <Table 
                 style={{tableLayout:'auto', width: '100%'}} 
