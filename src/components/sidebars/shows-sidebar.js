@@ -7,11 +7,14 @@ import { REVIEW_TYPE } from '../../utils'
 import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutline } from "react-icons/io5";
 import { DividerWithText } from '../../chakra'
 
-export const ShowsSidebar = ({ shows, handleShowSelect }) => { 
+export const ShowsSidebar = ({ 
+    shows, 
+    handleShowSelect 
+}) => { 
     const [searchedShows, setSearchedShows] = useState(shows); // why???
     const separateShowsByType = shows => {
-        const upcoming = shows.filter( ({ showTime }) => showTime > Date.now());
-        const recent = shows.filter( ({ showTime }) => showTime < Date.now());
+        const upcoming = shows.filter( ({ show }) => show.showTime > Date.now());
+        const recent = shows.filter( ({ show }) => show.showTime < Date.now());
         return ({
             recent,
             upcoming
@@ -34,11 +37,13 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
     }
     const { recent, upcoming } = shows?.length > 0 ? separateShowsByType(shows) : [];
     const historicalShows = [
-        'Ali vs Frazier I', 'Ali vs Foreman', 'Hagler vs Hearns'
+        'Ali vs Frazier I', 'Hagler vs Hearns'
     ];
     const fantasyFights = [
         'Floyd Mayweather vs Willie Pep', 'Mike Tyson vs Muhammad Ali'
     ];
+    // console.log('recent: ', recent);
+    // console.log('upcoming: ', upcoming);
     return (
         <Flex 
             id="shows_sidebar" 
@@ -64,7 +69,8 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
             <Stack w="100%" spacing="4" flex="1" overflow="auto" pt="0">
                 <NavGroup label="Upcoming">
                     {upcoming?.length > 0 && upcoming.map( show => {
-                        const { showId, fight: { fightQuickTitle, isTitleFight } } = show;
+                        const { show: { fightQuickTitle, showId }} = show;
+                        const isTitleFight = true;
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.PREDICTION} 
                             showId={showId} 
@@ -78,7 +84,7 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
                 </NavGroup>
                 <NavGroup label="Recent">
                     {recent?.length > 0 && recent.map( show => {
-                        const { showId, fight: { fightQuickTitle } } = show;
+                        const { show: { fightQuickTitle, showId }} = show;
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.REVIEW} 
                             icon={<IoStarOutline mt="-5px" /> } 

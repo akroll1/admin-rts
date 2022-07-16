@@ -5,8 +5,6 @@ import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 
 export const ShowsMain = ({
-    fighters,
-    selectedShowFight, 
     predictionsAndReviews,
     showReviewForm, 
     setShowReviewForm, 
@@ -19,7 +17,7 @@ export const ShowsMain = ({
     handleFormChange,
     handleCreateGroupScorecard,
 }) => {
-    const { showTime } = selectedShow;
+    const { show: { showTime }} = selectedShow;
     const UPCOMING = showTime > Date.now() ? true : false; 
     // console.log('selectedShowFight: ', selectedShowFight);
     return (
@@ -38,15 +36,14 @@ export const ShowsMain = ({
             <ShowsMetadata
                 showTime={showTime}
                 selectedShow={selectedShow}
-                selectedShowFight={selectedShowFight}
             /> 
             
             <ShowsFighterFaceoff 
-                fighters={fighters} 
+                fighters={selectedShow.fighters} 
                 showTime={showTime}
             />
             <DividerWithText text="The Storyline" />
-            <FightStoryline selectedShowFight={selectedShowFight} /> 
+            <FightStoryline selectedShow={selectedShow} /> 
 
             <DividerWithText text={UPCOMING ? 'Predictions' : 'Reviews'} />
             <PredictionsReviews 
