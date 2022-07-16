@@ -71,9 +71,6 @@ const Shows = props => {
                     .then(res => {
                         console.log('res, 64: ', res)
                         setShows(res.data);
-                        setSelectedShow(res.data[0]);
-                        // need this for fightQuickTitle.
-                        setSelectedShowFight(res.data[0].fights);
                     })
                     .catch(err => console.log(err));
             }
