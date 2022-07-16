@@ -2,9 +2,8 @@ import React from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import { parseEpoch } from '../../utils/utils'
 
-export const ShowsMetadata = ({ selectedShow, selectedShowFight }) => {
-    const { fightQuickTitle } = selectedShowFight
-    const { promoter, location, showTime } = selectedShow;
+export const ShowsMetadata = ({ selectedShow }) => {
+    const { show: { fightQuickTitle, location, promoter, showTime }} = selectedShow;
     return (
         <Flex 
             as="section" 
@@ -20,7 +19,7 @@ export const ShowsMetadata = ({ selectedShow, selectedShowFight }) => {
             <Heading letterSpacing="1px" as="h2" size="xl">{ fightQuickTitle }</Heading>
             <Heading p="1" letterSpacing="1px" as="h3" size="md">{ promoter }</Heading>
             <Heading fontWeight="normal" as="h3" size="sm">{ parseEpoch(showTime) }</Heading>
-            {/* <Heading mt="1" fontWeight="normal" letterSpacing="1px" as="h3" size="xs">{ location }</Heading> */}
+            <Heading mt="1" fontWeight="normal" letterSpacing="1px" as="h3" size="xs">{ location }</Heading>
         </Flex>
     )
 }
