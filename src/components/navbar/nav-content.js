@@ -20,7 +20,12 @@ const MobileNavContext = props => {
   }
   return (
     <>
-      <Flex align="center" justify="space-between" className="nav-content__mobile" {...props}>
+      <Flex 
+        align="center" 
+        justify="space-between" 
+        className="nav-content__mobile" 
+        {...props}
+      >
         <Box flexBasis="6rem">
           <ToggleButton isOpen={isOpen} onClick={onToggle} />
         </Box>
@@ -35,7 +40,12 @@ const MobileNavContext = props => {
             </NavLink.Mobile>
           ),
         )}
-          <Button colorScheme="blue" w="full" size="sm" onClick={handleButtonClick}>
+          <Button 
+            colorScheme="blue" 
+            w="full" 
+            size="sm" 
+            onClick={handleButtonClick}
+          >
             {isLoggedIn ? `Sign Out` : `Sign In`}
           </Button>
       </NavMenu>

@@ -4,6 +4,7 @@ import { Logo, Copyright, SocialMediaLinks, LinkGrid, SubscribeForm } from '../.
 
 export const Footer = () => (
   <Box 
+    display={["none", "none", "flex"]}
     boxSizing="border-box"
     as="footer" 
     role="contentinfo" 
@@ -14,12 +15,9 @@ export const Footer = () => (
     py={["0","0","4"]} 
     px={{ base: '4', md: '6', lg:'8' }}
   >
-    {/* <Divider my="2" opacity={1} width="90%" m="auto" mb="1" mt="1" /> */}
     <Stack spacing="10" maxW="100%" divider={<StackDivider />}>
-    {/* <StackDivider /> */}
       <Stack direction={{ base: 'column', lg: 'row' }} spacing={{ base: '10', lg: '28' }}>
         <Box flex="1">
-          {/* <Logo /> */}
         </Box>
         <Stack direction={{ base: 'column', md: 'row' }} spacing={{ base: '10', md: '15' }}>
           <LinkGrid spacing={{ base: '10', md: '20', lg: '28' }} flex="1" />

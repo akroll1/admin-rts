@@ -5,7 +5,7 @@ import { capFirstLetters } from '../../../utils'
 import { stateStore } from '../../../stores'
 
 export const FightStats = (props) => {
-    const { label, value, ...boxProps } = props;
+    const { label, tabs, value, ...boxProps } = props;
     const { stats } = stateStore.getState();
 
     const [fighters, setFighters] = useState(null);
@@ -58,6 +58,7 @@ export const FightStats = (props) => {
     
     return (
         <Flex
+            display={window.innerWidth <= 768 && tabs.analytics ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
             flexDirection="column"
             px="2"
             bg="bg-surface"
@@ -67,7 +68,7 @@ export const FightStats = (props) => {
             alignItems="center"
             justifyContent="space-evenly"
         >
-            <DividerWithText text={`Group Results`} />
+            <DividerWithText text={`Group Analytics`} />
             <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-evenly">
 
                 <Stack alignItems="center" justifyContent="center">
@@ -88,7 +89,6 @@ export const FightStats = (props) => {
                 </Stack>
 
             </Flex>
-            <DividerWithText text={`FightSync Chat`} />
         </Flex>
     )
 }

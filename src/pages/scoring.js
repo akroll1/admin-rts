@@ -2,15 +2,15 @@ import React, {useEffect, useState} from 'react'
 import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, PredictionModal } from '../components/modals'
-import { ScoringSidebar } from '../components/sidebars'
-import { predictionIsLocked } from '../utils/utils'
+import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, MoneylineModal, PredictionModal } from '../components/modals'
+import {  } from '../components/sidebars'
+import { predictionIsLocked } from '../utils'
 import { useLocation, useNavigate } from 'react-router'
-import { ChatSidebar } from '../components/sidebars'
-import { Notification } from '../components/notifications'
+import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
 import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS } from '../utils'
-import { ScoringMain } from '../components/scoring-main'
+import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { stateStore } from '../stores'
+import { useWindowResize } from '../hooks'
 
 const Scoring = () => {
     const location = useLocation();
@@ -20,7 +20,14 @@ const Scoring = () => {
     //////////////////  SCORE STATE /////////////////////////
     const { chatScorecard, myGuestJudges, setAvailableGuestJudges, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
     const { sub, email, username } = user?.sub ? user : '';
-
+    const [tabs, setTabs] = useState({
+        sidebar: false,
+        scoring: true, 
+        table: false,
+        chat: false,
+        analytics: false
+    });
+    const windowWidth = useWindowResize();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [groupScorecard, setGroupScorecard] = useState({
         totalRounds: '', 
@@ -40,20 +47,19 @@ const Scoring = () => {
     const [fightStatus, setFightStatus] = useState(null);
     const [fightComplete, setFightComplete] = useState(false);
     //////////////////  MODALS  /////////////////////////
-    const [addGuestJudgeModal, setAddGuestJudgeModal] = useState(false);
-    const [predictionModal, setPredictionModal] = useState(false);
-    const [addMemberModal, setAddMemberModal] = useState(false);
-    const [expiredTokenModal, setExpiredTokenModal] = useState(false);
+    const [modals, setModals] = useState({
+        addMemberModal: false,
+        addGuestJudgeModal: false,
+        expiredTokenModal: false,
+        moneylineModal: false,
+        predictionModal: false,
+    })
     //////////////////  SIDEBAR  /////////////////////////
     const [needsPrediction, setNeedsPrediction] = useState(false);
     const [prediction, setPrediction] = useState('');
     const [predictionLock, setPredictionLock] = useState(true);
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
-
-    //////////////////  NOTIFICATIONS /////////////////////////
-    const [notificationTimeout, setNotificationTimeout] = useState(false);
-    const [notifications, setNotifications] = useState([]);
 
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
@@ -63,7 +69,29 @@ const Scoring = () => {
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
         } 
     },[user]) 
-
+    useEffect(() => {
+        // get window width size for scoring tabs.
+        const getWindowWidth = () => {
+            if(windowWidth >= 768){
+                setTabs({
+                    sidebar: true,
+                    scoring: true, 
+                    table: true,
+                    chat: true,
+                    analytics: true
+                })
+            } else {
+                setTabs({
+                    sidebar: false,
+                    scoring: true, 
+                    table: false,
+                    chat: false,
+                    analytics: false
+                })
+            }
+        }
+        getWindowWidth();
+    },[windowWidth])
     useEffect(() => {
         // 1. Fetch Group Scorecard.
         const fetchGroupScorecard = async () => {
@@ -72,7 +100,7 @@ const Scoring = () => {
             console.log('res.data: ', res.data);
             if(typeof res.data === 'string' && res.data.includes('Token expired')){
                 console.log('Token is expired.')
-                return;
+                return setModals( modals => ({ ...modals, expiredTokenModal: true }))
             }
             if(res.data === 'No scorecard found.'){
                 alert('No Scorecard Found');
@@ -97,7 +125,7 @@ const Scoring = () => {
             if(needsPrediction){
                 setTimeout(() => {
                     setNeedsPrediction(true); 
-                    setPredictionModal(true);
+                    setModals( modals => ({ ...modals, predictionModal: true })) 
                 },5000);
             }
             if(thisUserScorecard.prediction){
@@ -114,7 +142,7 @@ const Scoring = () => {
                 transformPredictionData();
             }
             
-            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : null);
+            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : []);
             setChatKey(res.data.groupScorecard.chatKey);
             setTotalRounds(res.data.fight.rounds);
 
@@ -260,24 +288,7 @@ const Scoring = () => {
             .catch(err => console.log(err));
     };
     // useEffect for removing notifications.
-    useEffect(() => {
-        if(notifications.length > 0){
-            const timer = setTimeout(() => {
-                const temp = notifications;
-                temp.shift(temp.length -1)
-                setNotifications(temp);
-                setNotificationTimeout(prev => !prev);
-            }, 3000)
-            return () => clearTimeout(timer);
-        }
-    },[notificationTimeout])
 
-    const handleCloseNotification = e => {
-        const { id } = e.currentTarget;
-        const temp = notifications
-        const filtered = temp.filter( ({ notification }) => notification !== id);
-        setNotifications(filtered)
-    };
     const handleOpenAddMemberSubmitModal = () => {
         if(userScorecard.ownerId !== groupScorecard.ownerId){
             return toast({ 
@@ -287,7 +298,7 @@ const Scoring = () => {
                 isClosable: true
             })
         }
-        setAddMemberModal(true)
+        setModals({ ...modals, addMemberModal: true });
     }
     const handleAddMemberSubmit = async email => {
         setIsSubmitting(true);
@@ -305,7 +316,7 @@ const Scoring = () => {
         }
         return await axios.put(groupScorecardsUrl, update, tokenConfig)
             .then( res => {
-                setAddMemberModal(false);
+                setModals( modals => ({ ...modals, addMemberModal: false }));
                 if(res.status === 200){
                     return toast({ 
                         title: `Email invite was sent to member.`,
@@ -319,7 +330,7 @@ const Scoring = () => {
     };
     // this method can also be used in the initial useEffect to get the guest judges.
     const fetchGuestJudgeScorecards = async guestJudgeIds => {
-        const getJudges = await guestJudgeIds.map( async id => {
+        const getJudges = await guestJudgeIds.length > 0 && guestJudgeIds.map( async id => {
             const url = process.env.REACT_APP_SCORECARDS + `/${id}/${showData.fight.fightId}`;
             return axios(url, tokenConfig)
                 .then( res => res.data )
@@ -336,73 +347,61 @@ const Scoring = () => {
     // console.log('fighterData: ', fighterData)
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
+    // console.log('modals: ', modals)
     return (
-        <Flex flexDir="column" position="relative">
-            <ExpiredTokenModal 
-                expiredTokenModal={expiredTokenModal}
-                setExpiredTokenModal={setExpiredTokenModal}
-            />
-            <AddGuestJudgeModal 
-                fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
-                addGuestJudgeModal={addGuestJudgeModal}
-                setAddGuestJudgeModal={setAddGuestJudgeModal}
-            />
-            <AddMemberModal 
-                handleAddMemberSubmit={handleAddMemberSubmit}
-                isSubmitting={isSubmitting}
-                addMemberModal={addMemberModal}
-                setAddMemberModal={setAddMemberModal}
-            />
-            <PredictionModal 
-                rounds={rounds}
-                setPredictionModal={setPredictionModal}
-                predictionModal={predictionModal}
-                fighterData={fighterData}
-                handleSubmitPrediction={handleSubmitPrediction} 
-            />
-            <SliderHeading fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
-            <Flex 
-                w={["100%","auto"]} 
-                position="fixed" 
-                top="1rem" 
-                right="0" 
-                flexDir="column" 
-                zIndex="10000"
-            >
-                {notifications.length > 0 && notifications.map( ({notification, username}) => {
-                    return (
-                        <Notification
-                            key={notification}
-                            id={notification}
-                            handleCloseNotification={handleCloseNotification}
-                            notification={notification} 
-                            username={username}
-                        /> 
-                    )
-                })}
-            </Flex>    
-            <Flex 
-                w="100%" 
-                height="auto" 
-                maxW="100%" 
-                direction={["column", "column", "row" ]} 
-                color="white" 
-                alignItems="flex-start" 
-                justifyContent="center" 
-                margin="auto" 
-                px={6} 
-                py={8
-            }>    
-                <ScoringSidebar 
+        <Flex 
+            id="scoring"
+            w="100%" 
+            flexDirection="column" 
+            color="white" 
+            alignItems="center" 
+            justifyContent="center" 
+            margin="auto" 
+            p="4"
+        >         
+            <SliderHeading mb="5rem" fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
+            <Flex>
+                
+                <AddGuestJudgeModal 
+                    modals={modals}
+                    setModals={setModals} 
+                    fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
+                />
+                <AddMemberModal 
+                    modals={modals}
+                    setModals={setModals} 
+                    handleAddMemberSubmit={handleAddMemberSubmit}
+                    isSubmitting={isSubmitting}
+                />
+                <ExpiredTokenModal 
+                    modals={modals}
+                    setModals={setModals} 
+                />
+                <MoneylineModal
+                    modals={modals}
+                    setModals={setModals} 
+                />
+                <PredictionModal 
+                    modals={modals}
+                    setModals={setModals} 
+                    rounds={rounds}
+                    fighterData={fighterData}
+                    handleSubmitPrediction={handleSubmitPrediction} 
+                />
+            </Flex>
+            <Flex display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} w="100%" minH="60vh"  maxH="60vh">
+                <ScoringSidebarLeft
+                    modals={modals}
+                    setModals={setModals}
+                    tabs={tabs}
                     finalScore={finalScore}
                     groupScorecard={groupScorecard}
-                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
                     prediction={prediction}
-                    setAddGuestJudgeModal={setAddGuestJudgeModal}
-                    setPredictionModal={setPredictionModal}
                     showData={showData}
+                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
                 />
                 <ScoringMain
+                    tabs={tabs}
                     totalRounds={totalRounds}
                     fightComplete={fightComplete}
                     submitRoundScores={submitRoundScores}
@@ -411,20 +410,28 @@ const Scoring = () => {
                     setSliderScores={setSliderScores} 
                     isSubmitting={isSubmitting}
                 />
-                <ChatSidebar 
+                <ScoringSidebarRight
+                    tabs={tabs}
                     setIncomingScore={setIncomingScore}
                     chatScorecard={chatScorecard}
                     tokenConfig={tokenConfig}
                     chatKey={chatKey}
                     username={username}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                    setNotificationTimeout={setNotificationTimeout}
+
                 />
-            </Flex>   
-            <ScoringTable username={username} tableData={tableData} scoredRounds={scoredRounds} totalRounds={totalRounds} />
+            </Flex>
+            <ScoringTable 
+                tabs={tabs} 
+                username={username} 
+                tableData={tableData} 
+                scoredRounds={scoredRounds} 
+                totalRounds={totalRounds} 
+            />
+
+            <ScoringTabs tabs={tabs} setTabs={setTabs} />
         </Flex>
     )
+
 }
 export default Scoring
 

@@ -3,26 +3,27 @@ import { persist } from 'zustand/middleware'
 
 export const stateStore = create(persist(
     (set, get) => ({
-        setUser: user => {
-            set( state => ({ user }))
+        setBroadcast: broadcast => {
+            set( state => ({ broadcast }))
+        }, 
+        setChatScorecard: chatScorecard => {
+            set( state => ({ chatScorecard }))
         },
-        setToken: tokenConfig => {
-            set( state => ({ tokenConfig }))
+        setIncomingScore: incomingScore => {
+            set( state => ({ incomingScore }))
         },
         setStats: stats => {
             set( state => ({ stats }))
         },
+        setToken: tokenConfig => {
+            set( state => ({ tokenConfig }))
+        },
+        setUser: user => {
+            set( state => ({ user }))
+        },
+        userScorecards: [],
         setUserScorecards: userScorecards => {
             set( state => ({ userScorecards }))
-        },
-        setChatScorecard: chatScorecard => {
-            set( state => ({ chatScorecard }))
-        },
-        setBroadcast: broadcast => {
-            set( state => ({ broadcast }))
-        }, 
-        setIncomingScore: incomingScore => {
-            set( state => ({ incomingScore }))
         },
         availableGuestJudges: [],
         setAvailableGuestJudges: availableGuestJudges => {
@@ -35,6 +36,7 @@ export const stateStore = create(persist(
     }),
     {
         name: 'fsl',
+        version: 1,
         getStorage: () => sessionStorage
     }
 ))

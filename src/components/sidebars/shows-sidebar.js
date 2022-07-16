@@ -3,7 +3,6 @@ import { SearchField } from './fighters-sidebar-components/search-field'
 import { Flex, Stack } from '@chakra-ui/react'
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
-import { FaTicketAlt } from 'react-icons/fa'
 import { REVIEW_TYPE } from '../../utils'
 import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutline } from "react-icons/io5";
 import { DividerWithText } from '../../chakra'
@@ -42,7 +41,7 @@ export const ShowsSidebar = ({ shows, handleShowSelect }) => {
     ];
     return (
         <Flex 
-            id="scoring-sidebar" 
+            id="shows_sidebar" 
             as="aside"
             flex="1 0 25%" 
             w="100%" 

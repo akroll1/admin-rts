@@ -1,20 +1,22 @@
-import React, { useState, createRef, useRef, useEffect } from 'react'
+import React, { createRef, useEffect, useState, useRef,} from 'react'
 import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
+import { DividerWithText } from '../../../chakra'
+import { stateStore } from '../../../stores'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { FightStats } from './chat-sidebar-components/fight-stats'
-import { stateStore } from '../../stores'
 
 export const ChatSidebar = ({
-    setIncomingScore,
-    tokenConfig, 
     chatKey, 
     username, 
     setNotifications, 
-    setNotificationTimeout 
+    setNotificationTimeout,
+    setIncomingScore,
+    tabs,
 }) => {
+
     // chatKey is room key for room ARN, required for chat metadata.
-    const { chatScorecard, setChatScorecard } = stateStore.getState();
+
+    const { chatScorecard, setChatScorecard, tokenConfig } = stateStore.getState();
     const [moderator, setModerator] = useState(false);
     const [avatar, setAvatar] = useState({});
     const [chatToken, setChatToken] = useState(null);
@@ -186,6 +188,7 @@ export const ChatSidebar = ({
    
     return (
         <Flex 
+            display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
             id="chat-sidebar"
             flexDir="column" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
@@ -197,7 +200,7 @@ export const ChatSidebar = ({
             borderRadius="md" 
             overflowY="scroll"
         >
-            <FightStats />
+            <DividerWithText text={"Group Chat"} />
             <Input
                 as="input"
                 m="1"

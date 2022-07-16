@@ -3,13 +3,14 @@ import { Button, Flex, Heading } from '@chakra-ui/react'
 import { FighterSlider } from '../fighter-slider'
 
 export const ScoringMain = ({ 
-    totalRounds,
     fightComplete,
     fighterData,
-    submitRoundScores, 
-    sliderScores, 
-    setSliderScores,
     isSubmitting,
+    setSliderScores,
+    sliderScores, 
+    submitRoundScores, 
+    tabs,
+    totalRounds,
 }) => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [round, setRound] = useState(null)
@@ -24,10 +25,10 @@ export const ScoringMain = ({
 
     return (
         <Flex 
+            display={tabs.scoring ? 'flex' : 'none'}
             id="scoring-main"
-            p="4" 
+            p={["0", "2"]} 
             m={['auto', 'auto', 'unset']} 
-            marginTop="1rem"
             flex={["1 0 40%", "1 0 40%", "1 0 40%", "1 0 50%"]}
             flexDir="column" 
             w="100%"
@@ -52,6 +53,7 @@ export const ScoringMain = ({
             }
             </Flex>
             <Button
+                minH="2.5rem"
                 onClick={submitRoundScores}
                 disabled={isSubmitting || isDisabled } 
                 variant="outline" 

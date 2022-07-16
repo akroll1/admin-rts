@@ -14,7 +14,7 @@ import { stateStore } from '../stores'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const { user, setUser, setUserScorecards, tokenConfig } = stateStore( state => state);
+  const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = stateStore( state => state);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
@@ -36,11 +36,12 @@ const Dashboard = props => {
     }
     setAuth()
   },[])
+  console.log('userScorecards: ', userScorecards)
   // getScorecards && check if user exists.
   useEffect(() => {
-    if(tokenConfig?.headers){
+    if(userScorecards.length === 0){
       const getUserScorecards = async () => {
-        const url = process.env.REACT_APP_SCORECARDS + (`/${user.sub}-${user.email}`);
+        const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
         return axios.get(url, tokenConfig)
           .then(res => {
             if(res.data?.length > 0 ) setUserScorecards(res.data)
@@ -77,19 +78,22 @@ const Dashboard = props => {
               setUserScorecards(data)
             }
           }).catch(err => console.log(err))
-        }
+        } 
         getUserScorecards();
 
+      } else {
+          setScorecards(userScorecards)
+      }
+      // put user data into DB.
+      const updateUser = async () => {
+        // put a check on here so this isn't called every time.
+        const url = process.env.REACT_APP_USERS + `/${user.sub}`;
+        return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
+          .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
+      }
+      updateUser();
 
-        // put user data into DB.
-        const updateUser = async () => {
-          const url = process.env.REACT_APP_USERS + `/${user.sub}`;
-          return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
-            .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
-        }
-        updateUser();
-    }
-  },[tokenConfig])
+  },[])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
@@ -97,13 +101,13 @@ const Dashboard = props => {
   };
 
   const isSuperAdminFormOptions = [
-    { value: "SHOW-FORM", label:"Show Form", type: 'Show Form', icon: FaEdit, link: '/dashboard/show-form' },
-    { value: "POUNDFORM", label:"P4P Form", type: 'P4P Form', icon: FaEdit, link: '/dashboard/pound-form' },
-    { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
-    { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
-    { value: "GUEST-JUDGES", label:"Guest Judges Form", type: 'Guest Judges', icon: FaEdit, link: '/dashboard/guest-judges' },
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
+    { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
+    { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
+    { value: "GUEST-JUDGES", label:"Guest Judges Form", type: 'Guest Judges', icon: FaEdit, link: '/dashboard/guest-judges' },
+    { value: "POUNDFORM", label:"P4P Form", type: 'P4P Form', icon: FaEdit, link: '/dashboard/pound-form' },
+    { value: "SHOW-FORM", label:"Show Form", type: 'Show Form', icon: FaEdit, link: '/dashboard/show-form' },
   ];
 
   const userFormLinks = () => {
