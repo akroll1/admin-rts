@@ -389,7 +389,13 @@ const Scoring = () => {
                     handleSubmitPrediction={handleSubmitPrediction} 
                 />
             </Flex>
-            <Flex display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} w="100%" minH="60vh"  maxH="60vh">
+            <Flex 
+                display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
+                mb="3rem"
+                w="100%" 
+                minH="60vh"  
+                maxH="60vh"
+            >
                 <ScoringSidebarLeft
                     modals={modals}
                     setModals={setModals}

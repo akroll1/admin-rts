@@ -38,6 +38,7 @@ export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => 
             p="8"
             pt="2"
             my="auto"
+            h="auto"
         >      
             <Table 
                 style={{tableLayout:'auto', width: '100%'}} 
