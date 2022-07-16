@@ -18,7 +18,6 @@ export const ShowsSidebar = ({
         if(shows.length > 0){
             const upcoming = shows.filter( ({ show }) => show.showTime > Date.now()).reverse();
             setUpcoming(upcoming);
-            console.log('upcoming: ', upcoming)
             const recent = shows.filter( ({ show }) => show.showTime < Date.now());
             setRecent(recent);
             handleShowSelect(upcoming[0].show.showId, REVIEW_TYPE.PREDICTION)
