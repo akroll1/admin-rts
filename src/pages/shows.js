@@ -17,12 +17,20 @@ const Shows = props => {
 
     const baseUrl = process.env.REACT_APP_SHOWS;
     const [shows, setShows] = useState([]);
-    const [selectedShow, setSelectedShow] = useState({});
+    const [selectedShow, setSelectedShow] = useState({
+        show: {
+            fightQuickTitle: '',
+            location: '',
+            promoter: '', 
+            network: '',
+            fighters: []
+        },
+        fighters: []
+    });
     const [selectedShowFight, setSelectedShowFight] = useState([]);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [predictionsAndReviews, setPredictionsAndReviews] = useState([]); 
     const [reviewType, setReviewType] = useState('PREDICTION');
-    const [fighters, setFighters] = useState([]);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
         admin: email, // human readable form.
@@ -46,27 +54,26 @@ const Shows = props => {
      * **/
 
     useEffect(() => {
-        if(id && sub){ 
-            const getShow = id => {
-                const url = baseUrl + `/${id}`;
-                axios.get(url, tokenConfig)
-                    .then( res => {
-                        setSelectedShow(res.data[0])
-                    })
-                    .catch( err => console.log(err))
-            }
-            getShow(id);
-        }
+        // if(id && sub){ 
+        //     const getShow = id => {
+        //         const url = baseUrl + `/${id}`;
+        //         axios.get(url, tokenConfig)
+        //             .then( res => {
+        //                 setSelectedShow(res.data[0])
+        //             })
+        //             .catch( err => console.log(err))
+        //     }
+        //     getShow(id);
+        // }
         if(sub){
             const getAllShows = () => {
                 return axios.get(baseUrl, tokenConfig)
                     .then(res => {
-                        // console.log('res, 86: ', res)
-                        
+                        console.log('res, 64: ', res)
                         setShows(res.data);
                         setSelectedShow(res.data[0]);
                         // need this for fightQuickTitle.
-                        setSelectedShowFight(res.data[0].fight);
+                        setSelectedShowFight(res.data[0].fights);
                     })
                     .catch(err => console.log(err));
             }
@@ -93,12 +100,9 @@ const Shows = props => {
     // 1. handleShowSelect.
     const handleShowSelect = (id, reviewType) => {
         if(reviewType === 'REMINDER' || reviewType === 'HISTORICAL') return;
-
-        const [selected] = shows.filter( show => show.showId === id)
-        // console.log('selected: ', selected )
+        const [selected] = shows.filter( show => show.show.showId === id)
         setReviewType(reviewType);
         setSelectedShow(selected);
-        setSelectedShowFight(selected.fight)
     };
         //groupscorecard form???
     const handleFormChange = e => {
@@ -127,9 +131,9 @@ const Shows = props => {
             ...showReviewForm,
             owner: sub,
             username,
-            showId: selectedShow.showId,
-            fightId: selectedShow.fightIds[0],
-            reviewType: Date.now() > selectedShow.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
+            showId: selectedShow.show.showId,
+            fightId: selectedShow.show.fightId,
+            reviewType: Date.now() > selectedShow.show.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
         };
         const reviewObj = Object.assign({}, obj);
         return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, tokenConfig)
@@ -150,15 +154,13 @@ const Shows = props => {
             }).catch(err => console.log(err))
             .finally(() => handleReviewFormClose());
     };
-
-   
     /**
      * 1. on selectedShow, get all the show Reviews
      */
     useEffect(() => {
-        if(selectedShow.showId){
+        if(selectedShow.show.showId){
             const getSelectedShowReviews = async () => {
-                const url = process.env.REACT_APP_REVIEWS + `/${reviewType.toLowerCase()}/${selectedShow.fightIds[0]}`;
+                const url = process.env.REACT_APP_REVIEWS + `/${reviewType.toLowerCase()}/${selectedShow.show.fightId}`;
                 return axios.get(url, tokenConfig)
                     .then( res => {
                         console.log('res: ', res)
@@ -194,7 +196,7 @@ const Shows = props => {
     useEffect(() => {
         if(showReviewForm){
             const getReview = async () => {
-                const url = process.env.REACT_APP_REVIEWS + `/user/${reviewType.toLowerCase()}/${selectedShow.fightIds[0]}`;
+                const url = process.env.REACT_APP_REVIEWS + `/user/${reviewType.toLowerCase()}/${selectedShow.show.fightId}`;
                 return axios.get(url, tokenConfig)
                     .then(res => {
                         if(res.data.reviewId){
@@ -206,22 +208,6 @@ const Shows = props => {
             getReview();
         }
     },[showReviewForm]);
-    // on selectedShow && selectedShow.showId, get the fighters.
-    useEffect(() => {
-        if(selectedShow.showId){
-            const { fighterIds } = selectedShow.fight;
-            const getFighters = async fighterIds => {
-                const fighters = await Promise.all(fighterIds.map( async fighterId => {
-                    const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
-                    return await axios.get(url, tokenConfig)
-                        .then( res => res.data)
-                        .catch( err => console.log(err));
-                }))
-                return setFighters(fighters);
-            };
-            getFighters(fighterIds);
-        }
-    }, [selectedShow])
 
     const handleCreateGroupScorecard = async () => {
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
@@ -280,11 +266,8 @@ const Shows = props => {
             <ShowsSidebar 
                 shows={shows} 
                 handleShowSelect={handleShowSelect} 
-                selectedShowFight={selectedShowFight}
             />  
             <ShowsMain 
-                fighters={fighters}
-                selectedShowFight={selectedShowFight}
                 predictionsAndReviews={predictionsAndReviews}
                 showReviewForm={showReviewForm}
                 setShowReviewForm={setShowReviewForm}
