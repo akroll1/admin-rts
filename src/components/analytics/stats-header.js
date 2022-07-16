@@ -11,7 +11,7 @@ const stats = [
     },
   },
   {
-    label: 'Avg. Rounds Won',
+    label: 'Winner Avg. Rounds Won',
     value: '74.87%',
     delta: {
       value: '2.3%',
@@ -19,7 +19,7 @@ const stats = [
     },
   },
   {
-    label: 'Correct Predictions',
+    label: 'Correct Winner Predictions',
     value: '63.87%',
     delta: {
       value: '0.1%',
@@ -32,9 +32,7 @@ export const StatsHeader = () => (
   <Box as="section" py={{base: '4'}}>
     <Container maxWidth="100%">
       <SimpleGrid columns={{base: 1, md: 3}} gap={{base: '5', md: '6'}}>
-        {stats.map((stat, id) => (
-          <Stat key={id} {...stat} />
-        ))}
+        { stats.map( (stat, id) => <Stat key={id} {...stat} /> )}
       </SimpleGrid>
     </Container>
   </Box>

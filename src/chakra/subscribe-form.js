@@ -7,7 +7,7 @@ export const SubscribeForm = (props) => {
     <chakra.form {...props} onSubmit={(e) => e.preventDefault()} maxW="100%">
       <Stack spacing="2">
         <FooterHeading>Subscribe to our newsletter</FooterHeading>
-        <Text>Get the <span style={{fontWeight: 'bold',color: '#FFF'}}>FightCloud newsletter</span> delivered directly to your inbox!</Text>
+        <Text>Get the <span style={{fontWeight: 'bold',color: '#FFF'}}>FightSync newsletter</span> delivered directly to your inbox!</Text>
         <Stack spacing="4" direction={{ base: 'column', md: 'row' }}>
           <Input
             bg={useColorModeValue('white', 'inherit')}

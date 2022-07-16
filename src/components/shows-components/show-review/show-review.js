@@ -43,7 +43,7 @@ export const PredictionsReviews = ({
               <Stack spacing="1">
                 <Rating defaultValue={4} size="sm" />
                 <Text lineHeight="1" color={'gray.600'}>
-                  Based on 128 {type}s
+                  {`Based on ${Math.floor(Math.random()* 1000)} ${type}s`}
                 </Text>
               </Stack>
             </Stack>
