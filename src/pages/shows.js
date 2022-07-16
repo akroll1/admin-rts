@@ -160,7 +160,7 @@ const Shows = props => {
                 const url = process.env.REACT_APP_REVIEWS + `/${reviewType.toLowerCase()}/${selectedShow.show.fightId}`;
                 return axios.get(url, tokenConfig)
                     .then( res => {
-                        console.log('res: ', res)
+                        // console.log('res: ', res)
                         const reviewsArr = [];
                         const predictionsArr = [];
                         let reviewsObj = {
