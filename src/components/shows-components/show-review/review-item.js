@@ -113,9 +113,6 @@ export const ReviewItem = ({
             <MenuItem icon={<AddIcon />}>
               Follow {username}
             </MenuItem>
-            <MenuItem icon={<EditIcon />}>
-              Un-Follow
-            </MenuItem>
           </MenuList>
         </Menu>
       </Flex>
