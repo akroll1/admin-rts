@@ -6,6 +6,8 @@ import { ReviewFormModal } from '../components/modals'
 import { useNavigate, useParams } from 'react-router'
 import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
+import { ExpiredTokenModal } from '../components/modals'
+
 import { stateStore } from '../stores'
 
 const Shows = props => {
@@ -14,7 +16,9 @@ const Shows = props => {
     const toast = useToast();
     const { user, tokenConfig } = stateStore.getState();
     const { email, sub, username } = user;
-
+    const [modals, setModals] = useState({
+        expiredTokenModal: false
+    });
     const baseUrl = process.env.REACT_APP_SHOWS;
     const [shows, setShows] = useState([]);
     const [selectedShow, setSelectedShow] = useState({
@@ -69,6 +73,9 @@ const Shows = props => {
             const getAllShows = () => {
                 return axios.get(baseUrl, tokenConfig)
                     .then(res => {
+                        if(res.data.includes('Token expired')){
+                            return setModals({ ...modals, expiredTokenModal: true });
+                        }
                         console.log('res, 64: ', res)
                         setShows(res.data);
                     })
@@ -251,6 +258,7 @@ const Shows = props => {
             mb={6} 
             pb={8}
         >    
+            <ExpiredTokenModal modals={modals} setModals={setModals} />
             { showReviewForm && 
                 <ReviewFormModal
                     reviewForm={reviewForm}

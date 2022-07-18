@@ -3,7 +3,7 @@ import { Rating } from './rating'
 import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useToast } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
 import { stateStore } from '../../../stores'
-
+import axios from 'axios';
 export const PredictionsReviews = ({ 
   reviewType, 
   predictionsAndReviews, 
@@ -11,9 +11,11 @@ export const PredictionsReviews = ({
   showReviewForm 
 }) => {
   const toast = useToast();
-  const { sub } = stateStore( state => state.user);
+  const { user: { sub } , tokenConfig } = stateStore.getState();
+  console.log('sub: ', sub)
   const type = reviewType.charAt(0) + reviewType.toLowerCase().slice(1);
-  const renderType = predictionsAndReviews[reviewType]
+  const renderType = predictionsAndReviews[reviewType];
+
   const handleLikeClick = likeType => {
     console.log('likeType: ', likeType)
     if(!sub){
@@ -24,6 +26,10 @@ export const PredictionsReviews = ({
         isClosable: true
       })
     }
+    const url = process.env.REACT_APP_LIKES;
+    return axios.put(url, tokenConfig)
+      .then( res => console.log('res: ', res))
+      .catch( err => console.log(err));
   };
 
   return (

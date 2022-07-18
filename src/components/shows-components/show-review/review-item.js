@@ -53,21 +53,21 @@ export const ReviewItem = ({
         </Flex>
         <Menu>
           <MenuButton
+            border="none"
             as={IconButton}
             aria-label='Options'
             icon={<FiMoreHorizontal />}
             variant='outline'
           />
           <MenuList>
-            <MenuItem icon={<AddIcon />} command='⌘T'>
-              Follow
+            <MenuItem icon={<AddIcon />}>
+              Follow {username}
             </MenuItem>
-            <MenuItem icon={<EditIcon />} command='⌘O'>
+            <MenuItem icon={<EditIcon />}>
               Un-Follow
             </MenuItem>
           </MenuList>
         </Menu>
-        {/* <Icon onClick={() => console.log('clicked')} _hover={{cursor: 'pointer'}} as={FiMoreHorizontal} boxSize="5" color="muted" /> */}
       </Flex>
     </Stack>
   )
