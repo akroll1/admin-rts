@@ -1,10 +1,12 @@
 import React from 'react'
-import { Box, Flex, Heading, Icon, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Heading, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa'
 import { parseEpoch} from '../../../utils/utils'
 import { ReviewPostStars } from '../../stars'
-
+import { FiMoreHorizontal } from 'react-icons/fi'
+import { AddIcon, EditIcon } from '@chakra-ui/icons'
 export const ReviewItem = ({ 
+  handleLikeClick,
   reviewItem 
 }) => {
   const { username, rating, review, title, updatedAt } = reviewItem;
@@ -44,9 +46,28 @@ export const ReviewItem = ({
       <Text color={useColorModeValue('gray.600', 'gray.400')} fontSize="sm">
         - {username} on {parseEpoch(updatedAt,'reviews')}
       </Text>
-      <Flex justifyContent="flex-start">
-        <Icon h={4} w={4} onClick={() => console.log('clicking icon')} as={FaRegThumbsUp} _hover={{cursor: 'pointer'}} />
-        <Icon h={4} w={4} ml="1rem" onClick={() => console.log('clicking icon')} as={FaRegThumbsDown} _hover={{cursor: 'pointer'}} />
+      <Flex px="1" flexDirection="row" justifyContent="space-between" alignItems="center">
+        <Flex justifyContent="flex-start">
+          <Icon h={4} w={4} onClick={() => handleLikeClick('up')} as={FaRegThumbsUp} _hover={{cursor: 'pointer'}} />
+          <Icon h={4} w={4} ml="1rem" onClick={() => handleLikeClick('down')} as={FaRegThumbsDown} _hover={{cursor: 'pointer'}} />
+        </Flex>
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            aria-label='Options'
+            icon={<FiMoreHorizontal />}
+            variant='outline'
+          />
+          <MenuList>
+            <MenuItem icon={<AddIcon />} command='⌘T'>
+              Follow
+            </MenuItem>
+            <MenuItem icon={<EditIcon />} command='⌘O'>
+              Un-Follow
+            </MenuItem>
+          </MenuList>
+        </Menu>
+        {/* <Icon onClick={() => console.log('clicked')} _hover={{cursor: 'pointer'}} as={FiMoreHorizontal} boxSize="5" color="muted" /> */}
       </Flex>
     </Stack>
   )

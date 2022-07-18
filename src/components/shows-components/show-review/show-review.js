@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Rating } from './rating'
-import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useToast } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
+import { stateStore } from '../../../stores'
 
 export const PredictionsReviews = ({ 
   reviewType, 
@@ -9,10 +10,21 @@ export const PredictionsReviews = ({
   setShowReviewForm, 
   showReviewForm 
 }) => {
-  // console.log('reviewType: ', reviewType)
+  const toast = useToast();
+  const { sub } = stateStore( state => state.user);
   const type = reviewType.charAt(0) + reviewType.toLowerCase().slice(1);
-  // console.log('type: ', type)
   const renderType = predictionsAndReviews[reviewType]
+  const handleLikeClick = likeType => {
+    console.log('likeType: ', likeType)
+    if(!sub){
+      return toast({ 
+        title: 'Must be signed in.',
+        duration: 5000,
+        status: 'error',
+        isClosable: true
+      })
+    }
+  };
 
   return (
     <Flex 
@@ -90,7 +102,7 @@ export const PredictionsReviews = ({
         flexWrap="wrap" 
         alignItems="center"
       >
-        { renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
+        { renderType?.length > 0 && renderType.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} handleLikeClick={handleLikeClick} />)}
       </Flex>
     </Flex>
   )

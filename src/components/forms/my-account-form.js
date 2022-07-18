@@ -48,6 +48,12 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
           <Heading size="lg" as="h1" paddingBottom="4">
             Account Settings
           </Heading>
+          <FieldGroup title="BoxCoins">
+            <FormControl id="boxCoins">
+              <FormLabel>Total</FormLabel>
+              <Input w="25%" readOnly type="number" value={boxCoins} />
+            </FormControl>
+          </FieldGroup>
           <FieldGroup title="Personal Info">
             <VStack width="full" spacing="6">
               <FormControl id="email">
@@ -78,12 +84,6 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
                 </FormHelperText>
               </FormControl>
             </VStack>
-          </FieldGroup>
-          <FieldGroup title="BoxCoins">
-            <FormControl id="boxCoins">
-              <FormLabel>Total</FormLabel>
-              <Input w="25%" readOnly type="number" value={boxCoins} />
-            </FormControl>
           </FieldGroup>
           <FieldGroup title="Public Profile">
             <Stack width="full" spacing="4">

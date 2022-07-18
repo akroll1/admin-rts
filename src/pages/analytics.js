@@ -19,10 +19,10 @@ const Analytics = () => {
     useEffect(() => {
         if(showId){
             const fetchFightData = async () => {
-                const url = process.env.REACT_APP_ANALYTICS + `/${ showId }`;
+                const url = process.env.REACT_APP_ANALYTICS + `/${showId}`;
                 return await axios.get(url, tokenConfig)
-                .then( res => setShowData(res.data))
-                .catch( err => console.log(err));
+                    .then( res => setShowData(res.data))
+                    .catch( err => console.log(err));
             }
             fetchFightData();
         }
@@ -30,7 +30,10 @@ const Analytics = () => {
     console.log('showData: ', showData);
     return(
         <Flex flexDirection={["column", "column", "row"]}>
-            <AnalyticsSidebar showData={showData} />
+            <AnalyticsSidebar
+                showData={showData} 
+                showId={showId} 
+            />
             <AnalyticsMain showData={showData} />
         </Flex>
     )

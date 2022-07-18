@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
+import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 import axios from 'axios'
+import { DragHandleIcon } from '@chakra-ui/icons'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -140,25 +141,32 @@ export const MyPoundList = ({ tokenConfig, user }) => {
                 if(!item) return;
                 return (
                   <ListItem
-                    display="flex" 
-                    alignItems="center" 
-                    justifyContent="flex-start"
-                    p="4"
-                    m="2"
-                    borderRadius="5px"
-                    bg={i > 4 ? "whiteAlpha.200" : "whiteAlpha.400"}
-                    height='2.5rem'
-                    // w="100%"
-                    key={i}
-                    data-position={i}
-                    draggable
-                    onDragStart={onDragStart}
-                    onDragOver={onDragOver}
-                    onDrop={onDrop}
-                    onDragLeave={onDragLeave}
-                    _hover={{ cursor: 'pointer' }}>
-                  <Text as="p" style={i > 4 ? myListStyles : officialListStyles}>{i + 1} </Text>&nbsp;&nbsp;{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)}
-                </ListItem>
+                  display="flex" 
+                  alignItems="center" 
+                  justifyContent="flex-start"
+                  p="4"
+                  m="2"
+                  borderRadius="5px"
+                  bg={i > 4 ? "whiteAlpha.200" : "whiteAlpha.400"}
+                  height='2.5rem'
+                  // w="100%"
+                  key={i}
+                  data-position={i}
+                  draggable
+                  onDragStart={onDragStart}
+                  onDragOver={onDragOver}
+                  onDrop={onDrop}
+                  onDragLeave={onDragLeave}
+                  _hover={{ cursor: 'pointer' }}
+                  >
+                    <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-between">
+                      <Flex>
+                        <Text as="p" style={i > 4 ? myListStyles : officialListStyles}>{i + 1} </Text><Text ml="2" textAlign="left">{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)} </Text>
+
+                      </Flex>
+                      <Icon mr="0" as={DragHandleIcon} />
+                    </Flex>
+                  </ListItem>
               )})}
           </UnorderedList>
         </Flex>
