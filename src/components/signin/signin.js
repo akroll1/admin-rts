@@ -170,9 +170,26 @@ export const SignIn = props => {
             <Heading textAlign="center" size="xl" fontWeight="extrabold">
               Create An Account
             </Heading>
-            <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
+            <Text 
+              mt="4" 
+              mb="8" 
+              align="center" 
+              textAlign="center" 
+              maxW="md" 
+              fontWeight="medium" 
+              display="flex" 
+              flexDirection={["column", "row" ]}
+              alignItems="center" 
+              justifyContent="center"
+            >
               <Text as="span">Already have an account?</Text>
-              <Text onClick={() => setIsSignin(true)} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Sign-In here!</Text>
+              <Text 
+                onClick={() => setIsSignin(true)} 
+                _hover={{cursor: 'pointer'}} 
+                style={{marginLeft: '0.5rem', color: '#90cdf4'}}
+              >
+                Sign-In here!
+              </Text>
             </Text>
           </>  
         }

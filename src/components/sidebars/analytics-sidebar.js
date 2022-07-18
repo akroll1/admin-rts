@@ -12,7 +12,7 @@ import { DividerWithText } from '../../chakra'
  * THIS NEEDS TO SWITCH BETWEEN A LIST OF SHOWS 
  * AND THE SHOW STATS IF THERE IS A /:fightId PARAM.
  */
-export const AnalyticsSidebar = ({ showData }) => {
+export const AnalyticsSidebar = ({ showData, showId }) => {
     const handleSearch = () => {
         console.log('handleSearch')
     }
@@ -37,24 +37,57 @@ export const AnalyticsSidebar = ({ showData }) => {
             color="white" 
             fontSize="sm"
         >
-            <AnalyticsSearchField style={{width: '100%'}} handleSearch={handleSearch} />
+            { !showId && <AnalyticsSearchField style={{width: '100%'}} handleSearch={handleSearch} /> }
             <DividerWithText text={fightQuickTitle ? fightQuickTitle : 'Search'} />
-            <Stack w="full" spacing="4" flex="1" overflow="auto" pt="8" p="2">               
+            <Stack 
+                w="full" 
+                spacing="4" 
+                flex="1" 
+                overflow="auto" 
+                pt="8" 
+                p="2"
+            >               
                 <NavGroup label="Show">
-                    <NavItem icon={<FaTv />} label={ network } />
-                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
-                    <NavItem icon={<FaRegClock />} label={ showTime } />
+                    <NavItem 
+                        icon={<FaTv />} 
+                        label={ network } 
+                    />
+                    <NavItem 
+                        icon={<FaMapMarkerAlt />} 
+                        label={ location } 
+                    />
+                    <NavItem 
+                        icon={<FaRegClock />} 
+                        label={ showTime } 
+                    />
                 </NavGroup>
 
                 <NavGroup label="Fight">
-                    <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
-                    <NavItem icon={<IoScaleOutline />} label={ weightclass } />
-                    <NavItem icon={<FaRegMoneyBillAlt />} label={ odds } /> 
+                    <NavItem 
+                        icon={<BiChevronRightCircle />} 
+                        label={ rounds ? rounds + ' Rounds' : '' } 
+                    />
+                    <NavItem 
+                        icon={<IoScaleOutline />} 
+                        label={ weightclass } 
+                    />
+                    <NavItem 
+                        icon={<FaRegMoneyBillAlt />} 
+                        label={ odds } 
+                    /> 
                 </NavGroup>
 
                 <NavGroup label="Support">
-                    <NavItem subtle icon={<BiCog />} label="Explanations" />
-                    <NavItem subtle icon={<BiBuoy />} label="Help & Support" />
+                    <NavItem 
+                        subtle 
+                        icon={<BiCog />} 
+                        label="Explanations" 
+                    />
+                    <NavItem 
+                        subtle 
+                        icon={<BiBuoy />} 
+                        label="Help & Support" 
+                    />
                 </NavGroup>
             </Stack>
         </Flex>
