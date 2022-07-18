@@ -12,12 +12,10 @@ export const PredictionsReviews = ({
 }) => {
   const toast = useToast();
   const { user: { sub } , tokenConfig } = stateStore.getState();
-  console.log('sub: ', sub)
   const type = reviewType.charAt(0) + reviewType.toLowerCase().slice(1);
   const renderType = predictionsAndReviews[reviewType];
 
-  const handleLikeClick = likeType => {
-    console.log('likeType: ', likeType)
+  const handleLikeClick = (reviewId, likeType) => {
     if(!sub){
       return toast({ 
         title: 'Must be signed in.',
@@ -27,8 +25,17 @@ export const PredictionsReviews = ({
       })
     }
     const url = process.env.REACT_APP_LIKES;
-    return axios.put(url, tokenConfig)
-      .then( res => console.log('res: ', res))
+    return axios.put(url, { likeType, reviewId }, tokenConfig)
+      .then( res => {
+        if(res.data.includes('Review liked')){
+          return toast({ 
+            title: 'Upvoted.',
+            duration: 5000,
+            status: 'success',
+            isClosable: true
+          })
+        }
+      })
       .catch( err => console.log(err));
   };
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Flex, Heading, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa'
 import { parseEpoch} from '../../../utils/utils'
@@ -9,7 +9,26 @@ export const ReviewItem = ({
   handleLikeClick,
   reviewItem 
 }) => {
-  const { username, rating, review, title, updatedAt } = reviewItem;
+  const [localLikes, setLocalLikes] = useState(0);
+  const [clickedUP, setClickedUP] = useState(false)
+  const [clickedDOWN, setClickedDOWN] = useState(false)
+  const { likes, rating, review, reviewId, title, updatedAt, username } = reviewItem;
+
+  useEffect(() => {
+    setLocalLikes(likes > 0 ? likes * Math.ceil(Math.random()*100) : 1)
+  },[likes]);
+
+  const handleVote = type => {
+    if(type === 'up' && !clickedUP){
+      setLocalLikes(localLikes + 1);
+      setClickedUP(true);
+      handleLikeClick(reviewId, type);
+    } else if(type ==='down' && !clickedDOWN) {
+      setClickedDOWN(true);
+      handleLikeClick(reviewId, type);
+    }
+  }
+
   return (
     <Stack 
       my="2" 
@@ -36,20 +55,51 @@ export const ReviewItem = ({
             size="sm" 
           />
           <Box>
-            <Heading display="inline-flex" flex="1 0 50%" m="auto" size="sm" fontWeight="medium" color={useColorModeValue('black', 'white')}>
+            <Heading 
+              display="inline-flex" 
+              flex="1 0 50%" 
+              m="auto" 
+              size="sm" 
+              fontWeight="medium" 
+              color={useColorModeValue('black', 'white')}
+            >
               {title}
             </Heading>
           </Box>
         </Flex>
       </Box>
-      <Text minH={["3rem","4.5rem"]} noOfLines={3} wordBreak="break-word">{review}</Text>
+      <Text 
+        minH={["3rem","4.5rem"]} 
+        noOfLines={3} 
+        wordBreak="break-word"
+      >
+        {review}
+      </Text>
       <Text color={useColorModeValue('gray.600', 'gray.400')} fontSize="sm">
         - {username} on {parseEpoch(updatedAt,'reviews')}
       </Text>
-      <Flex px="1" flexDirection="row" justifyContent="space-between" alignItems="center">
+      <Flex 
+        px="1" 
+        flexDirection="row" 
+        justifyContent="space-between" 
+        alignItems="center"
+      >
         <Flex justifyContent="flex-start">
-          <Icon h={4} w={4} onClick={() => handleLikeClick('up')} as={FaRegThumbsUp} _hover={{cursor: 'pointer'}} />
-          <Icon h={4} w={4} ml="1rem" onClick={() => handleLikeClick('down')} as={FaRegThumbsDown} _hover={{cursor: 'pointer'}} />
+          <Icon 
+            h={4} 
+            w={4} 
+            onClick={() => handleVote('up')} 
+            as={FaRegThumbsUp} 
+            _hover={{cursor: 'pointer'}} 
+          />
+            <Text pl="1" mr="2" fontSize="xs">{`${localLikes}`}</Text>
+          <Icon 
+            h={4} 
+            w={4} 
+            onClick={() => handleVote('down')} 
+            as={FaRegThumbsDown} 
+            _hover={{cursor: 'pointer'}} 
+          />
         </Flex>
         <Menu>
           <MenuButton
