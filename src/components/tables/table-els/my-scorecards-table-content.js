@@ -36,8 +36,23 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
           { scorecards?.length > 0 && scorecards.map((row, index) => {
             const { groupScorecardId, isComplete, label, prediction } = row;
             return (
-              <Tr key={index} onClick={() => navigate(`/scoring/${groupScorecardId}`)} _hover={{cursor: 'pointer', bg: 'gray.700', color: '#fff', border: '1px solid #795858'}} style={{textAlign: 'center'}} key={index}>
-                <Td textAlign="center" whiteSpace="nowrap">
+              <Tr 
+                key={index} 
+                onClick={() => navigate(`/scoring/${groupScorecardId}`)} 
+                _hover={{
+                  textAlign: "center",
+                  cursor: 'pointer', 
+                  bg: 'gray.700', 
+                  color: '#fff', 
+                  borderX: '1px solid #795858',
+                  borderBottom: '2px solid #795858',
+                  borderRadius: '5px'
+                }} 
+              >
+                <Td 
+                  textAlign="center" 
+                  whiteSpace="nowrap"
+                >
                   { label }
                 </Td>
                 <Td textAlign="center" whiteSpace="nowrap">
