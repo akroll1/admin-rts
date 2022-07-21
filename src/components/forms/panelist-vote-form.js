@@ -4,7 +4,7 @@ import { FieldGroup } from '../../chakra'
 import { FightersTable } from '../tables'
 import axios from 'axios';
 
-export const PoundForm = ({ user, tokenConfig }) => {
+export const PanelistVoteForm = ({ user, tokenConfig }) => {
   const toast = useToast();
   const poundUrl = process.env.REACT_APP_POUND_LIST + `/${1}`;
   const fightersUrl = process.env.REACT_APP_FIGHTERS;
@@ -14,16 +14,13 @@ export const PoundForm = ({ user, tokenConfig }) => {
   const [fighterIdsList, setFighterIdsList] = useState([]);
 
   useEffect(() => {
-    const getFighterOptions = async () => {
-      return axios.get(poundUrl, tokenConfig)
+      axios.get(poundUrl,tokenConfig)
           .then(res => {
             const getFighterIds = res.data.map( fighterObj => fighterObj.fighterId);
             setFighterIdsList(getFighterIds);   
             setPoundList(res.data)
           })
           .catch(err => console.log(err))
-    }
-    getFighterOptions();
   },[])
 
   const setForm = e => {

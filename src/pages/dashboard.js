@@ -5,8 +5,19 @@ import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
 import { MyScorecards } from './my-scorecards'
 import { CreateGroupScorecard } from './create-scorecard'
-import { MyAccountForm, BroadcastForm, DiscussionsForm, FightForm, FightersForm, GuestJudgeForm, PoundForm, ShowForm } from '../components/forms'
+import { 
+  MyAccountForm, 
+  BroadcastForm, 
+  DiscussionsForm, 
+  FightForm, 
+  FightersForm, 
+  GuestJudgeForm, 
+  PanelistForm,
+  PoundForm, 
+  ShowForm 
+} from '../components/forms'
 import { MyPoundList } from '../components/lists'
+import { ExpiredTokenModal } from '../components/modals'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { capFirstLetters } from '../utils'
@@ -14,6 +25,9 @@ import { stateStore } from '../stores'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
+  const [modals, setModals] = useState({
+    expiredTokenModal: false
+  });
   const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = stateStore( state => state);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
@@ -101,6 +115,7 @@ const Dashboard = props => {
   };
 
   const isSuperAdminFormOptions = [
+    { value: "PANELIST", label:"Panelist Form", type: 'Panelist', icon: FaEdit, link: '/dashboard/panelist' },
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
@@ -128,6 +143,10 @@ const Dashboard = props => {
   }
   return (
     <Flex height="auto" width={{ base: 'full'}} direction="row" color="white" flexWrap="wrap" px={6} py={8}>
+      <ExpiredTokenModal 
+        modals={modals}
+        setModals={setModals}
+      />
       <Box flex="1 0 25%">
         <Stack spacing={6}>
           <Box fontSize="sm" lineHeight="tall">
@@ -161,6 +180,7 @@ const Dashboard = props => {
         { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} handleFormSelect={handleFormSelect} /> }
         { form === 'POUND' && <MyPoundList tokenConfig={tokenConfig} user={user} /> }
         { form === 'ACCOUNT' && <MyAccountForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'PANELIST' && <PanelistForm setModals={setModals} tokenConfig={tokenConfig} user={user} /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} tokenConfig={tokenConfig} /> }
         { form === 'POUNDFORM' && <PoundForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'SHOW-FORM' && <ShowForm tokenConfig={tokenConfig} user={user} /> }

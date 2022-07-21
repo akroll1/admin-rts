@@ -18,8 +18,15 @@ const Scoring = () => {
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
     //////////////////  SCORE STATE /////////////////////////
-    const { chatScorecard, myGuestJudges, setAvailableGuestJudges, setChatScorecard, setStats, tokenConfig, user } = stateStore.getState();
-    const { sub, email, username } = user?.sub ? user : '';
+    const { 
+        chatScorecard, 
+        setAvailableGuestJudges, 
+        setChatScorecard, 
+        setStats, 
+        tokenConfig, 
+        user 
+    } = stateStore.getState();
+    const { sub, email, username } = user;
     const [tabs, setTabs] = useState({
         sidebar: false,
         scoring: true, 
