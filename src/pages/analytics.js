@@ -1,40 +1,75 @@
 import React, { useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { useParams } from 'react-router'
-import { AnalyticsSidebar } from '../components/sidebars'
+import { AnalyticsSidebar, AnalyticsSidebarAllShows, AnalyticsSidebarSelectedShow } from '../components/sidebars'
 import { AnalyticsMain } from '../components/analytics'
+import { MoneylineModal } from '../components/modals'
+import { AnalyticsTable } from '../components/tables'
 import { stateStore } from '../stores'
+import { useWindowResize } from '../hooks'
 import axios from 'axios'
 
 const Analytics = () => {
-    const {tokenConfig,  user } = stateStore.getState();
-    const { sub, email, username } = user;
-    const [showData, setShowData] = useState({
-        fight: {
-            fightQuickTitle: ''
-        }
-    });
     const { showId } = useParams(); // showId: /c8734c80-16e6-46d1-90f4-c103de4b8b92
-
+    const windowWidth = useWindowResize();
+    const { 
+        setAnalyticsShows, 
+        setSelectedAnalyticsShow, 
+        tokenConfig, 
+    } = stateStore.getState();
+    const [tabs, setTabs] = useState({
+        sidebar: false,
+        scoring: true, 
+        table: false,
+        chat: false,
+        analytics: false
+    });
+    const [modals, setModals] = useState({
+        moneylineModal: false
+    });
     useEffect(() => {
-        if(showId){
-            const fetchFightData = async () => {
-                const url = process.env.REACT_APP_ANALYTICS + `/${showId}`;
-                return await axios.get(url, tokenConfig)
-                    .then( res => setShowData(res.data))
-                    .catch( err => console.log(err));
-            }
-            fetchFightData();
+        const fetchAllFights = async () => {
+            const url = process.env.REACT_APP_ANALYTICS;
+            return await axios.get(url, tokenConfig)
+                .then( res => {
+                    setSelectedAnalyticsShow(res.data[0])
+                    setAnalyticsShows(res.data);
+                }
+            ).catch( err => console.log(err));
         }
+        fetchAllFights();
     },[]);
-    console.log('showData: ', showData);
+
     return(
-        <Flex flexDirection={["column", "column", "row"]}>
-            <AnalyticsSidebar
-                showData={showData} 
-                showId={showId} 
+        <Flex 
+            id="analytics"
+            w="100%" 
+            flexDirection="column" 
+            color="white" 
+            alignItems="center" 
+            justifyContent="center" 
+            margin="auto" 
+            p="4"
+            minH="80vh"
+            mb="4"
+        >         
+             <MoneylineModal
+                modals={modals}
+                setModals={setModals} 
             />
-            <AnalyticsMain showData={showData} />
+             <Flex 
+                display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
+                mb="3rem"
+                w="100%" 
+                minH="60vh"  
+                maxH="60vh"
+            >
+                <AnalyticsSidebar />
+                <AnalyticsMain />
+            </Flex>
+            <AnalyticsTable 
+                tabs={tabs} 
+            />
         </Flex>
     )
 }

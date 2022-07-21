@@ -2,12 +2,24 @@ import { Box, HStack } from '@chakra-ui/react'
 import * as React from 'react'
 import { BsCaretRightFill } from 'react-icons/bs'
 
-export const NavItem = (props) => {
-  const { handlePredictionToggle, button, id, handleClick, active, subtle, icon, children, label, endElement, href } = props
+export const NavItem = ({ 
+  handlePredictionToggle, 
+  button, 
+  id, 
+  handleClick, 
+  active, 
+  subtle, 
+  icon, 
+  children, 
+  label, 
+  endElement, 
+  href 
+}) => {
   return (
     <HStack
       id={id}
-      onClick={id === 'prediction' ? () => handlePredictionToggle(true) : null }
+      onClick={handleClick}
+      // onClick={id === 'prediction' ? () => handlePredictionToggle(true) : null }
       as="a"
       href={href}
       w="full"

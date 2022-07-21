@@ -1,3 +1,4 @@
+export * from './analytics-table'
 export * from './discussions-form-table'
 export * from './fighters-page-fighters-table'
 export * from './fighters-table'

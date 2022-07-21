@@ -1,23 +1,16 @@
-import React from 'react';
-import { Button, Flex, Stack } from '@chakra-ui/react'
-import { AnalyticsSearchField } from '../analytics'
-import { NavGroup } from './scoring-sidebar/nav-group'
-import { NavItem } from './scoring-sidebar/nav-item'
-import { FaMapMarkerAlt, FaRegClock, FaRegMoneyBillAlt, FaTv } from 'react-icons/fa'
-import { BiChevronRightCircle, BiCog, BiBuoy } from 'react-icons/bi'
-import { IoScaleOutline } from 'react-icons/io5'
-import { getSidebarData } from '../../utils'
-import { DividerWithText } from '../../chakra'
-/**
- * THIS NEEDS TO SWITCH BETWEEN A LIST OF SHOWS 
- * AND THE SHOW STATS IF THERE IS A /:fightId PARAM.
- */
-export const AnalyticsSidebar = ({ showData, showId }) => {
-    const handleSearch = () => {
-        console.log('handleSearch')
+import React, { useState } from 'react'
+import { Flex ,Box, Container, Stack, Tab, TabList, Tabs } from '@chakra-ui/react'
+import { AnalyticsSidebarAllShows, AnalyticsSidebarSelectedShow } from './analytics-sidebars'
+
+export const AnalyticsSidebar = () => {
+    const [sidebar, setSidebar] = useState('all');
+    const handleTabClick = e => {
+        const { name } = e.currentTarget;
+        setSidebar(name)
     }
-    const { fightQuickTitle, location, network, odds, rounds, showTime, weightclass } = showData?.show ? getSidebarData(showData) : '';
+    console.log('sidebar: ', sidebar)
     return (
+
         <Flex 
             id="analytics_sidebar" 
             as="aside"
@@ -28,8 +21,8 @@ export const AnalyticsSidebar = ({ showData, showId }) => {
             height="auto" 
             overflowY="scroll" 
             position="relative" 
-            alignItems="center" 
-            justifyContent="center"
+            alignItems="flex-start" 
+            justifyContent="flex-start"
             borderRadius="lg"
             direction="column" 
             p="2" 
@@ -37,60 +30,22 @@ export const AnalyticsSidebar = ({ showData, showId }) => {
             color="white" 
             fontSize="sm"
         >
-            { !showId && <AnalyticsSearchField style={{width: '100%'}} handleSearch={handleSearch} /> }
-            <DividerWithText text={fightQuickTitle ? fightQuickTitle : 'Search'} />
-            <Stack 
-                w="full" 
-                spacing="4" 
-                flex="1" 
-                overflow="auto" 
-                pt="8" 
-                p="2"
-            >               
-                <NavGroup label="Show">
-                    <NavItem 
-                        icon={<FaTv />} 
-                        label={ network } 
-                    />
-                    <NavItem 
-                        icon={<FaMapMarkerAlt />} 
-                        label={ location } 
-                    />
-                    <NavItem 
-                        icon={<FaRegClock />} 
-                        label={ showTime } 
-                    />
-                </NavGroup>
-
-                <NavGroup label="Fight">
-                    <NavItem 
-                        icon={<BiChevronRightCircle />} 
-                        label={ rounds ? rounds + ' Rounds' : '' } 
-                    />
-                    <NavItem 
-                        icon={<IoScaleOutline />} 
-                        label={ weightclass } 
-                    />
-                    <NavItem 
-                        icon={<FaRegMoneyBillAlt />} 
-                        label={ odds } 
-                    /> 
-                </NavGroup>
-
-                <NavGroup label="Support">
-                    <NavItem 
-                        subtle 
-                        icon={<BiCog />} 
-                        label="Explanations" 
-                    />
-                    <NavItem 
-                        subtle 
-                        icon={<BiBuoy />} 
-                        label="Help & Support" 
-                    />
-                </NavGroup>
-            </Stack>
+            <Container py={{base: '4', md: '8'}}>
+                <Stack spacing="16">
+                    <Tabs variant="with-line">
+                        <TabList w="100%">
+                            <Tab flex="0 0 50%" borderRight="2px solid gray" _focus={sidebar === 'all' ? { borderBottom: '2px solid blue'} : ''} name="all" onClick={handleTabClick}>All Shows</Tab>
+                            <Tab flex="0 0 50%" _focus={sidebar === 'selected' ? { borderBottom: '2px solid blue'} : ''} name="selected" onClick={handleTabClick}>Selected Show</Tab>
+                        </TabList>
+                    </Tabs>
+                </Stack>
+            </Container>
+            <AnalyticsSidebarAllShows 
+                sidebar={sidebar} 
+            />
+            <AnalyticsSidebarSelectedShow 
+                sidebar={sidebar} 
+            />
         </Flex>
     )
-
 }

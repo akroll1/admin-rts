@@ -17,9 +17,9 @@ export const ShowsMetadata = ({ selectedShow }) => {
             textAlign="center"
         >
             <Heading letterSpacing="1px" as="h2" size="xl">{ fightQuickTitle }</Heading>
-            <Heading p="1" letterSpacing="1px" as="h3" size="md">{ promoter }</Heading>
             <Heading fontWeight="normal" as="h3" size="sm">{ parseEpoch(showTime) }</Heading>
             <Heading mt="1" fontWeight="normal" letterSpacing="1px" as="h3" size="xs">{ location }</Heading>
+            <Heading p="1" letterSpacing="1px" as="h3" size="md">{ promoter }</Heading>
         </Flex>
     )
 }
