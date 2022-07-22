@@ -42,11 +42,14 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
         }
     };
     
-    const searchForPanelistByFight = () => {
-
+    const searchForPanelistByFight = async () => {
+        const url = process.env.REACT_APP_PANELS + `/fight/${searchByFight}`;
+        return axios.get(url, tokenConfig)
+            .then( res => console.log('res: ', res))
+            .catch( err => console.log(err));
     };
 
-    const putGuestJudge = () => {
+    const putPanelist = () => {
         const url = process.env.REACT_APP_PANELISTS;
         return axios.put(url, form, tokenConfig)
             .then(res => {
@@ -126,7 +129,7 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
                     </Stack>
                     <FieldGroup mt="8">
                         <ButtonGroup width="full">
-                            <Button onClick={putGuestJudge} type="submit" colorScheme="blue">
+                            <Button onClick={putPanelist} type="submit" colorScheme="blue">
                                 Submit
                             </Button>
                             <Button variant="outline">Cancel</Button>
