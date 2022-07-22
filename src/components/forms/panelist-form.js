@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, ButtonGroup, FormControl, FormLabel, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Flex, FormControl, FormLabel, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import axios from 'axios';
 import { PanelistsTable } from '../tables/panelists-table';
 
 export const PanelistForm = ({ setModals, tokenConfig }) => {
-    const [panelists, setPanelists] = useState([
-        {
-            panelistId: '1',
-            firstName: 'A',
-            lastName: 'K'
-        }
-    ]);
     const toast = useToast();
+    const [allPanelists, setAllPanelists] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [searchByFight, setSearchByFight] = useState('');
     const [search, setSearch] = useState('');
@@ -26,7 +20,17 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
         link: '',
         tagline: ''
     });
-
+    useEffect(() => {
+        const fetchAllPanelists = async () => {
+            const url = process.env.REACT_APP_PANELISTS;
+            return axios.get(url, tokenConfig)
+                .then( res => {
+                    setAllPanelists(res.data)
+                    setForm(res.data[0])
+                }).catch( err => console.log(err));
+        }
+        fetchAllPanelists();
+    },[]);
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
         return setForm({...form, [id]: value });
@@ -64,9 +68,14 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
                 }})
             .catch(err => console.log(err))
     }
-
+    const handleSelectedPanelist = e => {
+        const { id } = e.currentTarget;
+        const [panelist] = allPanelists.filter( panelist => panelist.panelistId === id);
+        setForm(panelist);    
+    }
     const { bio, displayName, firstName, panelistId, lastName, img, links, tagline } = form;
-    // LINKS is an array | null;
+    console.log('allPanelists: ', allPanelists);
+
     return (
         <>
             <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
@@ -136,38 +145,8 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
                         </ButtonGroup>
                     </FieldGroup>
                 </form>
-                <Stack mt="3rem" spacing="4" divider={<StackDivider />}>
-                    <FieldGroup title="All Fight Panelists">
-                        <VStack width="full" spacing="6">
-                            <FormControl id="searchByFight">
-                                <FormLabel htmlFor="panelistId">
-                                    Fight ID
-                                </FormLabel>
-                                <Input 
-                                    value={searchByFight} 
-                                    onChange={ ({ currentTarget: {value} }) => setSearchByFight(value.length == 36 ? value : '')} 
-                                    type="text" 
-                                    maxLength={36} 
-                                />
-                            </FormControl>
-                            <HStack justifyContent="center" width="full">
-                                <Button 
-                                    disabled={!searchByFight}  
-                                    minW="33%" 
-                                    isLoading={isSubmitting} 
-                                    loadingText="Searching..." 
-                                    onClick={searchForPanelistByFight} 
-                                    type="button" 
-                                    colorScheme="blue"
-                                >
-                                    Search
-                                </Button>
-                            </HStack>
-                        </VStack>
-                    </FieldGroup>
-                </Stack>
             </Box>
-            <PanelistsTable panelists={panelists} />
+            <PanelistsTable panelists={allPanelists} handleSelectedPanelist={handleSelectedPanelist} />
         </>
 
     )

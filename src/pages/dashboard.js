@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useInsertionEffect} from 'react'
 import { Box, Divider, Flex, Spacer, Stack } from '@chakra-ui/react'
+import { SettingsIcon } from '@chakra-ui/icons'
 import { FaListOl, FaEdit, FaRegBell, FaRegChartBar, FaRegQuestionCircle, FaUser, FaUserFriends } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
@@ -36,7 +37,7 @@ const Dashboard = props => {
   const [formLinks, setFormLinks] = useState([
     { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaEdit, link: '/dashboard/scorecards' },
     { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound-list' },
-    { value: "ACCOUNT", label:"Account Settings", type: 'User', icon: FaUser, link: '/dashboard/account' },
+    { value: "ACCOUNT", label:"Account Settings", type: 'User', icon: SettingsIcon, link: '/dashboard/account' },
     // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
     // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
@@ -127,6 +128,7 @@ const Dashboard = props => {
   ];
   const isSuperAdminFormOptions = [
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
+    { value: "CREATE_PANEL", label:"Create Panel Form", type: 'Create Panel', icon: FaEdit, link: '/dashboard/create-panel' },
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
     { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
@@ -193,6 +195,7 @@ const Dashboard = props => {
         { form === 'ACCOUNT' && <MyAccountForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'PANELS_MEMBER' && <MyPanelsForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'PANELIST' && <PanelistForm setModals={setModals} tokenConfig={tokenConfig} user={user} /> }
+        { form === 'CREATE_PANEL' && <CreatePanelForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} tokenConfig={tokenConfig} /> }
         { form === 'POUNDFORM' && <PoundForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'SHOW-FORM' && <ShowForm tokenConfig={tokenConfig} user={user} /> }

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 
-export const CreatePanelFormTable = ({ panelists }) => {
+export const CreatePanelFormTable = ({ panelists, handleSelectPanel }) => {
   return (
     <Flex 
         flexDir="column" 
@@ -13,7 +13,7 @@ export const CreatePanelFormTable = ({ panelists }) => {
         mt="1rem" 
         px={{ base: '6', md: '8' }}
     >
-      <CreatePanelFormTableContent panelists={panelists} />
+      <CreatePanelFormTableContent panelists={panelists} handleSelectPanel={handleSelectPanel} />
     </Flex>
   )
 }
@@ -33,10 +33,11 @@ const columns = [
       accessor: 'lastName'
   },
 ];
-const CreatePanelFormTableContent = ({ panelists }) => {
+const CreatePanelFormTableContent = ({ panelists, handleSelectPanel }) => {
 
   return (
-    <Table my="8" borderWidth="1px" fontSize="sm">
+    <Table my="8" mt="0" borderWidth="1px" fontSize="sm">
+        <TableCaption placement="top" >All Panels Table</TableCaption>
       <Thead bg={mode('gray.50', 'gray.800')}>
         <Tr>
           {columns.map((column, index) => (

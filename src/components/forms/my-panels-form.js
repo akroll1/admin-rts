@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, OrderedList, useToast } from '@chakra-ui/react'
-import { capFirstLetters } from '../../utils'
-import axios from 'axios'
 import { DragHandleIcon } from '@chakra-ui/icons'
+import { capFirstLetters } from '../../utils'
 import { PanelMemberPredictionsTable } from '../tables'
+import axios from 'axios'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -17,18 +17,18 @@ export const MyPanelsForm = ({
     user 
 }) => {
   const toast = useToast();  
-  const [voteOptionsList, setVoteOptionsList] = useState([]);
+  const [allUserPanels, setAllUserPanels] = useState([]);
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   
-  ////////////////////////////////////////////////////////
   useEffect(() => {
-    if(user.sub){
-        const getVoteOptions = async () => {
-            // const url = process.env.REACT_APP_PANEL_VOTES + `/${fightId}`;
-        }
-        getVoteOptions();
+    const getAllMemberPanels = async () => {
+      const url = process.env.REACT_APP_PANELS + `/${user.sub}`;
+      return axios.get(url, tokenConfig)
+        .then( res => setAllUserPanels(res.data))
+        .catch( err => console.log(err));
     }
-  }, [user.sub]);
+    getAllMemberPanels();
+  },[]);
 
   const onDragStart = e => {
     const initialPosition = Number(e.currentTarget.dataset.position);
@@ -36,7 +36,7 @@ export const MyPanelsForm = ({
       ...dragAndDrop,
       draggedFrom: initialPosition,
       isDragging: true,
-      originalOrder: voteOptionsList
+      originalOrder: allUserPanels
     });
     // Note: this is only for Firefox.
     e.dataTransfer.setData("text/html", '');
@@ -59,11 +59,11 @@ export const MyPanelsForm = ({
         updatedOrder: newList,
         draggedTo: draggedTo
       })
-      setVoteOptionsList(newList)
+      setAllUserPanels(newList)
     }
   }
   const onDrop = e => {
-    setVoteOptionsList(dragAndDrop.updatedOrder);
+    setAllUserPanels(dragAndDrop.updatedOrder);
     setDragAndDrop({
       ...dragAndDrop,
       draggedFrom: null,
@@ -80,7 +80,7 @@ export const MyPanelsForm = ({
 
   const submitMyList = () => {
     const votedList = {
-      voteOptionsList,
+      allUserPanels,
       updatedAt: new Date(),
       owner: `${user.sub}`
     }
@@ -136,7 +136,7 @@ export const MyPanelsForm = ({
         </ButtonGroup>
 
         <OrderedList overflow="scroll" h="30rem" ml="0" boxSizing="border-box" w="100%" listStyleType="none">
-          { voteOptionsList?.length > 0 && voteOptionsList.map((item, i) => {
+          { allUserPanels?.length > 0 && allUserPanels.map((item, i) => {
             // console.log('item: ',item)
             if(!item) return;
             return (
