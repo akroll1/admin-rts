@@ -14,13 +14,16 @@ export const PoundForm = ({ user, tokenConfig }) => {
   const [fighterIdsList, setFighterIdsList] = useState([]);
 
   useEffect(() => {
-      axios.get(poundUrl,tokenConfig)
+    const getFighterOptions = async () => {
+      return axios.get(poundUrl, tokenConfig)
           .then(res => {
             const getFighterIds = res.data.map( fighterObj => fighterObj.fighterId);
             setFighterIdsList(getFighterIds);   
             setPoundList(res.data)
           })
           .catch(err => console.log(err))
+    }
+    getFighterOptions();
   },[])
 
   const setForm = e => {
