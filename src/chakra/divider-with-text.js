@@ -3,7 +3,6 @@ import { Box, Divider, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 
 export const DividerWithText = props => {
   const { text, mt } = props;
-  console.log('mt: ', mt)
   return (
     <Flex align="center" color="gray.300" w="90%" m="auto" my="4" mt={mt}>
       <Box flex="1">

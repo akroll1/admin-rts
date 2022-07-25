@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Button, ButtonGroup, Flex, FormControl, FormLabel, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import axios from 'axios';
-import { PanelistsTable } from '../tables/panelists-table';
+import { PanelistsTable } from '../tables';
 
 export const PanelistForm = ({ setModals, tokenConfig }) => {
     const toast = useToast();
@@ -46,13 +46,6 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
         }
     };
     
-    const searchForPanelistByFight = async () => {
-        const url = process.env.REACT_APP_PANELS + `/fight/${searchByFight}`;
-        return axios.get(url, tokenConfig)
-            .then( res => console.log('res: ', res))
-            .catch( err => console.log(err));
-    };
-
     const putPanelist = () => {
         const url = process.env.REACT_APP_PANELISTS;
         return axios.put(url, form, tokenConfig)

@@ -1,7 +1,6 @@
 import React from 'react'
-import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
-import { ConsoleLogger } from '@aws-amplify/core'
 
 export const PanelistsTable = ({ panelists, handleSelectedPanelist }) => {
   return (
@@ -34,6 +33,7 @@ const PanelistsTableContent = ({ panelists, handleSelectedPanelist }) => {
    
   return (
     <Table my="8" borderWidth="1px" fontSize="sm">
+      <TableCaption placement="top">Panelists Table</TableCaption> 
       <Thead bg={mode('gray.50', 'gray.800')}>
         <Tr>
           {columns.map((column, index) => (

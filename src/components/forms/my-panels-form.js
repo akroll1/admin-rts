@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, OrderedList, useToast } from '@chakra-ui/react'
 import { DragHandleIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
-import { PanelMemberPredictionsTable } from '../tables'
+import { MyPanelsFormTable } from '../tables'
+import { MyPanelsRadioButtons } from './my-panels-form-els'
 import axios from 'axios'
 
 const initialDnDState = {
@@ -17,17 +18,23 @@ export const MyPanelsForm = ({
     user 
 }) => {
   const toast = useToast();  
-  const [allUserPanels, setAllUserPanels] = useState([]);
+  const [panels, setPanels] = useState([]);
+  const [selectedPanel, setSelectedPanel] = useState({
+    rounds: []
+  });
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   
   useEffect(() => {
-    const getAllMemberPanels = async () => {
-      const url = process.env.REACT_APP_PANELS + `/${user.sub}`;
+    const getAllPanels = async () => {
+      const url = process.env.REACT_APP_PANELS;
       return axios.get(url, tokenConfig)
-        .then( res => setAllUserPanels(res.data))
-        .catch( err => console.log(err));
+        .then( res => {
+          console.log('res: ', res)
+          setPanels(res.data)
+          setSelectedPanel(res.data[0])
+        }).catch( err => console.log(err));
     }
-    getAllMemberPanels();
+    getAllPanels();
   },[]);
 
   const onDragStart = e => {
@@ -36,7 +43,7 @@ export const MyPanelsForm = ({
       ...dragAndDrop,
       draggedFrom: initialPosition,
       isDragging: true,
-      originalOrder: allUserPanels
+      originalOrder: panels
     });
     // Note: this is only for Firefox.
     e.dataTransfer.setData("text/html", '');
@@ -59,11 +66,11 @@ export const MyPanelsForm = ({
         updatedOrder: newList,
         draggedTo: draggedTo
       })
-      setAllUserPanels(newList)
+      setPanels(newList)
     }
   }
   const onDrop = e => {
-    setAllUserPanels(dragAndDrop.updatedOrder);
+    setPanels(dragAndDrop.updatedOrder);
     setDragAndDrop({
       ...dragAndDrop,
       draggedFrom: null,
@@ -77,10 +84,9 @@ export const MyPanelsForm = ({
       draggedTo: null
     });
   }
-
   const submitMyList = () => {
     const votedList = {
-      allUserPanels,
+      panels,
       updatedAt: new Date(),
       owner: `${user.sub}`
     }
@@ -95,9 +101,15 @@ export const MyPanelsForm = ({
       }})
       .catch(err => console.log(err))
   }
+  const handlePanelSelect = e => {
+    const { id } = e.currentTarget;
+    const [panel] = panels.filter( panel => panel.panelId === id);
+    setSelectedPanel(panel);
+    console.log('panel: ', panel)
 
+    
+  }
   const officialListStyles = { fontWeight: 'bold', color: '#e80000'};
-  const myListStyles = { };
 
   return (
     <Flex 
@@ -117,57 +129,69 @@ export const MyPanelsForm = ({
       </Heading>
       <Flex 
         as="section" 
-        flex="1 0 40%" 
+        w="50%"
+        m="auto"
         flexDir="column" 
         alignItems="center" 
         justifyContent="center"
       >
 
-        <PanelMemberPredictionsTable />
+        <MyPanelsFormTable handlePanelSelect={handlePanelSelect} panels={panels} />
 
+        <Heading as="h2" size="sm">Who Wins?</Heading>
 
+        <MyPanelsRadioButtons selectedPanel={selectedPanel} />
 
-
-        <ButtonGroup mb="1rem">
-          <Button onClick={submitMyList} type="button" colorScheme="blue">
-            Submit My List
-          </Button>
-          <Button variant="outline">Cancel</Button>
-        </ButtonGroup>
-
-        <OrderedList overflow="scroll" h="30rem" ml="0" boxSizing="border-box" w="100%" listStyleType="none">
-          { allUserPanels?.length > 0 && allUserPanels.map((item, i) => {
+        <Heading as="h2" size="sm">How?</Heading>
+        <OrderedList 
+          overflow="scroll" 
+          h="30rem" 
+          ml="0" 
+          boxSizing="border-box" 
+          w="100%" 
+          listStyleType="none"
+        >
+          Must create an array of 12 ELEMENTS, not the number 12, idiot.
+          
+          { selectedPanel?.map( (item, i) => {
+            console.log('item: ', item)
             // console.log('item: ',item)
             if(!item) return;
             return (
               <ListItem
-              display="flex" 
-              alignItems="center" 
-              justifyContent="flex-start"
-              p="4"
-              m="2"
-              borderRadius="5px"
-              bg={i > 4 ? "whiteAlpha.200" : "whiteAlpha.400"}
-              height='2.5rem'
-              w="100%"
-              key={i}
-              data-position={i}
-              draggable
-              onDragStart={onDragStart}
-              onDragOver={onDragOver}
-              onDrop={onDrop}
-              onDragLeave={onDragLeave}
-              _hover={{ cursor: 'pointer' }}
+                display="flex" 
+                alignItems="center" 
+                justifyContent="flex-start"
+                p="4"
+                m="2"
+                borderRadius="5px"
+                bg={i > 4 ? "whiteAlpha.200" : "whiteAlpha.400"}
+                height='2.5rem'
+                w="100%"
+                key={i}
+                data-position={i}
+                draggable
+                onDragStart={onDragStart}
+                onDragOver={onDragOver}
+                onDrop={onDrop}
+                onDragLeave={onDragLeave}
+                _hover={{ cursor: 'pointer' }}
               >
                 <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-between">
                   <Flex>
-                    <Text as="p" style={i > 4 ? myListStyles : officialListStyles}>{i + 1} </Text><Text ml="2" textAlign="left">{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)} </Text>
+                    <Text as="p">{i+1}</Text>
                   </Flex>
                   <Icon mr="0" as={DragHandleIcon} />
                 </Flex>
               </ListItem>
           )})}
         </OrderedList>
+        <ButtonGroup mb="1rem">
+          <Button onClick={submitMyList} type="button" colorScheme="blue">
+            Submit My List
+          </Button>
+          <Button variant="outline">Cancel</Button>
+        </ButtonGroup>
       </Flex>
     </Flex>
   )

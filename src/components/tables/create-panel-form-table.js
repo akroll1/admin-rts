@@ -2,18 +2,18 @@ import React from 'react'
 import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 
-export const CreatePanelFormTable = ({ panelists, handleSelectPanel }) => {
+export const CreatePanelAllPanelsTable = ({ panels, handleSelectPanel }) => {
   return (
     <Flex 
-        flexDir="column" 
-        maxH="15rem" 
-        overflow="scroll" 
-        maxW={{ base: 'container.xl', md: '7xl' }} 
-        mx="auto" 
-        mt="1rem" 
-        px={{ base: '6', md: '8' }}
+      flexDir="column" 
+      maxH="15rem" 
+      overflow="scroll" 
+      maxW={{ base: 'container.xl', md: '7xl' }} 
+      mx="auto" 
+      mt="1rem" 
+      px={{ base: '6', md: '8' }}
     >
-      <CreatePanelFormTableContent panelists={panelists} handleSelectPanel={handleSelectPanel} />
+      <CreatePanelAllPanelsTableContent panels={panels} handleSelectPanel={handleSelectPanel} />
     </Flex>
   )
 }
@@ -25,15 +25,11 @@ const badgeEnum = {
 }
 const columns = [
   {
-      Header: 'First Name',
-      accessor: 'firstName',
-  },
-  {
-      Header: 'Last Name',
-      accessor: 'lastName'
-  },
+      Header: 'Fight',
+      accessor: 'fightQuickTitle',
+  }
 ];
-const CreatePanelFormTableContent = ({ panelists, handleSelectPanel }) => {
+const CreatePanelAllPanelsTableContent = ({ panels, handleSelectPanel }) => {
 
   return (
     <Table my="8" mt="0" borderWidth="1px" fontSize="sm">
@@ -53,11 +49,10 @@ const CreatePanelFormTableContent = ({ panelists, handleSelectPanel }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {panelists?.length > 0 && panelists.map( (panelist, i) => {
+        {panels?.length > 0 && panels.map( (panel, i) => {
             return (
-                <Tr _hover={{cursor: 'pointer'}} id={panelist.panelistId} key={panelist.panelistId}>
-                    <Td>{capFirstLetters(panelist.firstName)}</Td>
-                    <Td>{capFirstLetters(panelist.lastName)}</Td>
+                <Tr onClick={handleSelectPanel} _hover={{cursor: 'pointer'}} id={panel.panelId} key={panel.panelId}>
+                    <Td>{capFirstLetters(panel.fightQuickTitle)}</Td>
                 </Tr>
             )
         })}
