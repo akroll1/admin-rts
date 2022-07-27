@@ -3,8 +3,8 @@ import * as React from 'react'
 import { RadioCard, MyPanelsRadioCardGroup } from './who-wins-radio-card'
 import { capFirstLetters } from '../../../utils'
 
-export const MyPanelsRadioButtons = ({ selectedPanel }) => {
-    const { fighters } = selectedPanel;
+export const MyPanelsRadioButtons = ({ setWinner, selectedPanel }) => {
+    const { fighters } = selectedPanel?.fighters ? selectedPanel : [];
   return (
     <Flex
         m="auto"
@@ -20,7 +20,14 @@ export const MyPanelsRadioButtons = ({ selectedPanel }) => {
         <Container maxW="lg">
             <MyPanelsRadioCardGroup defaultValue="one" spacing="3" w="100%">
                 { fighters?.length > 0 && fighters.map( fighter => (
-                    <RadioCard minH="4rem" border="1px solid red" key={fighter.fighterId} value={fighter.firstName}>
+                    <RadioCard 
+                        fighterId={fighter.fighterId}
+                        setWinner={setWinner}
+                        minH="4rem" 
+                        border="1px solid red" 
+                        key={fighter.fighterId} 
+                        value={fighter.firstName}
+                    >
                         <Text w="100%" color="emphasized" fontWeight="medium" fontSize="sm">
                             {`${capFirstLetters(fighter.firstName)} ${capFirstLetters(fighter.lastName)}`}
                         </Text>

@@ -25,7 +25,7 @@ const badgeEnum = {
 }
 const columns = [
   {
-      Header: 'Fight',
+      Header: 'All Existing Panels',
       accessor: 'fightQuickTitle',
   }
 ];
