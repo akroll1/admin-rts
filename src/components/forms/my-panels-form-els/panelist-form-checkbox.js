@@ -12,26 +12,24 @@ export const PanelistFormCheckbox = ({ allPanelists, panelistIds, setPanelistIds
         setCheckedItems([...Array(allPanelists.length).fill(true)])
     },[allPanelists])
 
-    useEffect(() => {
-        const checkAllChecked = checkedItems.every(Boolean);
-        setAllChecked(checkAllChecked)
-
-
-    },[checkedItems]);
-
-    const selectAll = e => {
-        const { checked } = e.target;
-        if(allChecked){
-            setPanelistIds([])
-            setCheckedItems([...Array(allPanelists.length).fill(false)])
-        }
-
-        setCheckedItems([...Array(allPanelists.length).fill(true)])
-        const getPanelistIds = allPanelists.map( ({ panelistId }) => panelistId);
-        setPanelistIds(getPanelistIds);
-    };
     const handleCheckbox = e => {
         const { checked, id, name, value } = e.target;
+        if(id === 'all'){
+            if(checked){
+                // console.log('checked: ', checked)
+                setPanelistIds([])
+                setCheckedItems([...Array(allPanelists.length).fill(true)])
+                setAllChecked(true)
+                return
+            } else {
+                // console.log('NOT checked')
+                setCheckedItems([])
+                const getPanelistIds = allPanelists.map( ({ panelistId }) => panelistId);
+                setPanelistIds(getPanelistIds);
+            }
+            return;
+        }
+        // console.log('END')
         const update = checkedItems.slice(0);
         update[id] = checked;
         if(checked){
@@ -44,7 +42,8 @@ export const PanelistFormCheckbox = ({ allPanelists, panelistIds, setPanelistIds
         setCheckedItems(update)
 
     }
-    console.log('panelistIds: ', panelistIds)
+    // console.log('panelistIds: ', panelistIds)
+    // console.log('checkedItems: ', checkedItems)
     const allItemsChecked = panelistIds.length === allPanelists.length;
     return (
 
@@ -53,7 +52,8 @@ export const PanelistFormCheckbox = ({ allPanelists, panelistIds, setPanelistIds
                 <Checkbox
                     isChecked={allChecked}
                     isIndeterminate={isIndeterminate}
-                    onChange={selectAll}
+                    onChange={handleCheckbox}
+                    id="all"
                 >
                     Select All Panelists
                 </Checkbox>
@@ -69,7 +69,8 @@ export const PanelistFormCheckbox = ({ allPanelists, panelistIds, setPanelistIds
                                 <Checkbox
                                     onChange={handleCheckbox}
                                     key={i}
-                                    isChecked={allChecked || panelistIds[panelist.panelistId]}
+                                    isChecked={allChecked || checkedItems[i]}
+                                    // isChecked={allChecked}
                                     id={i}
                                     name={panelist.panelistId}
                                     defaultChecked

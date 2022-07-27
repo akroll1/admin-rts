@@ -1,6 +1,7 @@
 import React from 'react'
 import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
+import { PanelistsTable } from '../panelists-table'
 
 export const MyPanelsFormTable = ({ handlePanelSelect, panels }) => {
   return (
@@ -25,7 +26,11 @@ const badgeEnum = {
 }
 const columns = [
   {
-      Header: 'Fight',
+      Header: 'Red Corner',
+      accessor: 'fightQuickTitle',
+  },
+  {
+      Header: 'Blue Corner',
       accessor: 'fightQuickTitle',
   },
   // {
@@ -51,14 +56,15 @@ const MyPanelsTableContent = ({ handlePanelSelect, panels }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {panels?.length > 0 && panels.map( (panel, i) => {
+        {panels?.length > 0 && panels.map( panel => {
+            const [fighter1, fighter2] = panel.fighters
             return (
                 <Tr _hover={{cursor: 'pointer'}} onClick={handlePanelSelect} 
-                  id={panel.panelId} 
-                  key={panel.panelId}
+                  id={panel.fightId} 
+                  key={panel.fightId}
                 >
-                  <Td textAlign="center">{capFirstLetters(panel.fightQuickTitle)}</Td>
-                  {/* <Td>{capFirstLetters(panel.lastName)}</Td> */}
+                  <Td textAlign="center">{`${capFirstLetters(fighter1.firstName)} ${capFirstLetters(fighter1.lastName)}`}</Td>
+                  <Td textAlign="center">{`${capFirstLetters(fighter2.firstName)} ${capFirstLetters(fighter2.lastName)}`}</Td>
                 </Tr>
             )
         })}
