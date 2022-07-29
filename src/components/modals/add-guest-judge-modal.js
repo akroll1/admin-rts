@@ -4,22 +4,15 @@ import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
 import { stateStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
+import { CustomOverlay } from '../custom-overlay';
 
-const CustomOverlay = () => (
-    <ModalOverlay
-        bg='none'
-        backdropFilter='auto'
-        backdropInvert='60%'
-        backdropBlur='2px'
-    />
-)
 
 export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModals }) => {
     const toast = useToast();
     const { myGuestJudges, setMyGuestJudges } = stateStore.getState();
     const availableGuestJudges = stateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
-    const [overlay, setOverlay] = React.useState(<CustomOverlay />)
+    const [overlay, setOverlay] = useState(<CustomOverlay />)
     useEffect(() => {
         if(modals.addGuestJudgeModal){
             const currentJudges = availableGuestJudges.length > 0 && availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))

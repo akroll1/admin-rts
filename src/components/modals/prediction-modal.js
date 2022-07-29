@@ -1,16 +1,9 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Flex, Select, Icon, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { FaTrophy } from 'react-icons/fa'
 import { capFirstLetters } from '../../utils'
+import { CustomOverlay } from '../custom-overlay'
 
-const CustomOverlay = () => (
-  <ModalOverlay
-    bg='none'
-    backdropFilter='auto'
-    backdropInvert='60%'
-    backdropBlur='2px'
-  />
-)
 export const PredictionModal = ({ 
     modals,
     setModals,
@@ -18,7 +11,7 @@ export const PredictionModal = ({
     fighterData,
     handleSubmitPrediction 
 }) => {
-  const [overlay, setOverlay] = React.useState(<CustomOverlay />)
+  const [overlay, setOverlay] = useState(<CustomOverlay />)
   const [localPrediction, setLocalPrediction] = useState({
       fighter:'',
       result: ''

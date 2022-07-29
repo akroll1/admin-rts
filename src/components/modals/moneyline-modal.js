@@ -1,21 +1,31 @@
 import React, {useState} from 'react'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { ScoringMoneylineTable } from '../tables'
+import { CustomOverlay } from '../custom-overlay'
 
-const CustomOverlay = () => (
-  <ModalOverlay
-    bg='none'
-    backdropFilter='auto'
-    backdropInvert='60%'
-    backdropBlur='2px'
-  />
-)
 export const MoneylineModal = ({
-    modals,
-    setModals,
+  fighterData,
+  modals,
+  props,
+  setModals,
 }) => {
-  const [overlay, setOverlay] = React.useState(<CustomOverlay />)
+  const [overlay, setOverlay] = useState(<CustomOverlay />)
+  console.log('props: ', props)
+  console.log('fighterData: ', fighterData)
+  const mapPropsToFighter = () => {
+    const [fighter1, fighter2] = fighterData;
+    const mapped = props.map( prop => {
+      if(prop[fighter1.fighterId]){
+        console.log('prop: ', prop);
 
+      } else {
+        console.log('else')
+      }
+      return prop;
+    })
+  }
+  const test = props?.length > 0 ? mapPropsToFighter : '';
+  console.log('test: ', test())
   return (
     <Modal 
       blockScrollOnMount={false} 

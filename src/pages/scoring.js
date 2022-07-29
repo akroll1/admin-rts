@@ -61,6 +61,8 @@ const Scoring = () => {
         moneylineModal: false,
         predictionModal: false,
     })
+    //////////////////  PROPS  /////////////////////////
+    const [props, setProps] = useState(null);
     //////////////////  SIDEBAR  /////////////////////////
     const [needsPrediction, setNeedsPrediction] = useState(false);
     const [prediction, setPrediction] = useState('');
@@ -71,6 +73,17 @@ const Scoring = () => {
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
+    useEffect(() => {
+        if(modals.moneylineModal){
+            const fetchPanelProps = async () => {
+                const url = process.env.REACT_APP_PANELS + `/props/${showData.fight.fightId}`;
+                return axios.get(url, tokenConfig)
+                    .then( res => setProps(res.data.panelScores))
+                    .catch( err => console.log(err));
+            }
+            fetchPanelProps();
+        }
+    }, [modals])
     useEffect(() => {
         if(!user?.sub){
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
@@ -99,6 +112,7 @@ const Scoring = () => {
         }
         getWindowWidth();
     },[windowWidth])
+
     useEffect(() => {
         // 1. Fetch Group Scorecard.
         const fetchGroupScorecard = async () => {
@@ -106,7 +120,6 @@ const Scoring = () => {
                 .then( res => res).catch( err => console.log(err));
             console.log('res.data: ', res.data);
             if(typeof res.data === 'string' && res.data.includes('Token expired')){
-                console.log('Token is expired.')
                 return setModals( modals => ({ ...modals, expiredTokenModal: true }))
             }
             if(res.data === 'No scorecard found.'){
@@ -171,13 +184,11 @@ const Scoring = () => {
             setSliderScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId });
         }
         fetchGroupScorecard();
-        
         // const sync = setInterval(() => {
         //     fetchGroupScorecard();
         //     if(sync) return;
         //     sync();
         // }, 30000);
-
     },[]);
 
     useEffect(() => {
@@ -385,7 +396,9 @@ const Scoring = () => {
                     setModals={setModals} 
                 />
                 <MoneylineModal
+                    fighterData={fighterData}
                     modals={modals}
+                    props={props}
                     setModals={setModals} 
                 />
                 <PredictionModal 
