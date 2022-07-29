@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Input, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { isValidEmail } from '../../utils';
-
-const CustomOverlay = () => (
-    <ModalOverlay
-        bg='none'
-        backdropFilter='auto'
-        backdropInvert='60%'
-        backdropBlur='2px'
-    />
-)
+import { CustomOverlay } from '../custom-overlay';
 
 export const AddMemberModal = ({ 
     modals,
@@ -18,7 +10,7 @@ export const AddMemberModal = ({
     handleOpenAddMemberSubmitModal,
     isSubmitting, 
 }) => {
-    const [overlay, setOverlay] = React.useState(<CustomOverlay />)
+    const [overlay, setOverlay] = useState(<CustomOverlay />)
     const [email, setEmail] = useState('');
     const isInvalid = isValidEmail(email) ? false : true;
     const addMember = () => {
