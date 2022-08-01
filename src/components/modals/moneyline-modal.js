@@ -17,7 +17,6 @@ export const MoneylineModal = ({
     const mapped = props.map( prop => {
       if(prop[fighter1.fighterId]){
         console.log('prop: ', prop);
-
       } else {
         console.log('else')
       }
@@ -25,7 +24,7 @@ export const MoneylineModal = ({
     })
   }
   const test = props?.length > 0 ? mapPropsToFighter : '';
-  console.log('test: ', test())
+  console.log('test: ', test)
   return (
     <Modal 
       blockScrollOnMount={false} 
