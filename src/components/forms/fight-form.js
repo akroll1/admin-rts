@@ -58,6 +58,7 @@ export const FightForm = ({ user, tokenConfig }) => {
         return axios.post(url, postObj, tokenConfig)
             .then( res => {
                 if(res.status === 200){
+                    console.log('FIGHT: ', res.data);
                     toast({ title: 'Fight created!',
                     status: 'success',
                     duration: 5000,

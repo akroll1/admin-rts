@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, OrderedList, useToast } from '@chakra-ui/react'
 import { DragHandleIcon } from '@chakra-ui/icons'
-import { PANELIST_PREDICTIONS_OPTIONS } from '../../utils'
+import { capFirstLetters, PANELIST_PREDICTIONS_OPTIONS } from '../../utils'
 import { MyPanelsFormTable } from '../tables'
 import { MyPanelsRadioButtons } from './my-panels-form-els'
 import axios from 'axios'
@@ -18,6 +18,7 @@ export const MyPanelsForm = ({
     user 
 }) => {
   const toast = useToast();  
+  const [listWinner, setListWinner] = useState('');
   const [predictionsList, setPredictionsList] = useState([]);
   const [winner, setWinner] = useState('');
   const [panels, setPanels] = useState([]);
@@ -92,6 +93,7 @@ export const MyPanelsForm = ({
   }
   const submitMyPredictions = () => {
     if(!winner) return alert('Please select the winner.')
+
     const predictionsListValues = predictionsList.map( prediction => prediction.value);
     const userPredictionsObj = {
       panelId: selectedPanel.fightId,
@@ -120,10 +122,20 @@ export const MyPanelsForm = ({
     const { id } = e.currentTarget;
     const [panel] = panels.filter( panel => panel.fightId === id);
     setSelectedPanel(panel);
+    setListWinner('')
   }
   // console.log('panels: ', panels)
   // console.log('predictionsList: ', predictionsList)
-  // console.log('winner: ', winner)
+  console.log('winner: ', winner)
+  console.log('selectedPanel: ', selectedPanel.fighters)
+  console.log('listWinner: ', listWinner)
+  useEffect(() => {
+    if(winner.length > 0){
+      const [selected] = selectedPanel.fighters.filter( ({ fighterId }) => fighterId === winner);
+      setListWinner(selected?.lastName)
+    }
+  },[winner]);
+
   return (
     <Flex 
       id="panels_form" 
@@ -155,16 +167,16 @@ export const MyPanelsForm = ({
 
         <MyPanelsRadioButtons setWinner={setWinner} selectedPanel={selectedPanel} />
 
-        {winner && 
-        <>
-          <Heading as="h2" size="sm">How?</Heading>
-          <OrderedList 
-            overflow="scroll" 
-            ml="0" 
-            boxSizing="border-box" 
-            w="100%" 
-            listStyleType="none"
-          >
+        { winner && listWinner && 
+          <>
+            <Heading as="h2" size="sm">How?</Heading>
+            <OrderedList 
+              overflow="scroll" 
+              ml="0" 
+              boxSizing="border-box" 
+              w="100%" 
+              listStyleType="none"
+            >
             
             { predictionsList.map( (item, i) => {
               // console.log('item: ',item)
@@ -201,14 +213,14 @@ export const MyPanelsForm = ({
                       justifyContent="space-between"
                     >
                       <Text color="#ff1a1a" as="p">{`${i+1}.`}</Text> 
-                      <Text ml="8">{`${item.label}`}</Text>
+                      <Text ml="8">{`${capFirstLetters(winner.length > 0 ? listWinner : '')} -- ${item.label}`}</Text>
                     </Flex>
                     <Icon mr="0" as={DragHandleIcon} />
                   </Flex>
                 </ListItem>
             )})}
-          </OrderedList>
-        </>
+            </OrderedList>
+          </>
         }
         <ButtonGroup m="4" p="4">
           <Button onClick={submitMyPredictions} type="button" colorScheme="blue">

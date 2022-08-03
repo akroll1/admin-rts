@@ -30,9 +30,15 @@ export const FightersForm = ({ user, tokenConfig }) => {
         // console.log('inside submit fighter: ',fighter);
         // TODO: there is no fighterId on post????
         // fighter not created.
-        const url = process.env.REACT_APP_FIGHTERS + `/${fighter.fighterId}`;
-        // console.log('fighter: ',fighter);
-        return axios.put(url, fighter, tokenConfig)
+        let url = process.env.REACT_APP_FIGHTERS;
+        const verbType = fighter.fighterId ? 'PUT' : 'POST';
+        if(verbType === 'PUT'){
+            url = process.env.REACT_APP_FIGHTERS + `/${fighter.fighterId}`;
+        }
+        console.log('fighter: ',fighter);
+        console.log('verbType: ', verbType)
+        // return
+        return axios[verbType === 'POST' ? 'post' : 'put'](url, fighter, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     toast({ title: 'Fighter updated!',

@@ -107,7 +107,7 @@ export const ShowForm = ({ user, tokenConfig }) => {
     }
     const { fightIds, location, network, promoter, showName, showStatus, showStoryline, showTime } = form;
     const fightId = fightIds[0];
-    console.log('form: ', form);
+    // console.log('form: ', form);
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
