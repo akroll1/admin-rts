@@ -58,7 +58,7 @@ const Scoring = () => {
         addMemberModal: false,
         addGuestJudgeModal: false,
         expiredTokenModal: false,
-        moneylineModal: false,
+        moneylineModal: true,
         predictionModal: false,
     })
     //////////////////  PROPS  /////////////////////////
@@ -74,16 +74,16 @@ const Scoring = () => {
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
     useEffect(() => {
-        if(modals.moneylineModal){
+        if(showData?.fight?.fightId){
             const fetchPanelProps = async () => {
                 const url = process.env.REACT_APP_PANELS + `/props/${showData.fight.fightId}`;
                 return axios.get(url, tokenConfig)
-                    .then( res => setProps(res.data.panelScores))
+                    .then( res => setProps(res.data ? res.data.panelScores : []))
                     .catch( err => console.log(err));
             }
             fetchPanelProps();
         }
-    }, [modals])
+    }, [showData?.fight])
     useEffect(() => {
         if(!user?.sub){
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
@@ -366,6 +366,7 @@ const Scoring = () => {
     // console.log('chatScorecard: ', chatScorecard)
     // console.log('roundResults: ', roundResults);
     // console.log('modals: ', modals)
+    // console.log('props: ', props)
     return (
         <Flex 
             id="scoring"
@@ -396,6 +397,7 @@ const Scoring = () => {
                     setModals={setModals} 
                 />
                 <MoneylineModal
+                    totalRounds={totalRounds}
                     fighterData={fighterData}
                     modals={modals}
                     props={props}

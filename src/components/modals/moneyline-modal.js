@@ -8,25 +8,13 @@ export const MoneylineModal = ({
   modals,
   props,
   setModals,
+  totalRounds
 }) => {
   const [overlay, setOverlay] = useState(<CustomOverlay />)
-  console.log('props: ', props)
-  console.log('fighterData: ', fighterData)
-  const mapPropsToFighter = () => {
-    const [fighter1, fighter2] = fighterData;
-    const mapped = props.map( prop => {
-      if(prop[fighter1.fighterId]){
-        console.log('prop: ', prop);
-      } else {
-        console.log('else')
-      }
-      return prop;
-    })
-  }
-  const test = props?.length > 0 ? mapPropsToFighter : '';
-  console.log('test: ', test)
+  
   return (
     <Modal 
+      size="lg"
       blockScrollOnMount={false} 
       isCentered 
       isOpen={modals.moneylineModal} 
@@ -34,9 +22,13 @@ export const MoneylineModal = ({
     >
       <ModalOverlay/>
       <ModalContent>
-        <ModalHeader textAlign="center">Scoring Props</ModalHeader>
+        {/* <ModalHeader textAlign="center">Scoring Props</ModalHeader> */}
         <ModalBody>
-            <ScoringMoneylineTable />
+          <ScoringMoneylineTable 
+            fighterData={fighterData} 
+            props={props} 
+            totalRounds={totalRounds}
+          />
         </ModalBody>
         <ModalFooter 
           display="flex" 
