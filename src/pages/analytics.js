@@ -33,7 +33,7 @@ const Analytics = () => {
                 .then( res => {
                     console.log('res: ', res)
                     if(res.data.includes('Token expired')){
-                        setModals({ ...modals, expiredTokenModal: true })
+                        return setModals({ ...modals, expiredTokenModal: true })
                     }
                     setSelectedAnalyticsShow(res.data[0])
                     setAllAnalyticsShows(res.data);
@@ -71,11 +71,13 @@ const Analytics = () => {
                 maxH="60vh"
             >
                 <AnalyticsSidebar 
-                    analyticsShows={allAnalyticsShows}
+                    allAnalyticsShows={allAnalyticsShows}
                     selectedAnalyticsShow={selectedAnalyticsShow}
                     setSelectedAnalyticsShow={setSelectedAnalyticsShow}
                 />
-                <AnalyticsMain />
+                <AnalyticsMain 
+                    selectedAnalyticsShow={selectedAnalyticsShow}
+                />
             </Flex>
             <AnalyticsTable 
                 tabs={tabs} 
