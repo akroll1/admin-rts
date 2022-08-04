@@ -44,7 +44,7 @@ export const AnalyticsSidebarAllShows = ({
 
     const setSelectedShow = e => {
         const { id } = e.currentTarget;
-        const [selected] = allAnalyticsShows.filter( show => show.show.showId === id)
+        const [selected] = allAnalyticsShows.filter( show => show.show.showId === id);
         setSelectedAnalyticsShow(selected)
         setData(selected)
     }
