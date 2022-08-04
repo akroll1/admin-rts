@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { useParams } from 'react-router'
-import { AnalyticsSidebar, AnalyticsSidebarAllShows, AnalyticsSidebarSelectedShow } from '../components/sidebars'
+import { AnalyticsSidebar } from '../components/sidebars'
 import { AnalyticsMain } from '../components/analytics'
-import { MoneylineModal } from '../components/modals'
+import { ExpiredTokenModal, MoneylineModal } from '../components/modals'
 import { AnalyticsTable } from '../components/tables'
 import { stateStore } from '../stores'
 import { useWindowResize } from '../hooks'
@@ -12,11 +12,7 @@ import axios from 'axios'
 const Analytics = () => {
     const { showId } = useParams(); // showId: /c8734c80-16e6-46d1-90f4-c103de4b8b92
     const windowWidth = useWindowResize();
-    const { 
-        setAnalyticsShows, 
-        setSelectedAnalyticsShow, 
-        tokenConfig, 
-    } = stateStore.getState();
+    const { tokenConfig } = stateStore.getState();
     const [tabs, setTabs] = useState({
         sidebar: false,
         scoring: true, 
@@ -24,16 +20,23 @@ const Analytics = () => {
         chat: false,
         analytics: false
     });
+    const [selectedAnalyticsShow, setSelectedAnalyticsShow] = useState({});
+    const [allAnalyticsShows, setAllAnalyticsShows] = useState([]);
     const [modals, setModals] = useState({
-        moneylineModal: false
+        moneylineModal: false,
+        expiredTokenModal: false
     });
     useEffect(() => {
         const fetchAllFights = async () => {
             const url = process.env.REACT_APP_ANALYTICS;
             return await axios.get(url, tokenConfig)
                 .then( res => {
+                    console.log('res: ', res)
+                    if(res.data.includes('Token expired')){
+                        setModals({ ...modals, expiredTokenModal: true })
+                    }
                     setSelectedAnalyticsShow(res.data[0])
-                    setAnalyticsShows(res.data);
+                    setAllAnalyticsShows(res.data);
                 }
             ).catch( err => console.log(err));
         }
@@ -53,6 +56,9 @@ const Analytics = () => {
             minH="80vh"
             mb="4"
         >         
+            <ExpiredTokenModal 
+                modals={modals}
+            />
              <MoneylineModal
                 modals={modals}
                 setModals={setModals} 
@@ -64,7 +70,11 @@ const Analytics = () => {
                 minH="60vh"  
                 maxH="60vh"
             >
-                <AnalyticsSidebar />
+                <AnalyticsSidebar 
+                    analyticsShows={allAnalyticsShows}
+                    selectedAnalyticsShow={selectedAnalyticsShow}
+                    setSelectedAnalyticsShow={setSelectedAnalyticsShow}
+                />
                 <AnalyticsMain />
             </Flex>
             <AnalyticsTable 
