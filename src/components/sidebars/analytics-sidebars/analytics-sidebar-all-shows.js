@@ -11,8 +11,12 @@ import { DividerWithText } from '../../../chakra'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { stateStore } from '../../../stores'
 
-export const AnalyticsSidebarAllShows = ({ sidebar }) => {
-    const { analyticsShows, selectedAnalyticsShow, setSelectedAnalyticsShow } = stateStore.getState();
+export const AnalyticsSidebarAllShows = ({ 
+    allAnalyticsShows,
+    selectedAnalyticsShow,
+    setSelectedAnalyticsShow,
+    sidebar 
+}) => {
     const handleSearch = () => {
         console.log('handleSearch')
     }
@@ -40,18 +44,18 @@ export const AnalyticsSidebarAllShows = ({ sidebar }) => {
 
     const setSelectedShow = e => {
         const { id } = e.currentTarget;
-        const [selected] = analyticsShows.filter( show => show.show.showId === id)
+        const [selected] = allAnalyticsShows.filter( show => show.show.showId === id)
         setSelectedAnalyticsShow(selected)
         setData(selected)
     }
     const { fight, show } = data;
-    console.log('analyticsShows: ', analyticsShows);
-    console.log('selectedAnaltyicsShow: ', selectedAnalyticsShow)
+    // console.log('analyticsShows: ', analyticsShows);
+    // console.log('selectedAnaltyicsShow: ', selectedAnalyticsShow)
     return (
         <Flex w="100%" flexDirection="column" display={sidebar === 'all' ? 'flex' : 'none'}>
             <AnalyticsSearchField style={{width: '100%'}} handleSearch={handleSearch} /> 
             <NavGroup label="Shows">
-                { analyticsShows.length > 0 && analyticsShows.map( show => {
+                { allAnalyticsShows?.length > 0 && allAnalyticsShows?.map( show => {
                         return (
                             <NavItem
                                 id={show.show.showId}

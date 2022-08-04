@@ -69,6 +69,7 @@ export const OFFICIAL_RESULTS_ARRAY = [
     { value: 'SD', label: 'SD' },
     { value: 'SDD', label: 'SDD' },
     { value: 'DQ', label: 'DQ' },
+    { value: 'DC', label: 'Decision' },
     { value: 'KO1', label: 'KO1' },
     { value: 'KO2', label: 'KO2' },
     { value: 'KO3', label: 'KO3' },
@@ -83,20 +84,13 @@ export const OFFICIAL_RESULTS_ARRAY = [
     { value: 'KO12', label: 'KO12' },
     { value: 'KO13', label: 'KO13' },
     { value: 'KO14', label: 'KO14' },
-    { value: 'KO15', label: 'KO15' },
-    { value: 'TKO1', label: 'TKO1' },
-    { value: 'TKO2', label: 'TKO2' },
-    { value: 'TKO3', label: 'TKO3' },
-    { value: 'TKO4', label: 'TKO4' },
-    { value: 'TKO5', label: 'TKO5' },
-    { value: 'TKO6', label: 'TKO6' },
-    { value: 'TKO7', label: 'TKO7' },
-    { value: 'TKO8', label: 'TKO8' },
-    { value: 'TKO9', label: 'TKO9' },
-    { value: 'TKO10', label: 'TKO10' },
-    { value: 'TKO11', label: 'TKO11' },
-    { value: 'TKO12', label: 'TKO12' },
-    { value: 'TKO13', label: 'TKO13' },
-    { value: 'TKO14', label: 'TKO14' },
-    { value: 'TKO15', label: 'TKO15' }
+    { value: 'KO15', label: 'KO15' }
 ];
+
+export const PANELIST_PREDICTIONS_OPTIONS = [
+	{ value: 'DC', label: 'Decision' },
+	{ value: 'KO13' , label: 'KO - Rds 1-3' },
+	{ value: 'KO46' , label: 'KO - Rds 4-6' },
+	{ value: 'KO79' , label: 'KO - Rds 7-9' },
+	{ value: 'KO10' , label: 'KO - Rds 10-12' }
+]

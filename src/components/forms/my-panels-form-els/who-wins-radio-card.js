@@ -1,3 +1,4 @@
+import React from 'react'
 import {
     Box,
     Circle,
@@ -11,7 +12,6 @@ import {
     useRadioGroup,
     useStyleConfig,
   } from '@chakra-ui/react'
-  import React from 'react'
   
   export const MyPanelsRadioCardGroup = props => {
     const { children, name, defaultValue, value, onChange, ...rest } = props
@@ -19,7 +19,7 @@ import {
       name,
       defaultValue,
       value,
-      onChange,
+      onChange
     })
     const cards = React.useMemo(
       () =>
@@ -37,15 +37,21 @@ import {
     return <HStack {...getRootProps(rest)}>{cards}</HStack>
   }
   export const RadioCard = (props) => {
-    const { radioProps, children, ...rest } = props
+    const { fighterId, setWinner, radioProps, children, ...rest } = props
     const { getInputProps, getCheckboxProps, getLabelProps, state } = useRadio(radioProps)
     const id = useId(undefined, 'radio-button')
     const styles = useStyleConfig('RadioCard', props)
     const inputProps = getInputProps()
     const checkboxProps = getCheckboxProps()
-    const labelProps = getLabelProps()
-    return (
+    const labelProps = getLabelProps();
+    const handleWinnerSelected = e => {
+      const { id } = e.currentTarget;
+      setWinner(id);
+    }
+      return (
       <Flex
+        id={fighterId}
+        onClick={handleWinnerSelected}
         p="1"
         border={state.isChecked ? "1px solid #4299E1" : 'none'} 
         borderRadius="5px"

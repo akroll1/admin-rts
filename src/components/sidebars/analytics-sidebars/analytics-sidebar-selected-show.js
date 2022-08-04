@@ -15,8 +15,12 @@ import { stateStore } from '../../../stores';
  * THIS NEEDS TO SWITCH BETWEEN A LIST OF SHOWS 
  * AND THE SHOW STATS IF THERE IS A /:fightId PARAM.
  */
-export const AnalyticsSidebarSelectedShow = ({ sidebar }) => {
-    const { analyticsShows, selectedAnalyticsShow, setSelectedAnalyticsShow } = stateStore.getState();
+export const AnalyticsSidebarSelectedShow = ({ 
+    allAnalyticsShows,
+    selectedAnalyticsShow,
+    setSelectedAnalyticsShow,
+    sidebar 
+}) => {
     const handleSearch = () => {
         console.log('handleSearch')
     }
@@ -44,13 +48,13 @@ export const AnalyticsSidebarSelectedShow = ({ sidebar }) => {
 
     const setSelectedShow = e => {
         const { id } = e.currentTarget;
-        const [selected] = analyticsShows.filter( show => show.show.showId === id)
+        const [selected] = allAnalyticsShows.filter( show => show.show.showId === id)
         setSelectedAnalyticsShow(selected)
         setData(selected)
     }
     const { fight, show } = data;
-    console.log('analyticsShows: ', analyticsShows);
-    console.log('selectedAnaltyicsShow: ', selectedAnalyticsShow)
+    // console.log('analyticsShows: ', analyticsShows);
+    // console.log('selectedAnaltyicsShow: ', selectedAnalyticsShow)
     return (
         <Flex w="100%" flexDir="column" display={sidebar === 'selected' ? 'flex' : 'none'}>
             <DividerWithText text={show.showName} /> 

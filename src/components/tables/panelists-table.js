@@ -4,7 +4,7 @@ import { capFirstLetters } from '../../utils'
 
 export const PanelistsTable = ({ panelists, handleSelectedPanelist }) => {
   return (
-    <Flex flexDir="column" maxH="15rem" overflow="scroll" mx="auto" mt="1rem" px={{ base: '6', md: '8' }}>
+    <Flex flexDir="column" maxH="20rem" mx="auto" mt="1rem" px={{ base: '6', md: '8' }}>
       <PanelistsTableContent panelists={panelists} handleSelectedPanelist={handleSelectedPanelist} />
     </Flex>
   )
@@ -32,8 +32,8 @@ const columns = [
 const PanelistsTableContent = ({ panelists, handleSelectedPanelist }) => {
    
   return (
-    <Table my="8" borderWidth="1px" fontSize="sm">
-      <TableCaption placement="top">Panelists Table</TableCaption> 
+    <Table my="8" borderWidth="1px" fontSize="sm" overflowY="scroll">
+      <TableCaption placement="top">All Panelists Table</TableCaption> 
       <Thead bg={mode('gray.50', 'gray.800')}>
         <Tr>
           {columns.map((column, index) => (

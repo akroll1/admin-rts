@@ -4,7 +4,7 @@ import { capFirstLetters } from '../../../utils'
 
 
 export const AnalyticsGuestJudgeTable = ({ guestJudges }) => {
-    console.log('guestJudges: ', guestJudges)
+    // console.log('guestJudges: ', guestJudges)
 
     return (
         <TableContainer w="75%" m="auto" mt="0"  minH="100%">
@@ -19,7 +19,7 @@ export const AnalyticsGuestJudgeTable = ({ guestJudges }) => {
                 </Thead>
                 <Tbody>
                     { guestJudges?.length > 0 && guestJudges?.map( judge => {
-                        console.log('judge: ', judge);
+                        // console.log('judge: ', judge);
                         return (
                             <Tr textAlign="center" _hover={{background: 'gray.700', cursor: 'pointer'}} id={judge.guestJudgeId} key={judge.guestJudgeId}>
                                 <Td textAlign="center">{`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`}</Td>

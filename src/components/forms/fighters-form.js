@@ -3,11 +3,9 @@ import { Box, Button, FormControl, FormLabel, Heading, HStack, Input, Stack, Sta
 import { FieldGroup } from '../../chakra'
 import { FightersTable } from '../tables';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid'
 
 export const FightersForm = ({ user, tokenConfig }) => {
     const toast = useToast();
-    const fightersUrl = process.env.REACT_APP_FIGHTERS;
     const [fighters, setFighters] = useState([]);
     const [fighter, setFighter] = useState({
         fighterId: '',
@@ -30,9 +28,17 @@ export const FightersForm = ({ user, tokenConfig }) => {
     }
     const submitFighter = () => {
         // console.log('inside submit fighter: ',fighter);
-        const url = fightersUrl + `/${fighter.fighterId}`;
-        // console.log('fighter: ',fighter);
-        return axios.put(url, fighter, tokenConfig)
+        // TODO: there is no fighterId on post????
+        // fighter not created.
+        let url = process.env.REACT_APP_FIGHTERS;
+        const verbType = fighter.fighterId ? 'PUT' : 'POST';
+        if(verbType === 'PUT'){
+            url = process.env.REACT_APP_FIGHTERS + `/${fighter.fighterId}`;
+        }
+        console.log('fighter: ',fighter);
+        console.log('verbType: ', verbType)
+        // return
+        return axios[verbType === 'POST' ? 'post' : 'put'](url, fighter, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     toast({ title: 'Fighter updated!',

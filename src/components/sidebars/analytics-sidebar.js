@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import { Flex ,Box, Container, Stack, Tab, TabList, Tabs } from '@chakra-ui/react'
 import { AnalyticsSidebarAllShows, AnalyticsSidebarSelectedShow } from './analytics-sidebars'
 
-export const AnalyticsSidebar = () => {
+export const AnalyticsSidebar = ({
+    allAnalyticsShows,
+    selectedAnalyticsShow,
+    setSelectedAnalyticsShow,
+}) => {
     const [sidebar, setSidebar] = useState('all');
     const handleTabClick = e => {
         const { name } = e.currentTarget;
@@ -41,10 +45,15 @@ export const AnalyticsSidebar = () => {
                 </Stack>
             </Container>
             <AnalyticsSidebarAllShows 
+                allAnalyticsShows={allAnalyticsShows}
+                setSelectedAnalyticsShow={setSelectedAnalyticsShow}
                 sidebar={sidebar} 
             />
             <AnalyticsSidebarSelectedShow 
+                allAnalyticsShows={allAnalyticsShows}
+                selectedAnalyticsShow={selectedAnalyticsShow}
                 sidebar={sidebar} 
+                setSelectedAnalyticsShow={setSelectedAnalyticsShow}
             />
         </Flex>
     )

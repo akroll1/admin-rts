@@ -1,23 +1,20 @@
 import React, {useState} from 'react'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { ScoringMoneylineTable } from '../tables'
+import { CustomOverlay } from '../custom-overlay'
 
-const CustomOverlay = () => (
-  <ModalOverlay
-    bg='none'
-    backdropFilter='auto'
-    backdropInvert='60%'
-    backdropBlur='2px'
-  />
-)
 export const MoneylineModal = ({
-    modals,
-    setModals,
+  fighterData,
+  modals,
+  props,
+  setModals,
+  totalRounds
 }) => {
-  const [overlay, setOverlay] = React.useState(<CustomOverlay />)
-
+  const [overlay, setOverlay] = useState(<CustomOverlay />)
+  
   return (
     <Modal 
+      size="lg"
       blockScrollOnMount={false} 
       isCentered 
       isOpen={modals.moneylineModal} 
@@ -25,9 +22,13 @@ export const MoneylineModal = ({
     >
       <ModalOverlay/>
       <ModalContent>
-        <ModalHeader textAlign="center">Scoring Props</ModalHeader>
+        {/* <ModalHeader textAlign="center">Scoring Props</ModalHeader> */}
         <ModalBody>
-            <ScoringMoneylineTable />
+          <ScoringMoneylineTable 
+            fighterData={fighterData} 
+            props={props} 
+            totalRounds={totalRounds}
+          />
         </ModalBody>
         <ModalFooter 
           display="flex" 
