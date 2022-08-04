@@ -33,14 +33,6 @@ export const stateStore = create(persist(
         setMyGuestJudges: myGuestJudges => {
             set( state => ({ myGuestJudges }))
         },
-        analyticsShows: [],
-        setAnalyticsShows: analyticsShows => {
-            set( state => ({ analyticsShows }))
-        },
-        selectedAnalyticsShow: {},
-        setSelectedAnalyticsShow: selectedAnalyticsShow => {
-            set( state => ({ selectedAnalyticsShow }))
-        }
     }),
     {
         name: 'fsl',

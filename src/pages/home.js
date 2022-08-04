@@ -38,7 +38,7 @@ const Home = () => {
               Can't get enough boxing? Here you go.
             </Heading>
             <Text fontSize="lg" mt="4" color={mode('gray.600', 'gray.400')}>
-              Score fights in real-time and compare your scores to other boxing fans. Play with a group and compare scores- live!
+              Score fights in real-time and compete against other boxing fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live!
             </Text>
             <Button
               onClick={() => navigate('/learn-more')}
@@ -65,14 +65,14 @@ const Home = () => {
         </Stack>
         <Divider my="20" opacity={1} />
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: '12', md: '8' }}>
-          <Feature title="Score the Fight" icon={<FaFileSignature />}>
-              Score fights and keep scores for your personal records. 
+          <Feature title="Win Prizes" icon={<FaHandsHelping />}>
+            Win prizes for making correct pre-fight and in-fight predictions.
           </Feature>
           <Feature title="Score with Friends" icon={<FaHeadset />}>
             Create a group and score fights together- in real time.
           </Feature>
-          <Feature title="Search Other Scorecards" icon={<FaHandsHelping />}>
-            Compare your scores to other boxing fans.
+          <Feature title="Contribute" icon={<FaFileSignature />}>
+            Score fights and contribute to crowd-sourced boxing analytics. 
           </Feature>
         </SimpleGrid>
       </Box>

@@ -76,7 +76,7 @@ const Shows = props => {
                         if(res.data.includes('Token expired')){
                             return setModals({ ...modals, expiredTokenModal: true });
                         }
-                        console.log('res, 64: ', res)
+                        console.log('res.data: ', res.data)
                         setShows(res.data);
                     })
                     .catch(err => console.log(err));
