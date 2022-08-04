@@ -4,8 +4,9 @@ import { StatsHeader } from '../analytics'
 import { AnalyticsGuestJudgeTable } from '../tables/analytics-guest-judge-table'
 import { stateStore } from '../../stores'
 
-export const AnalyticsMain = () => {
-    const selectedAnalyticsShow = stateStore( state => state.selectedAnalyticsShow )
+export const AnalyticsMain = ({
+    selectedAnalyticsShow
+}) => {
     const { fight, guestJudges } = selectedAnalyticsShow?.fight ? selectedAnalyticsShow : '';
     const [judges, setGuestJudges] = useState([]);
 
