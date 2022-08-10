@@ -16,9 +16,9 @@ export const ScoringMoneylineTable = ({
                 const setPropsLabel = (score, index) => {
                     if(score[0] === 'DC'){
                         if(index >= 2){
-                            return '4-1';
+                            return `4-1`
                         }
-                        return '3-1'
+                        return `3-1`
                     } 
                     switch(index){
                         case 0:

@@ -64,8 +64,10 @@ const Dashboard = props => {
   console.log('userScorecards: ', userScorecards)
   // getScorecards && check if user exists.
   useEffect(() => {
+    // get rid of this, too, just let a user refresh, don't use userScorecards.length.
     if(userScorecards.length === 0){
       const getUserScorecards = async () => {
+        // this needs to be two promises, or figure out what's happening in prod, why nothing comes back sometimes.
         const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
         return axios.get(url, tokenConfig)
           .then(res => {
@@ -77,7 +79,7 @@ const Dashboard = props => {
               if(ownerId.includes('@')){
                 const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
                 const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
-                  .then( res => console.log('PATCH: ', res)).catch( err => console.log(err));
+                  .then( res => res).catch( err => console.log(err));
               }
               const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
               const setPrediction = prediction => {

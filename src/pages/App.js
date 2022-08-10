@@ -26,7 +26,7 @@ const App = () => {
         <Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}>
           <Routes>
             <Route exact path="/" element={<Home />} />
-            {/* <Route exact path="/about" element={<About />} /> */}
+            <Route exact path="/about" element={<About />} />
             <Route exact path="/signin" element={<SignIn />} />
             <Route exact path="/logout" element={<Home />} />
             <Route exact path="/learn-more" element={<LearnMore />} />
