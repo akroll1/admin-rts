@@ -3,9 +3,9 @@ import { Flex, Heading } from '@chakra-ui/react'
 import { useParams } from 'react-router'
 import { stateStore } from '../stores'
 import axios from 'axios'
-import { capFirstLetters } from '../utils'
 import { ScorecardsPageScoringTable } from '../components/tables'
 import { ScorecardsSearch } from '../components/search'
+import { ExpiredTokenModal } from '../components/modals'
 
 export const Scorecards = () => {
     const { scorecardId } = useParams();
@@ -13,6 +13,9 @@ export const Scorecards = () => {
     const [scorecard, setScorecard] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [prediction, setPrediction] = useState('');
+    const [modals, setModals] = useState({
+        expiredTokenModal: false
+    });
 
     useEffect(() => {
         if(tableData.length > 0){
@@ -29,8 +32,10 @@ export const Scorecards = () => {
             const getScorecard = async () => {
                 const url = process.env.REACT_APP_SCORECARDS + `/card/${scorecardId}`;
                 return axios.get(url, tokenConfig)
-                .then( res => setScorecard([res.data]))
-                .catch( err => console.log(err))
+                .then( res => {
+                    if(res.data.length > 0 && res.data?.includes('Token expired')) return setModals({ ...modals, expiredTokenModal: true });
+                    setScorecard([res.data])
+                }).catch( err => console.log(err))
             }
             getScorecard()
         }
@@ -97,6 +102,7 @@ export const Scorecards = () => {
     console.log('tableData: ', tableData)
     return (
         <Flex p="8" flexDir="column" wordBreak="break-word">
+            <ExpiredTokenModal modals={modals} setModals={setModals} />
             <Flex p="4" flexDir="column" alignItems="center">
                 <Heading my="4" m="2" as="h1" size="lg">Search User's Scorecards</Heading>
                 <ScorecardsSearch />
@@ -107,9 +113,7 @@ export const Scorecards = () => {
             </Heading>
             <Heading my="1" as="h3" size="md">Prediction: {prediction}</Heading>
             <Heading my="1" as="h3" size="md">Result: </Heading>
-            <Flex alignItems="center" justifyContent="center">
 
-            </Flex>
             <ScorecardsPageScoringTable 
                 tableData={tableData}
                 totalRounds={totalRounds}
