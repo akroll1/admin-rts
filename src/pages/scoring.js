@@ -48,8 +48,7 @@ const Scoring = () => {
     const [tableData, setTableData] = useState([]);
     const [scoredRounds, setScoredRounds] = useState('');
     const [totalRounds, setTotalRounds] = useState(0);
-    const [sliderScores, setSliderScores] = useState({});
-    const [onlyShowToCurrentRound, setOnlyShowToCurrentRound] = useState(false);
+    const [fighterScores, setFighterScores] = useState({});
     const [chatKey, setChatKey] = useState(null);
     const [fightStatus, setFightStatus] = useState(null);
     const [fightComplete, setFightComplete] = useState(false);
@@ -58,7 +57,7 @@ const Scoring = () => {
         addMemberModal: false,
         addGuestJudgeModal: false,
         expiredTokenModal: false,
-        moneylineModal: true,
+        moneylineModal: false,
         predictionModal: false,
     })
     //////////////////  PROPS  /////////////////////////
@@ -69,7 +68,6 @@ const Scoring = () => {
     const [predictionLock, setPredictionLock] = useState(true);
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
-
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
@@ -181,7 +179,7 @@ const Scoring = () => {
                     [lastName]: 10
                 })
             })
-            setSliderScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId });
+            setFighterScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId });
         }
         fetchGroupScorecard();
         // const sync = setInterval(() => {
@@ -193,7 +191,8 @@ const Scoring = () => {
 
     useEffect(() => {
         if(scorecards?.length > 0){
-            const getTableData = scorecards => {
+            const getTableData = (scorecards, fighterData) => {
+                
                 const s = scorecards.map( scorecard => {
                     let { username, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
@@ -245,30 +244,34 @@ const Scoring = () => {
                 scorecard.scores = tempScores;
                 setUserScorecard({ ...userScorecard, scores: tempScores });
                 const updatedScorecards = [...otherScorecards, scorecard];
-                getTableData(updatedScorecards)
+                getTableData(updatedScorecards, fighterData)
             }
             if(!incomingScore.scorecardId){
-                getTableData(scorecards)
+                getTableData(scorecards, fighterData)
             }
         }
     },[scorecards, incomingScore])
 
-    const submitRoundScores = () => {
+    const submitRoundScores = scoreUpdate => {
         if(fightComplete) return; 
         setIsSubmitting(true);
-        const submittedScores = Object.assign(Object.create({}),sliderScores);
-        setChatScorecard(submittedScores);
+        const update = {
+            ...fighterScores,
+            ...scoreUpdate
+        };
+        setChatScorecard(update);
         
         const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
-        return axios.put(url, submittedScores, tokenConfig)
+        // console.log('update: ', update)
+        return axios.put(url, update, tokenConfig)
             .then( res => {
                 if(res.status === 200){
                     // UPDATES.
-                    setSliderScores({ ...sliderScores, round: sliderScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
-                    const isFightComplete = sliderScores.round + 1 > totalRounds;
-                    setScoredRounds(isFightComplete ? totalRounds : sliderScores.round);
+                    setFighterScores({ ...fighterScores, round: fighterScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
+                    const fightIsComplete = fighterScores.round + 1 > totalRounds;
+                    setScoredRounds(fightIsComplete ? totalRounds : fighterScores.round);
         
-                    if(isFightComplete){
+                    if(fightIsComplete){
                         setFightComplete(true);
                         setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
                         alert('FIGHT COMPLETE')
@@ -361,12 +364,7 @@ const Scoring = () => {
     }
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
-    // console.log('tableData: ', tableData)
-    // console.log('fighterData: ', fighterData)
-    // console.log('chatScorecard: ', chatScorecard)
-    // console.log('roundResults: ', roundResults);
-    // console.log('modals: ', modals)
-    // console.log('props: ', props)
+
     return (
         <Flex 
             id="scoring"
@@ -378,7 +376,6 @@ const Scoring = () => {
             margin="auto" 
             p="4"
         >         
-            <SliderHeading mb="5rem" fightQuickTitle={showData?.fight?.fightQuickTitle ? showData.fight.fightQuickTitle : ''} />
             <Flex>
                 
                 <AddGuestJudgeModal 
@@ -429,14 +426,13 @@ const Scoring = () => {
                     handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
                 />
                 <ScoringMain
+                    fightComplete={fightComplete}
+                    fighterData={fighterData}
+                    fighterScores={fighterScores} 
+                    isSubmitting={isSubmitting}
+                    submitRoundScores={submitRoundScores}
                     tabs={tabs}
                     totalRounds={totalRounds}
-                    fightComplete={fightComplete}
-                    submitRoundScores={submitRoundScores}
-                    fighterData={fighterData}
-                    sliderScores={sliderScores} 
-                    setSliderScores={setSliderScores} 
-                    isSubmitting={isSubmitting}
                 />
                 <ScoringSidebarRight
                     tabs={tabs}
@@ -462,7 +458,3 @@ const Scoring = () => {
 
 }
 export default Scoring
-
-const SliderHeading = ({ fightQuickTitle }) => (
-    <Heading textAlign="center" as="h2" size="lg">{fightQuickTitle}</Heading>
-)

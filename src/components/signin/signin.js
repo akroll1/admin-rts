@@ -10,12 +10,17 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { stateStore } from '../../stores'
 
 export const SignIn = props => {
+  const navigate = useNavigate();
+  // const { pathname }= window.location;
+  // if(!pathname.includes('/signin')){
+  //   sessionStorage.setItem('path', pathname)
+  // }
+
   let [searchParams, setSearchParams] = useSearchParams();
   const name = searchParams.get('name');
   const pw = searchParams.get('pw');
   const nonce = searchParams.get('nonce');
 
-  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSignin, setIsSignin] = useState(true);
   const [waitingForCode, setWaitingForCode] = useState(false);

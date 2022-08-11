@@ -1,9 +1,7 @@
-import React from 'react'
-import { Button, Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
-import { Badge } from '@chakra-ui/react'
-import { TableUser } from './table-user'
+import React, { useState } from 'react'
+import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { CopyIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router'
-import { capFirstLetters } from '../../../utils'
 
 const badgeEnum = {
   completed: 'green',
@@ -11,11 +9,19 @@ const badgeEnum = {
   // declined: 'red',
 }
 
-
 export const MyScorecardsTableContent = ({ scorecards }) => {
-  // console.log('scorecards: ', scorecards)
   const navigate = useNavigate();
+  const [value, setValue] = useState('');
+  const [hasCopied, onCopy] = useState(value);
 
+  const handleCopy = e => {
+    const { id } = e.currentTarget;
+    setValue(id);
+    const link = `${window.location.origin}/scorecards/${id}`
+    onCopy(value)
+    navigator.clipboard.writeText(link)
+  }
+  
   return (
     <Flex overflow="scroll" w="100%">
       <Table my="8" borderWidth="1px" fontSize="sm" size={['sm', 'md']}>
@@ -30,15 +36,17 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
               <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
                 Status
               </Th>
+              <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
+                Get Link
+              </Th>
           </Tr>
         </Thead>
         <Tbody>
           { scorecards?.length > 0 && scorecards.map((row, index) => {
-            const { groupScorecardId, isComplete, label, prediction } = row;
+            const { groupScorecardId, isComplete, label, prediction, scorecardId } = row;
             return (
               <Tr 
                 key={index} 
-                onClick={() => navigate(`/scoring/${groupScorecardId}`)} 
                 _hover={{
                   textAlign: "center",
                   cursor: 'pointer', 
@@ -49,17 +57,17 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
                   borderRadius: '5px'
                 }} 
               >
-                <Td 
-                  textAlign="center" 
-                  whiteSpace="nowrap"
-                >
+                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
                   { label }
                 </Td>
-                <Td textAlign="center" whiteSpace="nowrap">
+                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
                   { prediction }                      
                 </Td>
-                <Td textAlign="center" whiteSpace="nowrap">
+                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
                   { isComplete ? `Fight Complete` : `Upcoming` }                      
+                </Td>
+                <Td value={value} onClick={handleCopy} id={`${scorecardId}`} textAlign="center" whiteSpace="nowrap">
+                  { hasCopied && `${scorecardId}` === value ? `Copied!` : <CopyIcon /> }
                 </Td>
               </Tr>
           )})}

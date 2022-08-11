@@ -1,38 +1,32 @@
 
 import React from 'react'
-import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
+import { capFirstLetters } from '../../utils';
 
-export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => {
-    // console.log('tableData: ', tableData)
+export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
+    console.log('tableData: ', tableData)
     const sort = (a, b) => a.username - b.username;
     const sortedTable = tableData.sort( sort )
     const columns = [
         {
-            Header: 'Player',
-            accessor: 'player',
-            Cell: function TableCell(username, prediction) {
-                return <ScoringTableInfo username={username} prediction={prediction} />
-            }
+            Header: 'Fighter'
         },
         {
-            Header: 'Round',
-            accessor: 'round'
+            Header: 'Round' 
         },
         {
-            Header: 'Total',
-            accessor: 'total'
+            Header: 'Total'
         },
-
     ];
     
     // console.log('getPlayersData: ',getPlayersData)
     const rounds = new Array(totalRounds).fill('Round');
     const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : '';
+
     return (      
         <Flex 
             overflow="scroll"
-            display={tabs.table ? 'flex' : 'none'}
             id="score_table" 
             w="100%" 
             p="8"
@@ -43,8 +37,7 @@ export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => 
             <Table 
                 style={{tableLayout:'auto', width: '100%'}} 
                 overflowX="scroll" 
-                overflowY="scroll" 
-                size={["sm", "md"]} 
+                size={["sm"]} 
                 variant="striped" 
                 my="4" 
                 borderWidth="1px" 
@@ -55,7 +48,6 @@ export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => 
                 <Thead bg={mode('gray.50', 'gray.800')}>
                     <Tr>
                         {columns.map((column, index) => {
-
                             if(index === 0){
                                 return (    
                                     <Th 
@@ -113,8 +105,13 @@ export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => 
                                     
                                     if(i === 0){
                                         return (
-                                            <Td key={i} p="0">
-                                                {element}
+                                            <Td p="0px !important" flexDir="column">
+                                                <Flex p="1" alignItems="center" justifyContent="center">
+                                                    {capFirstLetters(`${fighter1}`)} 
+                                                </Flex>
+                                                <Flex p="1" alignItems="center" justifyContent="center">
+                                                    {capFirstLetters(`${fighter2}`)} 
+                                                </Flex>
                                             </Td>
                                         )
                                     }

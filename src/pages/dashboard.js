@@ -64,51 +64,49 @@ const Dashboard = props => {
   console.log('userScorecards: ', userScorecards)
   // getScorecards && check if user exists.
   useEffect(() => {
-    if(userScorecards.length === 0){
-      const getUserScorecards = async () => {
-        const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
-        return axios.get(url, tokenConfig)
-          .then(res => {
-            if(res.data?.length > 0 ) setUserScorecards(res.data)
-            // console.log('res: ',res);
-            const data = res.data?.map(obj => {
-              const { fighterData, scorecard } = obj;
-              const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
-              if(ownerId.includes('@')){
-                const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-                const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
-                  .then( res => console.log('PATCH: ', res)).catch( err => console.log(err));
-              }
-              const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
-              const setPrediction = prediction => {
-                  if(prediction){
-                      const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
-                      return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
-                  }
-                      return 'Prediction Not Set'
-              }
-              const prediction = setPrediction(scorecard.prediction);
-              const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
-              const isComplete = scores.length >= rounds;
-              return ({
-                  prediction,
-                  label,
-                  groupScorecardId,
-                  isComplete
-              })
-            });
-            // put scorecard info in for scorecards switcher.
-            if(res.data.length > 0){
-              setScorecards(data)
-              setUserScorecards(data)
+    const getUserScorecards = async () => {
+      // this needs to be two promises, or figure out what's happening in prod, why nothing comes back sometimes.
+      const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
+      return axios.get(url, tokenConfig)
+        .then(res => {
+          if(res.data?.length > 0 ) setUserScorecards(res.data)
+          // console.log('res: ',res);
+          const data = res.data?.map(obj => {
+            const { fighterData, scorecard } = obj;
+            const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
+            if(ownerId.includes('@')){
+              const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
+              const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
+                .then( res => res).catch( err => console.log(err));
             }
-          }).catch(err => console.log(err))
-        } 
-        getUserScorecards();
+            const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
+            const setPrediction = prediction => {
+                if(prediction){
+                    const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
+                    return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
+                }
+                    return 'Prediction Not Set'
+            }
+            const prediction = setPrediction(scorecard.prediction);
+            const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
+            const isComplete = scores.length >= rounds;
+            return ({
+                prediction,
+                label,
+                groupScorecardId,
+                isComplete,
+                scorecardId
+            })
+          });
+          // put scorecard info in for scorecards switcher.
+          if(res.data.length > 0){
+            setScorecards(data)
+            setUserScorecards(data)
+          }
+        }).catch(err => console.log(err))
+      } 
+      getUserScorecards();
 
-      } else {
-          setScorecards(userScorecards)
-      }
       // put user data into DB.
       const updateUser = async () => {
         // put a check on here so this isn't called every time.
@@ -190,7 +188,7 @@ const Dashboard = props => {
         borderRadius="md" 
         mt={0}
       >
-        { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} handleFormSelect={handleFormSelect} /> }
+        { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} user={user} /> }
         { form === 'POUND' && <MyPoundList tokenConfig={tokenConfig} user={user} /> }
         { form === 'ACCOUNT' && <MyAccountForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'PANELS_MEMBER' && <MyPanelsForm tokenConfig={tokenConfig} user={user} /> }

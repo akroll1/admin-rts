@@ -18,6 +18,7 @@ import Analytics from './analytics'
 import Shows from './shows'
 import theme from '../theme'
 import { PoundPage } from './pound'
+import { Scorecards } from './scorecards'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn' ? true : false));
@@ -26,7 +27,7 @@ const App = () => {
         <Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}>
           <Routes>
             <Route exact path="/" element={<Home />} />
-            {/* <Route exact path="/about" element={<About />} /> */}
+            <Route exact path="/about" element={<About />} />
             <Route exact path="/signin" element={<SignIn />} />
             <Route exact path="/logout" element={<Home />} />
             <Route exact path="/learn-more" element={<LearnMore />} />
@@ -40,6 +41,11 @@ const App = () => {
             <Route exact path="/counterpunch" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
+            <Route exact path="/scorecards/:scorecardId" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <Scorecards /> 
+              </PrivateRoute>
+            }/>
             <Route exact path="/analytics" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Analytics /> 
