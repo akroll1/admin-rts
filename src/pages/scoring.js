@@ -191,7 +191,8 @@ const Scoring = () => {
 
     useEffect(() => {
         if(scorecards?.length > 0){
-            const getTableData = scorecards => {
+            const getTableData = (scorecards, fighterData) => {
+                
                 const s = scorecards.map( scorecard => {
                     let { username, prediction, scores } = scorecard;
                     const [fighter1, fighter2] = fighterData;
@@ -243,10 +244,10 @@ const Scoring = () => {
                 scorecard.scores = tempScores;
                 setUserScorecard({ ...userScorecard, scores: tempScores });
                 const updatedScorecards = [...otherScorecards, scorecard];
-                getTableData(updatedScorecards)
+                getTableData(updatedScorecards, fighterData)
             }
             if(!incomingScore.scorecardId){
-                getTableData(scorecards)
+                getTableData(scorecards, fighterData)
             }
         }
     },[scorecards, incomingScore])
