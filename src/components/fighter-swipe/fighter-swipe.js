@@ -8,7 +8,6 @@ export const FighterSwipe = ({
     selectedRoundWinner,
     notWinnerScore,
 }) => {
-    const [score, setScore] = useState(10);
     const { fighterId, firstName, lastName, ringname } = fighter; 
 
     return (

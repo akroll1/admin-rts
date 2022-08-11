@@ -18,6 +18,7 @@ import Analytics from './analytics'
 import Shows from './shows'
 import theme from '../theme'
 import { PoundPage } from './pound'
+import { Scorecards } from './scorecards'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn' ? true : false));
@@ -40,6 +41,11 @@ const App = () => {
             <Route exact path="/counterpunch" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
+            <Route exact path="/scorecards/:scorecardId" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <Scorecards /> 
+              </PrivateRoute>
+            }/>
             <Route exact path="/analytics" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Analytics /> 
