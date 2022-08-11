@@ -2,7 +2,7 @@ import React from 'react'
 import { Heading, Center } from '@chakra-ui/react'
 import { MyScorecardsTable } from '../components/tables'
 
-export const MyScorecards = ({ scorecards, user }) => {
+export const MyScorecards = ({ scorecards }) => {
     return (
         <>
             <Center>

@@ -10,20 +10,18 @@ const badgeEnum = {
 }
 
 export const MyScorecardsTableContent = ({ scorecards }) => {
-  console.log('scorecards: ', scorecards)
   const navigate = useNavigate();
   const [value, setValue] = useState('');
   const [hasCopied, onCopy] = useState(value);
 
   const handleCopy = e => {
     const { id } = e.currentTarget;
-
     setValue(id);
     const link = `${window.location.origin}/scorecards/${id}`
     onCopy(value)
     navigator.clipboard.writeText(link)
-
   }
+  
   return (
     <Flex overflow="scroll" w="100%">
       <Table my="8" borderWidth="1px" fontSize="sm" size={['sm', 'md']}>
