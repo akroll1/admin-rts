@@ -13,6 +13,7 @@ import {
   DiscussionsForm, 
   FightForm, 
   FightersForm, 
+  FightResolutionForm,
   GuestJudgeForm, 
   PanelistForm,
   MyPanelsForm,
@@ -130,6 +131,7 @@ const Dashboard = props => {
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
     { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
+    { value: "FIGHT-RESOLUTION", label:"Fight Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/fight-resolution' },
     { value: "GUEST-JUDGES", label:"Guest Judges Form", type: 'Guest Judges', icon: FaEdit, link: '/dashboard/guest-judges' },
     { value: "PANELIST", label:"Panelist Form", type: 'User', icon: FaUser, link: '/dashboard/panelist' },
     { value: "POUNDFORM", label:"P4P Form", type: 'P4P Form', icon: FaEdit, link: '/dashboard/pound-form' },
@@ -198,6 +200,7 @@ const Dashboard = props => {
         { form === 'POUNDFORM' && <PoundForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'SHOW-FORM' && <ShowForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'FIGHTERS' && <FightersForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'FIGHT-RESOLUTION' && <FightResolutionForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'DISCUSSIONS' && <DiscussionsForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'GUEST-JUDGES' && <GuestJudgeForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'BROADCAST' && <BroadcastForm tokenConfig={tokenConfig} user={user} /> }
