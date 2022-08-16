@@ -39,30 +39,23 @@ export const NETWORK_ENUMS = [
 	{ value: 'NONE', label: 'NONE' }
 ];
 
-export const FIGHT_SHOW_STATUS_ENUMS = [
+export const FIGHT_STATUS_SELECT_CONSTANTS = [
 	{ value: 'ACTIVE', label: 'ACTIVE' },
 	{ value: 'CANCELED', label: 'CANCELED' },
-	{ value: 'COMPLETED', label: 'COMPLETED' },
+	{ value: 'COMPLETE', label: 'COMPLETE' },
 	{ value: 'FANTASY', label: 'FANTASY' },
 	{ value: 'PENDING', label: 'PENDING' }
 ];
 
-export const FIGHT_SHOW_STATUS_CONSTANTS = {
+export const FIGHT_STATUS_CONSTANTS = {
 	ACTIVE: 'ACTIVE',
 	CANCELED: 'CANCELED',
-	COMPLETED: 'COMPLETED',
+	COMPLETE: 'COMPLETE',
 	FANTASY: 'FANTASY',
 	PENDING: 'PENDING'
 };
-export const STATUS_CONSTANTS = {
-	ACTIVE: 'ACTIVE',
-	CANCELED: 'CANCELED',
-	COMPLETED: 'COMPLETED',
-	FANTASY: 'FANTASY',
-	PENDING: 'PENDING',
-};
 
-export const OFFICIAL_RESULTS_ARRAY = [
+export const OFFICIAL_RESULTS_ENUM = [
     { value: 'UD', label: 'UD' },
     { value: 'MD', label: 'MD' },
     { value: 'MDD', label: 'MDD' },

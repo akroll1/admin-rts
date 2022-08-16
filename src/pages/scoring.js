@@ -7,7 +7,7 @@ import {  } from '../components/sidebars'
 import { predictionIsLocked } from '../utils'
 import { useLocation, useNavigate } from 'react-router'
 import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
-import { capFirstLetters, FIGHT_SHOW_STATUS_CONSTANTS } from '../utils'
+import { capFirstLetters, FIGHT_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { stateStore } from '../stores'
 import { useWindowResize } from '../hooks'
@@ -273,7 +273,7 @@ const Scoring = () => {
         
                     if(fightIsComplete){
                         setFightComplete(true);
-                        setFightStatus(FIGHT_SHOW_STATUS_CONSTANTS.COMPLETED)
+                        setFightStatus(FIGHT_STATUS_CONSTANTS.COMPLETE)
                         alert('FIGHT COMPLETE')
                     }
                 }
