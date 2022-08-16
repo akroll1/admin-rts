@@ -3,7 +3,7 @@ import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLa
 import { FieldGroup } from '../../chakra'
 import { DeleteIcon } from '@chakra-ui/icons'
 import axios from 'axios'
-import { FIGHT_SHOW_STATUS_ENUMS, ROUND_LENGTH_ENUMS,  WEIGHTCLASS_ENUMS } from '../../utils'
+import { FIGHT_STATUS_SELECT_CONSTANTS, ROUND_LENGTH_ENUMS,  WEIGHTCLASS_ENUMS } from '../../utils'
 
 export const FightForm = ({ user, tokenConfig }) => {
     const toast = useToast();
@@ -177,7 +177,7 @@ export const FightForm = ({ user, tokenConfig }) => {
                                 <FormControl id="fightStatus">
                                     <FormLabel htmlFor="fightStatus">Fight Status</FormLabel>
                                     <Select placeholder={form.fightStatus || 'Fight Status'} onChange={handleFormChange}>
-                                        { FIGHT_SHOW_STATUS_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                        { FIGHT_STATUS_SELECT_CONSTANTS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                     </Select>
                                 </FormControl>
                                 <FormControl id="officialResult">

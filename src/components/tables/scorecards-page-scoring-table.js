@@ -5,7 +5,7 @@ import { ScoringTableInfo } from './scoring-table-els'
 import { capFirstLetters } from '../../utils';
 
 export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
-    console.log('tableData: ', tableData)
+    // console.log('tableData: ', tableData)
     const sort = (a, b) => a.username - b.username;
     const sortedTable = tableData.sort( sort )
     const columns = [
@@ -105,7 +105,7 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                     
                                     if(i === 0){
                                         return (
-                                            <Td p="0px !important" flexDir="column">
+                                            <Td key={i} p="0px !important" flexDir="column">
                                                 <Flex p="1" alignItems="center" justifyContent="center">
                                                     {capFirstLetters(`${fighter1}`)} 
                                                 </Flex>

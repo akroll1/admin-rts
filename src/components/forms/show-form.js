@@ -5,7 +5,7 @@ import axios from 'axios'
 import { ShowFormFightersTable, ShowFormShowsTable } from '../tables'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import { NETWORK_ENUMS, FIGHT_SHOW_STATUS_ENUMS, createTimestamp } from '../../utils'
+import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
 import parseISO from 'date-fns/parseISO'
 // import { addDays } from 'date-fns/addDays'
 
@@ -111,7 +111,7 @@ export const ShowForm = ({ user, tokenConfig }) => {
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
-            <form id="settings-form" onSubmit={(e) => {e.preventDefault()}}>
+            <form id="show_form" onSubmit={(e) => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
                         Show Form
@@ -162,7 +162,7 @@ export const ShowForm = ({ user, tokenConfig }) => {
                                 <FormControl id="showStatus">
                                     <FormLabel htmlFor="showStatus">Show Status</FormLabel>
                                     <Select onChange={handleFormChange}>
-                                        { FIGHT_SHOW_STATUS_ENUMS.map( ({value, label}) => <option placeholder='hey' key={value} value={value}>{label}</option>)}
+                                        { FIGHT_STATUS_SELECT_CONSTANTS.map( ({value, label}) => <option placeholder='hey' key={value} value={value}>{label}</option>)}
                                     </Select>                            
                                 </FormControl>
                             }
