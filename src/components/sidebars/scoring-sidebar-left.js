@@ -99,7 +99,7 @@ export const ScoringSidebarLeft = ({
                             size="sm" 
                             pl="0"
                         >
-                            Score&#58; { 0 }
+                            Score&#58; {finalScore ? finalScore : `Not Scored` }
                         </Button>} 
                     /> 
                 </NavGroup>
