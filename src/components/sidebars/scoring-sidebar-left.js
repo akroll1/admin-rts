@@ -23,8 +23,7 @@ export const ScoringSidebarLeft = ({
     const [showGuests, setShowGuests] = useState(null)
     const { availableGuestJudges } = stateStore.getState();
   
-    const handlePredictionToggle = () => {
-        console.log('handlePredictionToggle');
+    const handlePredictionModalToggle = () => {
         if(isLocked){
             return alert('Predictions are locked.')
         }
@@ -68,7 +67,7 @@ export const ScoringSidebarLeft = ({
                     <NavItem 
                         id="prediction"
                         icon={isLocked ? <FaLock /> : <FaLockOpen />} 
-                        handlePredictionToggle={handlePredictionToggle}
+                        handlePredictionModalToggle={handlePredictionModalToggle}
                         label={<Button 
                             // disabled={isLocked} 
                             button={'button'}
@@ -100,7 +99,7 @@ export const ScoringSidebarLeft = ({
                             size="sm" 
                             pl="0"
                         >
-                            Score&#58; { 0 }
+                            Score&#58; {finalScore ? finalScore : `Not Scored` }
                         </Button>} 
                     /> 
                 </NavGroup>

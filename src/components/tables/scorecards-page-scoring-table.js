@@ -88,14 +88,18 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                         let filledMappedScores;   
                         if(mappedScores.length <= totalRounds){
                             const numberToFill = totalRounds - (mappedScores.length);
-                            const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1]:0, [fighter2]: 0}));
+                            const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1.lastName]:0, [fighter2.lastName]: 0}));
                             filledMappedScores = mappedScores.concat(addingRounds)
                         }
                         const currentRound = mappedScores.length;
                         const index = prediction ? prediction.indexOf(',') : '';
-                        const transformedPrediction = prediction ? prediction.slice(0, index) : '';
+                        const slicedPrediction = prediction ? prediction.slice(0, index) : '';
                         const predictionResult = prediction ? prediction.slice(index+1) : '';
                         const roundKO = prediction ? predictionResult.slice(2) : '';
+                        // console.log('prediction: ', prediction)
+                        // console.log('ROUND KO: ', roundKO)
+                        // console.log('slicedPrediction: ', slicedPrediction)
+                        // console.log('fighter1: ', fighter1)
                         return (
                             <Tr key={idx} p="0">
                                 {columns.map( (column, i) => {
@@ -107,10 +111,10 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                         return (
                                             <Td key={i} p="0px !important" flexDir="column">
                                                 <Flex p="1" alignItems="center" justifyContent="center">
-                                                    {capFirstLetters(`${fighter1}`)} 
+                                                    {capFirstLetters(`${fighter1.lastName}`)} 
                                                 </Flex>
                                                 <Flex p="1" alignItems="center" justifyContent="center">
-                                                    {capFirstLetters(`${fighter2}`)} 
+                                                    {capFirstLetters(`${fighter2.lastName}`)} 
                                                 </Flex>
                                             </Td>
                                         )
@@ -127,17 +131,17 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                                             // borderX={(i) % 2 == 0 ? (i) >= currentRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
                                                             w="100%"
                                                             p="1"
-                                                            bg={roundScores[fighter1] ? "gray.500" : "gray.600"} 
+                                                            bg={roundScores[fighter1.lastName] ? "gray.500" : "gray.600"} 
                                                             flexDirection="column" 
                                                             alignItems="center" 
                                                             justifyContent="center" 
-                                                            style={(i+1) == roundKO && (transformedPrediction == fighter1) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: '1px solid #2e3648'} }
+                                                            style={(i+1) == roundKO && (slicedPrediction == fighter1.fighterId) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: '1px solid #2e3648'} }
                                                         >   
-                                                            {roundScores[fighter1]}
+                                                            {roundScores[fighter1.lastName]}
                                                         </Flex>
                                                         <Flex 
                                                             w="100%"
-                                                            style={(i+1) == roundKO && (transformedPrediction == fighter2) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: "1px solid RGBA(0, 0, 0, 0.36)"} } 
+                                                            style={(i+1) == roundKO && (slicedPrediction == fighter2.fighterId) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: "1px solid RGBA(0, 0, 0, 0.36)"} } 
                                                             color={i >= mappedScores.length ? 'transparent' : "whiteAlpha.900"}
 
                                                             flexDirection="column" 
@@ -146,7 +150,7 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                                             mt="0.5rem" 
                                                             p="1"
                                                         >
-                                                            {roundScores[fighter2]}
+                                                            {roundScores[fighter2.lastName]}
                                                         </Flex>
                                                     </Flex>
                                                 </Td>
@@ -166,7 +170,7 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                                         justifyContent="center" 
                                                         w="100%"
                                                     >
-                                                        {totals[fighter1]}
+                                                        {totals[fighter1.lastName]}
                                                     </Flex>
                                                     <Flex 
                                                         fontWeight="bold" 
@@ -177,7 +181,7 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                                         justifyContent="center" 
                                                         mt="0.5rem" w="100%"
                                                     >
-                                                        {totals[fighter2]}
+                                                        {totals[fighter2.lastName]}
                                                     </Flex>
                                                 </Flex>
                                             </Td>
