@@ -41,8 +41,14 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
         };
         console.log('resolutionObj: ', resolutionObj);
         return axios.put(url, resolutionObj, tokenConfig)
-            .then( res => console.log('res: ', res))
-            .catch( err => console.log(err));
+            .then( res => {
+                if(res.status === 200){
+                    toast({ title: 'Fight Resolution updated!',
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,})   
+                }
+            }).catch( err => console.log(err));
     };
 
     const setOfficalResult = () => {
