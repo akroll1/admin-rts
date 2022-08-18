@@ -86,17 +86,19 @@ const Dashboard = props => {
                     const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
                     return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
                 }
-                    return 'Prediction Not Set'
+                    return `No Prediction`
             }
             const prediction = setPrediction(scorecard.prediction);
+            const finalScore = scorecard.finalScore ? scorecard.finalScore : `No Score`;
             const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
             const isComplete = scores.length >= rounds;
             return ({
-                prediction,
-                label,
-                groupScorecardId,
-                isComplete,
-                scorecardId
+              finalScore,
+              groupScorecardId,
+              isComplete,
+              label,
+              prediction,
+              scorecardId
             })
           });
           // put scorecard info in for scorecards switcher.

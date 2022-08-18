@@ -56,13 +56,14 @@ export const FIGHT_STATUS_CONSTANTS = {
 };
 
 export const OFFICIAL_RESULTS_ENUM = [
-    { value: 'UD', label: 'UD' },
-    { value: 'MD', label: 'MD' },
-    { value: 'MDD', label: 'MDD' },
-    { value: 'SD', label: 'SD' },
-    { value: 'SDD', label: 'SDD' },
-    { value: 'DQ', label: 'DQ' },
     { value: 'DC', label: 'Decision' },
+    { value: 'DR', label: 'Draw' },
+    { value: 'UD', label: 'Unanimous Decision' },
+    { value: 'MD', label: 'Majority Decision' },
+    { value: 'MDD', label: 'Majority Decision Draw' },
+    { value: 'SD', label: 'Split Decision' },
+    { value: 'SDD', label: 'Split Decision Draw' },
+    { value: 'DQ', label: 'Disqualification' },
     { value: 'KO1', label: 'KO1' },
     { value: 'KO2', label: 'KO2' },
     { value: 'KO3', label: 'KO3' },

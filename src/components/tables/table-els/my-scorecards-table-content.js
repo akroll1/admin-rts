@@ -37,13 +37,16 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
                 Status
               </Th>
               <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
-                Get Link
+                Score
+              </Th>
+              <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
+                Link
               </Th>
           </Tr>
         </Thead>
         <Tbody>
           { scorecards?.length > 0 && scorecards.map((row, index) => {
-            const { groupScorecardId, isComplete, label, prediction, scorecardId } = row;
+            const { finalScore, groupScorecardId, isComplete, label, prediction, scorecardId } = row;
             return (
               <Tr 
                 key={index} 
@@ -65,6 +68,9 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
                 </Td>
                 <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
                   { isComplete ? `Fight Complete` : `Upcoming` }                      
+                </Td>
+                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
+                  { finalScore }                      
                 </Td>
                 <Td value={value} onClick={handleCopy} id={`${scorecardId}`} textAlign="center" whiteSpace="nowrap">
                   { hasCopied && `${scorecardId}` === value ? `Copied!` : <CopyIcon /> }

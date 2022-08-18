@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Button, ButtonGroup, Flex, FormControl, FormLabel, Heading, HStack, Input, Radio, RadioGroup, Select, Stack, StackDivider, useToast, VStack } from '@chakra-ui/react'
 import { DividerWithText, FieldGroup } from '../../chakra'
 import axios from 'axios'
-import { capFirstLetters, FIGHT_STATUS_SELECT_CONSTANTS, FIGHT_STATUS_CONSTANTS, OFFICIAL_RESULTS_ENUM } from '../../utils'
+import { capFirstLetters, FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM } from '../../utils'
 
 export const FightResolutionForm = ({ user, tokenConfig }) => {
     const toast = useToast();
@@ -32,10 +32,11 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
                 .finally(() => setIsSubmitting(false));
         }
     };
+    
     const handleSubmitResolution = () => {
         const url = process.env.REACT_APP_FIGHTS + `/resolutions/${fightId}`;
         const resolutionObj = {
-            officialResult: `${radio}, ${fightResolution}`,
+            officialResult: radio === `DR` ? `DR` : `${radio},${fightResolution}`,
             fightStatus: selectFightStatus
         };
         console.log('resolutionObj: ', resolutionObj);
@@ -44,21 +45,20 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
             .catch( err => console.log(err));
     };
 
-    const getOfficalResult = () => {
+    const setOfficalResult = () => {
         if(!officialResult) return `No official result.`;
         const [fighter1, fighter2] = fighters;
         const winner = officialResult.slice(0, 36) === fighter1.fighterId ? `${capFirstLetters(fighter1.firstName)} ${capFirstLetters(fighter1.lastName)}` : `${capFirstLetters(fighter2.firstName)} ${capFirstLetters(fighter2.lastName)}`
         const wonHow = officialResult.slice(37);
         return `${winner}: ${wonHow}`;
     }
-
-    console.log('form: ', form);
-    console.log('radio: ', radio);
-    console.log('fightResolution: ', fightResolution);
+    
+    //    02e3e0a4-8b4a-43b9-8919-4f7d498aa36c
     const { fight, fighters } = form;
     const { fightQuickTitle, fightStatus, officialResult, rounds, weightclass } = fight;
     const [fighter1, fighter2] = fighters.length > 0 ? fighters : '';
-    const theOfficialResult = fighters.length > 0 ? getOfficalResult() : '';
+    const theOfficialResult = fighters.length > 0 ? setOfficalResult() : '';
+
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
             <form id="fight_resolution_form" onSubmit={(e) => {e.preventDefault()}}>
@@ -106,23 +106,27 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
                         <Stack>
                             <Radio value={fighter1.fighterId}>{`${capFirstLetters(fighter1.firstName)} ${capFirstLetters(fighter1.lastName)}`}</Radio>
                             <Radio value={fighter2.fighterId}>{`${capFirstLetters(fighter2.firstName)} ${capFirstLetters(fighter2.lastName)}`}</Radio>
+                            <Radio value={'DR'}>Draw</Radio>
                         </Stack>
                     </RadioGroup>
-                    <Select 
-                        onChange={e => setFightResolution(e.currentTarget.value)}
-                        w="50%" 
-                        mt="4"
-                    >
-                        { OFFICIAL_RESULTS_ENUM.map( result => <option key={result.value} value={result.value}>{result.label}</option> )}
-                    </Select>
-                    <Select 
-                        onChange={e => setSelectFightStatus(e.currentTarget.value)}
-                        w="50%" 
-                        mt="4"
-                    >
-                        { FIGHT_STATUS_SELECT_CONSTANTS.map( ({ value, label }) => <option key={value} value={value}>{label}</option> )}
-                    </Select>
-
+                    { radio !== 'DR' && 
+                        <>
+                            <Select 
+                                onChange={e => setFightResolution(e.currentTarget.value)}
+                                w="50%" 
+                                mt="4"
+                            >
+                                { OFFICIAL_RESULTS_ENUM.map( result => <option key={result.value} value={result.value}>{result.label}</option> )}
+                            </Select>
+                            <Select 
+                                onChange={e => setSelectFightStatus(e.currentTarget.value)}
+                                w="50%" 
+                                mt="4"
+                            >
+                                { FIGHT_STATUS_SELECT_CONSTANTS.map( ({ value, label }) => <option key={value} value={value}>{label}</option> )}
+                            </Select>
+                        </>
+                    }
                     <FieldGroup mt="8">
                         <ButtonGroup w="100%">
                             <Button 
@@ -142,5 +146,3 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
         </Box>
     )
 }
-// 2ed612cb-7b7e-4a68-8553-e10bc194564f, KO8
-// 02e3e0a4-8b4a-43b9-8919-4f7d498aa36c
