@@ -31,7 +31,7 @@
     },
     {
       role: 'UI/UX',
-      image: '',
+      image: 'dallin.png',
       name: 'Dallin Higgins',
       twitter: '#',
       linkedin: '#',
