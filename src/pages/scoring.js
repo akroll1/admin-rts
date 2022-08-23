@@ -163,6 +163,7 @@ const Scoring = () => {
             setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : []);
             setChatKey(res.data.groupScorecard.chatKey);
             setTotalRounds(res.data.fight.rounds);
+            setFightStatus(res.data.fight.fightStatus);
 
             const findScoredRounds = thisUserScorecard => {
                 const scored = thisUserScorecard.scores.length;
@@ -364,7 +365,7 @@ const Scoring = () => {
     }
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
-
+    console.log('fightStatus: ', fightStatus)
     return (
         <Flex 
             id="scoring"
@@ -445,11 +446,12 @@ const Scoring = () => {
                 />
             </Flex>
             <ScoringTable 
-                tabs={tabs} 
-                username={username} 
-                tableData={tableData} 
+                fightStatus={fightStatus}
                 scoredRounds={scoredRounds} 
+                tableData={tableData} 
+                tabs={tabs} 
                 totalRounds={totalRounds} 
+                username={username} 
             />
 
             <ScoringTabs tabs={tabs} setTabs={setTabs} />
