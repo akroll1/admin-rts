@@ -9,29 +9,29 @@ export const links = [
   {
     label: 'FightCloud',
     children: [
+      // {
+      //   label: 'Fighter Talk',
+      //   description: 'Fighters discuss all things fighting.',
+      //   href: '/discussions',
+      //   icon: <IoGrid />,
+      // },
+      // {
+      //   label: 'Latest Boxing News',
+      //   description: 'Updated in real-time.',
+      //   href: '/news',
+      //   icon: <IoHelpBuoy />,
+      // },
       {
-        label: 'Fighter Talk',
-        description: 'Fighters discuss all things fighting.',
-        href: '/discussions',
-        icon: <IoGrid />,
-      },
-      {
-        label: 'Latest Boxing News',
-        description: 'Updated in real-time.',
-        href: '/news',
-        icon: <IoHelpBuoy />,
+        label: 'Blog',
+        description: 'Get the latest boxing insights from the team.',
+        href: '/blog',
+        icon: <MdWeb />,
       },
       {
         label: 'Counter-Punch',
         description: 'The boxing trivia game show you can play, too!',
         href: '/counterpunch',
         icon: <IoCalendar />,
-      },
-      {
-        label: 'Blog',
-        description: 'Get the latest boxing insights from the team.',
-        href: '/blog',
-        icon: <MdWeb />,
       },
     ],
   }

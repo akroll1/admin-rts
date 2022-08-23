@@ -1,9 +1,15 @@
 
 import React from 'react'
-import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 
-export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => {
+export const ScoringTable = ({ 
+    fightStatus,
+    scoredRounds, 
+    tableData, 
+    tabs, 
+    totalRounds 
+}) => {
     // console.log('tableData: ', tableData)
     const sort = (a, b) => a.username - b.username;
     const sortedTable = tableData.sort( sort )
@@ -51,7 +57,7 @@ export const ScoringTable = ({ scoredRounds, tableData, tabs, totalRounds }) => 
                 fontSize="sm"
                 bg="whiteAlpha.50"
             >
-                {/* { fightResult && <caption style={{margin: '1rem auto',width: '100%', captionSide:"top"}}>Official: {fightResult} </caption> } */}
+                { fightStatus === `COMPLETE` && <TableCaption style={{margin: 'auto',width: '100%', captionSide:"top"}}>FIGHT IS OFFICIAL</TableCaption> }
                 <Thead bg={mode('gray.50', 'gray.800')}>
                     <Tr>
                         {columns.map((column, index) => {
