@@ -106,9 +106,14 @@ export const Scorecards = () => {
 
     const getScorecardData = scorecard => {
         const [fighter1, fighter2] = scorecard.fighterData;
-        const officialResult = scorecard.fight.officialResult.slice(0, 36) === fighter1.fighterId 
-        ? `${capFirstLetters(fighter1.lastName)} ${scorecard.fight.officialResult.slice(37)}`
-        : `${capFirstLetters(fighter2.lastName)} ${scorecard.fight.officialResult.slice(37)}`
+        let officialResult;
+        if(scorecard.fight.fightStatus === 'CANCELED'){
+            officialResult = scorecard.fight.fightStatus
+        } else {
+            officialResult = scorecard.fight.officialResult.slice(0, 36) === fighter1.fighterId 
+            ? `${capFirstLetters(fighter1.lastName)} ${scorecard.fight.officialResult.slice(37)}`
+            : `${capFirstLetters(fighter2.lastName)} ${scorecard.fight.officialResult.slice(37)}`
+        }
         
         const { finalScore, rounds } = scorecard.scorecard;
         
