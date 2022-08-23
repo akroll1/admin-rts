@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Box, Flex, HStack, Img, Link, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react'
 import { FaLinkedinIn, FaTwitter } from 'react-icons/fa'
 
-export const Member = (props) => {
+export const Member = props => {
   const { image, name, role, twitter, linkedIn, children } = props
   return (
     <Flex direction="column" align="center" textAlign="center">
@@ -22,7 +22,7 @@ export const Member = (props) => {
       >
         {children}
       </Text>
-      <HStack mt="5" spacing="3">
+      {/* <HStack mt="5" spacing="3">
         <Link isExternal color={useColorModeValue('blue.600', 'blue.300')} href={twitter}>
           <VisuallyHidden>{`${name}'s Twitter page`}</VisuallyHidden>
           <FaTwitter aria-hidden />
@@ -31,7 +31,7 @@ export const Member = (props) => {
           <VisuallyHidden>{`${name}'s Linkedin page`}</VisuallyHidden>
           <FaLinkedinIn aria-hidden />
         </Link>
-      </HStack>
+      </HStack> */}
     </Flex>
   )
 }
