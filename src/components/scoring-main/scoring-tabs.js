@@ -14,7 +14,7 @@ export const ScoringTabs = ({ tabs, setTabs }) => {
     }
     const tab_data = [
         {
-            label: 'Sidebar',
+            label: 'Info',
             value: 'sidebar',
             icon: InfoOutlineIcon
         },

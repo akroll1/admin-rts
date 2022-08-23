@@ -34,9 +34,6 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
                 Prediction
               </Th>
               <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
-                Status
-              </Th>
-              <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
                 Score
               </Th>
               <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
@@ -46,7 +43,14 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
         </Thead>
         <Tbody>
           { scorecards?.length > 0 && scorecards.map((row, index) => {
-            const { finalScore, groupScorecardId, isComplete, label, prediction, scorecardId } = row;
+            const { fightStatus, finalScore, groupScorecardId, label, prediction, rounds, scorecardId } = row;
+            const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
+            const renderScoreOrStatus = () => {
+              if(finalScore) return finalScore;
+              if(!finalScore){
+                return fightStatus === `CANCELED` ? `Canceled` : `Upcoming`;
+              }
+            }
             return (
               <Tr 
                 key={index} 
@@ -67,10 +71,7 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
                   { prediction }                      
                 </Td>
                 <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
-                  { isComplete ? `Fight Complete` : `Upcoming` }                      
-                </Td>
-                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
-                  { finalScore }                      
+                  { renderScoreOrStatus() }                      
                 </Td>
                 <Td value={value} onClick={handleCopy} id={`${scorecardId}`} textAlign="center" whiteSpace="nowrap">
                   { hasCopied && `${scorecardId}` === value ? `Copied!` : <CopyIcon /> }

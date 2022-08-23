@@ -58,6 +58,7 @@ export const ScoringMain = ({
         setSelectedRoundWinner('');
         setNotWinnerScore(9)
     }
+
     return (
         <Flex 
             id="scoring-main"

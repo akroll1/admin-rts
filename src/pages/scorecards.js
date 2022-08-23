@@ -7,42 +7,44 @@ import { ScorecardsPageScoringTable } from '../components/tables'
 import { ScorecardsSearch } from '../components/search'
 import { ExpiredTokenModal } from '../components/modals'
 import { capFirstLetters } from '../utils'
-import { ConsoleLogger } from '@aws-amplify/core'
+import { ScorecardsSearchTable } from '../components/tables/scorecards-search-table'
 
 export const Scorecards = () => {
-    const { scorecardId } = useParams();
     const { tokenConfig } = stateStore.getState();
-    const [scorecard, setScorecard] = useState([]);
+    const { initialScorecardId } = useParams();
+    const [scorecardId, setScorecardId] = useState(initialScorecardId)
+    const [search, setSearch] = useState('');
+    const [userScorecard, setUserScorecard] = useState({});
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchedUsername, setSearchedUsername] = useState('')
+    const [searchedUserScorecards, setSearchedUserScorecards] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [prediction, setPrediction] = useState('');
-    const [score, setScore] = useState('');
     const [modals, setModals] = useState({
         expiredTokenModal: false
     });
 
     useEffect(() => {
         if(scorecardId){
-            const getScorecard = async () => {
+            const getUserScorecard = async () => {
                 const url = process.env.REACT_APP_SCORECARDS + `/card/${scorecardId}`;
                 return axios.get(url, tokenConfig)
                 .then( res => {
                     if(res.data.length > 0 && res.data?.includes('Token expired')) return setModals({ ...modals, expiredTokenModal: true });
-                    setScorecard([res.data])
+                    setUserScorecard(res.data)
                 }).catch( err => console.log(err))
             }
-            getScorecard()
+            getUserScorecard()
         }
     },[scorecardId]);
     useEffect(() => {
-        if(scorecard?.length > 0){
-            getTableData(scorecard);
+        if(userScorecard?.username){
+            getTableData(userScorecard);
         }
-    },[scorecard]);
+    },[userScorecard]);
 
-    const getTableData = scorecards => {   
-        
-
-        const s = scorecards.map( scorecard => {
+    const getTableData = userScorecard => {   
+        const s = [userScorecard].map( scorecard => {
             const { fighterData, username } = scorecard;
             const [fighter1, fighter2] = fighterData;
             let { prediction } = scorecard.scorecard;
@@ -67,22 +69,6 @@ export const Scorecards = () => {
                 });
             }
             
-            if(prediction){
-                // 1. Get official result winner and how.
-                // 2. Get prediction and how.
-                const { 
-                    officialWinner, 
-                    officialHow, 
-                    predictedWinner, 
-                    predictedHow 
-                } = getOfficialResultAndUserPrediction();
-                // console.log('officialWinner: ', officialWinner);
-                // console.log('officialHow: ', officialHow);
-                // console.log('predictedWinner: ', predictedWinner)
-                // console.log('predictedHow: ', predictedHow)
-
-               
-            }
             const totals = scores.reduce( (acc, curr) => {
                 if(curr[fighter1.lastName]){
                     acc[fighter1.lastName] += curr[fighter1.lastName];
@@ -119,25 +105,59 @@ export const Scorecards = () => {
     }; 
 
     const getScorecardData = scorecard => {
-        
         const [fighter1, fighter2] = scorecard.fighterData;
         const officialResult = scorecard.fight.officialResult.slice(0, 36) === fighter1.fighterId 
         ? `${capFirstLetters(fighter1.lastName)} ${scorecard.fight.officialResult.slice(37)}`
         : `${capFirstLetters(fighter2.lastName)} ${scorecard.fight.officialResult.slice(37)}`
         
         const { finalScore, rounds } = scorecard.scorecard;
-
+        
         const username = scorecard.username;
-            return ({
-                fighter1,
-                fighter2,
-                finalScore,
-                officialResult,
-                totalRounds: rounds,
-                username
-            })
+        return ({
+            fighter1,
+            fighter2,
+            finalScore,
+            officialResult,
+            totalRounds: rounds,
+            username
+        })
     }
-    const { officialResult, finalScore, totalRounds, username} = scorecard.length > 0 ? getScorecardData(scorecard[0]) : '';
+
+    const handleUserSearch = e => {
+        const { value } = e.currentTarget;
+        setSearch(value);
+        const url = process.env.REACT_APP_USERS + `/search/${search}`;
+        if(value.length > 3){
+            return axios.get(url, tokenConfig)
+                .then( res => {
+                    console.log('res.data: ', res.data);
+                    setSearchResults(res.data)
+                })
+                .catch( err => console.log(err));
+        }
+    }
+
+    const handleAutocompleteClick = e => {
+        const { id, value } = e.currentTarget;
+        const url = process.env.REACT_APP_SCORECARDS + `/search/${id}`;
+        return axios.get(url, tokenConfig)
+            .then( res => {
+                setSearchedUsername(value)
+                setSearchedUserScorecards(res.data)
+                setSearchResults([]);
+            }).catch( err => console.log(err));
+    };
+
+    const handleScorecardSelect = e => {
+        const { id } = e.currentTarget;
+        console.log('id: ', id)
+        setScorecardId(id);
+    }
+
+    const { officialResult, finalScore, totalRounds, username } = userScorecard?.username ? getScorecardData(userScorecard) : '';
+    
+    // console.log('autocomplete: ' , autocomplete)
+    console.log('searchedUserScorecards: ', searchedUserScorecards);
     return (
         <Flex 
             p="8" 
@@ -161,17 +181,29 @@ export const Scorecards = () => {
                 >
                     Search Scorecards
                 </Heading>
-                <ScorecardsSearch />
+                <ScorecardsSearch
+                    handleAutocompleteClick={handleAutocompleteClick}
+                    handleUserSearch={handleUserSearch}    
+                    search={search}
+                    searchResults={searchResults} 
+                />
             </Flex>
             <Heading my="1" as="h2" size="md">Username: {username}</Heading>
             <Heading my="1" as="h3" size="md">Prediction: {prediction ? prediction : `No Prediction`}</Heading>
             <Heading my="1" as="h3" size="md">Official Result: {officialResult}</Heading>
-            <Heading my="1" as="h3" size="md">Score: {finalScore ? finalScore : `No Score`}</Heading>
+            <Heading my="1" as="h3" size="md">Score: {finalScore ? finalScore : `No Prediction`}</Heading>
 
             <ScorecardsPageScoringTable 
                 tableData={tableData}
                 totalRounds={totalRounds}
             />
+            { searchedUserScorecards.length > 0 && 
+                <ScorecardsSearchTable
+                    handleScorecardSelect={handleScorecardSelect}
+                    searchedUserScorecards={searchedUserScorecards}
+                    searchedUsername={searchedUsername} 
+                />
+            }
         </Flex>
     )
 }

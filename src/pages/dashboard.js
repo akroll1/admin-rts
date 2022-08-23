@@ -73,8 +73,8 @@ const Dashboard = props => {
           if(res.data?.length > 0 ) setUserScorecards(res.data)
           // console.log('res: ',res);
           const data = res.data?.map(obj => {
-            const { fighterData, scorecard } = obj;
-            const { groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
+            const { fighterData, fightStatus, scorecard } = obj;
+            const { finalScore, groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
             if(ownerId.includes('@')){
               const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
               const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
@@ -89,15 +89,14 @@ const Dashboard = props => {
                     return `No Prediction`
             }
             const prediction = setPrediction(scorecard.prediction);
-            const finalScore = scorecard.finalScore ? scorecard.finalScore : `No Score`;
             const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
-            const isComplete = scores.length >= rounds;
             return ({
+              fightStatus,
               finalScore,
               groupScorecardId,
-              isComplete,
               label,
               prediction,
+              rounds,
               scorecardId
             })
           });

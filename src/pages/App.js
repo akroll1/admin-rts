@@ -41,7 +41,7 @@ const App = () => {
             <Route exact path="/counterpunch" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
-            <Route exact path="/scorecards/:scorecardId" element={
+            <Route exact path="/scorecards/:initialScorecardId" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Scorecards /> 
               </PrivateRoute>
