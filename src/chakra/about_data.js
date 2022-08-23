@@ -1,5 +1,5 @@
   
-  export const members = [
+  export const about_data = [
     {
       role: 'Founder / CEO',
       image: 'me-3.jpeg',

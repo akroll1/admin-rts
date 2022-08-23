@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react'
-import { Member } from '../../chakra'
-import { members } from '../../chakra'
+import { Member, about_data } from '../../chakra'
 
 export const About = () => (
   <Box as="section">
@@ -20,7 +19,7 @@ export const About = () => (
         </Text>
       </Box>
       <SimpleGrid mt="20" columns={{ base: 1, md: 2, lg: 3 }} spacingX="6" spacingY="16">
-        {members.map((member, idx) => (
+        {about_data.map((member, idx) => (
           <Member
             key={idx}
             role={member.role}
