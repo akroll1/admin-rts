@@ -1,5 +1,5 @@
   
-  export const members = [
+  export const about_data = [
     {
       role: 'Founder / CEO',
       image: 'me-3.jpeg',
@@ -30,14 +30,12 @@
         'Consectetur libero id faucibus nisl tincidunt eget nullam fringilla urna porttitor.',
     },
     {
-      role: 'CFO',
-      image:
-        'rob.png',
-      name: 'Rob Quatela',
+      role: 'UI/UX',
+      image: '',
+      name: 'Dallin Higgins',
       twitter: '#',
       linkedin: '#',
-      description:
-        'Mi eget mauris pharetra et ultrices neque ornare aenean massa eget egestas purus.',
+      description: 'Mi eget mauris pharetra et ultrices neque ornare aenean massa eget egestas purus.',
     },
     {
       role: 'Lead Architect',

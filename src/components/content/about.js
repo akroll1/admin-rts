@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react'
-import { Member, members } from '../../chakra'
+import { Member, about_data } from '../../chakra'
 
 export const About = () => (
   <Box as="section">
@@ -15,11 +15,11 @@ export const About = () => (
           About the team
         </Heading>
         <Text fontSize="xl" maxW="2xl" mx="auto">
-          FightCloud is dedicated to bringing boxing fans the most relevant boxing information to them in real time. This is the team.
+          FightCloud is dedicated to bringing boxing fans the most relevant boxing information to them in real time. These guys make it happen.
         </Text>
       </Box>
       <SimpleGrid mt="20" columns={{ base: 1, md: 2, lg: 3 }} spacingX="6" spacingY="16">
-        {members.map((member, idx) => (
+        {about_data.map((member, idx) => (
           <Member
             key={idx}
             role={member.role}
