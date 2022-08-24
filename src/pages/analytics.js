@@ -10,7 +10,7 @@ import { useWindowResize } from '../hooks'
 import axios from 'axios'
 
 const Analytics = () => {
-    const { showId } = useParams(); // showId: /c8734c80-16e6-46d1-90f4-c103de4b8b92
+    const { getShowId } = useParams(); // showId: /c8734c80-16e6-46d1-90f4-c103de4b8b92
     const windowWidth = useWindowResize();
     const { tokenConfig } = stateStore.getState();
     const [tabs, setTabs] = useState({

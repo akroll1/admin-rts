@@ -51,7 +51,7 @@ const App = () => {
                 <Analytics /> 
               </PrivateRoute>
             }/>
-            <Route exact path="/analytics/:showId" element={
+            <Route exact path="/analytics/:getShowId" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Analytics /> 
               </PrivateRoute>

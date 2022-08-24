@@ -67,59 +67,6 @@ export const AnalyticsSidebarAllShows = ({
                     })
                 }
             </NavGroup>    
-        
-            <DividerWithText mt="1" text={show.showName} /> 
-            <Stack 
-                w="full" 
-                spacing="4" 
-                flex="1" 
-                overflow="auto" 
-                pt="8" 
-                p="2"
-            >               
-                <NavGroup label="Show">
-                    <NavItem 
-                        icon={<FaTv />} 
-                        label={ show.network } 
-                    />
-                    <NavItem 
-                        icon={<FaMapMarkerAlt />} 
-                        label={ show.location } 
-                    />
-                    <NavItem 
-                        icon={<FaRegClock />} 
-                        label={ parseEpoch(show.showTime) } 
-                    />
-                </NavGroup>
-
-                <NavGroup label="Fight">
-                    <NavItem 
-                        icon={<BiChevronRightCircle />} 
-                        label={ `${fight.rounds} Rounds`} 
-                    />
-                    <NavItem 
-                        icon={<IoScaleOutline />} 
-                        label={ transformedWeightclass(fight.weightclass) } 
-                    />
-                    <NavItem 
-                        icon={<FaRegMoneyBillAlt />} 
-                        label={ fight.odds } 
-                    /> 
-                </NavGroup>
-
-                <NavGroup label="Support">
-                    <NavItem 
-                        subtle 
-                        icon={<BiCog />} 
-                        label="Explanations" 
-                    />
-                    <NavItem 
-                        subtle 
-                        icon={<BiBuoy />} 
-                        label="Help & Support" 
-                    />
-                </NavGroup>
-            </Stack>
         </Flex>
     )
 
