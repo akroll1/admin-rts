@@ -12,7 +12,6 @@ export const AnalyticsSidebar = ({
         const { name } = e.currentTarget;
         setSidebar(name)
     }
-    console.log('sidebar: ', sidebar)
     return (
 
         <Flex 
@@ -38,23 +37,42 @@ export const AnalyticsSidebar = ({
                 <Stack spacing="16">
                     <Tabs variant="with-line">
                         <TabList w="100%">
-                            <Tab flex="0 0 50%" borderRight="2px solid gray" _focus={sidebar === 'all' ? { borderBottom: '2px solid blue'} : ''} name="all" onClick={handleTabClick}>All Shows</Tab>
-                            <Tab flex="0 0 50%" _focus={sidebar === 'selected' ? { borderBottom: '2px solid blue'} : ''} name="selected" onClick={handleTabClick}>Selected Show</Tab>
+                            <Tab 
+                                flex="0 0 50%" 
+                                borderRight="2px solid gray" 
+                                _focus={sidebar === 'all' ? { borderBottom: '2px solid lightblue'} : ''} 
+                                name="all" 
+                                onClick={handleTabClick}
+                            >
+                                All Shows
+                            </Tab>
+                            <Tab 
+                                flex="0 0 50%" 
+                                _focus={sidebar === 'selected' ? { borderBottom: '2px solid lightblue'} : ''} 
+                                name="selected" 
+                                onClick={handleTabClick}
+                            >
+                                Show Info
+                            </Tab>
                         </TabList>
                     </Tabs>
                 </Stack>
             </Container>
-            <AnalyticsSidebarAllShows 
-                allAnalyticsShows={allAnalyticsShows}
-                setSelectedAnalyticsShow={setSelectedAnalyticsShow}
-                sidebar={sidebar} 
-            />
-            <AnalyticsSidebarSelectedShow 
-                allAnalyticsShows={allAnalyticsShows}
-                selectedAnalyticsShow={selectedAnalyticsShow}
-                sidebar={sidebar} 
-                setSelectedAnalyticsShow={setSelectedAnalyticsShow}
-            />
+            { sidebar === 'all' && 
+                <AnalyticsSidebarAllShows 
+                    allAnalyticsShows={allAnalyticsShows}
+                    setSelectedAnalyticsShow={setSelectedAnalyticsShow}
+                    sidebar={sidebar} 
+                />
+            }
+            { sidebar === 'selected' &&
+                <AnalyticsSidebarSelectedShow 
+                    allAnalyticsShows={allAnalyticsShows}
+                    selectedAnalyticsShow={selectedAnalyticsShow}
+                    sidebar={sidebar} 
+                    setSelectedAnalyticsShow={setSelectedAnalyticsShow}
+                />
+            }
         </Flex>
     )
 }
