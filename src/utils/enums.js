@@ -27,15 +27,16 @@ export const WEIGHTCLASS_ENUMS = [
 ];
 
 export const NETWORK_ENUMS = [
+	{ value: 'DAZN', label: 'DAZN' },
 	{ value: 'ESPN', label: 'ESPN' },
 	{ value: 'ESPN+', label: 'ESPN+' },
+	{ value: 'FIGHTSYNC', label: 'FightSync' },
+	{ value: 'FIGHTTV', label: 'Fight TV' },
+	{ value: 'FOXSPORTS', label: 'Fox Sports' },
 	{ value: 'HBO', label: 'HBO' },
-	{ value: 'HBOPPV', label: 'HBOPPV' },
-	{ value: 'DAZN', label: 'DAZN' },
-	{ value: 'SHOWTIME',  label: 'SHOWTIME' },
-	{ value: 'SHOWTIMEPPV', label: 'SHOWTIMEPPV' },
-	{ value: 'FIGHTSYNC', label: 'FIGHTSYNC' },
-	{ value: 'FIGHTTV', label: 'FIGHTTV' },
+	{ value: 'HBOPPV', label: 'HBO PPV' },
+	{ value: 'SHOWTIME',  label: 'Showtime' },
+	{ value: 'SHOWTIMEPPV', label: 'Showtime PPV' },
 	{ value: 'NONE', label: 'NONE' }
 ];
 
