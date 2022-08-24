@@ -52,9 +52,10 @@ export const AnalyticsSidebarSelectedShow = ({
         setSelectedAnalyticsShow(selected)
         setData(selected)
     }
+
     const { fight, show } = data;
     // console.log('analyticsShows: ', analyticsShows);
-    // console.log('selectedAnaltyicsShow: ', selectedAnalyticsShow)
+    console.log('selectedAnaltyicsShow: ', selectedAnalyticsShow)
     return (
         <Flex w="100%" flexDir="column" display={sidebar === 'selected' ? 'flex' : 'none'}>
             <DividerWithText text={show.showName} /> 
