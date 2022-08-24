@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Flex ,Box, Container, Stack, Tab, TabList, Tabs } from '@chakra-ui/react'
-import { AnalyticsSidebarAllShows, AnalyticsSidebarSelectedShow } from './analytics-sidebars'
+import { AnalyticsSidebarRecentShows, AnalyticsSidebarSelectedShow } from './analytics-sidebars'
 
 export const AnalyticsSidebar = ({
     allAnalyticsShows,
@@ -44,7 +44,7 @@ export const AnalyticsSidebar = ({
                                 name="all" 
                                 onClick={handleTabClick}
                             >
-                                All Shows
+                                Recent Shows
                             </Tab>
                             <Tab 
                                 flex="0 0 50%" 
@@ -59,7 +59,7 @@ export const AnalyticsSidebar = ({
                 </Stack>
             </Container>
             { sidebar === 'all' && 
-                <AnalyticsSidebarAllShows 
+                <AnalyticsSidebarRecentShows 
                     allAnalyticsShows={allAnalyticsShows}
                     setSelectedAnalyticsShow={setSelectedAnalyticsShow}
                     sidebar={sidebar} 

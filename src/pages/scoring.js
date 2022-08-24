@@ -256,14 +256,19 @@ const Scoring = () => {
     const submitRoundScores = scoreUpdate => {
         if(fightComplete) return; 
         setIsSubmitting(true);
-        const update = {
-            ...fighterScores,
+        
+        const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
+        let update = {};
+        for(const [key, val] of Object.entries(fighterScores)){
+            if(key !== 'scorecardId'){
+                update[key] = val   
+            }
+        }
+        update = {
+            ...update,
             ...scoreUpdate
         };
         setChatScorecard(update);
-        
-        const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`;
-        // console.log('update: ', update)
         return axios.put(url, update, tokenConfig)
             .then( res => {
                 if(res.status === 200){

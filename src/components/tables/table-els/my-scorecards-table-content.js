@@ -60,7 +60,6 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
                   cursor: 'pointer', 
                   bg: 'gray.700', 
                   color: '#fff', 
-                  borderX: '1px solid #795858',
                   borderBottom: '2px solid #795858',
                   borderRadius: '5px'
                 }} 
