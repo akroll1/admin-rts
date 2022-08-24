@@ -11,7 +11,7 @@ const stats = [
     },
   },
   {
-    label: 'Winner Avg. Rounds Won',
+    label: 'Winner Rounds Won %',
     value:  `${Math.ceil(Math.random()*100)}%`,
     delta: {
       value: '2.3%',
@@ -19,7 +19,7 @@ const stats = [
     },
   },
   {
-    label: 'Correct Winner Predictions',
+    label: 'Correct Winner Predictions %',
     value: `${Math.ceil(Math.random()*100)}%`,
     delta: {
       value: '0.1%',
