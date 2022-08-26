@@ -3,7 +3,15 @@ import { Button, Flex, FormControl, FormGroup, FormLabel, Input, InputGroup, Inp
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { DividerWithText, FieldGroup } from '../../../chakra'
 
-export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmailSubmit, handleFormChange, handleCreateGroupScorecard, members }) => {
+export const ShowsCreateGroupScorecard = ({ 
+    deleteMember, 
+    emailValue, 
+    handleEmailSubmit, 
+    handleFormChange, 
+    handleCreateGroupScorecard, 
+    isSubmitting,
+    members 
+}) => {
     return ( 
         <>
             <DividerWithText text={'Create a Group Scorecard'} />
@@ -37,10 +45,18 @@ export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmai
                                 m="2"
                                 mt={["4"]}
                                 type="button"
-                                >
+                            >
                                 Add Members
                             </Button>
-                            <Button m="2" mt={["4"]} onClick={handleCreateGroupScorecard} type="button" colorScheme="blue">
+                            <Button 
+                                isLoading={isSubmitting}
+                                loadingText="Submitting"
+                                m="2" 
+                                mt={["4"]} 
+                                onClick={handleCreateGroupScorecard} 
+                                type="button" 
+                                colorScheme="blue"
+                            >
                                 Create Scorecard
                             </Button>
                         </Flex>
