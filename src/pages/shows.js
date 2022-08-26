@@ -16,6 +16,7 @@ const Shows = props => {
     const toast = useToast();
     const { user, tokenConfig } = stateStore.getState();
     const { email, sub, username } = user;
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [modals, setModals] = useState({
         expiredTokenModal: false
     });
@@ -214,6 +215,7 @@ const Shows = props => {
     },[showReviewForm]);
 
     const handleCreateGroupScorecard = async () => {
+        setIsSubmitting(true);
         const url = process.env.REACT_APP_GROUP_SCORECARDS;
 
         const tempMembersArr = members.concat(email);
@@ -241,8 +243,8 @@ const Shows = props => {
                     // this is fine, group scorecards is just under development.
                     return navigate(`/dashboard/scorecards`);
                 }
-            })
-            .catch(err => console.log(err));
+            }).catch(err => console.log(err))
+            .finally(() => setIsSubmitting(false));
     };
     // console.log('selectedShow: ' , selectedShow);
     const { members } = groupScorecard;
@@ -273,17 +275,18 @@ const Shows = props => {
                 handleShowSelect={handleShowSelect} 
             />  
             <ShowsMain 
-                predictionsAndReviews={predictionsAndReviews}
-                showReviewForm={showReviewForm}
-                setShowReviewForm={setShowReviewForm}
-                selectedShow={selectedShow}
-                reviewType={reviewType}
-                handleEmailSubmit={handleEmailSubmit}
                 deleteMember={deleteMember}
-                members={members}
                 emailValue={emailValue}
-                handleFormChange={handleFormChange}
                 handleCreateGroupScorecard={handleCreateGroupScorecard}
+                handleEmailSubmit={handleEmailSubmit}
+                handleFormChange={handleFormChange}
+                isSubmitting={isSubmitting}
+                members={members}
+                predictionsAndReviews={predictionsAndReviews}
+                reviewType={reviewType}
+                selectedShow={selectedShow}
+                setShowReviewForm={setShowReviewForm}
+                showReviewForm={showReviewForm}
             />
            
         </Flex>

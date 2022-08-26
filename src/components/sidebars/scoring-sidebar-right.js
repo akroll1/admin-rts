@@ -19,7 +19,7 @@ export const ScoringSidebarRight = ({
                 temp.shift(temp.length -1)
                 setNotifications(temp);
                 setNotificationTimeout(prev => !prev);
-            }, 3000)
+            }, 30000)
             return () => clearTimeout(timer);
         }
     },[notificationTimeout])
@@ -46,6 +46,7 @@ export const ScoringSidebarRight = ({
             {notifications.length > 0 && notifications.map( ({notification, username}) => {
                 return (
                     <Flex 
+                        key={notification}
                         w={["100%","auto"]} 
                         position="fixed" 
                         top="3rem" 
