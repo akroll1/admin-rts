@@ -36,9 +36,7 @@ export const Notification = ({
           >
             <HStack divider={<StackDivider />} spacing="0">
               <HStack spacing="4" p="4" flex="1">
-                  {useBreakpointValue({base: false, sm: true}) && (
-                      <Avatar src="https://tinyurl.com/yhkm2ek8" name="Mike Tyson" boxSize="10" /> )
-                  }
+                <Avatar src="https://tinyurl.com/yhkm2ek8" name="Mike Tyson" boxSize="10" /> 
                 <Box>
                   <Text fontWeight="medium" fontSize="sm">
                     {displayName}
