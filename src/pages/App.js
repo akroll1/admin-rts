@@ -33,14 +33,22 @@ const App = () => {
             <Route exact path="/learn-more" element={<LearnMore />} />
             <Route exact path="/scoring/:groupScorecardId" element={<Scoring />} />
             <Route exact path="/scoring" element={<Scoring />} />
-            <Route exact path="/fighters" element={<Fighters />} />
-            <Route exact path="/fighters/:id" element={<Fighters />} />
             <Route exact path="/blog" element={<Blog />} />
             <Route exact path="/blog/:id" element={<BlogArticle />} />
             <Route exact path="/featured-fights/:id" element={<FeaturedFights />} />
             <Route exact path="/counterpunch" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
+            <Route exact path="/fighters" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <Fighters /> 
+              </PrivateRoute>
+            }/>
+            <Route exact path="/fighters/:id" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <Fighters /> 
+              </PrivateRoute>
+            }/>
             <Route exact path="/scorecards/:initialScorecardId" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Scorecards /> 

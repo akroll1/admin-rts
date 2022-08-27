@@ -181,7 +181,7 @@ export const MyPoundList = ({ tokenConfig, user }) => {
           m="4"
           mt="0"
         >
-          <Heading as="h3" p="4" pt="0" size={["sm", "md", "lg"]}>The FightSync List</Heading> 
+          <Heading as="h3" p="4" pt="0" size={["sm", "md"]}>The FightSync List</Heading> 
           <UnorderedList  h="30rem" boxSizing="border-box" w="100%" listStyleType="none">
               {officialPoundList?.length > 0 && officialPoundList.slice(0,10).map((item, i) => {
                 // console.log('item: ',item)

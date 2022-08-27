@@ -7,9 +7,9 @@ export const LinkGrid = (props) => (
     <Box minW="110px">
       <FooterHeading mb="4">Product</FooterHeading>
       <Stack>
-        <Link href='/about'>About</Link>
+        <Link href='/fighters'>Fighters</Link>
         <Link href='#'>API</Link>
-        <Link href='#'>Use Cases</Link>
+        <Link href='/about'>About</Link>
       </Stack>
     </Box>
     <Box minW="110px">

@@ -5,17 +5,18 @@ import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 
 export const ShowsMain = ({
-    predictionsAndReviews,
-    showReviewForm, 
-    setShowReviewForm, 
-    selectedShow, 
-    reviewType,
-    handleEmailSubmit, 
     deleteMember,
-    members,
     emailValue,
-    handleFormChange,
     handleCreateGroupScorecard,
+    handleEmailSubmit, 
+    handleFormChange,
+    isSubmitting,
+    members,
+    predictionsAndReviews,
+    reviewType,
+    selectedShow, 
+    setShowReviewForm, 
+    showReviewForm, 
 }) => {
     const { show: { showTime }} = selectedShow;
     const UPCOMING = showTime > Date.now() ? true : false; 
@@ -59,6 +60,7 @@ export const ShowsMain = ({
                     handleEmailSubmit={handleEmailSubmit} 
                     handleFormChange={handleFormChange} 
                     handleCreateGroupScorecard={handleCreateGroupScorecard} 
+                    isSubmitting={isSubmitting}
                     members={members} 
                 />
             } 

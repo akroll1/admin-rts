@@ -9,7 +9,7 @@ export const Stars = ({ handleStarRating, handleStarDivClick }) => {
             return (
                 <Flex mt="3" flexDirection="row" alignItems="center" justifyContent="center" _hover={{cursor: 'pointer'}} key={i} id={x}>
                     <Flex display="flex" flexDirection="row" w="50%" alignItems="center" justifyContent="flex-start">
-                        <Text mr="1rem" textAlign="left">{capFirstLetters(x) === 'ringGeneralship' ? 'Ring Generalship' : capFirstLetters(x)}</Text>
+                        <Text as="p" size="sm" mr="1rem" textAlign="left">{x === 'ringGeneralship' ? `Ring Generalship` : capFirstLetters(x)}</Text>
                     </Flex>
                     <Flex display="flex" flexDirection="row" w="50%" alignItems="center" justifyContent="flex-end">
                             <ReactStars
