@@ -10,8 +10,21 @@ export const FightersPageFighterProfile = ({
 }) => {
     const { firstName, lastName, fighterId, ringname } = selectedFighter ? selectedFighter : {};
     return (
-        <Flex w="100%" alignItems="center" justifyContent="space-around">
-            <Flex alignItems="center" justifyContent="center" flex="1 0 30%" bg="gray.500" maxW={{ base: 'xs', md: '3xl' }} mx="auto" p="5" borderRadius="3px">
+        <Flex 
+            w="100%" 
+            alignItems="center" 
+            justifyContent="space-around"
+        >
+            <Flex 
+                alignItems="center" 
+                justifyContent="center" 
+                flex="1 0 30%" 
+                bg="gray.500" 
+                maxW={{ base: 'xs', md: '3xl' }} 
+                mx="auto" 
+                p="5" 
+                borderRadius="3px"
+            >
                 <CardWithAvatar w="100%" key={fighterId} avatarProps={{ lastName, firstName }}>
                 <FighterInfoCard mt="3" ringname={ringname} lastName={lastName} firstName={firstName} bio={lastName} isVerified={true} />
                 <FollowerCount my="3" count={Math.random().toFixed(3)*1000}  />
@@ -23,7 +36,7 @@ export const FightersPageFighterProfile = ({
             </Flex>
             <Flex flexDirection="column" flex="1 0 60%" alignItems="center" justifyContent="flex-start">
                 <Heading mt="1rem" as="h3" size="md">Fan Ratings and Reviews</Heading>
-                <p>chakra ecomm reviews go here</p>
+                {/* <p>chakra ecomm reviews go here</p> */}
                 <Stars />
             </Flex>
         </Flex>
