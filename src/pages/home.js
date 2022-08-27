@@ -69,7 +69,7 @@ const Home = () => {
             Win prizes for making correct pre-fight and in-fight predictions.
           </Feature>
           <Feature title="Score with Friends" icon={<FaHeadset />}>
-            Create a group and score fights together- in real time.
+            Create a group and score fights together- in real time!
           </Feature>
           <Feature title="Contribute" icon={<FaFileSignature />}>
             Score fights and contribute to crowd-sourced boxing analytics. 
