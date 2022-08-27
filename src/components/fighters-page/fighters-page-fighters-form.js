@@ -6,9 +6,7 @@ import { capFirstLetters } from '../../utils';
 export const FightersPageFightersForm = ({ 
     selectedFighter 
 }) => {
-
     const { fighterId, firstName, lastName, ringname, wins, losses, draws, kos, dq, socials, home } = selectedFighter;
-    console.log('fighterId: ', fighterId);
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto" height="auto">
@@ -31,7 +29,7 @@ export const FightersPageFightersForm = ({
                             
                             <FormControl id="ringname">
                                 <FormLabel>Ring Name</FormLabel>
-                                <Input value={`${ringname}`} type="text" maxLength={255} />
+                                <Input value={`${capFirstLetters(ringname)}`} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="home">

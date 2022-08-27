@@ -28,7 +28,7 @@ import {
   export const LearnMore = () => {
     const navigate = useNavigate();
     return (
-      <Box as="section" py="24" bg={mode('gray.100', 'gray.800')}>
+      <Box as="section" py="8" bg={mode('gray.100', 'gray.800')}>
         <Box maxW={{ base: 'xl', md: '7xl' }} mx="auto" px={{ base: '6', md: '8' }}>
           <Grid templateColumns={{ base: '1fr', md: '360px 1fr' }} gap="64px">
             <Box>
@@ -43,11 +43,11 @@ import {
               </Button>
               <Testimonial
                 logo={<LearnMoreLogo />}
-                author="Shannon Briggs"
-                company="#LETSGOCHAMP"
+                author="Mike Tyson"
+                company="HOF Champion"
                 image="https://images.unsplash.com/photo-1531078215167-91fcfe45b39e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2598&q=80"
               >
-                &ldquo; I score all my fights on FightCloud's real-time scoring app. Search all my past scorecards on here as well. &rdquo;
+                &ldquo;Watch me score the fight in real-time on the FightSync app. Search all my past scorecards and see my predictions.&rdquo;
               </Testimonial>
             </Box>
             <Box>
@@ -69,13 +69,13 @@ import {
                 bg={{ base: mode('gray.200', 'gray.700'), lg: 'unset' }}
               >
                 <Feature title="Score Fights, Win Prizes">
-                  Score fights in real-time- on your computer or phone! Win prizes for KO predictions and high scores.
+                  Score fights in real-time- on the FightSync app and win prizes for correct predictions and high scores.
                 </Feature>
                 <Feature title="Score Fights with Friends">
-                  Form a group and score fights with friends. Watch their scores in real-time. Predict the fight and get rewarded!
+                  Form a group and score fights with friends. Watch their scores in real-time. Predict the fight and get rewarded.
                 </Feature>
                 <Feature title="All Scorecards Automatically Saved">
-                  All Scorecards are saved in the FightSync cloud. Make them public and compare how you scored the fight compared to other fans. 
+                  All Scorecards are saved in the FightSync cloud. Search other users and compare scores. 
                 </Feature>
               </SimpleGrid>
             </Box>
