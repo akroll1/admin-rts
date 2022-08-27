@@ -13,7 +13,7 @@ export const ReviewItem = ({
   const [clickedUP, setClickedUP] = useState(false)
   const [clickedDOWN, setClickedDOWN] = useState(false)
   const { likes, rating, review, reviewId, title, updatedAt, username } = reviewItem;
-
+  console.log('updatedAt: ', updatedAt)
   useEffect(() => {
     setLocalLikes(likes > 0 ? likes * Math.ceil(Math.random()*100) : 1)
   },[likes]);
