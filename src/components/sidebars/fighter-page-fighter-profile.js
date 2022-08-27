@@ -1,14 +1,16 @@
 import React from 'react'
-import { Button, Flex, Heading, useColorModeValue } from '@chakra-ui/react'
+import { Button, Flex, Heading } from '@chakra-ui/react'
 import { CardWithAvatar  } from './fighters-sidebar-components'
 import { FollowerCount } from './fighters-sidebar-components'
 import { FighterInfoCard } from './fighters-sidebar-components'
 import { Stars } from '../stars'
 
-export const FightersPageFighterProfile = ({ selectedFighter, handleViewProfile }) => {
+export const FightersPageFighterProfile = ({ 
+    selectedFighter 
+}) => {
     const { firstName, lastName, fighterId, ringname } = selectedFighter ? selectedFighter : {};
     return (
-        <>
+        <Flex w="100%" alignItems="center" justifyContent="space-around">
             <Flex alignItems="center" justifyContent="center" flex="1 0 30%" bg="gray.500" maxW={{ base: 'xs', md: '3xl' }} mx="auto" p="5" borderRadius="3px">
                 <CardWithAvatar w="100%" key={fighterId} avatarProps={{ lastName, firstName }}>
                 <FighterInfoCard mt="3" ringname={ringname} lastName={lastName} firstName={firstName} bio={lastName} isVerified={true} />
@@ -24,6 +26,6 @@ export const FightersPageFighterProfile = ({ selectedFighter, handleViewProfile 
                 <p>chakra ecomm reviews go here</p>
                 <Stars />
             </Flex>
-        </>
+        </Flex>
     )
 }

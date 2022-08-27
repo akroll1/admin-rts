@@ -1,6 +1,6 @@
 import React from 'react'
 import { HStack, Text, useColorModeValue, VStack } from '@chakra-ui/react'
-import { capFirstLetters } from '../../utils';
+import { capFirstLetters } from '../../../utils';
 
 export const FighterInfoCard = props => {
   const { firstName, lastName, ringname, bio, isVerified, ...stackProps } = props;

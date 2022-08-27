@@ -3,12 +3,12 @@ import * as React from 'react'
 import { BsCaretRightFill } from 'react-icons/bs'
 
 export const NavItem = (props) => {
-  const { fighterId, handleFighterSelect, active, subtle, icon, children, label, endElement, href } = props
+  const { fighterId, handleSidebarFighterSelect, active, subtle, icon, children, label, endElement, href } = props
   return (
     <HStack
       w="100%"
       id={fighterId}
-      onClick={e => handleFighterSelect(e)}
+      onClick={handleSidebarFighterSelect}
       as="a"
       href={href}
       flex="1"
