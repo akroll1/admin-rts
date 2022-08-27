@@ -80,7 +80,7 @@ export const FightersForm = ({ user, tokenConfig }) => {
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto" height="auto">
-            <form id="settings-form" onSubmit={e => {e.preventDefault()}}>
+            <form id="fighters_form" onSubmit={e => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
                     Fighter Form

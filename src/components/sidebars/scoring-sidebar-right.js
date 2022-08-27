@@ -18,8 +18,8 @@ export const ScoringSidebarRight = ({
                 const temp = notifications;
                 temp.shift(temp.length -1)
                 setNotifications(temp);
-                setNotificationTimeout(prev => !prev);
-            }, 30000)
+                // setNotificationTimeout(prev => !prev);
+            }, 10000)
             return () => clearTimeout(timer);
         }
     },[notificationTimeout])
@@ -43,27 +43,25 @@ export const ScoringSidebarRight = ({
             borderRadius="md" 
             overflowY="scroll"
         > 
+            <Flex 
+                w={["100%","auto"]} 
+                position="fixed" 
+                top="3rem" 
+                right="0" 
+                flexDir="column" 
+                zIndex="10000"
+            >
             {notifications.length > 0 && notifications.map( ({notification, username}) => {
                 return (
-                    <Flex 
+                    <Notification
                         key={notification}
-                        w={["100%","auto"]} 
-                        position="fixed" 
-                        top="3rem" 
-                        right="0" 
-                        flexDir="column" 
-                        zIndex="10000"
-                    >
-                        <Notification
-                            key={notification}
-                            id={notification}
-                            handleCloseNotification={handleCloseNotification}
-                            notification={notification} 
-                            username={username}
-                        /> 
-                    </Flex>  
-                )  
-            })}
+                        id={notification}
+                        handleCloseNotification={handleCloseNotification}
+                        notification={notification} 
+                        username={username}
+                    /> 
+                )})}
+            </Flex>  
             <FightStats tabs={tabs} />
             <ChatSidebar 
                 setNotifications={setNotifications}
