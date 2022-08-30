@@ -12,8 +12,7 @@ export const ReviewItem = ({
   const [localLikes, setLocalLikes] = useState(0);
   const [clickedUP, setClickedUP] = useState(false)
   const [clickedDOWN, setClickedDOWN] = useState(false)
-  const { likes, rating, review, reviewId, title, updatedAt, username } = reviewItem;
-  console.log('updatedAt: ', updatedAt)
+  const { createdAt, likes, rating, review, reviewId, title, username } = reviewItem;
   useEffect(() => {
     setLocalLikes(likes > 0 ? likes * Math.ceil(Math.random()*100) : 1)
   },[likes]);
@@ -76,7 +75,7 @@ export const ReviewItem = ({
         {review}
       </Text>
       <Text color={useColorModeValue('gray.600', 'gray.400')} fontSize="sm">
-        - {username} on {parseEpoch(updatedAt,'reviews')}
+        - {username} on {parseEpoch(createdAt,'reviews')}
       </Text>
       <Flex 
         px="1" 

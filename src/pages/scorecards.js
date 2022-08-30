@@ -11,7 +11,7 @@ import { ScorecardsSearchTable } from '../components/tables/scorecards-search-ta
 
 export const Scorecards = () => {
     const { tokenConfig } = stateStore.getState();
-    const { initialScorecardId } = useParams();
+    const { initialScorecardId, userId } = useParams();
     const [scorecardId, setScorecardId] = useState(initialScorecardId)
     const [search, setSearch] = useState('');
     const [userScorecard, setUserScorecard] = useState({});
