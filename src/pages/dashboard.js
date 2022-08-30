@@ -70,6 +70,9 @@ const Dashboard = props => {
       const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
       return axios.get(url, tokenConfig)
         .then(res => {
+          if(res.data.includes('Token expired')){
+            return setModals({ ...modals, expiredTokenModal: true });
+          }
           if(res.data?.length > 0 ) setUserScorecards(res.data)
           // console.log('res: ',res);
           const data = res.data?.map(obj => {

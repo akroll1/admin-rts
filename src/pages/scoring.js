@@ -68,20 +68,22 @@ const Scoring = () => {
     const [predictionLock, setPredictionLock] = useState(true);
     const [showData, setShowData] = useState(null);
     const [fighterData, setFighterData] = useState([]);
+    const [usernameAndUserId, setUsernameAndUserId] = useState([]);
+    const [adminUsername, setAdminUsername] = useState('');
     //////////////////  URL'S /////////////////////////
     const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
 
     useEffect(() => {
-        if(showData?.fight?.fightId){
+        if(modals.moneylineModal){
             const fetchPanelProps = async () => {
                 const url = process.env.REACT_APP_PANELS + `/props/${showData.fight.fightId}`;
                 return axios.get(url, tokenConfig)
-                    .then( res => setProps(res.data ? res.data.panelScores : []))
+                    .then( res => setProps(res.data ? res.data : []))
                     .catch( err => console.log(err));
             }
             fetchPanelProps();
         }
-    }, [showData?.fight])
+    }, [modals.moneylineModal])
     useEffect(() => {
         if(!user?.sub){
             navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
@@ -132,7 +134,10 @@ const Scoring = () => {
                 show: res.data.show,
                 fight: res.data.fight
             });
-            
+            const getUsernames = res.data.scorecards.map( ({ username, ownerId }) => ({ username, ownerId }));
+            setUsernameAndUserId(getUsernames);
+            setAdminUsername(res.data.adminUsername)
+
             // Get THIS USER'S scorecard.
             const [thisUserScorecard] = res.data.scorecards?.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
             console.log('thisUserScorecard', thisUserScorecard);
@@ -370,7 +375,7 @@ const Scoring = () => {
     }
     const { finalScore } = userScorecard;
     const { rounds } = showData?.fight ? showData.fight : 0;
-    console.log('fightStatus: ', fightStatus)
+
     return (
         <Flex 
             id="scoring"
@@ -422,14 +427,16 @@ const Scoring = () => {
                 maxH="60vh"
             >
                 <ScoringSidebarLeft
-                    modals={modals}
-                    setModals={setModals}
-                    tabs={tabs}
+                    adminUsername={adminUsername}
                     finalScore={finalScore}
-                    groupScorecard={groupScorecard}
-                    prediction={prediction}
-                    showData={showData}
                     handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
+                    groupScorecard={groupScorecard}
+                    modals={modals}
+                    prediction={prediction}
+                    setModals={setModals}
+                    showData={showData}
+                    tabs={tabs}
+                    usernameAndUserId={usernameAndUserId}
                 />
                 <ScoringMain
                     fightComplete={fightComplete}
