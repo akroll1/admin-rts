@@ -9,17 +9,20 @@ import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMone
 import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { stateStore } from '../../stores'
+import { Navigate, useNavigate } from 'react-router'
 
 export const ScoringSidebarLeft = ({ 
-    modals, 
-    setModals,
+    adminUsername,
     finalScore, 
-    groupScorecard,
     handleOpenAddMemberSubmitModal,
+    modals, 
     prediction, 
+    setModals,
     showData, 
-    tabs
+    tabs,
+    usernameAndUserId
 }) => {
+    const navigate = useNavigate();
     const [showGuests, setShowGuests] = useState(null)
     const { availableGuestJudges } = stateStore.getState();
   
@@ -34,8 +37,12 @@ export const ScoringSidebarLeft = ({
     }
     const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? getSidebarData(showData) : '';
     finalScore = parseInt(finalScore);
-    const { members } = groupScorecard;
 
+    const gotToSearch = e => {
+        console.log('e: ', e)
+        const { id } = e.currentTarget;
+        navigate(`/search/${id}`);
+    }
     return (
         <Flex 
             display={tabs.sidebar ? 'flex' : 'none'}
@@ -160,9 +167,10 @@ export const ScoringSidebarLeft = ({
                 </NavGroup>
 
                 <NavGroup label="Group Members">
-                    { members && members.length > 0 && members.map( (member, i) => {
-                        const isAdmin = member === groupScorecard.admin;
-                        return <NavItem icon={isAdmin ? <FaUserCog /> : <BiUser />} label={member.split('@')[0]} key={i} />
+                    { usernameAndUserId.length > 0 && usernameAndUserId.map( ({ username, ownerId }, i) => {
+                        const isAdmin = adminUsername.toLowerCase() == username ? true : false;
+
+                        return <NavItem href={`/scorecards/search/${ownerId}`} icon={isAdmin ? <FaUserCog /> : <BiUser />} label={username} key={i} />
                     })}
                 
                 <NavItem 

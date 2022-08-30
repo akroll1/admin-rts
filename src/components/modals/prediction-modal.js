@@ -69,7 +69,7 @@ export const PredictionModal = ({
                     }
                 </Select>
                 <Select _hover={{cursor: 'pointer'}} onChange={e => getResult(e)} m="1" placeholder="Select Result">
-                    <option value="UD">Decision</option>
+                    <option value="DC">Decision</option>
                     {totalRounds.map( (round,i) => {
                         return <option key={i} value={'KO'+(i+1)}>KO{i+1}</option>
                     })}

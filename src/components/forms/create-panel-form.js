@@ -44,22 +44,21 @@ export const CreatePanelForm = ({ user, tokenConfig }) => {
         fetchAllPanelists();
     },[])
 
-    useEffect(() => {
-
-        if(selectedPanel?.panelId){
-            searchForPanel();
-        //     const fetchPanelMembers = async => {
-        //         const url = process.env.REACT_APP_PANELIST_PREDICTIONS + `/${selectedPanel.panelId}`;
-        //         return axios.get(url, tokenConfig)
-        //             .then( res => setSelectedPanelists(res.data))
-        //             .catch( err => console.log(err));
-        //     }
-        //     fetchPanelMembers()
-        }
-    },[selectedPanel])
+    // useEffect(() => {
+    //     if(selectedPanel?.panelId){
+    //         const fetchPanelMembers = async => {
+    //             const url = process.env.REACT_APP_PANELIST_PREDICTIONS + `/${selectedPanel.panelId}`;
+    //             return axios.get(url, tokenConfig)
+    //                 .then( res => setSelectedPanelists(res.data))
+    //                 .catch( err => console.log(err));
+    //         }
+    //         fetchPanelMembers()
+    //     }
+    // },[selectedPanel])
     
     const searchForPanel = async () => {
-        const url = process.env.REACT_APP_PANELS + `/${selectedPanel.panelId}`;
+        // console.log('form: ', form)
+        const url = process.env.REACT_APP_PANELS + `/${form.panelId}`;
         return axios.get(url, tokenConfig)
             .then( res => {
                 if(res.data.fightQuickTitle){
@@ -107,11 +106,9 @@ export const CreatePanelForm = ({ user, tokenConfig }) => {
         // if(!form.panelId) return alert('Select a fight for panelId.')
         const postObj = {
             panelId: form.panelId,
-            panelistIds,
-            fightQuickTitle: form.fightQuickTitle
         };
         console.log('postObj: ', postObj)
-        return axios.put(url, postObj, tokenConfig)
+        return axios.post(url, postObj, tokenConfig)
             .then( res => {
                 console.log('res: ', res)
                 if(res.status === 200){
