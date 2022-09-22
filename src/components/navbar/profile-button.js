@@ -19,6 +19,10 @@ export const ProfileButton = ({
             navigate('/signin')
         }
     }
+    const signin = () => {
+        if(isLoggedIn) return
+        return navigate('/signin')
+    }
 
     return (
         <Box w="full">
@@ -29,15 +33,18 @@ export const ProfileButton = ({
                     size='sm'
                     as={Button} 
                     colorScheme='blue'
+                    onClick={signin}
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
-                <MenuList>
-                    <MenuItem onClick={() => navigate('/scorecards')}>Scorecards</MenuItem>
-                    <MenuItem onClick={() => navigate('/dashboard/account')}>Profile</MenuItem>
-                    <MenuDivider />
-                    <MenuItem onClick={() => handleClick()}>{isLoggedIn ? `Sign Out` : `Sign In`}</MenuItem>
-                </MenuList>
+                {isLoggedIn &&
+                    <MenuList>
+                        <MenuItem onClick={() => navigate('/scorecards')}>Scorecards</MenuItem>
+                        <MenuItem onClick={() => navigate('/dashboard/account')}>Profile</MenuItem>
+                        <MenuDivider />
+                        <MenuItem onClick={() => handleClick()}>{isLoggedIn ? `Sign Out` : `Sign In`}</MenuItem>
+                    </MenuList>
+                }
             </Menu>
         </Box>
     )

@@ -49,8 +49,8 @@ export const PasswordField = React.forwardRef((props, ref) => {
   return (
     <FormControl id="password">
       <Flex justify="space-between">
-        <FormLabel>Password</FormLabel>
-        { (formState.isSignin || formState.isSignup || formState.isForcedPasswordChange || formState.isWaitingForCode) &&
+        <FormLabel>{formState.isForcedPasswordChange ? `New Password` : `Password`}</FormLabel>
+        { (formState.isSignin || formState.isSignup || formState.isWaitingForCode) &&
           <Box 
             onClick={renderForgotPasswordForm}
             as="a" 

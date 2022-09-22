@@ -21,7 +21,7 @@ export const ForgotPasswordForm = ({
     return (
         <>
             <Heading mb="12" textAlign="center" size="xl" fontWeight="extrabold">
-                Change Password
+                Request Recovery Code
             </Heading>
             <Card>
                 <Stack spacing="6">

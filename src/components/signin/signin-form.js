@@ -54,7 +54,7 @@ export const SignInForm = ({
               id="signin_button" 
               _hover={{cursor: 'pointer'}} 
               as="a" 
-              onClick={() => handleSignIn()} 
+              onClick={handleSignIn} 
               type="button" 
               colorScheme="blue" 
               size="lg" 

@@ -11,25 +11,23 @@ export const ForcedPasswordChange = ({
     password, 
     username
 }) => {
-    const inputRef = createRef();
+    const inputRef3 = createRef();
     useEffect(() => {
-        inputRef.current.focus();
+        inputRef3.current.focus();
     },[]);
     console.log('isForgotPassword: ', isForgotPassword)
     return (
         <Box>
             <Heading textAlign="center" size="xl" fontWeight="extrabold">
-                ForcedPasswordChange
-            </Heading>
-            <Card>
-                <Heading textAlign="center" size="xl" fontWeight="extrabold">
                 Create New Password
-                </Heading>
-                <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center" />
+            </Heading>
+            <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center" />
+            <Card>
                 <Stack spacing="6">
                     <FormControl id="username">
                         <FormLabel>Username</FormLabel>
                         <Input 
+                            ref={inputRef3}
                             value={username} 
                             name="username" 
                             type="text" 
@@ -40,7 +38,6 @@ export const ForcedPasswordChange = ({
                         formState={formState}
                         handleFormChange={handleFormChange}
                         password={password} 
-                        ref={inputRef}
                     />
                     <Button 
                         id="forced_password_button" 

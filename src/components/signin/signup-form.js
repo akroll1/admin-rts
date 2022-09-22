@@ -12,11 +12,11 @@ export const SignUpForm = ({
   renderForgotPasswordForm,
   setFormState
 }) => {
-  const inputRef = createRef();
+  const inputRef2 = createRef();
   const { username, email, password, code } = form;
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef2.current.focus();
   },[]);
 
   return (
@@ -52,7 +52,7 @@ export const SignUpForm = ({
             <FormControl id="username">
               <FormLabel>Username</FormLabel>
               <Input 
-                ref={inputRef} 
+                ref={inputRef2} 
                 onChange={handleFormChange} 
                 value={username} 
                 name="username" 

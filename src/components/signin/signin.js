@@ -6,6 +6,7 @@ import { SignInForm } from './signin-form'
 import { SubmitNewPasswordForm } from './submit-new-password-form'
 import { ForgotPasswordForm } from './forgot-password-form'
 import { ForcedPasswordChange } from './forced-password-change'
+import { WaitingForCode } from './waiting-for-code-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { stateStore } from '../../stores'
@@ -56,24 +57,27 @@ export const SignIn = props => {
     const { id, value } = e.currentTarget;
     setForm({...form, [id]: value.trim() });
   };
-  const handleSignIn = (username = form.username, password = form.password) => {
+  const handleSignIn = () => {
     setIsSubmitting(true);
+    const { password, username} = form;
     Auth.signIn({
       username,
       password
     })
     .then((user) => {
       const { attributes } = user;
+      setForm({ ...form, user})
+      setForm({ ...form, password: '', user });
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
+
         setFormState({ 
           isSignin: false, 
           isSignup: false, 
           isForgotPassword: false, 
-          isForcedPasswordChange: false, 
-          isWaitingForCode: true,
+          isForcedPasswordChange: true, 
+          isWaitingForCode: false,
           isWaitingForNewPasswordCode: false
-      })
-        setForm({ ...form, password: '', user });
+        })
       } else {
         const groups = user.signInUserSession.accessToken.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
         setUser({ ...attributes, username, isLoggedIn: true, groups });
@@ -88,17 +92,19 @@ export const SignIn = props => {
     .catch((err) => {
       console.log('handleSignin err: ', err);
       if(err == 'UserNotConfirmedException: User is not confirmed.'){
+        setForm({ ...form, password: '' })
         alert(err.message);
         setFormState({ 
           isSignin: false, 
           isSignup: false, 
           isForgotPassword: false, 
-          isForcedPasswordChange: false, 
-          isWaitingForCode: true,
+          isForcedPasswordChange: true, 
+          isWaitingForCode: false,
           isWaitingForNewPasswordCode: false
         })
+      } else {
+        alert('Incorrect Username or Password')
       }
-      alert('Incorrect Username or Password')
     }).finally(() => setIsSubmitting(false));
   }
   const handleSignUp = e => {
@@ -127,6 +133,7 @@ export const SignIn = props => {
   };
   const handleForcePWChange = () => {
     const { username, password, user, email } = form;
+    console.log('user: ', user)
     Auth.completeNewPassword( user, password )
       .then( user => { 
         const { username, challengeParam: {  userAttributes } } = user;
@@ -141,7 +148,7 @@ export const SignIn = props => {
           Authorization: `Bearer ${token}`
         }})
         sessionStorage.setItem('isLoggedIn',true);
-        return navigate('/dashboard/scorecards', { user });
+        return navigate('/scorecards', { user });
       }).catch( err => {
         console.log('err: ', err);
         if(Array.from(err).includes('InvalidPasswordException') > -1){
@@ -218,8 +225,8 @@ export const SignIn = props => {
       .finally( () => setIsSubmitting(false))
   };
 
-  console.log('formState: ', formState)
-  console.log('form: ', form)
+  // console.log('formState: ', formState)
+  // console.log('form: ', form)
   return (
     <Box bg={useColorModeValue('gray.500', 'gray.800')} py="12" px={{ base: '4', lg: '8' }}>
       <Box maxW="md" mx="auto">
@@ -270,33 +277,12 @@ export const SignIn = props => {
         }
 
         { formState.isWaitingForCode && 
-          <Stack spacing="6">
-            <FormControl id="code">
-              <FormLabel>Code</FormLabel>
-              <Input 
-                onChange={handleFormChange} 
-                value={form.code} 
-                name="code" 
-                type="text" 
-                required 
-              />
-            </FormControl>
-            <Button 
-              _hover={{cursor: 'pointer'}} 
-              as="a" 
-              onClick={handleConfirmCode} 
-              type="button" 
-              colorScheme="blue" 
-              size="lg" 
-              fontSize="md"
-            >
-              Verify Code
-            </Button>
-            <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-              <Text as="span">Didn&apos;t receive a code?</Text>
-              <Text onClick={resendVerificationCode} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Resend code!</Text>
-            </Text>
-          </Stack>
+          <WaitingForCode
+            form={form}
+            handleConfirmCode={handleConfirmCode}
+            handleFormChange={handleFormChange}
+            resendVerificationCode={resendVerificationCode}
+          />
         }
 
         { formState.isWaitingForNewPasswordCode && 
