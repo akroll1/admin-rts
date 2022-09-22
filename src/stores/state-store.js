@@ -1,8 +1,28 @@
 import create from "zustand"
 import { persist } from 'zustand/middleware'
 
+const initialState = {
+    availableGuestJudges: [],
+    myGuestJudges: [],
+    tokenConfig: {},
+    stats: [],
+    user: {},
+    userScorecards: [],
+    reset: () => {}
+};
+
+// const initialState = {
+//     count: 10,
+//   }
+//   const useStore = create((set) => ({
+//     ...initialState,
+//     inc: () => set(state => ({ count: state.count + 1 })),
+//     reset: () => set(initialState),
+//   }))
+
 export const stateStore = create(persist(
     (set, get) => ({
+        ...initialState,
         setBroadcast: broadcast => {
             set( state => ({ broadcast }))
         }, 
@@ -33,6 +53,7 @@ export const stateStore = create(persist(
         setMyGuestJudges: myGuestJudges => {
             set( state => ({ myGuestJudges }))
         },
+        reset: () => set( state => initialState)
     }),
     {
         name: 'fsl',

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Button, FormControl, FormLabel, Heading, Input, SimpleGrid, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react'
-import { FaFacebook, FaGoogle } from 'react-icons/fa'
 import { DividerWithText, Card, Logo } from '../../chakra'
 import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
@@ -89,7 +88,7 @@ export const SignIn = props => {
     .catch((err) => {
       console.log('handleSignin err: ', err);
       if(err == 'UserNotConfirmedException: User is not confirmed.'){
-        alert('Please confirm your account.');
+        alert(err.message);
         setFormState({ 
           isSignin: false, 
           isSignup: false, 
@@ -97,8 +96,7 @@ export const SignIn = props => {
           isForcedPasswordChange: false, 
           isWaitingForCode: true,
           isWaitingForNewPasswordCode: false
-      })
-        return;
+        })
       }
       alert('Incorrect Username or Password')
     }).finally(() => setIsSubmitting(false));
@@ -119,9 +117,11 @@ export const SignIn = props => {
       })
       })
       .catch((err) => {
-        setIsSubmitting(false);
+        if(err.code === 'InvalidPasswordException'){
+          alert('Password Policy \n Minimum 8 Characters \n 1 Uppercase Letter \n 1 Lowercase letter \n 1 Number \n 1 Special character')
+        }
         if(err.message.includes('User already exists')){
-          alert('User already exists!')
+          alert(err.message)
         }
       }).finally(() => setIsSubmitting(false))
   };
@@ -161,8 +161,9 @@ export const SignIn = props => {
         }
       })
       .catch(err => {
-        console.log(err)
-        alert('Invalid verification code provided, please try again.')
+        if(err.code === 'CodeMismatchException'){
+          alert('Invalid verification code.')
+        }
       });
   };
 
@@ -177,6 +178,7 @@ export const SignIn = props => {
       });
   };
   const renderForgotPasswordForm = () => {
+    setForm({ ...form, password: '' });
     setFormState({ 
       isSignin: false, 
       isSignup: false, 
@@ -203,16 +205,17 @@ export const SignIn = props => {
   }
   
   const handleSubmitNewPassword = e => {
+    setIsSubmitting(true)
     e.preventDefault();
     const { code, password, username } = form;
     Auth.forgotPasswordSubmit( username, code, password )
       .then( res => {
-        console.log('res: ', res)
         if(res === 'SUCCESS'){
           handleSignIn(username, password);
         }
       })
-      .catch( err => console.log('err: ', err));
+      .catch( err => alert(err.message))
+      .finally( () => setIsSubmitting(false))
   };
 
   console.log('formState: ', formState)
@@ -222,112 +225,48 @@ export const SignIn = props => {
       <Box maxW="md" mx="auto">
 
         { formState.isSignin &&
-          <Box>
-            <Heading textAlign="center" size="xl" fontWeight="extrabold">
-              Sign in to your account
-            </Heading>
-            <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-              <Text as="span">Don&apos;t have an account?</Text>
-              <Text onClick={() => setFormState({ ...formState, isSignin: false, isSignup: true })} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Sign-up now!</Text>
-            </Text>
-            <Card>
-              <SignInForm 
-                form={form} 
-                formState={formState}
-                handleForgotPassword={handleForgotPassword}
-                handleFormChange={handleFormChange} 
-                handleSignIn={handleSignIn} 
-                isSubmitting={isSubmitting}
-                renderForgotPasswordForm={renderForgotPasswordForm} 
-              />
-              <DividerWithText mt="6">or continue with</DividerWithText>
-              <SimpleGrid mt="6" columns={2} spacing="3">
-                <Button color="currentColor" variant="outline">
-                  <VisuallyHidden>Login with Facebook</VisuallyHidden>
-                  <FaFacebook />
-                </Button>
-                <Button color="currentColor" variant="outline">
-                  <VisuallyHidden>Login with Google</VisuallyHidden>
-                  <FaGoogle />
-                </Button>
-              </SimpleGrid>
-            </Card>
-          </Box>
+          <SignInForm 
+            form={form} 
+            formState={formState}
+            handleFormChange={handleFormChange} 
+            handleSignIn={handleSignIn} 
+            isSubmitting={isSubmitting}
+            renderForgotPasswordForm={renderForgotPasswordForm} 
+            setFormState={setFormState}
+          />
         }
 
         { formState.isSignup &&
-          <Box>
-            <Heading textAlign="center" size="xl" fontWeight="extrabold">
-              Create An Account
-            </Heading>
-            <Text 
-              mt="4" 
-              mb="8" 
-              align="center" 
-              textAlign="center" 
-              maxW="md" 
-              fontWeight="medium" 
-              display="flex" 
-              flexDirection={["column", "row" ]}
-              alignItems="center" 
-              justifyContent="center"
-            >
-              <Text as="span">Already have an account?</Text>
-              <Text 
-                onClick={() => setFormState({ ...formState, isSignup: false, isSignin: true })} 
-                _hover={{cursor: 'pointer'}} 
-                style={{marginLeft: '0.5rem', color: '#90cdf4'}}
-              >
-                Sign-In here!
-              </Text>
-            </Text>
-
-            <Card>
-              <SignUpForm 
-                form={form} 
-                formState={formState}
-                handleConfirmCode={handleConfirmCode} 
-                handleForgotPassword={handleForgotPassword}
-                handleFormChange={handleFormChange} 
-                handleSignUp={handleSignUp} 
-                handleSignIn={handleSignIn} 
-                isSubmitting={isSubmitting} 
-                resendVerificationCode={resendVerificationCode} 
-                renderForgotPasswordForm={renderForgotPasswordForm}
-              />
-            </Card>
-          </Box>  
+          <SignUpForm 
+            form={form} 
+            formState={formState}
+            handleFormChange={handleFormChange} 
+            handleSignUp={handleSignUp} 
+            isSubmitting={isSubmitting} 
+            renderForgotPasswordForm={renderForgotPasswordForm}
+            setFormState={setFormState}
+          />
         }
 
         { formState.isForcedPasswordChange && 
-          <Box>
-            <Heading textAlign="center" size="xl" fontWeight="extrabold">
-              Create New Password
-            </Heading>
-            <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center" />
-            <Card>
-              <ForcedPasswordChange 
-                formState={formState}
-                handleForcePWChange={handleForcePWChange} 
-                handleFormChange={handleFormChange} 
-                isForgotPassword={formState.isForgotPassword}
-                password={form.password} 
-                username={form.username}
-              /> 
-            </Card>
-          </Box>
+          <ForcedPasswordChange 
+            formState={formState}
+            handleForcePWChange={handleForcePWChange} 
+            handleFormChange={handleFormChange} 
+            isForgotPassword={formState.isForgotPassword}
+            password={form.password} 
+            username={form.username}
+          /> 
         }
 
         { formState.isForgotPassword &&
-          <Card>
-            <ForgotPasswordForm
-              form={form}
-              formState={formState}
-              handleForgotPassword={handleForgotPassword}
-              handleFormChange={handleFormChange}
-              setFormState={setFormState}
-            />
-          </Card>
+          <ForgotPasswordForm
+            form={form}
+            formState={formState}
+            handleForgotPassword={handleForgotPassword}
+            handleFormChange={handleFormChange}
+            setFormState={setFormState}
+          />
         }
 
         { formState.isWaitingForCode && 
@@ -361,16 +300,14 @@ export const SignIn = props => {
         }
 
         { formState.isWaitingForNewPasswordCode && 
-          <Card>
-            <SubmitNewPasswordForm 
-              form={form}
-              formState={formState}
-              handleFormChange={handleFormChange}
-              handleSubmitNewPassword={handleSubmitNewPassword}
-              renderForgotPasswordForm={renderForgotPasswordForm}
-              resendVerificationCode={resendVerificationCode}
-            />
-          </Card>
+          <SubmitNewPasswordForm 
+            form={form}
+            formState={formState}
+            handleFormChange={handleFormChange}
+            handleSubmitNewPassword={handleSubmitNewPassword}
+            renderForgotPasswordForm={renderForgotPasswordForm}
+            resendVerificationCode={resendVerificationCode}
+          />
         }
       </Box>
     </Box>

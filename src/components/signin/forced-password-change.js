@@ -1,6 +1,7 @@
 import React, { useEffect, createRef } from 'react'
-import { Button, FormControl, FormLabel, Input, Stack } from '@chakra-ui/react'
+import { Box, Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
 import { PasswordField } from './password-field'
+import { Card } from '../../chakra'
 
 export const ForcedPasswordChange = ({ 
     formState,
@@ -16,34 +17,45 @@ export const ForcedPasswordChange = ({
     },[]);
     console.log('isForgotPassword: ', isForgotPassword)
     return (
-        <Stack spacing="6">
-            <FormControl id="username">
-                <FormLabel>Username</FormLabel>
-                <Input 
-                    value={username} 
-                    name="username" 
-                    type="text" 
-                    onChange={isForgotPassword ? handleFormChange : null}
-                />
-            </FormControl>
-            <PasswordField 
-                formState={formState}
-                handleFormChange={handleFormChange}
-                password={password} 
-                ref={inputRef}
-            />
-            <Button 
-                id="forced_password_button" 
-                _hover={{cursor: 'pointer'}} 
-                as="a" 
-                onClick={handleForcePWChange} 
-                type="button" 
-                colorScheme="blue" 
-                size="lg" 
-                fontSize="md"
-            >
-                Submit New Password
-            </Button>
-        </Stack>
+        <Box>
+            <Heading textAlign="center" size="xl" fontWeight="extrabold">
+                ForcedPasswordChange
+            </Heading>
+            <Card>
+                <Heading textAlign="center" size="xl" fontWeight="extrabold">
+                Create New Password
+                </Heading>
+                <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center" />
+                <Stack spacing="6">
+                    <FormControl id="username">
+                        <FormLabel>Username</FormLabel>
+                        <Input 
+                            value={username} 
+                            name="username" 
+                            type="text" 
+                            onChange={isForgotPassword ? handleFormChange : null}
+                        />
+                    </FormControl>
+                    <PasswordField 
+                        formState={formState}
+                        handleFormChange={handleFormChange}
+                        password={password} 
+                        ref={inputRef}
+                    />
+                    <Button 
+                        id="forced_password_button" 
+                        _hover={{cursor: 'pointer'}} 
+                        as="a" 
+                        onClick={handleForcePWChange} 
+                        type="button" 
+                        colorScheme="blue" 
+                        size="lg" 
+                        fontSize="md"
+                    >
+                        Submit New Password
+                    </Button>
+                </Stack>
+            </Card>
+        </Box>
     )
 }
