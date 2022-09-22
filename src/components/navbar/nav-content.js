@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, Button, Flex, HStack,useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Flex, HStack,MenuButton,useDisclosure } from '@chakra-ui/react'
 import { NavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
 import { ToggleButton, Submenu } from '../../chakra'
 import { links } from './navbar_data'
 import { useNavigate } from 'react-router'
+import { ProfileButton } from './profile-button'
 
 const MobileNavContext = props => {
   const { isLoggedIn, setIsLoggedIn } = props;
@@ -16,7 +17,7 @@ const MobileNavContext = props => {
       sessionStorage.clear();
       return navigate('/');
     }
-    return navigate("/signin")
+    return navigate("/")
   }
   return (
     <>
@@ -40,14 +41,7 @@ const MobileNavContext = props => {
             </NavLink.Mobile>
           ),
         )}
-          <Button 
-            colorScheme="blue" 
-            w="full" 
-            size="sm" 
-            onClick={handleButtonClick}
-          >
-            {isLoggedIn ? `Sign Out` : `Sign In`}
-          </Button>
+          <ProfileButton isLoggedIn={isLoggedIn} />
       </NavMenu>
     </>
   )
@@ -141,9 +135,7 @@ const DesktopNavContent = props => {
         ))}
       </HStack>
       <HStack spacing="8" minW="200px" justify="space-between">
-        <Button colorScheme="blue" w="full" size="sm" onClick={handleButtonClick}>
-          {isLoggedIn ? `Sign Out` : `Sign In`}
-        </Button>
+        <ProfileButton isLoggedIn={isLoggedIn} />
       </HStack>
     </Flex>
   )

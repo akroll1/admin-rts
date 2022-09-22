@@ -22,7 +22,7 @@ export const MoneylineModal = ({
     >
       <ModalOverlay/>
       <ModalContent>
-        {/* <ModalHeader textAlign="center">Scoring Props</ModalHeader> */}
+        <ModalHeader textAlign="center">The FightSync Props</ModalHeader>
         <ModalBody>
           <ScoringMoneylineTable 
             fighterData={fighterData} 

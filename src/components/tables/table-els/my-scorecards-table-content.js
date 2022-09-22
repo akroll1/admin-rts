@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { CopyIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 const badgeEnum = {
   completed: 'green',
@@ -11,16 +12,6 @@ const badgeEnum = {
 
 export const MyScorecardsTableContent = ({ scorecards }) => {
   const navigate = useNavigate();
-  const [value, setValue] = useState('');
-  const [hasCopied, onCopy] = useState(value);
-
-  const handleCopy = e => {
-    const { id } = e.currentTarget;
-    setValue(id);
-    const link = `${window.location.origin}/scorecards/${id}`
-    onCopy(value)
-    navigator.clipboard.writeText(link)
-  }
   
   return (
     <Flex overflow="scroll" w="100%">
@@ -73,8 +64,8 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
                 <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
                   { renderScoreOrStatus() }                      
                 </Td>
-                <Td value={value} onClick={handleCopy} id={`${scorecardId}`} textAlign="center" whiteSpace="nowrap">
-                  { hasCopied && `${scorecardId}` === value ? `Copied!` : <CopyIcon /> }
+                <Td onClick={() => navigate(`/scorecards/${scorecardId}`)} textAlign="center" whiteSpace="nowrap">
+                  <ExternalLinkIcon /> 
                 </Td>
               </Tr>
           )})}

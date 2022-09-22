@@ -16,6 +16,7 @@ import Fighters from './fighters'
 import Discussion from './discussions'
 import Analytics from './analytics'
 import Shows from './shows'
+import MyScorecards from './my-scorecards'
 import theme from '../theme'
 import { PoundPage } from './pound'
 import { Scorecards } from './scorecards'
@@ -36,9 +37,14 @@ const App = () => {
             <Route exact path="/blog" element={<Blog />} />
             <Route exact path="/blog/:id" element={<BlogArticle />} />
             <Route exact path="/featured-fights/:id" element={<FeaturedFights />} />
-            <Route exact path="/counterpunch" element={<CounterPunch />} />
+            <Route exact path="/live" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
+            <Route exact path="/scorecards" element={
+              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+                <MyScorecards /> 
+              </PrivateRoute>
+            }/>
             <Route exact path="/fighters" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
                 <Fighters /> 

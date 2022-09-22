@@ -3,11 +3,13 @@ import { Button, chakra, FormControl, FormLabel, Input, Stack } from '@chakra-ui
 import { PasswordField } from './password-field'
 
 export const SignInForm = ({ 
+  form,
+  formState, 
   handleForgotPassword,
-  isSubmitting, 
-  form, 
   handleFormChange, 
-  handleSignIn 
+  handleSignIn, 
+  isSubmitting,
+  renderForgotPasswordForm
 }) => {
   const inputRef = createRef();
   const { username, email } = form;
@@ -31,8 +33,9 @@ export const SignInForm = ({
           />
         </FormControl>
         <PasswordField 
+          formState={formState}
           handleFormChange={handleFormChange} 
-          handleForgotPassword={handleForgotPassword}  
+          renderForgotPasswordForm={renderForgotPasswordForm} 
         />
         <Button 
           isLoading={isSubmitting} 
