@@ -2,47 +2,45 @@ import React, { useEffect, createRef } from 'react'
 import { Button, FormControl, FormLabel, Input, Stack } from '@chakra-ui/react'
 import { PasswordField } from './password-field'
 
-export const ForcedPasswordChange = ({ 
-    formState,
-    isForgotPassword,
-    handleForcePWChange, 
+export const ForgotPasswordForm = ({ 
+    handleForgotPassword,
     handleFormChange, 
-    password, 
     username
 }) => {
     const inputRef = createRef();
     useEffect(() => {
         inputRef.current.focus();
     },[]);
-    console.log('isForgotPassword: ', isForgotPassword)
+    
+    const handleForgotPasswordClick = e => {
+        if(e.key === 'Enter'){
+            document.getElementById('forgot_password_button').click();
+        }
+    }
     return (
         <Stack spacing="6">
             <FormControl id="username">
                 <FormLabel>Username</FormLabel>
                 <Input 
+                    ref={inputRef}
                     value={username} 
                     name="username" 
                     type="text" 
-                    onChange={isForgotPassword ? handleFormChange : null}
+                    onChange={handleFormChange}
+                    onKeyDown={handleForgotPasswordClick}
                 />
             </FormControl>
-            <PasswordField 
-                formState={formState}
-                handleFormChange={handleFormChange}
-                password={password} 
-                ref={inputRef}
-            />
             <Button 
-                id="forced_password_button" 
+                id="forgot_password_button" 
                 _hover={{cursor: 'pointer'}} 
                 as="a" 
-                onClick={handleForcePWChange} 
+                onClick={handleForgotPassword} 
                 type="button" 
                 colorScheme="blue" 
                 size="lg" 
                 fontSize="md"
             >
-                Submit New Password
+                Submit
             </Button>
         </Stack>
     )

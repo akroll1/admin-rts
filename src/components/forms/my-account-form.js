@@ -48,7 +48,7 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
           <Heading size="lg" as="h1" paddingBottom="4">
             Account Settings
           </Heading>
-          <FieldGroup title="BoxCoins">
+          <FieldGroup title="FightCoins">
             <FormControl id="boxCoins">
               <FormLabel>Total</FormLabel>
               <Input w="25%" readOnly type="number" value={boxCoins} />

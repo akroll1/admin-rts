@@ -1,9 +1,10 @@
-import { Link, useColorModeValue as mode } from '@chakra-ui/react'
 import * as React from 'react'
+import { Link, useColorModeValue as mode } from '@chakra-ui/react'
 import { Link as RRLink } from 'react-router-dom'
 
 const DesktopNavLink = React.forwardRef((props, ref) => {
   const { active, href, ...rest } = props;
+  // console.log('props: ', props)
   return (
     <Link
       as={RRLink}

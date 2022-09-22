@@ -12,7 +12,6 @@ export const NavTabLink = props => {
     >
       <Link
         as={RRLink}
-        as="div"
         display="block"
         fontWeight="medium"
         lineHeight="1.25rem"
