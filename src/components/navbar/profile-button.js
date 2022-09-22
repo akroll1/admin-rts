@@ -9,11 +9,10 @@ export const ProfileButton = ({
     const navigate = useNavigate();
 
     const handleClick = () => {
-        console.log('stateStore: ', stateStore.getState())
         const { reset } = stateStore.getState();
         if(isLoggedIn){
             setIsLoggedIn(false)
-            reset()
+            reset();
             navigate('/');
         } else {
             setIsLoggedIn(false)
@@ -30,13 +29,12 @@ export const ProfileButton = ({
                     size='sm'
                     as={Button} 
                     colorScheme='blue'
-                    >
-                    Profile
+                >
+                    {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
                 <MenuList>
                     <MenuItem onClick={() => navigate('/scorecards')}>Scorecards</MenuItem>
                     <MenuItem onClick={() => navigate('/dashboard/account')}>Profile</MenuItem>
-                    {/* <MenuItem onClick={() => navigate('#')}>FAQ</MenuItem> */}
                     <MenuDivider />
                     <MenuItem onClick={() => handleClick()}>{isLoggedIn ? `Sign Out` : `Sign In`}</MenuItem>
                 </MenuList>
