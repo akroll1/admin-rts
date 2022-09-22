@@ -1,10 +1,25 @@
 import React from 'react'
 import { Box, Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
-
-export const ProfileButton = ({ isLoggedIn }) => {
-
+import { stateStore } from '../../stores'
+export const ProfileButton = ({ 
+    isLoggedIn,
+    setIsLoggedIn 
+}) => {
     const navigate = useNavigate();
+
+    const handleClick = () => {
+        console.log('stateStore: ', stateStore.getState())
+        const { reset } = stateStore.getState();
+        if(isLoggedIn){
+            setIsLoggedIn(false)
+            reset()
+            navigate('/');
+        } else {
+            setIsLoggedIn(false)
+            navigate('/signin')
+        }
+    }
 
     return (
         <Box w="full">
@@ -23,7 +38,7 @@ export const ProfileButton = ({ isLoggedIn }) => {
                     <MenuItem onClick={() => navigate('/dashboard/account')}>Profile</MenuItem>
                     {/* <MenuItem onClick={() => navigate('#')}>FAQ</MenuItem> */}
                     <MenuDivider />
-                    <MenuItem onClick={() => navigate('/signin')}>{isLoggedIn ? `Sign Out` : `Sign In`}</MenuItem>
+                    <MenuItem onClick={() => handleClick()}>{isLoggedIn ? `Sign Out` : `Sign In`}</MenuItem>
                 </MenuList>
             </Menu>
         </Box>

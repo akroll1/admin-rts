@@ -112,14 +112,7 @@ const DesktopNavContent = props => {
 
 
   // const isLoggedIn = socketActive() ? true : false;
-  const handleButtonClick = () => {
-    if(isLoggedIn){
-      setIsLoggedIn(false);
-      sessionStorage.clear();
-      return navigate('/');
-    }
-    return navigate("/signin")
-  }
+
   return (
     <Flex className="nav-content__desktop" align="center" justify="space-between" {...props}>
       <Button onClick={() => navigate('/')} bg="transparent" to="/">FightSync</Button>
@@ -135,7 +128,7 @@ const DesktopNavContent = props => {
         ))}
       </HStack>
       <HStack spacing="8" minW="200px" justify="space-between">
-        <ProfileButton isLoggedIn={isLoggedIn} />
+        <ProfileButton isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       </HStack>
     </Flex>
   )
