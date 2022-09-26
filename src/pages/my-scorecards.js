@@ -17,14 +17,13 @@ export const MyScorecards = () => {
     // getScorecards && check if user exists.
     useEffect(() => {
       const getUserScorecards = async () => {
-        const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
+        const url = process.env.REACT_APP_API + `/scorecards/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}/all`;
         return axios.get(url, tokenConfig)
           .then(res => {
             if(res.data.includes('Token expired')){
               return setModals({ ...modals, expiredTokenModal: true });
             }
             if(res.data?.length > 0 ) setUserScorecards(res.data)
-            // console.log('res: ',res);
             const data = res.data?.map(obj => {
               const { fighterData, fightStatus, scorecard } = obj;
               const { finalScore, groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
@@ -54,6 +53,7 @@ export const MyScorecards = () => {
               })
             });
             // put scorecard info in for scorecards switcher.
+            console.log('data: ', data)
             if(res.data.length > 0){
               setScorecards(data)
               setUserScorecards(data)

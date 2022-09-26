@@ -18,7 +18,7 @@ const Fighters = () => {
     
     useEffect(() => {
         const getAllFighters = async () => {
-            const url = process.env.REACT_APP_FIGHTERS;
+            const url = process.env.REACT_APP_API = `/fighters`;
             return await axios.get(url, tokenConfig)
                 .then(res => {
                     setFighters(res.data)
@@ -32,7 +32,7 @@ const Fighters = () => {
     useEffect(() => {  
         if(fighterId){
             const getFighter = async () => {
-                const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
+                const url = process.env.REACT_APP_API + `/fighters/${fighterId}`;
                 return await axios.get(url, tokenConfig)
                 .then( res => setSelectedFighter(res.data))
                 .catch( err => console.log(err))

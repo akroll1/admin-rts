@@ -84,6 +84,7 @@ export const OFFICIAL_RESULTS_ENUM = [
 
 export const PANELIST_PREDICTIONS_OPTIONS = [
 	{ value: 'DC', label: 'Decision' },
+	{ value: 'SD', label: 'Split Decision' },
 	{ value: 'KO13' , label: 'KO - Rds 1-3' },
 	{ value: 'KO46' , label: 'KO - Rds 4-6' },
 	{ value: 'KO79' , label: 'KO - Rds 7-9' },

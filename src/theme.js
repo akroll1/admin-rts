@@ -108,6 +108,11 @@ export const myTheme = {
       transition: 'all 0.25s ease-in-out',
     },
   },
+  // colors: {
+  //   brand: {
+  //     100: '#C01616'
+  //   }
+  // }
 };
 const theme = extendTheme({ ...chakraTheme, ...myTheme, config });
 export default theme;

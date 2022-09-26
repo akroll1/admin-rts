@@ -22,23 +22,17 @@ export const FightersForm = ({ user, tokenConfig }) => {
     });
 
     const setFighterInfo = e => {
-        const { id, value } = e.currentTarget;
+        const { id, name, value } = e.currentTarget;
+        console.log('name: ', name);
 
         return setFighter({...fighter, [id]: value });
     }
-    const submitFighter = () => {
-        // console.log('inside submit fighter: ',fighter);
-        // TODO: there is no fighterId on post????
-        // fighter not created.
-        let url = process.env.REACT_APP_FIGHTERS;
-        const verbType = fighter.fighterId ? 'PUT' : 'POST';
-        if(verbType === 'PUT'){
-            url = process.env.REACT_APP_FIGHTERS + `/${fighter.fighterId}`;
-        }
+
+    const handlePostFighter = () => {
+        const url = process.env.REACT_APP_API + `/fighters/${fighter.fighterId}`;
         console.log('fighter: ',fighter);
-        console.log('verbType: ', verbType)
-        // return
-        return axios[verbType === 'POST' ? 'post' : 'put'](url, fighter, tokenConfig)
+        
+        return axios.post(url, fighter, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     toast({ title: 'Fighter updated!',
@@ -55,8 +49,8 @@ export const FightersForm = ({ user, tokenConfig }) => {
                         draws: 0,
                         kos: 0,
                         dq: 0,
-                        socials: [],
-                        home: ''
+                        socials: null, 
+                        home: null
                     })
                 }
             })
@@ -118,24 +112,24 @@ export const FightersForm = ({ user, tokenConfig }) => {
                             <Flex flexDirection="row" flexWrap="wrap">
                                 <FormControl m="3" style={{width: '25%'}} id="wins">
                                     <FormLabel>Wins</FormLabel>
-                                    <Input value={wins} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={wins} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
                                 </FormControl>
 
                                 <FormControl m="3" style={{width: '25%'}} id="losses">
                                     <FormLabel>Losses</FormLabel>
-                                    <Input value={losses} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={losses} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="draws">
                                     <FormLabel>Draws</FormLabel>
-                                    <Input value={draws} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={draws} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="kos">
                                     <FormLabel>KO's</FormLabel>
-                                    <Input value={kos} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={kos} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="dq">
                                     <FormLabel>DQ's</FormLabel>
-                                    <Input value={dq} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={dq} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
                                 </FormControl>
                             </Flex>
                         </HStack>
@@ -143,7 +137,7 @@ export const FightersForm = ({ user, tokenConfig }) => {
                 </Stack>
                 <FieldGroup mt="8">
                     <HStack width="full">
-                    <Button onClick={submitFighter} type="submit" colorScheme="blue">
+                    <Button onClick={handlePostFighter} type="submit" colorScheme="blue">
                         Save Changes
                     </Button>
                     <Button variant="outline">Cancel</Button>

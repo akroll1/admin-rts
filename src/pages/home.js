@@ -49,6 +49,7 @@ const Home = () => {
               px="8"
               fontWeight="bold"
               h="14"
+              // bg="brand.100"
               iconSpacing="3"
               rightIcon={
                 <Box

@@ -47,6 +47,8 @@ export const ShowsSidebar = ({
     const fantasyFights = [
         'Floyd Mayweather vs Willie Pep', 'Mike Tyson vs Muhammad Ali'
     ];
+    console.log('shows 14: ', shows)
+    console.log('upcoming: ', upcoming)
     return (
         <Flex 
             id="shows_sidebar" 

@@ -20,7 +20,6 @@ const Shows = props => {
     const [modals, setModals] = useState({
         expiredTokenModal: false
     });
-    const baseUrl = process.env.REACT_APP_SHOWS;
     const [shows, setShows] = useState([]);
     const [selectedShow, setSelectedShow] = useState({
         show: {
@@ -72,7 +71,8 @@ const Shows = props => {
         // }
         if(sub){
             const getAllShows = () => {
-                return axios.get(baseUrl, tokenConfig)
+                const url = process.env.REACT_APP_API + `/shows/summary`;
+                return axios.get(url, tokenConfig)
                     .then(res => {
                         if(res.data.includes('Token expired')){
                             return setModals({ ...modals, expiredTokenModal: true });

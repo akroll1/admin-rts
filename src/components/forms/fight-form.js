@@ -36,7 +36,7 @@ export const FightForm = ({ user, tokenConfig }) => {
     const handlePutFight = () => {
         setIsSubmitting(true);
         const fightObj = Object.assign(Object.create({}), form, {fighterIds: [fighterAId, fighterBId]}, { guestJudgeIds })
-        const url = process.env.REACT_APP_FIGHTS + `/${fightId}`;
+        const url = process.env.REACT_APP_API + `/fights/${fightId}`;
         return axios.put(url, fightObj, tokenConfig)
             .then( res => {
                 if(res.status === 200){
@@ -52,8 +52,9 @@ export const FightForm = ({ user, tokenConfig }) => {
     
     const handlePostFight = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_FIGHTS;
-        const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId]})
+        const url = process.env.REACT_APP_API +`/fights`;
+        // TODO: I don't want odds on post, remove.
+        const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId], rounds: parseInt(form.rounds)})
         console.log('postObj: ', postObj)
         return axios.post(url, postObj, tokenConfig)
             .then( res => {
@@ -70,7 +71,7 @@ export const FightForm = ({ user, tokenConfig }) => {
     
     const searchForFight = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_FIGHTS + `/${fightId}`
+        const url = process.env.REACT_APP_API + `/fights/${fightId}`;
         return axios.get(url, tokenConfig)
             .then( res => {
                 if(res.status === 200){
@@ -85,7 +86,7 @@ export const FightForm = ({ user, tokenConfig }) => {
     };
     const deleteFight = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_FIGHT + `/${fightId}`;
+        const url = process.env.REACT_APP_API + `/fights/${fightId}`;
         return axios.delete(url, tokenConfig)
             .then( res => console.log('res: ', res))
             .catch( err => console.log(err))
