@@ -25,17 +25,18 @@ export const MyScorecards = () => {
             }
             if(res.data?.length > 0 ) setUserScorecards(res.data)
             const data = res.data?.map(obj => {
-              const { fighterData, fightStatus, scorecard } = obj;
-              const { finalScore, groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
+              const { fight, fighters, scorecard } = obj;
+              const { finalScore, groupScorecardId, ownerId, scorecardId, scores } = scorecard;
+              const { fightStatus, rounds } = fight;
               if(ownerId.includes('@')){
                 const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
                 const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
                   .then( res => res).catch( err => console.log(err));
               }
-              const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
+              const [fighter1, fighter2] = fighters.map( ({ lastName }) => lastName);
               const setPrediction = prediction => {
                   if(prediction){
-                      const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
+                      const [prediction] = fighters.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
                       return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
                   }
                       return `No Prediction`

@@ -3,12 +3,12 @@ import { Box, HStack, Icon } from '@chakra-ui/react'
 import { BsCaretRightFill } from 'react-icons/bs'
 import { HiBadgeCheck } from 'react-icons/hi';
 export const UpcomingNavItem = (props) => {
-  const { isPlaying, name, showId, selectShow, active, subtle, icon, children, label, endElement, href } = props;
+  const { active, isPlaying, name, fightId, selectFight, subtle, icon, children, label, endElement, href } = props; 
   return (
     <HStack
     name={name}
-    id={showId}
-    onClick={e => selectShow(e)}
+    id={fightId}
+    onClick={selectFight}
     as="a"
     href={href}
     w="full"
@@ -18,7 +18,7 @@ export const UpcomingNavItem = (props) => {
     userSelect="none"
     rounded="md"
     transition="all 0.2s"
-    bg={active ? 'gray.700' : undefined}
+    bg={active ? 'gray.700' : ''}
     _hover={{
       bg: 'gray.700',
     }}

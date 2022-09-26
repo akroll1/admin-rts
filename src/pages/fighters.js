@@ -18,7 +18,7 @@ const Fighters = () => {
     
     useEffect(() => {
         const getAllFighters = async () => {
-            const url = process.env.REACT_APP_API = `/fighters`;
+            const url = process.env.REACT_APP_API + `/fighters`;
             return await axios.get(url, tokenConfig)
                 .then(res => {
                     setFighters(res.data)

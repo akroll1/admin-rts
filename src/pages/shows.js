@@ -20,19 +20,22 @@ const Shows = props => {
     const [modals, setModals] = useState({
         expiredTokenModal: false
     });
-    const [shows, setShows] = useState([]);
-    const [selectedShow, setSelectedShow] = useState({
+    const [fights, setFights] = useState([]);
+    const [selectedFight, setSelectedFight] = useState(null);
+    const [selectedFightSummary, setSelectedFightSummary] = useState({
         show: {
-            fightQuickTitle: '',
             location: '',
-            promoter: '', 
             network: '',
-            fighters: []
+            promoter: '',
+            showId: '' 
+        },
+        fight: {
+            fightId: '',
+            fightQuickTitle: '',
         },
         fighters: []
     });
-    const [selectedShowFight, setSelectedShowFight] = useState([]);
-    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [fightReviewForm, setFightReviewForm] = useState(false);
     const [predictionsAndReviews, setPredictionsAndReviews] = useState([]); 
     const [reviewType, setReviewType] = useState('PREDICTION');
     const [emailValue, setEmailValue] = useState('');
@@ -53,119 +56,38 @@ const Shows = props => {
         review: '',
         title: ''
     });
-    /**
-     * 1. Get the shows, all or if ID in params.
-     * **/
 
     useEffect(() => {
-        // if(id && sub){ 
-        //     const getShow = id => {
-        //         const url = baseUrl + `/${id}`;
-        //         axios.get(url, tokenConfig)
-        //             .then( res => {
-        //                 setSelectedShow(res.data[0])
-        //             })
-        //             .catch( err => console.log(err))
-        //     }
-        //     getShow(id);
-        // }
-        if(sub){
-            const getAllShows = () => {
-                const url = process.env.REACT_APP_API + `/shows/summary`;
+        const getFights = async () => {
+            const url = process.env.REACT_APP_API + `/fights`;
+            return axios.get(url, tokenConfig)
+                .then(res => {
+                    if(res.data.includes('Token expired')){
+                        return setModals({ ...modals, expiredTokenModal: true });
+                    }
+                    setFights(res.data);
+                })
+                .catch(err => console.log(err));
+        }
+        getFights();
+    },[])
+
+    useEffect(() => {
+        if(selectedFight){
+            const getFightSummary = async () => {
+                const url = process.env.REACT_APP_API + `/fights/${selectedFight.fightId}/summary`;
                 return axios.get(url, tokenConfig)
-                    .then(res => {
-                        if(res.data.includes('Token expired')){
-                            return setModals({ ...modals, expiredTokenModal: true });
-                        }
-                        console.log('res.data: ', res.data)
-                        setShows(res.data);
-                    })
-                    .catch(err => console.log(err));
+                    .then( res => setSelectedFightSummary(res.data))
+                    .catch( err => console.log(err))
             }
-            getAllShows();
+            getFightSummary();
         }
-    },[id, sub])
-    const handleEmailSubmit = e => {
-        e.preventDefault();
-        if(isValidEmail(emailValue)){
-            const { members } = groupScorecard;
-            const tempMembers = members.concat(emailValue);
-            setGroupScorecard({...groupScorecard, members: tempMembers});
-            setEmailValue('');
-        } else {
-            alert('Not a valid email.')
-        }
-    }
-    const deleteMember = e => {
-        const { id } = e.currentTarget;
-        const { members } = groupScorecard;
-        const tempMembersArr = members.filter( member => member !== id)
-        return setGroupScorecard({...groupScorecard, members: tempMembersArr});
-    }
-    // 1. handleShowSelect.
-    const handleShowSelect = (id, reviewType) => {
-        if(reviewType === 'REMINDER' || reviewType === 'HISTORICAL') return;
-        const [selected] = shows.filter( show => show.show.showId === id)
-        setReviewType(reviewType);
-        setSelectedShow(selected);
-    };
-        //groupscorecard form???
-    const handleFormChange = e => {
-        const { id, value, checked } = e.currentTarget;
-        if(id === 'reminders') return setGroupScorecard({...groupScorecard, reminders: checked})
-        if(id === 'emailValue') return setEmailValue(value);
-    };
-    // 1. Close review form.
-    const handleReviewFormClose = () => {
-        setTimeout(() => {
-            setReviewForm({
-                reviewId: null,
-                title: '',
-                rating: 0,
-                review: ''
-            });
-            setShowReviewForm(false);
-        },200);
-    }
-    // 1. Submit the user review.
-    const handleReviewFormSubmit = (showReviewForm, verbType) => {
-        let url = verbType === 'POST' 
-            ? process.env.REACT_APP_REVIEWS 
-            : process.env.REACT_APP_REVIEWS + `/${showReviewForm.reviewId}`;
-        const obj = {
-            ...showReviewForm,
-            owner: sub,
-            username,
-            showId: selectedShow.show.showId,
-            fightId: selectedShow.show.fightId,
-            reviewType: Date.now() > selectedShow.show.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
-        };
-        const reviewObj = Object.assign({}, obj);
-        return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, tokenConfig)
-            .then(res => {
-                if(res.status === 200){
-                    const filtered = predictionsAndReviews[reviewType].filter( review => review.owner !== reviewObj.owner);
+    }, [selectedFight]);
 
-                    const temp = filtered.concat(reviewObj);
-                    setPredictionsAndReviews({ ...predictionsAndReviews, [reviewType]: temp })
-
-                    return toast({ 
-                        title: 'Review Submitted!',
-                        duration: 5000,
-                        status: 'success',
-                        isClosable: true
-                    })
-                }
-            }).catch(err => console.log(err))
-            .finally(() => handleReviewFormClose());
-    };
-    /**
-     * 1. on selectedShow, get all the show Reviews
-     */
     useEffect(() => {
-        if(selectedShow.show.showId){
-            const getSelectedShowReviews = async () => {
-                const url = process.env.REACT_APP_REVIEWS + `/${reviewType.toLowerCase()}/${selectedShow.show.fightId}`;
+        if(selectedFightSummary.fight.fightId){
+            const getSelectedFightReviews = async () => {
+                const url = process.env.REACT_APP_API + `/reviews/${reviewType.toLowerCase()}/${selectedFightSummary.fight.fightId}`;
                 return axios.get(url, tokenConfig)
                     .then( res => {
                         // console.log('res: ', res)
@@ -190,18 +112,91 @@ const Shows = props => {
                         setPredictionsAndReviews(reviewsObj);
                     }).catch(err => console.log(err))
             } 
-            getSelectedShowReviews();
+            getSelectedFightReviews();
         }
-    },[selectedShow])
+    },[selectedFightSummary])
+
+    const handleEmailSubmit = e => {
+        e.preventDefault();
+        if(isValidEmail(emailValue)){
+            const { members } = groupScorecard;
+            const tempMembers = members.concat(emailValue);
+            setGroupScorecard({...groupScorecard, members: tempMembers});
+            setEmailValue('');
+        } else {
+            alert('Not a valid email.')
+        }
+    }
+    const deleteMember = e => {
+        const { id } = e.currentTarget;
+        const { members } = groupScorecard;
+        const tempMembersArr = members.filter( member => member !== id)
+        return setGroupScorecard({...groupScorecard, members: tempMembersArr});
+    }
+    const getSelectedFightReview = (id, reviewType) => {
+        if(reviewType === 'REMINDER' || reviewType === 'HISTORICAL') return;
+        const [selected] = fights.filter( fight => fight.fightId === id)
+        setReviewType(reviewType);
+        setFightReviewForm(selected);
+    };
+        //groupscorecard form???
+    const handleFormChange = e => {
+        const { id, value, checked } = e.currentTarget;
+        if(id === 'reminders') return setGroupScorecard({...groupScorecard, reminders: checked})
+        if(id === 'emailValue') return setEmailValue(value);
+    };
+    // 1. Close review form.
+    const handleReviewFormClose = () => {
+        setTimeout(() => {
+            setReviewForm({
+                reviewId: null,
+                title: '',
+                rating: 0,
+                review: ''
+            });
+            setFightReviewForm(false);
+        },200);
+    }
+    // 1. Submit the user review.
+    const handleReviewFormSubmit = (fightReviewForm, verbType) => {
+        let url = verbType === 'POST' 
+            ? process.env.REACT_APP_API + `/reviews`
+            : process.env.REACT_APP_API + `/reviews/${fightReviewForm.reviewId}`;
+        const obj = {
+            ...fightReviewForm,
+            owner: sub,
+            username,
+            showId: selectedFightSummary.show.showId,
+            fightId: selectedFightSummary.show.fightId,
+            reviewType: Date.now() > selectedFightSummary.show.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
+        };
+        const reviewObj = Object.assign({}, obj);
+        return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, tokenConfig)
+            .then(res => {
+                if(res.status === 200){
+                    const filtered = predictionsAndReviews[reviewType].filter( review => review.owner !== reviewObj.owner);
+
+                    const temp = filtered.concat(reviewObj);
+                    setPredictionsAndReviews({ ...predictionsAndReviews, [reviewType]: temp })
+
+                    return toast({ 
+                        title: 'Review Submitted!',
+                        duration: 5000,
+                        status: 'success',
+                        isClosable: true
+                    })
+                }
+            }).catch(err => console.log(err))
+            .finally(() => handleReviewFormClose());
+    };
     /**
      * 1. Check if a user has already submitted a review for this. 
      * ** THIS CAN BE TWO OBJECTS, PREDICTION AND REVIEW! **
-     * **  **
     */
     useEffect(() => {
-        if(showReviewForm){
+        if(fightReviewForm){
             const getReview = async () => {
-                const url = process.env.REACT_APP_REVIEWS + `/user/${reviewType.toLowerCase()}/${selectedShow.show.fightId}`;
+                const url = process.env.REACT_APP_API + `/reviews/user/${reviewType.toLowerCase()}/${selectedFightSummary.show.fightId}`;
                 return axios.get(url, tokenConfig)
                     .then(res => {
                         if(res.data.reviewId){
@@ -212,7 +207,7 @@ const Shows = props => {
             }
             getReview();
         }
-    },[showReviewForm]);
+    },[fightReviewForm]);
 
     const handleCreateGroupScorecard = async () => {
         setIsSubmitting(true);
@@ -224,13 +219,13 @@ const Shows = props => {
 
         const scorecardObj = {
             admin: email, // necessary to create a groupScorecard, membersArr.
-            fighterIds: [selectedShow.fighters[0].fighterId, selectedShow.fighters[1].fighterId],
-            fightId: selectedShow.show.fightId,
-            groupScorecardName: selectedShow.show.fightQuickTitle,
+            fighterIds: [selectedFightSummary.fighters[0].fighterId, selectedFightSummary.fighters[1].fighterId],
+            fightId: selectedFightSummary.show.fightId,
+            groupScorecardName: selectedFightSummary.show.fightQuickTitle,
             members: dedupedEmails,
             ownerId: sub,
-            rounds: selectedShow.show.rounds,// here
-            showId: selectedShow.show.showId,
+            rounds: selectedFightSummary.show.rounds,// here
+            showId: selectedFightSummary.show.showId,
             username
         };
 
@@ -246,7 +241,6 @@ const Shows = props => {
             }).catch(err => console.log(err))
             .finally(() => setIsSubmitting(false));
     };
-    // console.log('selectedShow: ' , selectedShow);
     const { members } = groupScorecard;
     return (
         <Flex 
@@ -261,7 +255,7 @@ const Shows = props => {
             pb={8}
         >    
             <ExpiredTokenModal modals={modals} setModals={setModals} />
-            { showReviewForm && 
+            { fightReviewForm && 
                 <ReviewFormModal
                     reviewForm={reviewForm}
                     setReviewForm={setReviewForm}
@@ -271,8 +265,10 @@ const Shows = props => {
             }
 
             <ShowsSidebar 
-                shows={shows} 
-                handleShowSelect={handleShowSelect} 
+                fights={fights} 
+                getSelectedFightReview={getSelectedFightReview} 
+                selectedFight={selectedFight}
+                setSelectedFight={setSelectedFight}
             />  
             <ShowsMain 
                 deleteMember={deleteMember}
@@ -284,9 +280,9 @@ const Shows = props => {
                 members={members}
                 predictionsAndReviews={predictionsAndReviews}
                 reviewType={reviewType}
-                selectedShow={selectedShow}
-                setShowReviewForm={setShowReviewForm}
-                showReviewForm={showReviewForm}
+                selectedFightSummary={selectedFightSummary}
+                setFightReviewForm={setFightReviewForm}
+                fightReviewForm={fightReviewForm}
             />
            
         </Flex>

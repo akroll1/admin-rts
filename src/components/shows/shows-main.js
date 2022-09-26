@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
-import { PredictionsReviews, ShowsCreateGroupScorecard, ShowsMetadata, FightStoryline } from '../shows-components'
+import { PredictionsReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 
@@ -14,13 +14,13 @@ export const ShowsMain = ({
     members,
     predictionsAndReviews,
     reviewType,
-    selectedShow, 
-    setShowReviewForm, 
-    showReviewForm, 
+    selectedFightSummary, 
+    setFightReviewForm, 
+    fightReviewForm, 
 }) => {
-    const { show: { showTime }} = selectedShow;
+    const { showTime } = selectedFightSummary?.show?.showTime ? selectedFightSummary.show : 1656208800000;
     const UPCOMING = showTime > Date.now() ? true : false; 
-    // console.log('selectedShowFight: ', selectedShowFight);
+
     return (
         <Flex 
             as="section"
@@ -34,24 +34,24 @@ export const ShowsMain = ({
             alignItems="center"
             boxSizing="border-box" 
         >
-            <ShowsMetadata
+            <FightMetadata
                 showTime={showTime}
-                selectedShow={selectedShow}
+                selectedFightSummary={selectedFightSummary}
             /> 
             
             <ShowsFighterFaceoff 
-                fighters={selectedShow.fighters} 
+                fighters={selectedFightSummary.fighters} 
                 showTime={showTime}
             />
             <DividerWithText text="The Storyline" />
-            <FightStoryline selectedShow={selectedShow} /> 
+            <FightStoryline selectedFightSummary={selectedFightSummary} /> 
 
             <DividerWithText text={UPCOMING ? 'Predictions' : 'Reviews'} />
             <PredictionsReviews 
                 reviewType={reviewType}
                 predictionsAndReviews={predictionsAndReviews}
-                showReviewForm={showReviewForm} 
-                setShowReviewForm={setShowReviewForm} 
+                fightReviewForm={fightReviewForm} 
+                setFightReviewForm={setFightReviewForm} 
             />
             { UPCOMING && 
                 <ShowsCreateGroupScorecard 

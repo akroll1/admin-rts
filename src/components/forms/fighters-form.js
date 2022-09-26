@@ -17,19 +17,22 @@ export const FightersForm = ({ user, tokenConfig }) => {
         draws: 0,
         kos: 0,
         dq: 0,
-        socials: [],
-        home: ''
+        socials: null,
+        home: null
     });
 
     const setFighterInfo = e => {
         const { id, name, value } = e.currentTarget;
         console.log('name: ', name);
-
-        return setFighter({...fighter, [id]: value });
+        if(name === 'stats'){
+            setFighter({...fighter, [id]: parseInt(value) });
+            return;
+        }
+        setFighter({...fighter, [id]: value });
     }
 
     const handlePostFighter = () => {
-        const url = process.env.REACT_APP_API + `/fighters/${fighter.fighterId}`;
+        const url = process.env.REACT_APP_API + `/fighters`;
         console.log('fighter: ',fighter);
         
         return axios.post(url, fighter, tokenConfig)
@@ -39,19 +42,19 @@ export const FightersForm = ({ user, tokenConfig }) => {
                     status: 'success',
                     duration: 5000,
                     isClosable: true,});
-                    setFighter({
-                        fighterId: '',
-                        firstName: '',
-                        lastName: '',
-                        ringname: '',
-                        wins: 0,
-                        losses: 0,
-                        draws: 0,
-                        kos: 0,
-                        dq: 0,
-                        socials: null, 
-                        home: null
-                    })
+                    // setFighter({
+                    //     fighterId: '',
+                    //     firstName: '',
+                    //     lastName: '',
+                    //     ringname: '',
+                    //     wins: 0,
+                    //     losses: 0,
+                    //     draws: 0,
+                    //     kos: 0,
+                    //     dq: 0,
+                    //     socials: null, 
+                    //     home: null
+                    // })
                 }
             })
             .catch(err => console.log(err))
@@ -114,7 +117,6 @@ export const FightersForm = ({ user, tokenConfig }) => {
                                     <FormLabel>Wins</FormLabel>
                                     <Input name="stats" value={wins} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
                                 </FormControl>
-
                                 <FormControl m="3" style={{width: '25%'}} id="losses">
                                     <FormLabel>Losses</FormLabel>
                                     <Input name="stats" value={losses} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />

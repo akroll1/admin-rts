@@ -37,10 +37,9 @@ export const MyScorecardsTableContent = ({ scorecards }) => {
             const { fightStatus, finalScore, groupScorecardId, label, prediction, rounds, scorecardId } = row;
             const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
             const renderScoreOrStatus = () => {
+              if(fightStatus === `CANCELED`) return `Canceled`;
               if(finalScore) return finalScore;
-              if(!finalScore){
-                return fightStatus === `CANCELED` ? `Canceled` : `Upcoming`;
-              }
+              if(!finalScore && !prediction) return `No Prediction`; 
             }
             return (
               <Tr 

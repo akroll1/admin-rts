@@ -4,11 +4,12 @@ import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useToast } fro
 import { ReviewItem } from './review-item'
 import { stateStore } from '../../../stores'
 import axios from 'axios';
+
 export const PredictionsReviews = ({ 
   reviewType, 
   predictionsAndReviews, 
-  setShowReviewForm, 
-  showReviewForm 
+  setFightReviewForm, 
+  fightReviewForm 
 }) => {
   const toast = useToast();
   const { user: { sub } , tokenConfig } = stateStore.getState();
@@ -24,7 +25,7 @@ export const PredictionsReviews = ({
         isClosable: true
       })
     }
-    const url = process.env.REACT_APP_LIKES;
+    const url = process.env.REACT_APP_API + `/likes`;
     return axios.put(url, { likeType, reviewId }, tokenConfig)
       .then( res => {
         if(res.data.includes('Review liked')){
@@ -84,7 +85,7 @@ export const PredictionsReviews = ({
                 </Button>
                 <Button 
                   mt={["2", "0"]} 
-                  onClick={() => setShowReviewForm(!showReviewForm)} 
+                  onClick={() => setFightReviewForm(!fightReviewForm)} 
                   colorScheme="blue"
                 >
                   Write a {type}
@@ -99,7 +100,7 @@ export const PredictionsReviews = ({
             </Heading>
             <Button 
               mt="1rem" 
-              onClick={() => setShowReviewForm(!showReviewForm)} 
+              onClick={() => setFightReviewForm(!fightReviewForm)} 
               size="lg" 
               colorScheme="blue"
             >
