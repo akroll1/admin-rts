@@ -3,6 +3,7 @@ import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
 import { PredictionsReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
+import { useFightStore } from '../../stores'
 
 export const ShowsMain = ({
     deleteMember,
@@ -14,13 +15,12 @@ export const ShowsMain = ({
     members,
     predictionsAndReviews,
     reviewType,
-    selectedFightSummary, 
     setFightReviewForm, 
     fightReviewForm, 
 }) => {
-    const { showTime } = selectedFightSummary?.show?.showTime ? selectedFightSummary.show : 1656208800000;
+    const { fightSummary } = useFightStore();
+    const { show: { showTime }} = fightSummary;
     const UPCOMING = showTime > Date.now() ? true : false; 
-
     return (
         <Flex 
             as="section"
@@ -35,16 +35,15 @@ export const ShowsMain = ({
             boxSizing="border-box" 
         >
             <FightMetadata
-                showTime={showTime}
-                selectedFightSummary={selectedFightSummary}
+                fightSummary={fightSummary}
             /> 
             
             <ShowsFighterFaceoff 
-                fighters={selectedFightSummary.fighters} 
+                fighters={fightSummary.fighters} 
                 showTime={showTime}
             />
             <DividerWithText text="The Storyline" />
-            <FightStoryline selectedFightSummary={selectedFightSummary} /> 
+            <FightStoryline fightSummary={fightSummary} /> 
 
             <DividerWithText text={UPCOMING ? 'Predictions' : 'Reviews'} />
             <PredictionsReviews 

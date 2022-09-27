@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Rating } from './rating'
 import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useToast } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
-import { stateStore } from '../../../stores'
+import { useStateStore } from '../../../stores'
 import axios from 'axios';
 
 export const PredictionsReviews = ({ 
@@ -12,7 +12,7 @@ export const PredictionsReviews = ({
   fightReviewForm 
 }) => {
   const toast = useToast();
-  const { user: { sub } , tokenConfig } = stateStore.getState();
+  const { user: { sub } , tokenConfig } = useStateStore.getState();
   const type = reviewType.charAt(0) + reviewType.toLowerCase().slice(1);
   const renderType = predictionsAndReviews[reviewType];
 

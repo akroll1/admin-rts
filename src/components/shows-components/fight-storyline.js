@@ -1,8 +1,8 @@
 import React from 'react'
 import { Flex, Heading, Text } from '@chakra-ui/react'
 
-export const FightStoryline = ({ selectedFightSummary }) => {
-    const { fight: { fightStoryline, odds }} = selectedFightSummary;
+export const FightStoryline = ({ fightSummary }) => {
+    const { fight: { fightStoryline, odds }} = fightSummary;
     return (
         <Flex 
             as="section"

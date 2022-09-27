@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router'
 import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
 import { capFirstLetters, FIGHT_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 import { useWindowResize } from '../hooks'
 
 const Scoring = () => {
@@ -25,7 +25,7 @@ const Scoring = () => {
         setStats, 
         tokenConfig, 
         user 
-    } = stateStore.getState();
+    } = useStateStore.getState();
     const { sub, email, username } = user;
     const [tabs, setTabs] = useState({
         sidebar: false,

@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useState, useRef,} from 'react'
 import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { DividerWithText } from '../../../chakra'
-import { stateStore } from '../../../stores'
+import { useStateStore } from '../../../stores'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -16,7 +16,7 @@ export const ChatSidebar = ({
 
     // chatKey is room key for room ARN, required for chat metadata.
 
-    const { chatScorecard, setChatScorecard, tokenConfig } = stateStore.getState();
+    const { chatScorecard, setChatScorecard, tokenConfig } = useStateStore.getState();
     const [moderator, setModerator] = useState(false);
     const [avatar, setAvatar] = useState({});
     const [chatToken, setChatToken] = useState(null);

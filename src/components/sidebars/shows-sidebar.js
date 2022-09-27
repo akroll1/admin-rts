@@ -6,24 +6,24 @@ import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
 import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutline } from "react-icons/io5";
 import { DividerWithText } from '../../chakra'
+import { useFightStore } from '../../stores'
 
 export const ShowsSidebar = ({ 
-    fights, 
     getSelectedFightReview,
-    selectedFight,
-    setSelectedFight
 }) => { 
+    const { fights, selectedFight, setSelectedFight } = useFightStore();
     const [searchedFights, setSearchedFights] = useState(fights); 
     const [upcoming, setUpcoming] = useState([]);
     const [recent, setRecent] = useState([]);
     const [selectedFightId, setSelectedFightId] = useState('');
+
     useEffect(() => {
         if(fights.length > 0){
             const upcoming = fights.filter( fight => fight.fightStatus === 'PENDING').reverse();
             setUpcoming(upcoming);
             const recent = fights.filter( fight => fight.fightStatus === 'COMPLETE');
             setRecent(recent);
-            if(upcoming.length > 0) setSelectedFight(upcoming[0]);
+            if(upcoming.length > 0) setSelectedFight(upcoming[0].fightId);
         }
     }, [fights])
     
@@ -43,7 +43,7 @@ export const ShowsSidebar = ({
     const selectFight = e => {
         const { name, id } = e.currentTarget;
         const [selected] = fights.filter( fight => fight.fightId === id);
-        setSelectedFight(selected);
+        setSelectedFight(selected.fightId);
     }
     const historicalShows = [
         'Ali vs Frazier I', 'Hagler vs Hearns'

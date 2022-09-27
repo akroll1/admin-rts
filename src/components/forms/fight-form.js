@@ -3,7 +3,7 @@ import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLa
 import { FieldGroup } from '../../chakra'
 import { DeleteIcon } from '@chakra-ui/icons'
 import axios from 'axios'
-import { FIGHT_STATUS_SELECT_CONSTANTS, ROUND_LENGTH_ENUMS,  WEIGHTCLASS_ENUMS } from '../../utils'
+import { FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM, ROUND_LENGTH_ENUMS, WEIGHTCLASS_ENUMS } from '../../utils'
 
 export const FightForm = ({ user, tokenConfig }) => {
     const toast = useToast();
@@ -35,7 +35,8 @@ export const FightForm = ({ user, tokenConfig }) => {
     
     const handlePutFight = () => {
         setIsSubmitting(true);
-        const fightObj = Object.assign(Object.create({}), form, {fighterIds: [fighterAId, fighterBId]}, { guestJudgeIds })
+        const judgeIds = guestJudgeIds.length > 0 ? guestJudgeIds : null;
+        const fightObj = Object.assign(Object.create({}), form, {fighterIds: [fighterAId, fighterBId]}, { guestJudgeIds: judgeIds })
         const url = process.env.REACT_APP_API + `/fights/${fightId}`;
         return axios.put(url, fightObj, tokenConfig)
             .then( res => {
@@ -184,7 +185,7 @@ export const FightForm = ({ user, tokenConfig }) => {
                                 <FormControl id="officialResult">
                                     <FormLabel htmlFor="officialResult">Official Result</FormLabel>
                                     <Select placeholder={form.officialResult || 'Official Result'} onChange={handleFormChange}>
-                                        { WEIGHTCLASS_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                        { OFFICIAL_RESULTS_ENUM.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                     </Select>
                                 </FormControl>
                                     <FormControl id="winnderId">

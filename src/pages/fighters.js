@@ -6,13 +6,13 @@ import { useParams } from 'react-router'
 import { FightersSidebar } from '../components/sidebars'
 import { FightersPageFighterProfile } from '../components/sidebars'
 import { FightersPageFightersForm } from '../components/fighters-page'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 
 const Fighters = () => {
     const location = useLocation();
     const { id } = useParams();
     const [fighterId, setFighterId] = useState(id);
-    const { tokenConfig } = stateStore.getState();
+    const { tokenConfig } = useStateStore.getState();
     const [fighters, setFighters] = useState([]);
     const [ selectedFighter, setSelectedFighter] = useState({});
     

@@ -8,32 +8,20 @@ import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import { ExpiredTokenModal } from '../components/modals'
 
-import { stateStore } from '../stores'
+import { useFightStore, useStateStore } from '../stores'
+import { useScorecardStore } from '../stores/scorecards'
 
 const Shows = props => {
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
-    const { user, tokenConfig } = stateStore.getState();
+    const { user, tokenConfig } = useStateStore();
+    const { fetchFights, fetchFightSummary, fightSummary, fights, selectedFight } = useFightStore();
+    const { createGroupScorecard } = useScorecardStore();
     const { email, sub, username } = user;
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [modals, setModals] = useState({
         expiredTokenModal: false
-    });
-    const [fights, setFights] = useState([]);
-    const [selectedFight, setSelectedFight] = useState(null);
-    const [selectedFightSummary, setSelectedFightSummary] = useState({
-        show: {
-            location: '',
-            network: '',
-            promoter: '',
-            showId: '' 
-        },
-        fight: {
-            fightId: '',
-            fightQuickTitle: '',
-        },
-        fighters: []
     });
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [predictionsAndReviews, setPredictionsAndReviews] = useState([]); 
@@ -58,36 +46,19 @@ const Shows = props => {
     });
 
     useEffect(() => {
-        const getFights = async () => {
-            const url = process.env.REACT_APP_API + `/fights`;
-            return axios.get(url, tokenConfig)
-                .then(res => {
-                    if(res.data.includes('Token expired')){
-                        return setModals({ ...modals, expiredTokenModal: true });
-                    }
-                    setFights(res.data);
-                })
-                .catch(err => console.log(err));
-        }
-        getFights();
+        const fights = fetchFights();
     },[])
-
+    // this could be handled by above.
     useEffect(() => {
-        if(selectedFight){
-            const getFightSummary = async () => {
-                const url = process.env.REACT_APP_API + `/fights/${selectedFight.fightId}/summary`;
-                return axios.get(url, tokenConfig)
-                    .then( res => setSelectedFightSummary(res.data))
-                    .catch( err => console.log(err))
-            }
-            getFightSummary();
+        if(selectedFight.fightId){
+            fetchFightSummary(selectedFight.fightId);
         }
     }, [selectedFight]);
 
     useEffect(() => {
-        if(selectedFightSummary.fight.fightId){
+        if(fightSummary.fight.fightId){
             const getSelectedFightReviews = async () => {
-                const url = process.env.REACT_APP_API + `/reviews/${reviewType.toLowerCase()}/${selectedFightSummary.fight.fightId}`;
+                const url = process.env.REACT_APP_API + `/reviews/${reviewType.toLowerCase()}/${fightSummary.fight.fightId}`;
                 return axios.get(url, tokenConfig)
                     .then( res => {
                         // console.log('res: ', res)
@@ -114,7 +85,7 @@ const Shows = props => {
             } 
             getSelectedFightReviews();
         }
-    },[selectedFightSummary])
+    },[fightSummary])
 
     const handleEmailSubmit = e => {
         e.preventDefault();
@@ -166,9 +137,9 @@ const Shows = props => {
             ...fightReviewForm,
             owner: sub,
             username,
-            showId: selectedFightSummary.show.showId,
-            fightId: selectedFightSummary.show.fightId,
-            reviewType: Date.now() > selectedFightSummary.show.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
+            showId: fightSummary.show.showId,
+            fightId: fightSummary.show.fightId,
+            reviewType: Date.now() > fightSummary.show.showTime ? REVIEW_TYPE.REVIEW : REVIEW_TYPE.PREDICTION
         };
         const reviewObj = Object.assign({}, obj);
         return axios[verbType === 'POST' ? 'post' : 'put'](url, reviewObj, tokenConfig)
@@ -196,7 +167,7 @@ const Shows = props => {
     useEffect(() => {
         if(fightReviewForm){
             const getReview = async () => {
-                const url = process.env.REACT_APP_API + `/reviews/user/${reviewType.toLowerCase()}/${selectedFightSummary.show.fightId}`;
+                const url = process.env.REACT_APP_API + `/reviews/user/${reviewType.toLowerCase()}/${fightSummary.show.fightId}`;
                 return axios.get(url, tokenConfig)
                     .then(res => {
                         if(res.data.reviewId){
@@ -211,37 +182,35 @@ const Shows = props => {
 
     const handleCreateGroupScorecard = async () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_GROUP_SCORECARDS;
-
+        // this can be pushed down to zustand.
         const tempMembersArr = members.concat(email);
         const goodEmails = removeBadEmails(tempMembersArr);
         const dedupedEmails = [...new Set(goodEmails)];
 
         const scorecardObj = {
             admin: email, // necessary to create a groupScorecard, membersArr.
-            fighterIds: [selectedFightSummary.fighters[0].fighterId, selectedFightSummary.fighters[1].fighterId],
-            fightId: selectedFightSummary.show.fightId,
-            groupScorecardName: selectedFightSummary.show.fightQuickTitle,
+            fighterIds: [fightSummary.fighters[0].fighterId, fightSummary.fighters[1].fighterId],
+            fightId: fightSummary.fight.fightId,
+            groupScorecardName: fightSummary.fight.fightQuickTitle,
             members: dedupedEmails,
             ownerId: sub,
-            rounds: selectedFightSummary.show.rounds,// here
-            showId: selectedFightSummary.show.showId,
-            username
+            rounds: fightSummary.fight.rounds,
+            showId: fightSummary.show.showId,
         };
-
-        /////////////////////////////////////////////
-        // checking for a previous groupScorecard
-        return axios.post(url, scorecardObj, tokenConfig)
-            .then(res => {
-                if(res.status === 200){
-                    const { groupScorecardId } = res.data;
-                    // this is fine, group scorecards is just under development.
-                    return navigate(`/dashboard/scorecards`);
-                }
-            }).catch(err => console.log(err))
-            .finally(() => setIsSubmitting(false));
+        const created = await createGroupScorecard(scorecardObj);
+        console.log('created: ', created);
+        if(created){
+            toast({ 
+                title: 'Group Created!',
+                duration: 5000,
+                status: 'success',
+                isClosable: true
+            })
+        }
+        setIsSubmitting(false);        
     };
     const { members } = groupScorecard;
+    // console.log('fightSummary: ', fightSummary)
     return (
         <Flex 
             w="100%" 
@@ -267,8 +236,6 @@ const Shows = props => {
             <ShowsSidebar 
                 fights={fights} 
                 getSelectedFightReview={getSelectedFightReview} 
-                selectedFight={selectedFight}
-                setSelectedFight={setSelectedFight}
             />  
             <ShowsMain 
                 deleteMember={deleteMember}
@@ -280,7 +247,6 @@ const Shows = props => {
                 members={members}
                 predictionsAndReviews={predictionsAndReviews}
                 reviewType={reviewType}
-                selectedFightSummary={selectedFightSummary}
                 setFightReviewForm={setFightReviewForm}
                 fightReviewForm={fightReviewForm}
             />

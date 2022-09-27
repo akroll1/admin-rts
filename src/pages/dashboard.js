@@ -22,14 +22,14 @@ import {
 import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
 import { ExpiredTokenModal } from '../components/modals'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
   const [modals, setModals] = useState({
     expiredTokenModal: false
   });
-  const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = stateStore( state => state);
+  const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = useStateStore( state => state);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([

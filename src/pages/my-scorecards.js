@@ -4,7 +4,7 @@ import { MyScorecardsTable } from '../components/tables'
 import { ExpiredTokenModal } from '../components/modals'
 import axios from 'axios'
 import { capFirstLetters } from '../utils'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 
 export const MyScorecards = () => {
     const [modals, setModals] = useState({
@@ -12,7 +12,7 @@ export const MyScorecards = () => {
     });
     const [scorecards, setScorecards] = useState(null);
 
-    const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = stateStore( state => state);
+    const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = useStateStore( state => state);
     console.log('userScorecards: ', userScorecards)
     // getScorecards && check if user exists.
     useEffect(() => {

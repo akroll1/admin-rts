@@ -8,8 +8,8 @@ import { NavItem } from './scoring-sidebar/nav-item'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
 import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
-import { stateStore } from '../../stores'
-import { Navigate, useNavigate } from 'react-router'
+import { useStateStore } from '../../stores'
+import { useNavigate } from 'react-router'
 
 export const ScoringSidebarLeft = ({ 
     adminUsername,
@@ -24,7 +24,7 @@ export const ScoringSidebarLeft = ({
 }) => {
     const navigate = useNavigate();
     const [showGuests, setShowGuests] = useState(null)
-    const { availableGuestJudges } = stateStore.getState();
+    const { availableGuestJudges } = useStateStore.getState();
   
     const handlePredictionModalToggle = () => {
         if(isLocked){

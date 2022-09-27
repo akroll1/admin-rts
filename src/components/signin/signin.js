@@ -9,7 +9,7 @@ import { ForcedPasswordChange } from './forced-password-change'
 import { WaitingForCode } from './waiting-for-code-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { stateStore } from '../../stores'
+import { useStateStore } from '../../stores'
 
 export const SignIn = props => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export const SignIn = props => {
       isWaitingForNewPasswordCode: false
   })
 
-  const { setUser, setToken } = stateStore.getState();
+  const { setUser, setToken } = useStateStore.getState();
 
   Amplify.configure({
     Auth: {

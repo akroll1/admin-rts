@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
-import { stateStore } from '../../stores'
+import { useStateStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
 import { CustomOverlay } from '../custom-overlay';
 
 
 export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModals }) => {
     const toast = useToast();
-    const { myGuestJudges, setMyGuestJudges } = stateStore.getState();
-    const availableGuestJudges = stateStore( state => state.availableGuestJudges);
+    const { myGuestJudges, setMyGuestJudges } = useStateStore.getState();
+    const availableGuestJudges = useStateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
     const [overlay, setOverlay] = useState(<CustomOverlay />)
     useEffect(() => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
-import { stateStore } from '../../stores'
+import { useStateStore } from '../../stores'
 // get isLoggedIn from state store, not handling it in prod.
 export const ProfileButton = ({ 
     isLoggedIn,
@@ -10,7 +10,7 @@ export const ProfileButton = ({
     const navigate = useNavigate();
 
     const handleClick = () => {
-        const { reset } = stateStore.getState();
+        const { reset } = useStateStore.getState();
         if(isLoggedIn){
             setIsLoggedIn(false)
             reset();

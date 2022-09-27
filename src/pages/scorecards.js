@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import { useParams } from 'react-router'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 import axios from 'axios'
 import { ScorecardsPageScoringTable } from '../components/tables'
 import { ScorecardsSearch } from '../components/search'
@@ -10,7 +10,7 @@ import { capFirstLetters } from '../utils'
 import { ScorecardsSearchTable } from '../components/tables/scorecards-search-table'
 
 export const Scorecards = () => {
-    const { tokenConfig } = stateStore.getState();
+    const { tokenConfig } = useStateStore.getState();
     const { initialScorecardId, userId } = useParams();
     const [scorecardId, setScorecardId] = useState(initialScorecardId)
     const [search, setSearch] = useState('');

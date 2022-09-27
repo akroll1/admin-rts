@@ -20,7 +20,7 @@ const initialState = {
 //     reset: () => set(initialState),
 //   }))
 
-export const stateStore = create(persist(
+export const useStateStore = create(persist(
     (set, get) => ({
         ...initialState,
         setBroadcast: broadcast => {
