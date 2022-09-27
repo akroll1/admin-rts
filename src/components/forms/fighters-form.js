@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Button, FormControl, FormLabel, Heading, HStack, Input, Stack, StackDivider, VStack, Flex, useToast } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { FightersTable } from '../tables';
 import axios from 'axios';
 
 export const FightersForm = ({ user, tokenConfig }) => {
     const toast = useToast();
-    const [fighters, setFighters] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
+    const [searchFighterId, setSearchFighterId] = useState('');
     const [fighter, setFighter] = useState({
         fighterId: '',
         firstName: '',
@@ -31,52 +32,93 @@ export const FightersForm = ({ user, tokenConfig }) => {
         setFighter({...fighter, [id]: value });
     }
 
-    const handlePostFighter = () => {
-        const url = process.env.REACT_APP_API + `/fighters`;
-        console.log('fighter: ',fighter);
-        
-        return axios.post(url, fighter, tokenConfig)
+    const handleUpdateFighter = () => {
+        setIsSubmitting(true)
+        const url = process.env.REACT_APP_API + `/fighters/${searchFighterId}`;
+        Object.assign(fighter, {
+            fighterId: searchFighterId
+        })
+        console.log('fighter: ', fighter)
+
+        return axios.put(url, fighter, tokenConfig)
+            .then( res => {
+                if(res.status === 200){
+                    toast({ title: 'Fighter updated!',
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,});
+                }
+            }).catch( err => console.log(err))
+            .finally(() => setIsSubmitting(false))
+        }
+        const handleCreateFighter = () => {
+            setIsSubmitting(true)
+            const url = process.env.REACT_APP_API + `/fighters`;
+            return axios.post(url, fighter, tokenConfig)
             .then(res => {
                 if(res.status === 200){
                     toast({ title: 'Fighter updated!',
                     status: 'success',
                     duration: 5000,
                     isClosable: true,});
-                    // setFighter({
-                    //     fighterId: '',
-                    //     firstName: '',
-                    //     lastName: '',
-                    //     ringname: '',
-                    //     wins: 0,
-                    //     losses: 0,
-                    //     draws: 0,
-                    //     kos: 0,
-                    //     dq: 0,
-                    //     socials: null, 
-                    //     home: null
-                    // })
                 }
             })
             .catch(err => console.log(err))
+            .finally(() => setIsSubmitting(false))
+        }
+        
+        const searchForFighter = e => {
+            e.preventDefault();
+            setIsSubmittingSearch(true);
+            const url = process.env.REACT_APP_API + `/fighters/${searchFighterId}`;
+            return axios.get(url, tokenConfig)
+            .then( res => {
+                if(res.status === 200){
+                    const { fighterId, firstName, lastName, ringname, wins, losses, draws, kos, dq, socials, home, createdAt, updatedAt } = res.data;
+                    setFighter({
+                        fighterId,
+                        firstName,
+                        lastName,
+                        ringname,
+                        wins,
+                        losses,
+                        draws,
+                        kos,
+                        dq,
+                        home,
+                        socials,
+                        createdAt
+                    });
+                }
+            }).catch( err => console.log(err))
+            .finally(() => setIsSubmittingSearch(false))
     }
-    const deleteFighter = e => {
-        const { id } = e.currentTarget
-        const newList = fighters.filter( fighter => fighter.fighterId !== id);
-        setFighters(newList);
-    }
-    const selectFighter = e => {
-        const { id } = e.currentTarget;
-        console.log('id: ',id);
-        const selected = fighters.filter( fighter => fighter.fighterId === id);
-        setFighter({...selected[0]})
-    };
-    // console.log('fighters: ',fighters);
-    // console.log('fighter: ',fighter)
     const { fighterId, firstName, lastName, ringname, wins, losses, draws, kos, dq, socials, home } = fighter;
-    console.log('fighterId: ', fighterId);
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto" height="auto">
+            <FieldGroup title="Search for a Fight">
+                <VStack width="full" spacing="6">
+                    <FormControl id="searchFighterId">
+                        <FormLabel htmlFor="searchFighterId">Fighter ID</FormLabel>
+                        <Input value={searchFighterId} onChange={({currentTarget: {value}}) => setSearchFighterId(value.length === 36 ? value : '')} type="text" maxLength={36} />
+                    </FormControl>
+                    <HStack justifyContent="center" width="full">
+                        <Button 
+                            disabled={!searchFighterId} 
+                            minW="33%" 
+                            isLoading={isSubmittingSearch} 
+                            loadingText="Searching..." 
+                            onClick={searchForFighter} 
+                            type="button" 
+                            colorScheme="blue"
+                        >
+                            Search
+                        </Button>
+                    </HStack>
+                </VStack>
+            </FieldGroup>
+
             <form id="fighters_form" onSubmit={e => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
@@ -103,7 +145,7 @@ export const FightersForm = ({ user, tokenConfig }) => {
                                 <FormLabel>Home</FormLabel>
                                 <Input value={home} onChange={e => setFighterInfo(e)} type="text" maxLength={255} />
                             </FormControl>
-             
+            
                             <FormControl id="socials">
                                 <FormLabel>Socials</FormLabel>
                                 <Input value={socials} onChange={e => setFighterInfo(e)} type="text" maxLength={255} />
@@ -139,16 +181,19 @@ export const FightersForm = ({ user, tokenConfig }) => {
                 </Stack>
                 <FieldGroup mt="8">
                     <HStack width="full">
-                    <Button onClick={handlePostFighter} type="submit" colorScheme="blue">
-                        Save Changes
+                    <Button 
+                        onClick={searchFighterId ? handleUpdateFighter : handleCreateFighter} 
+                        isLoading={isSubmitting} 
+                        loadingText="Submitting..." 
+                        type="submit" 
+                        colorScheme="blue"
+                    >
+                        {searchFighterId ? `Update Fighter` : `Save`}
                     </Button>
                     <Button variant="outline">Cancel</Button>
                     </HStack>
                 </FieldGroup>
             </form>
-            <Flex maxH="15rem" overflowY="scroll">
-                <FightersTable p="1" fighters={fighters} deleteFighter={deleteFighter} selectFighter={selectFighter} />
-            </Flex>
         </Box>
     )
 }
