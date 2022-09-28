@@ -50,4 +50,5 @@ export const useFightStore = create<FightStore>()((set, get) => ({
         const [selectedFight] = get().fights.filter( fight => fight.fightId === selectedFightId);
         set({ selectedFight });
     },
+
 }))

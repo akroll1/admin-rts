@@ -8,9 +8,7 @@ import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutli
 import { DividerWithText } from '../../chakra'
 import { useFightStore } from '../../stores'
 
-export const ShowsSidebar = ({ 
-    getSelectedFightReview,
-}) => { 
+export const ShowsSidebar = () => { 
     const { fights, selectedFight, setSelectedFight } = useFightStore();
     const [searchedFights, setSearchedFights] = useState(fights); 
     const [upcoming, setUpcoming] = useState([]);

@@ -2,7 +2,7 @@ export interface Review {
 	reviewId: string;
 	fightId: string;
 	likes: number;
-	owner: string;
+	ownerId: string;
 	rating: number;
 	review: string;
     reviewType: ReviewType;
@@ -12,6 +12,18 @@ export interface Review {
 	username: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface ReviewPut {
+    reviewId?: string;
+    fightId: string;
+    ownerId: string;
+    rating: number;
+    review: string;
+    reviewType: ReviewType;
+    showId: string;
+    title: string;
+    username: string;
 }
 
 export enum ReviewType {

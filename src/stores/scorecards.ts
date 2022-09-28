@@ -14,35 +14,36 @@ interface ScorecardStore {
 }
 
 const store: any = useStateStore.getState();
-const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS!
+const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards`;
 
 export const useScorecardStore = create<ScorecardStore>()((set, get) => ({
     isSubmitting: false,
     groupScorecards: [],
     activeGroupScorecard: undefined,
     fetchGroupScorecards: async () => {
-        const res = await axios.get(groupScorecardsUrl)
+        const res = await axios.get(`${groupScorecardsUrl}`, store.accessToken);
         const data = res.data as GroupScorecard[];
         set({ groupScorecards: data })
     },
-    saveGroupScorecard: async (groupScorecard: GroupScorecard) => {
-        const res = await axios.post(groupScorecardsUrl, groupScorecard)
-        const data = res.data as GroupScorecard
-        set({
-            groupScorecards: get().groupScorecards.map(x =>
-                x.groupScorecardId === data.groupScorecardId ? data : x
-            ),
-            activeGroupScorecard: data
-        })
-    },
+    // saveGroupScorecard: async (groupScorecard: GroupScorecard) => {
+    //     const res = await axios.post(groupScorecardsUrl, groupScorecard, store.tokenConfig);
+    //     const data = res.data as GroupScorecard
+    //     set({
+    //         groupScorecards: get().groupScorecards.map(x =>
+    //             x.groupScorecardId === data.groupScorecardId ? data : x
+    //         ),
+    //         activeGroupScorecard: data
+    //     })
+    // },
     getGroupScorecard: async (groupScorecardID: string) => {
-        const res = await axios.get(`${groupScorecardsUrl}/${groupScorecardID}`)
+        const url = `${groupScorecardsUrl}/${groupScorecardID}`;
+        const res = await axios.get(url, store.tokenConfig);
         const data = res.data as GroupScorecard
         set({ activeGroupScorecard: data })
     },
     addMemberToActiveScorecard: async (email: string) => {
         set({isSubmitting: true})
-        const state = get()
+        const state = get();
         if(!state.activeGroupScorecard) throw new Error("No active group scorecard submitting")
 
         const result = await axios.post(`/groupScorecards/${state.activeGroupScorecard}/members`, {
@@ -55,6 +56,7 @@ export const useScorecardStore = create<ScorecardStore>()((set, get) => ({
     createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
         const url = process.env.REACT_APP_API + `/group-scorecards`;
         const res = await axios.post(url, scorecardObj, store.tokenConfig);
+        const data = res.data as GroupScorecard;
         if(res.status === 200) return true;
     }
 

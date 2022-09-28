@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
-import { PredictionsReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
+import { FightReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 import { useFightStore } from '../../stores'
@@ -13,8 +13,6 @@ export const ShowsMain = ({
     handleFormChange,
     isSubmitting,
     members,
-    predictionsAndReviews,
-    reviewType,
     setFightReviewForm, 
     fightReviewForm, 
 }) => {
@@ -45,23 +43,26 @@ export const ShowsMain = ({
             <DividerWithText text="The Storyline" />
             <FightStoryline fightSummary={fightSummary} /> 
 
-            <DividerWithText text={UPCOMING ? 'Predictions' : 'Reviews'} />
-            <PredictionsReviews 
-                reviewType={reviewType}
-                predictionsAndReviews={predictionsAndReviews}
-                fightReviewForm={fightReviewForm} 
-                setFightReviewForm={setFightReviewForm} 
-            />
-            { UPCOMING && 
-                <ShowsCreateGroupScorecard 
-                    deleteMember={deleteMember} 
-                    emailValue={emailValue} 
-                    handleEmailSubmit={handleEmailSubmit} 
-                    handleFormChange={handleFormChange} 
-                    handleCreateGroupScorecard={handleCreateGroupScorecard} 
-                    isSubmitting={isSubmitting}
-                    members={members} 
-                />
+            
+            { UPCOMING 
+                ?
+                    <ShowsCreateGroupScorecard 
+                        deleteMember={deleteMember} 
+                        emailValue={emailValue} 
+                        handleEmailSubmit={handleEmailSubmit} 
+                        handleFormChange={handleFormChange} 
+                        handleCreateGroupScorecard={handleCreateGroupScorecard} 
+                        isSubmitting={isSubmitting}
+                        members={members} 
+                    />
+                :
+                    <>
+                        <DividerWithText text={`Reviews`} />
+                        <FightReviews 
+                            fightReviewForm={fightReviewForm} 
+                            setFightReviewForm={setFightReviewForm} 
+                        />
+                    </>
             } 
         </Flex>    
     )

@@ -6,7 +6,6 @@ import { ReviewPostStars } from '../../stars'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
 export const ReviewItem = ({ 
-  handleLikeClick,
   reviewItem 
 }) => {
   const [localLikes, setLocalLikes] = useState(0);
@@ -19,12 +18,9 @@ export const ReviewItem = ({
 
   const handleVote = type => {
     if(type === 'up' && !clickedUP){
-      setLocalLikes(localLikes + 1);
-      setClickedUP(true);
-      handleLikeClick(reviewId, type);
+      console.log('Liked!')
     } else if(type ==='down' && !clickedDOWN) {
-      setClickedDOWN(true);
-      handleLikeClick(reviewId, type);
+      console.log('Downvoted.')
     }
   }
 

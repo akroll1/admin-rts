@@ -11,11 +11,6 @@ export const ReviewForm = ({
 }) => {
   const [value, setValue] = useState(null);
 
-  const submitReview = () => {
-    const verbType = reviewForm.reviewId ? 'PUT' : 'POST';
-    return handleReviewFormSubmit(reviewForm, verbType);
-  };
-
   useEffect(() => {
     setValue(reviewForm.rating)
   },[])
@@ -64,7 +59,7 @@ export const ReviewForm = ({
         <Flex flexDirection="inline-flex"> 
           <ButtonGroup>
             <Button 
-              onClick={submitReview} 
+              onClick={handleReviewFormSubmit} 
               type="button" 
               colorScheme="blue" 
             >
