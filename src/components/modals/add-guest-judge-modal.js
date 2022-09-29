@@ -6,7 +6,7 @@ import { useStateStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
 import { CustomOverlay } from '../custom-overlay';
 
-
+// now in scoring.ts
 export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModals }) => {
     const toast = useToast();
     const { myGuestJudges, setMyGuestJudges } = useStateStore.getState();

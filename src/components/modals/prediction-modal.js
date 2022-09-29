@@ -3,21 +3,26 @@ import { Flex, Select, Icon, Button, Modal, ModalBody, ModalContent, ModalFooter
 import { FaTrophy } from 'react-icons/fa'
 import { capFirstLetters } from '../../utils'
 import { CustomOverlay } from '../custom-overlay'
+import { useScorecardStore } from '../../stores'
 
 export const PredictionModal = ({ 
     modals,
     setModals,
-    rounds,
-    fighterData,
+    // rounds,
+    // fighters,
     handleSubmitPrediction 
 }) => {
+  const {
+    fight,
+    fighters
+  } = useScorecardStore();
   const [overlay, setOverlay] = useState(<CustomOverlay />)
   const [localPrediction, setLocalPrediction] = useState({
       fighter:'',
       result: ''
   });
 
-  const totalRounds = new Array(rounds).fill(0);
+  const totalRounds = new Array(fight?.rounds).fill(0);
   const getFighter = e => {
       const { id, value } = e.currentTarget;
       console.log('')
@@ -60,7 +65,7 @@ export const PredictionModal = ({
                 justifyContent="center"
               >
                 <Select _hover={{cursor: 'pointer'}} onChange={e => getFighter(e)} m="1" placeholder="Select winner">
-                  { fighterData.map( fighter => {
+                  { fighters.map( fighter => {
                       const { fighterId, firstName, lastName, ringname } = fighter;
                       return (
                         <option key={fighterId} id={fighterId} value={fighterId}>{`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`}</option>

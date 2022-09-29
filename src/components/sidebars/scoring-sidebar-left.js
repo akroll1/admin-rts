@@ -8,23 +8,28 @@ import { NavItem } from './scoring-sidebar/nav-item'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
 import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
-import { useStateStore } from '../../stores'
+import { useScorecardStore, useStateStore } from '../../stores'
 import { useNavigate } from 'react-router'
 
 export const ScoringSidebarLeft = ({ 
-    adminUsername,
-    finalScore, 
+    adminUsername, 
     handleOpenAddMemberSubmitModal,
     modals, 
-    prediction, 
     setModals,
-    showData, 
     tabs,
     usernameAndUserId
 }) => {
     const navigate = useNavigate();
+    const {
+        fight,
+        prediction,
+        show,
+        tableData,
+        userScorecard,
+    } = useScorecardStore();
+
     const [showGuests, setShowGuests] = useState(null)
-    const { availableGuestJudges } = useStateStore.getState();
+    const { availableGuestJudges } = useStateStore();
   
     const handlePredictionModalToggle = () => {
         if(isLocked){
@@ -35,8 +40,10 @@ export const ScoringSidebarLeft = ({
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
     }
-    const { isLocked, location, network, odds, rounds, showTime, weightclass } = showData ? getSidebarData(showData) : '';
-    finalScore = parseInt(finalScore);
+    const { odds, rounds, weightclass } = fight ? fight : ''
+    const { finalScore } = userScorecard
+    const { location, network, showTime } = show
+    const isLocked = showTime > Date.now()
 
     const gotToSearch = e => {
         console.log('e: ', e)
@@ -114,7 +121,7 @@ export const ScoringSidebarLeft = ({
                 <NavGroup label="Show">
                     <NavItem icon={<FaTv />} label={ network } />
                     <NavItem icon={<FaMapMarkerAlt />} label={ location } />
-                    <NavItem icon={<FaRegClock />} label={ showTime } />
+                    <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
                 </NavGroup>
 
                 <NavGroup label="Fight">

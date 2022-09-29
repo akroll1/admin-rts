@@ -1,3 +1,4 @@
+
 export const REVIEW_TYPE = {
     FANTASY: 'FANTASY',
     HISTORICAL: 'HISTORICAL',

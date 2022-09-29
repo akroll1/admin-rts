@@ -4,12 +4,12 @@ import { capFirstLetters } from '../../../utils'
 
 
 export const ScoringMoneylineTable = ({ 
-    fighterData, 
+    fighters, 
     props, 
     totalRounds 
 }) => {
-    // console.log('fighterData: ', fighterData);
-    const mapPropsToFighter = (fighterData, props, totalRounds) => {
+    // console.log('fighters: ', fighters);
+    const mapPropsToFighter = (fighters, props, totalRounds) => {
         const fighter1PropsObj = {
             'DC': '',
             'KO13': '',
@@ -25,7 +25,7 @@ export const ScoringMoneylineTable = ({
             'KO10': ''
         }
         
-        const [fighter1Id, fighter2Id] = fighterData.map( fighter => fighter.fighterId);
+        const [fighter1Id, fighter2Id] = fighters.map( fighter => fighter.fighterId);
         const fighter1Props = props.filter( prop => prop.fighterId === fighter1Id)
             .map( x => {
                 const { odds, outcome } = x
@@ -42,8 +42,8 @@ export const ScoringMoneylineTable = ({
     }
     
     const roundProps = ['DC', 'KO13', 'KO46', 'KO79', 'KO10'];
-    const [fighter1, fighter2] = fighterData.length > 0 ? fighterData : [];
-    const [fighter1Props, fighter2Props] = fighterData?.length > 0 && props?.length > 0 ? mapPropsToFighter(fighterData, props) : [];
+    const [fighter1, fighter2] = fighters.length > 0 ? fighters : [];
+    const [fighter1Props, fighter2Props] = fighters?.length > 0 && props?.length > 0 ? mapPropsToFighter(fighters, props) : [];
     const transfromPropLabel = label => {
         if(label.includes('KO10')) return `KO 10-12`;
         if(label.includes('KO')) return `KO ${label.slice(2).split('').join('-')}`;

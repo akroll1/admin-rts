@@ -23,7 +23,16 @@ export const ShowsCreateGroupScorecard = ({
                         { members.map((member, i) => {
                             return (
                                 <InputGroup key={i}>
-                                    <Input size="md" readOnly key={member} value={members[i]} placeholder="first.last@email.com" type="email" maxLength={255} />
+                                    <Input 
+                                        mb="1"
+                                        size="md" 
+                                        readOnly 
+                                        key={member} 
+                                        value={members[i]} 
+                                        placeholder="first.last@email.com" 
+                                        type="email" 
+                                        maxLength={255} 
+                                    />
                                     <InputRightElement children={<DeleteIcon id={member} onClick={deleteMember} _hover={{cursor: 'pointer', color: 'gray'}} color="white" />} />
                                 </InputGroup>
                             )

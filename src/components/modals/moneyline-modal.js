@@ -4,7 +4,7 @@ import { ScoringMoneylineTable } from '../tables'
 import { CustomOverlay } from '../custom-overlay'
 
 export const MoneylineModal = ({
-  fighterData,
+  fighters,
   modals,
   props,
   setModals,
@@ -25,7 +25,7 @@ export const MoneylineModal = ({
         <ModalHeader textAlign="center">The FightSync Props</ModalHeader>
         <ModalBody>
           <ScoringMoneylineTable 
-            fighterData={fighterData} 
+            fighters={fighters} 
             props={props} 
             totalRounds={totalRounds}
           />

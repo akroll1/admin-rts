@@ -37,7 +37,7 @@ export const SignIn = props => {
       isWaitingForNewPasswordCode: false
   })
 
-  const { setUser, setToken } = useStateStore.getState();
+  const { setUser, setToken, setIdToken } = useStateStore();
 
   Amplify.configure({
     Auth: {
@@ -82,9 +82,17 @@ export const SignIn = props => {
         const groups = user.signInUserSession.accessToken.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
         setUser({ ...attributes, username, isLoggedIn: true, groups });
         const token = user.signInUserSession.accessToken.jwtToken;
-        setToken({headers: {
-          Authorization: `Bearer ${token}`
-        }})
+        const idToken = user.signInUserSession.idToken.jwtToken;
+        setIdToken({
+          headers: {
+            Authorization: `Bearer ${idToken}`
+          }
+        });
+        setToken({
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         sessionStorage.setItem('isLoggedIn',true);
         return navigate('/scorecards', { username });
       }

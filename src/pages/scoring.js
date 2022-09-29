@@ -3,29 +3,47 @@ import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
 import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, MoneylineModal, PredictionModal } from '../components/modals'
-import {  } from '../components/sidebars'
 import { predictionIsLocked } from '../utils'
-import { useLocation, useNavigate } from 'react-router'
 import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
 import { capFirstLetters, FIGHT_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
-import { useStateStore } from '../stores'
+import { useStateStore, useScorecardStore, useScoringStore } from '../stores'
 import { useWindowResize } from '../hooks'
 
 const Scoring = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
+
     const toast = useToast();
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
     //////////////////  SCORE STATE /////////////////////////
     const { 
         chatScorecard, 
-        setAvailableGuestJudges, 
         setChatScorecard, 
         setStats, 
         tokenConfig, 
         user 
-    } = useStateStore.getState();
+    } = useStateStore();
+    const { 
+        activeGroupScorecard,
+        fight,
+        fightComplete,
+        fighters,
+        fighterScores,
+        scorecards,
+        scoredRounds,
+        setFightComplete,
+        setScoredRounds,
+        setFighterScores,
+        show,
+        userScorecard,
+        fetchGroupScorecard,
+    } = useScorecardStore();
+    const { 
+        collateTableData,
+        guestJudgeScorecards,
+        fetchGuestJudgeScorecards,
+        prediction,
+        setPrediction
+    } = useScoringStore();
     const { sub, email, username } = user;
     const [tabs, setTabs] = useState({
         sidebar: false,
@@ -43,15 +61,14 @@ const Scoring = () => {
         scorecardName: '',
     });
     const [incomingScore, setIncomingScore] = useState({});
-    const [scorecards, setScorecards] = useState(null);
-    const [userScorecard, setUserScorecard] = useState({});
+    // const [scorecards, setScorecards] = useState(null);
+    // const [userScorecard, setUserScorecard] = useState({});
     const [tableData, setTableData] = useState([]);
-    const [scoredRounds, setScoredRounds] = useState('');
+    // const [scoredRounds, setScoredRounds] = useState('');
     const [totalRounds, setTotalRounds] = useState(0);
-    const [fighterScores, setFighterScores] = useState({});
     const [chatKey, setChatKey] = useState(null);
     const [fightStatus, setFightStatus] = useState(null);
-    const [fightComplete, setFightComplete] = useState(false);
+    // const [fightComplete, setFightComplete] = useState(false);
     //////////////////  MODALS  /////////////////////////
     const [modals, setModals] = useState({
         addMemberModal: false,
@@ -60,35 +77,30 @@ const Scoring = () => {
         moneylineModal: false,
         predictionModal: false,
     })
-    //////////////////  PROPS  /////////////////////////
+
     const [props, setProps] = useState(null);
-    //////////////////  SIDEBAR  /////////////////////////
     const [needsPrediction, setNeedsPrediction] = useState(false);
-    const [prediction, setPrediction] = useState('');
     const [predictionLock, setPredictionLock] = useState(true);
-    const [showData, setShowData] = useState(null);
-    const [fighterData, setFighterData] = useState([]);
     const [usernameAndUserId, setUsernameAndUserId] = useState([]);
     const [adminUsername, setAdminUsername] = useState('');
-    //////////////////  URL'S /////////////////////////
-    const groupScorecardsUrl = process.env.REACT_APP_GROUP_SCORECARDS + `/${groupscorecard_id}`;
+    const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards/${groupscorecard_id}/summary`;
 
-    useEffect(() => {
-        if(modals.moneylineModal){
-            const fetchPanelProps = async () => {
-                const url = process.env.REACT_APP_PANELS + `/props/${showData.fight.fightId}`;
-                return axios.get(url, tokenConfig)
-                    .then( res => setProps(res.data ? res.data : []))
-                    .catch( err => console.log(err));
-            }
-            fetchPanelProps();
-        }
-    }, [modals.moneylineModal])
-    useEffect(() => {
-        if(!user?.sub){
-            navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
-        } 
-    },[user]) 
+    // useEffect(() => {
+    //     if(modals.moneylineModal){
+    //         const fetchPanelProps = async () => {
+    //             const url = process.env.REACT_APP_PANELS + `/props/${showData.fight.fightId}`;
+    //             return axios.get(url, tokenConfig)
+    //                 .then( res => setProps(res.data ? res.data : []))
+    //                 .catch( err => console.log(err));
+    //         }
+    //         fetchPanelProps();
+    //     }
+    // }, [modals.moneylineModal])
+    // useEffect(() => {
+    //     if(!user?.sub){
+    //         navigate('/signin', { replace: true}, {state:{ path: location.pathname}})
+    //     } 
+    // },[]) 
     useEffect(() => {
         // get window width size for scoring tabs.
         const getWindowWidth = () => {
@@ -114,149 +126,24 @@ const Scoring = () => {
     },[windowWidth])
 
     useEffect(() => {
-        // 1. Fetch Group Scorecard.
-        const fetchGroupScorecard = async () => {
-            const res = await axios.get(groupScorecardsUrl, tokenConfig)
-                .then( res => res).catch( err => console.log(err));
-            console.log('res.data: ', res.data);
-            if(typeof res.data === 'string' && res.data.includes('Token expired')){
-                return setModals( modals => ({ ...modals, expiredTokenModal: true }))
-            }
-            if(res.data === 'No scorecard found.'){
-                alert('No Scorecard Found');
-                return;
-            }
-            // 2. Set groupScorecard scorecards, showData, guestScorers, chatKey.
-            setGroupScorecard(res.data.groupScorecard);
-            setFighterData(res.data.fighterData);
-            setScorecards(res.data.scorecards);
-            setShowData({
-                show: res.data.show,
-                fight: res.data.fight
-            });
-            const getUsernames = res.data.scorecards.map( ({ username, ownerId }) => ({ username, ownerId }));
-            setUsernameAndUserId(getUsernames);
-            setAdminUsername(res.data.adminUsername)
-
-            // Get THIS USER'S scorecard.
-            const [thisUserScorecard] = res.data.scorecards?.filter( ({ ownerId }) => ownerId === email || ownerId === sub);
-            console.log('thisUserScorecard', thisUserScorecard);
-            if(!thisUserScorecard) return alert('No scorecard found.')
-            setUserScorecard(thisUserScorecard);
-            // predictions.
-            const needsPrediction = !thisUserScorecard.prediction && (res.data.show.showTime > Date.now());
-            if(needsPrediction){
-                setTimeout(() => {
-                    setNeedsPrediction(true); 
-                    setModals( modals => ({ ...modals, predictionModal: true })) 
-                },5000);
-            }
-            if(thisUserScorecard.prediction){
-                const transformPredictionData = () => {
-                    const { prediction } = thisUserScorecard;
-                    const [fighter] = res.data.fighterData.filter( data => {
-                        const { fighterId, lastName } = data;
-                        const transformedPrediction = `${capFirstLetters(lastName)}, ${prediction.split(',')[1]}`; 
-                        if(prediction.includes(fighterId)){
-                            return setPrediction(transformedPrediction);
-                        }
-                    });
-                }
-                transformPredictionData();
-            }
-            
-            setAvailableGuestJudges(res.data.guestJudges?.length > 0 ? res.data.guestJudges : []);
-            setChatKey(res.data.groupScorecard.chatKey);
-            setTotalRounds(res.data.fight.rounds);
-            setFightStatus(res.data.fight.fightStatus);
-
-            const findScoredRounds = thisUserScorecard => {
-                const scored = thisUserScorecard.scores.length;
-                if(scored + 1 > res.data.fight.rounds){
-                    setFightComplete(true);
-                    return res.data.fight.rounds
-                }
-                return scored;
-            }
-            const round = findScoredRounds(thisUserScorecard);
-            setScoredRounds(round);
-            const [fighter1, fighter2] = res.data.fighterData.map( ({ lastName }) => {
-                return ({
-                    [lastName]: 10
-                })
-            })
-            setFighterScores({ ...fighter1, ...fighter2, round, scorecardId: thisUserScorecard.scorecardId });
+        const getGroupScorecard = async () => {
+            const groupScorecard = await fetchGroupScorecard(groupscorecard_id);
         }
-        fetchGroupScorecard();
-        // const sync = setInterval(() => {
-        //     fetchGroupScorecard();
-        //     if(sync) return;
-        //     sync();
-        // }, 30000);
-    },[]);
+        getGroupScorecard();
+
+    },[])
 
     useEffect(() => {
-        if(scorecards?.length > 0){
-            const getTableData = (scorecards, fighterData) => {
-                
-                const s = scorecards.map( scorecard => {
-                    let { username, prediction, scores } = scorecard;
-                    const [fighter1, fighter2] = fighterData;
-                    const sortRoundAscending = (a, b) => a.round - b.round;
-                    if(prediction){
-                        const index = prediction.indexOf(',');
-                        prediction = prediction.slice(0, index) === fighter1.fighterId ? `${fighter1.lastName},${prediction.slice(index+1)}` : `${fighter2.lastName},${prediction.slice(index+1)}`;
-                    }
-
-                    const totals = scores.reduce( (acc, curr) => {
-                        if(curr[fighter1.lastName]){
-                            acc[fighter1.lastName] += curr[fighter1.lastName];
-                        }
-                        if(curr[fighter2.lastName]){
-                            acc[fighter2.lastName] += curr[fighter2.lastName];
-                        }
-                        return acc;
-                    },{
-                        [fighter1.lastName]: 0,
-                        [fighter2.lastName]: 0
-                    });
-                    const mappedScores = scores.map( score => {
-                        const { round } = score;
-                        const f1name = fighter1.lastName;
-                        const f2name = fighter2.lastName;
-                        return ({
-                            round,
-                            [f1name]: score[fighter1.lastName] ? score[fighter1.lastName] : 0,
-                            [f2name]: score[fighter2.lastName] ? score[fighter2.lastName] : 0
-                        })
-                    })
-                    .sort(sortRoundAscending);
-                   
-                    return ({
-                        mappedScores,
-                        username,
-                        totals,
-                        fighters: [fighter1.lastName, fighter2.lastName],
-                        prediction
-                    })
-                })
-                setTableData(s);
-                setStats(s)
-            }; 
-            if(incomingScore.scorecardId){     
-                let [scorecard] = scorecards.filter( scorecard => scorecard.scorecardId === incomingScore.scorecardId);
-                const otherScorecards = scorecards.filter( scorecard => scorecard.scorecardId !== incomingScore.scorecardId) 
-                const tempScores = scorecard.scores.concat(incomingScore);
-                scorecard.scores = tempScores;
-                setUserScorecard({ ...userScorecard, scores: tempScores });
-                const updatedScorecards = [...otherScorecards, scorecard];
-                getTableData(updatedScorecards, fighterData)
-            }
-            if(!incomingScore.scorecardId){
-                getTableData(scorecards, fighterData)
-            }
+        console.log('fight: ', fight)
+        // use this effect to get non-critical state from scoring.ts
+        if(fight?.guestJudgeIds.length > 0){
+            fetchGuestJudgeScorecards()
         }
-    },[scorecards, incomingScore])
+    },[fight])
+
+    useEffect(() => {
+        collateTableData();
+    },[scorecards])
 
     const submitRoundScores = scoreUpdate => {
         if(fightComplete) return; 
@@ -278,7 +165,7 @@ const Scoring = () => {
             .then( res => {
                 if(res.status === 200){
                     // UPDATES.
-                    setFighterScores({ ...fighterScores, round: fighterScores.round + 1, [fighterData[0].lastName]: 10, [fighterData[1].lastName]: 10 }); 
+                    setFighterScores({ ...fighterScores, round: fighterScores.round + 1, [fighters[0].lastName]: 10, [fighters[1].lastName]: 10 }); 
                     const fightIsComplete = fighterScores.round + 1 > totalRounds;
                     setScoredRounds(fightIsComplete ? totalRounds : fighterScores.round);
         
@@ -294,11 +181,11 @@ const Scoring = () => {
     };
     // submit fight prediction.
     const handleSubmitPrediction = prediction => {
-        if(predictionIsLocked(showData.show.showTime)) {
+        if(predictionIsLocked(show.showTime)) {
             setPredictionLock(true);
             return alert('Predictions are now locked!');
         }
-        const [fighter] = fighterData.filter( data => {
+        const [fighter] = fighters.filter( data => {
             const { fighterId, lastName } = data;
             const transformedPrediction = `${capFirstLetters(lastName)}, ${prediction.split(',')[1]}`; 
             return prediction.includes(fighterId) ? setPrediction(transformedPrediction) : setNeedsPrediction(true);
@@ -335,7 +222,7 @@ const Scoring = () => {
     const handleAddMemberSubmit = async email => {
         setIsSubmitting(true);
         const { admin, groupScorecardId, groupScorecardName, fightId } = groupScorecard;
-        const fighterIds = fighterData.map( ({ fighterId }) => fighterId);
+        const fighterIds = fighters.map( ({ fighterId }) => fighterId);
         const update = {
             admin,
             fighterIds,
@@ -361,20 +248,9 @@ const Scoring = () => {
             .finally(() => setIsSubmitting(false))
     };
     // this method can also be used in the initial useEffect to get the guest judges.
-    const fetchGuestJudgeScorecards = async guestJudgeIds => {
-        const getJudges = await guestJudgeIds.length > 0 && guestJudgeIds.map( async id => {
-            const url = process.env.REACT_APP_SCORECARDS + `/${id}/${showData.fight.fightId}`;
-            return axios(url, tokenConfig)
-                .then( res => res.data )
-                .catch( err => console.log(err));
-        });
-        const judgeScorecards = await Promise.all(getJudges);
-        console.log('judgeScorecards: ', judgeScorecards);
-        // no! I have to filter here.
-        // setScorecards(prev => ([ ...prev, ...judgeScorecards ]))
-    }
-    const { finalScore } = userScorecard;
-    const { rounds } = showData?.fight ? showData.fight : 0;
+    
+    // console.log('activeGroupScorecard: ', activeGroupScorecard)
+    // console.log('userScorecard: ', userScorecard)
 
     return (
         <Flex 
@@ -406,7 +282,7 @@ const Scoring = () => {
                 />
                 <MoneylineModal
                     totalRounds={totalRounds}
-                    fighterData={fighterData}
+                    fighters={fighters}
                     modals={modals}
                     props={props}
                     setModals={setModals} 
@@ -414,8 +290,6 @@ const Scoring = () => {
                 <PredictionModal 
                     modals={modals}
                     setModals={setModals} 
-                    rounds={rounds}
-                    fighterData={fighterData}
                     handleSubmitPrediction={handleSubmitPrediction} 
                 />
             </Flex>
@@ -428,19 +302,15 @@ const Scoring = () => {
             >
                 <ScoringSidebarLeft
                     adminUsername={adminUsername}
-                    finalScore={finalScore}
                     handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
-                    groupScorecard={groupScorecard}
                     modals={modals}
-                    prediction={prediction}
                     setModals={setModals}
-                    showData={showData}
                     tabs={tabs}
                     usernameAndUserId={usernameAndUserId}
                 />
                 <ScoringMain
                     fightComplete={fightComplete}
-                    fighterData={fighterData}
+                    fighters={fighters}
                     fighterScores={fighterScores} 
                     isSubmitting={isSubmitting}
                     submitRoundScores={submitRoundScores}
@@ -457,14 +327,7 @@ const Scoring = () => {
 
                 />
             </Flex>
-            <ScoringTable 
-                fightStatus={fightStatus}
-                scoredRounds={scoredRounds} 
-                tableData={tableData} 
-                tabs={tabs} 
-                totalRounds={totalRounds} 
-                username={username} 
-            />
+            <ScoringTable tabs={tabs} />
 
             <ScoringTabs tabs={tabs} setTabs={setTabs} />
         </Flex>

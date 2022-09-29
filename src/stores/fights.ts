@@ -1,7 +1,8 @@
 import create from 'zustand'
 import axios from 'axios'
-import { Fight, FightSummary, Network } from './models'
+import { Fight, FightSummary } from './models'
 import { useStateStore } from './state-store'
+import { Network } from './models/enums'
 
 export interface FightStore {
     isSubmitting: boolean;

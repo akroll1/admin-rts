@@ -151,8 +151,6 @@ const Shows = props => {
     };
     const { members } = groupScorecard;
 
-    console.log('reviewForm: ', reviewForm)
-
     return (
         <Flex 
             w="100%" 

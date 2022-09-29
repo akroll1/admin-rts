@@ -6,7 +6,7 @@ import { ScoringMainFightStats } from './scoring-main-fight-stats'
 
 export const ScoringMain = ({ 
     fightComplete,
-    fighterData,
+    fighters,
     fighterScores,
     isSubmitting,
     submitRoundScores, 
@@ -49,7 +49,7 @@ export const ScoringMain = ({
         }
     }
     const submitScores = () => {
-        const [fighter1, fighter2] = fighterData;
+        const [fighter1, fighter2] = fighters;
         const roundLoser = selectedRoundWinner === fighter1.lastName ? fighter2.lastName : fighter1.lastName;
         const update = {
             [roundLoser]: notWinnerScore
@@ -82,7 +82,7 @@ export const ScoringMain = ({
             </Heading> 
             <Flex flexDir={["row"]} w={["100%", "80%"]} m="auto">
             {
-                fighterData.length > 0 && fighterData.map( (fighter,i) => (
+                fighters.length > 0 && fighters.map( (fighter,i) => (
                     <FighterSwipe
                         setSelectedRoundWinner={setSelectedRoundWinner}
                         selectedRoundWinner={selectedRoundWinner}

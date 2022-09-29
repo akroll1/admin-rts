@@ -4,21 +4,13 @@ import { persist } from 'zustand/middleware'
 const initialState = {
     availableGuestJudges: [],
     myGuestJudges: [],
+    idTokenConfig: {},
     tokenConfig: {},
     stats: [],
     user: {},
     userScorecards: [],
     reset: () => {}
 };
-
-// const initialState = {
-//     count: 10,
-//   }
-//   const useStore = create((set) => ({
-//     ...initialState,
-//     inc: () => set(state => ({ count: state.count + 1 })),
-//     reset: () => set(initialState),
-//   }))
 
 export const useStateStore = create(persist(
     (set, get) => ({
@@ -37,6 +29,9 @@ export const useStateStore = create(persist(
         },
         setToken: tokenConfig => {
             set( state => ({ tokenConfig }))
+        },
+        setIdToken: idTokenConfig => {
+            set( state => ({ idTokenConfig }))
         },
         setUser: user => {
             set( state => ({ user }))

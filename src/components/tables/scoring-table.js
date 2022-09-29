@@ -2,14 +2,19 @@
 import React from 'react'
 import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
+import { useScorecardStore, useScoringStore } from '../../stores'
 
 export const ScoringTable = ({ 
-    fightStatus,
-    scoredRounds, 
-    tableData, 
     tabs, 
-    totalRounds 
 }) => {
+    const {
+        fightStatus,
+    } = useScoringStore()
+    const {
+        fight,
+        scoredRounds, 
+        tableData, 
+    } = useScorecardStore();
     // console.log('tableData: ', tableData)
     const sort = (a, b) => a.username - b.username;
     const sortedTable = tableData.sort( sort )
@@ -33,6 +38,7 @@ export const ScoringTable = ({
     ];
     
     // console.log('getPlayersData: ',getPlayersData)
+    const { totalRounds } = fight ? fight : 12;
     const rounds = new Array(totalRounds).fill('Round');
     const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : '';
     return (      

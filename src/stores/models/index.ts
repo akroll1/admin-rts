@@ -1,4 +1,6 @@
 export * from './fight'
+export * from './fighter'
 export * from './group-scorecard'
 export * from './review'
 export * from './scorecard'
+export * from './show'

@@ -1,3 +1,5 @@
+import { ReviewType } from "./enums";
+
 export interface Review {
 	reviewId: string;
 	fightId: string;
@@ -24,11 +26,4 @@ export interface ReviewPut {
     showId: string;
     title: string;
     username: string;
-}
-
-export enum ReviewType {
-	FANTASY = 'FANTASY',
-	HISTORICAL = 'HISTORICAL',
-	PREDICTION = 'PREDICTION',
-	REVIEW = 'REVIEW',
 }
