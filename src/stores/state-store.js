@@ -37,9 +37,6 @@ export const useStateStore = create(persist(
             set( state => ({ user }))
         },
         userScorecards: [],
-        setUserScorecards: userScorecards => {
-            set( state => ({ userScorecards }))
-        },
         availableGuestJudges: [],
         setAvailableGuestJudges: availableGuestJudges => {
             set( state => ({ availableGuestJudges }))

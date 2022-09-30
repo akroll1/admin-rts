@@ -6,13 +6,12 @@ import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
 // import { PredictionPopover } from '../../components/prediction-popover'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
-import { capFirstLetters, getSidebarData, parseEpoch, predictionIsLocked, transformedWeightclass } from '../../utils'
+import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { useScorecardStore, useStateStore } from '../../stores'
 import { useNavigate } from 'react-router'
 
 export const ScoringSidebarLeft = ({ 
-    adminUsername, 
     handleOpenAddMemberSubmitModal,
     modals, 
     setModals,
@@ -24,13 +23,16 @@ export const ScoringSidebarLeft = ({
         fight,
         prediction,
         show,
-        tableData,
         userScorecard,
     } = useScorecardStore();
-
-    const [showGuests, setShowGuests] = useState(null)
+    const adminUsername = 'ADMIN, fix this';
     const { availableGuestJudges } = useStateStore();
   
+    const { odds, rounds, weightclass } = fight ? fight : ''
+    const { finalScore } = userScorecard
+    const { location, network, showTime } = show
+    const isLocked = showTime > Date.now()
+
     const handlePredictionModalToggle = () => {
         if(isLocked){
             return alert('Predictions are locked.')
@@ -40,10 +42,6 @@ export const ScoringSidebarLeft = ({
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
     }
-    const { odds, rounds, weightclass } = fight ? fight : ''
-    const { finalScore } = userScorecard
-    const { location, network, showTime } = show
-    const isLocked = showTime > Date.now()
 
     const gotToSearch = e => {
         console.log('e: ', e)

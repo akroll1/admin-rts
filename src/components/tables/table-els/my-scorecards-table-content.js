@@ -10,9 +10,11 @@ const badgeEnum = {
   // declined: 'red',
 }
 
-export const MyScorecardsTableContent = ({ scorecards }) => {
+export const MyScorecardsTableContent = ({ 
+  scorecards 
+}) => {
+
   const navigate = useNavigate();
-  
   return (
     <Flex overflow="scroll" w="100%">
       <Table my="8" border="1px solid rgba(255, 255, 255, 0.16)" fontSize="sm" size={['sm', 'md']}>

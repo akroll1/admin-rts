@@ -5,6 +5,7 @@ import { CreateGroupScorecard, GroupScorecard, GroupScorecardSummary } from "./m
 import { useStateStore } from './state-store'
 import { capFirstLetters } from '../utils'
 import { Fight, Fighter, Show } from './models'
+import { IoReturnDownBackOutline } from "react-icons/io5"
 export interface FighterScore extends Record<keyof string, number>{}
 export interface FighterScores {
     rounds: number
@@ -28,14 +29,14 @@ interface ScorecardStore {
     setPrediction(prediction: string | null): void
     show: Show
     userScorecard: Scorecard
-    userScorecards: Scorecard[]
+    userScorecards: any[]
     fetchGroupScorecards(groupScorecardId: string): void
-    fetchUsersScorecards(ownerId: string): void
+    fetchUserScorecards(): void
     // addMemberToActiveScorecard(email: string): void
     createGroupScorecard(scorecardObj: CreateGroupScorecard): Promise<boolean | undefined>
 }
 
-const store: any = useStateStore.getState();
+const { idTokenConfig, tokenConfig, user }: any = useStateStore.getState();
 const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards`;
 
 export const useScorecardStore = create<ScorecardStore>()((set, get) => ({
@@ -54,10 +55,15 @@ export const useScorecardStore = create<ScorecardStore>()((set, get) => ({
     userScorecard: {} as Scorecard,
     userScorecards: [],
     fetchGroupScorecard: async (groupScorecardId: string) => {
-        const res = await axios.get(`${groupScorecardsUrl}/${groupScorecardId}/summary`, store.idTokenConfig);
+        const res = await axios.get(`${groupScorecardsUrl}/${groupScorecardId}/summary`, idTokenConfig);
         const data = res.data as GroupScorecardSummary;
         console.log('DATA: ', data)
-        const [userScorecard] = data.scorecards.filter( scorecard => scorecard.ownerId === store.user.sub);
+        const [userScorecard] = data.scorecards.filter( scorecard => scorecard.ownerId === user.sub);
+
+        if(userScorecard.ownerId.includes('@')){
+            const patchUrl = process.env.REACT_APP_API + `/scorecards/${userScorecard.scorecardId}`
+            const res = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
+        }
         set({ 
             activeGroupScorecard: data.groupScorecard, 
             fight: data.fight, 
@@ -77,14 +83,16 @@ export const useScorecardStore = create<ScorecardStore>()((set, get) => ({
     setPrediction: (prediction: string | null) => {
         if(!prediction && (get().show.showTime > Date.now())){
             set({ prediction: `Predictions Locked!`})
+            return
         }
         if(!prediction){
             set({ prediction: `Make a Prediction`})
+            return
         }
         if(prediction){
-            const predictionFighter = prediction.slice(0, 36);
-            const [fighter] = get().fighters.filter( fighter => fighter.fighterId === predictionFighter);
-            const transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${prediction.split(',')[1]}`; 
+            const predictionId = prediction.slice(0, 36)
+            const [fighter] = get().fighters.filter( fighter => fighter.fighterId === predictionId)
+            const transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${prediction.split(',')[1]}`
             set({ prediction: transformedPrediction })
         }
     },
@@ -109,18 +117,47 @@ export const useScorecardStore = create<ScorecardStore>()((set, get) => ({
 
     },
     fetchGroupScorecards: async (groupScorecardId: string) => {
-        const res = await axios.get(`${groupScorecardsUrl}/${groupScorecardId}`, store.tokenConfig);
+        const res = await axios.get(`${groupScorecardsUrl}/${groupScorecardId}`, tokenConfig);
         const data = res.data as GroupScorecard[];
         set({ groupScorecards: data })
     },
-    fetchUsersScorecards: async (ownerId) => {
-        const url = process.env.REACT_APP_API + `/scorecards/${ownerId}`
-        const res = await axios.get(url, store.tokenConfig)
-        const userScorecards = res.data as Scorecard[]
+    fetchUserScorecards: async () => {
+        const url = process.env.REACT_APP_API + `/scorecards/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}/all`;
+        const res = await axios.get(url, tokenConfig)
+        const data = res.data as any[]
+
+        const userScorecards = await Promise.all( data.map( async x => {
+            const { fight, fighters, scorecard } = x;
+            const { finalScore, groupScorecardId, prediction, scorecardId } = scorecard;
+            const { fightStatus, rounds } = fight;
+
+            const [fighter1, fighter2] = fighters.map( (fighter: any) => fighter.lastName);
+            let transformedPrediction;
+            if(!prediction){
+                transformedPrediction = `Set Prediction`
+            }
+            if(prediction){
+                const predictionId = prediction.slice(0, 36)
+                const [fighter] = fighters.filter( (fighter: any) => fighter.fighterId === predictionId)
+                transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${prediction.split(',')[1]}`
+            }
+            const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
+            return ({
+                fighters,
+                fightStatus,
+                finalScore,
+                groupScorecardId,
+                label,
+                prediction: transformedPrediction,
+                rounds,
+                scorecardId
+            })
+        }));
+        console.log('userScorecards: ', userScorecards)
         set({ userScorecards })
     },
     saveGroupScorecard: async (groupScorecard: GroupScorecard) => {
-        const res = await axios.post(groupScorecardsUrl, groupScorecard, store.tokenConfig);
+        const res = await axios.post(groupScorecardsUrl, groupScorecard, tokenConfig);
         const data = res.data as GroupScorecard
         set({
             groupScorecards: get().groupScorecards.map(x =>
@@ -131,11 +168,50 @@ export const useScorecardStore = create<ScorecardStore>()((set, get) => ({
     },
     createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
         const url = process.env.REACT_APP_API + `/group-scorecards`;
-        const res = await axios.post(url, scorecardObj, store.tokenConfig);
+        const res = await axios.post(url, scorecardObj, tokenConfig);
         const data = res.data as GroupScorecard;
         if(res.status === 200) return true;
+    },  
+    updateUser: async () => {
+        const url = process.env.REACT_APP_API + `/users/${user.sub}`;
+        const res = await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
     },
-    
+    // submitRoundScores: scoreUpdate => {
+    //     // if(fightComplete) return
+    //     setIsSubmitting(true)
+    //     const totalRounds = fight.totalRounds;
+    //     const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`
+    //     let update = {};
+    //     for(const [key, val] of Object.entries(fighterScores)){
+    //         if(key !== 'scorecardId'){
+    //             update[key] = val   
+    //         }
+    //     }
+    //     update = {
+    //         ...update,
+    //         ...scoreUpdate
+    //     };
+
+    //     setChatScorecard(update);
+
+    //     return axios.put(url, update, tokenConfig)
+    //         .then( res => {
+    //             if(res.status === 200){
+    //                 // UPDATES.
+    //                 setFighterScores({ ...fighterScores, round: fighterScores.round + 1, [fighters[0].lastName]: 10, [fighters[1].lastName]: 10 }); 
+    //                 const fightIsComplete = fighterScores.round + 1 > totalRounds;
+    //                 setScoredRounds(fightIsComplete ? totalRounds : fighterScores.round);
+        
+    //                 if(fightIsComplete){
+    //                     setFightComplete(true);
+    //                     setFightStatus(FIGHT_STATUS_CONSTANTS.COMPLETE)
+    //                     alert('FIGHT COMPLETE')
+    //                 }
+    //             }
+    //         })
+    //         .catch( err => console.log(err))
+    //         .finally(() => setIsSubmitting(false))
+    // };         
 
     // getGroupScorecard: async (groupScorecardID: string) => {
     //     const url = `${groupScorecardsUrl}/${groupScorecardID}`;

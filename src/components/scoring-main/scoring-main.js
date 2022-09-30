@@ -9,7 +9,7 @@ export const ScoringMain = ({
     fighters,
     fighterScores,
     isSubmitting,
-    submitRoundScores, 
+    // submitRoundScores, 
     tabs,
     totalRounds,
 }) => {
@@ -54,7 +54,7 @@ export const ScoringMain = ({
         const update = {
             [roundLoser]: notWinnerScore
         };
-        submitRoundScores(update);
+        // submitRoundScores(update);
         setSelectedRoundWinner('');
         setNotWinnerScore(9)
     }

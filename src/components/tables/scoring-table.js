@@ -10,14 +10,16 @@ export const ScoringTable = ({
     const {
         fightStatus,
     } = useScoringStore()
+
     const {
         fight,
         scoredRounds, 
         tableData, 
-    } = useScorecardStore();
-    // console.log('tableData: ', tableData)
+    } = useScorecardStore()
+    console.log('fight: ', fight)
     const sort = (a, b) => a.username - b.username;
-    const sortedTable = tableData.sort( sort )
+
+    const sortedTable = tableData?.sort( sort )
     const columns = [
         {
             Header: 'Player',
@@ -39,8 +41,8 @@ export const ScoringTable = ({
     
     // console.log('getPlayersData: ',getPlayersData)
     const { totalRounds } = fight ? fight : 12;
-    const rounds = new Array(totalRounds).fill('Round');
-    const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : '';
+    const rounds = new Array(totalRounds).fill('Round')
+    const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : ''
     return (      
         <Flex 
             overflow="scroll"

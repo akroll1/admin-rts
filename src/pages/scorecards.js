@@ -9,7 +9,7 @@ import { ExpiredTokenModal } from '../components/modals'
 import { capFirstLetters } from '../utils'
 import { ScorecardsSearchTable } from '../components/tables/scorecards-search-table'
 import { useScorecardStore, useScoringStore } from '../stores'
-import Dashboard from './dashboard'
+import { ScoringTable } from '../components/tables'
 
 export const Scorecards = () => {
     const { tokenConfig } = useStateStore.getState();
@@ -29,11 +29,12 @@ export const Scorecards = () => {
     } = useScoringStore();
     
     const {
-        userScorecard
+        userScorecard,
+        userScorecards,
     } = useScorecardStore();
 
     useEffect(() => {
-        if(userScorecard?.username){
+        if(userScorecard){
             collateTableData(userScorecard);
         }
     },[userScorecard]);
@@ -143,6 +144,7 @@ export const Scorecards = () => {
                     searchedUsername={searchedUsername} 
                 />
             }
+            <ScoringTable tabs={{ table: true }} />
         </Flex>
     )
 }

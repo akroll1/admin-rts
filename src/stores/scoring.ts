@@ -9,16 +9,20 @@ import { Scorecard } from './models'
 
 interface ScoringStore {
     fetchGuestJudgeScorecards(): void
+    fetchPanelProps(): void
     guestJudgeScorecards: Scorecard[],
+    panelProps: any[]
     prediction: string
     setPrediction(rawPrediction: string): void
+    submitPrediction(prediction: string): void
     tableData: any[]
 }
-const { fight, fighters, scorecards, show } = useScorecardStore.getState();
+const { fight, fighters, scorecards, show, userScorecard } = useScorecardStore.getState();
 const store: any = useStateStore.getState();
 
 export const useScoringStore = create<ScoringStore>()((set,get) => ({
     guestJudgeScorecards: [],
+    panelProps: [],
     prediction: '',
     tableData: [],
     setPrediction: (rawPrediction: string) => {
@@ -40,6 +44,12 @@ export const useScoringStore = create<ScoringStore>()((set,get) => ({
             // console.log('guestJudgeScorecards: ', guestJudgeScorecards);
             set({ guestJudgeScorecards })
         }
+    },
+    fetchPanelProps: async () => {
+        const url = process.env.REACT_APP_API + `/props/${fight?.fightId}`;
+        const res = await axios.get(url, store.tokenConfig)
+        const panelProps = res.data 
+        set({ panelProps })
     },
     collateTableData: () => {
         const s = scorecards.map( scorecard => {
@@ -99,6 +109,28 @@ export const useScoringStore = create<ScoringStore>()((set,get) => ({
         // if(!incomingScore.scorecardId){
         //     collateTableData(scorecards, fighters)
 
+    },
+    submitPrediction: async (fighterId: string) => {
+        if(show.showTime > Date.now()) {
+            return alert('Predictions are now locked!');
+        }
+
+        const [fighter] = fighters.filter( fighter => fighter.fighterId === fighterId) 
+        const transformedPrediction = `${capFirstLetters(fighter.lastName)}, ${get().prediction.split(',')[1]}`
+
+        const url = process.env.REACT_APP_API + `/scorecards/${userScorecard.scorecardId}`
+        const res = await axios.patch(url, {prediction: 'prediction'}, store.tokenConfig)
+
+        // const data = res.data;
+        //     .then(res => {
+        //         if(res.data === 'Updated prediction'){
+        //             get().setPrediction('hello')
+                    
+        //         }
+        //     })
+        //     .catch(err => console.log(err));
+            
+        
     }
 
 }))

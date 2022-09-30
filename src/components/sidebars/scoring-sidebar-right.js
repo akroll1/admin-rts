@@ -1,15 +1,20 @@
 import React, { useState, createRef, useRef, useEffect } from 'react'
 import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { ChatSidebar, FightStats } from './chat-sidebar-components'
-import { stateStore } from '../../stores'
+import { useScorecardStore, useStateStore } from '../../stores'
 import { Notification } from '../notifications'
 
 export const ScoringSidebarRight = ({
-    chatKey, 
+    // chatKey, 
     username, 
     setIncomingScore,
     tabs,
 }) => {    
+    const {
+        activeGroupScorecard
+    } = useScorecardStore()
+    const chatKey = activeGroupScorecard.chatKey
+    
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
     useEffect(() => {
