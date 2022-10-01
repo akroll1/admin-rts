@@ -29,6 +29,7 @@ export const MyScorecards = () => {
         updateUser()
       }
     },[])
+
     return (
         <Flex flexDir="column" p="4">
             <ExpiredTokenModal 

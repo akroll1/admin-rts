@@ -4,7 +4,6 @@ import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiUser, BiEdit, BiSt
 import { AccountSwitcher } from './scoring-sidebar/account-switcher'
 import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
-// import { PredictionPopover } from '../../components/prediction-popover'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
 import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
@@ -16,22 +15,22 @@ export const ScoringSidebarLeft = ({
     modals, 
     setModals,
     tabs,
-    usernameAndUserId
 }) => {
     const navigate = useNavigate();
     const {
         fight,
-        prediction,
+        transformedPrediction,
         show,
         userScorecard,
     } = useScorecardStore();
+
     const adminUsername = 'ADMIN, fix this';
     const { availableGuestJudges } = useStateStore();
   
-    const { odds, rounds, weightclass } = fight ? fight : ''
+    const { odds, rounds, weightclass } = fight ? fight : '';
     const { finalScore } = userScorecard
     const { location, network, showTime } = show
-    const isLocked = showTime > Date.now()
+    const isLocked = Date.now() > showTime
 
     const handlePredictionModalToggle = () => {
         if(isLocked){
@@ -81,7 +80,6 @@ export const ScoringSidebarLeft = ({
                         icon={isLocked ? <FaLock /> : <FaLockOpen />} 
                         handlePredictionModalToggle={handlePredictionModalToggle}
                         label={<Button 
-                            // disabled={isLocked} 
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 
@@ -95,7 +93,7 @@ export const ScoringSidebarLeft = ({
                             pl="0" 
                             m="0"
                         >
-                            { prediction ? prediction : 'Set Prediction' }
+                            { transformedPrediction ? transformedPrediction : 'Set Prediction' }
                         </Button>} 
                     /> 
                     <NavItem 
@@ -111,7 +109,7 @@ export const ScoringSidebarLeft = ({
                             size="sm" 
                             pl="0"
                         >
-                            Score&#58; {finalScore ? finalScore : `Not Scored` }
+                            Score&#58; {finalScore ? finalScore : `Not Official` }
                         </Button>} 
                     /> 
                 </NavGroup>
@@ -172,11 +170,11 @@ export const ScoringSidebarLeft = ({
                 </NavGroup>
 
                 <NavGroup label="Group Members">
-                    { usernameAndUserId.length > 0 && usernameAndUserId.map( ({ username, ownerId }, i) => {
+                    {/* { usernameAndUserId.length > 0 && usernameAndUserId.map( ({ username, ownerId }, i) => {
                         const isAdmin = adminUsername.toLowerCase() == username ? true : false;
 
                         return <NavItem href={`/scorecards/search/${ownerId}`} icon={isAdmin ? <FaUserCog /> : <BiUser />} label={username} key={i} />
-                    })}
+                    })} */}
                 
                 <NavItem 
                     icon={<BiPlusCircle />} 

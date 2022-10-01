@@ -1,6 +1,6 @@
 import { extendTheme, theme as chakraTheme} from "@chakra-ui/react";
 const config = {
-  initialColorMode: "dark",
+  initialColorMode: localStorage.getItem('chakra-ui-color-mode')||'dark',
   useSystemColorMode: false,
   cssVarPrefix: 'fsl'
 };
@@ -31,7 +31,8 @@ export const colors = {
   image: {
     light: '#c24e4e',
     dark: 'darkred'
-  }
+  },
+  
 };
 
 export const shadow = {
@@ -67,23 +68,31 @@ export const transition = {
   easeOutBack: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   duration: '0.4s',
 };
+export const fontFamily = {
+  fonts: {
+    body: `Lato`,
+    heading: `Koulen`
+  }
+}
+// export const typography = {
+export const letterSpacings = {
 
+    normal: `0.05em`
+  // }
+}
 export const myTheme = {
-  colors,
-  gradient,
-  shadow,
+  ...colors,
+  ...fontFamily,
+  letterSpacings,
+  ...gradient,
+  ...shadow,
   breakpoints: {
     xs: '400px',
     s: '600px',
     m: '900px',
     l: '1200px',
   },
-  fontFamily: {
-    // eslint-disable-next-line
-    body: `Open Sans,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
-    // eslint-disable-next-line
-    heading: `Candal, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
-  },
+
   layout: {
     article: '46rem',
     base: '70rem',
@@ -108,11 +117,33 @@ export const myTheme = {
       transition: 'all 0.25s ease-in-out',
     },
   },
-  // colors: {
-  //   brand: {
-  //     100: '#C01616'
-  //   }
-  // }
+  colors: {
+    brand: {
+      100: '#C01616'
+    }
+  },
+  background: {
+    dark: 'blackAlpha.500'
+  },
+  components: {
+    Input: {
+      defaultProps: {
+
+        focusBorderColor: '5px solid red'
+      },
+      baseStyle: {
+        field: {
+          focusBorderColor: '5px solid red'
+        }
+      }
+    }
+  },
+  borders: {
+    brand: {
+      100: '1px solid #C01616'
+    }
+  }
 };
-const theme = extendTheme({ ...chakraTheme, ...myTheme, config });
+const theme = extendTheme({ config, ...chakraTheme, ...myTheme });
+// console.log('theme: ', theme)
 export default theme;

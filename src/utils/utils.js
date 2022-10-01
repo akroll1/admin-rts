@@ -93,6 +93,7 @@ export const isValidEmail = email => {
     // console.log('validate email: ',re.test(email));
     return re.test(email) ? true : false;
 }
+
 export const removeBadEmails = emails => {
     return emails.filter( email => email != undefined && email.length > 0);
 }

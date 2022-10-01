@@ -1,10 +1,13 @@
 import { Button, Flex, Heading, Icon, Stack, Text, VStack } from '@chakra-ui/react'
-import { HiOutlineChatAlt2 } from 'react-icons/hi'
-import { TiChartBarOutline, TiChartLineOutline, TiMessages, TiNews } from 'react-icons/ti'
+import { FaUsers } from 'react-icons/fa'
+import { TiChartLineOutline } from 'react-icons/ti'
 import { GiBoxingRing } from 'react-icons/gi'
 import { ChatIcon, EditIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+import { HiOutlinePencil } from 'react-icons/hi'
 
-export const ScoringTabs = ({ tabs, setTabs }) => {
+export const ScoringTabs = ({ 
+    setTabs 
+}) => {
     const resetTabs = {
         sidebar: false,
         scoring: false, 
@@ -16,27 +19,27 @@ export const ScoringTabs = ({ tabs, setTabs }) => {
         {
             label: 'Info',
             value: 'sidebar',
-            icon: InfoOutlineIcon
+            icon: GiBoxingRing
         },
         {
             label: 'Scoring',
             value: 'scoring',
-            icon: GiBoxingRing
+            icon: HiOutlinePencil
         },
         {
             label: 'Chat',
             value: 'chat',
             icon: ChatIcon
         },
+        // {
+        //     label: 'Analytics',
+        //     value: 'analytics',
+        //     icon: TiChartLineOutline
+        // },
         {
-            label: 'Analytics',
-            value: 'analytics',
-            icon: TiChartLineOutline
-        },
-        {
-            label: 'Table',
+            label: 'Group',
             value: 'table',
-            icon: TiNews
+            icon: FaUsers
         },
     ];
 
@@ -50,7 +53,7 @@ export const ScoringTabs = ({ tabs, setTabs }) => {
             id="scoring_tabs"
             display={['flex','flex', 'none']} 
             as="section" 
-            bg="gray.600" 
+            bg="blackAlpha.900" 
             flexDirection="row" 
             w="100%"
             position="fixed"
@@ -66,7 +69,7 @@ export const ScoringTabs = ({ tabs, setTabs }) => {
                         alignItems="center" 
                         justifyContent="center" 
                         flex="1 0 20%"
-                        maxW="20%"
+                        maxW="25%"
                         onClick={handleTabClick}
                     >
                         <VStack>

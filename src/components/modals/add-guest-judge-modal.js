@@ -113,7 +113,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModal
                     justifyContent="center"
                 >
                     <ButtonGroup m="auto" spacing="4">
-                        { availableGuestJudges.length > 0 && 
+                        { availableGuestJudges.length < 0 && 
                             <Button 
                                 onClick={setJudges}
                                 loadingText="Submitting"  
@@ -122,8 +122,12 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModal
                                 Set Judges
                             </Button>
                         }
-                        <Button variant="outline" onClick={closeModal}>
-                            Cancel
+                        <Button 
+                            colorScheme={availableGuestJudges.length > 0 ? "" : 'blue'} 
+                            variant={availableGuestJudges.length > 0 ? 'outline' : 'solid'}
+                            onClick={closeModal}
+                        >
+                            { availableGuestJudges.length > 0 ? `Cancel` : `Close`}
                         </Button>
                     </ButtonGroup>
                 </ModalFooter>

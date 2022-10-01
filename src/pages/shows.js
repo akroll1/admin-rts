@@ -8,15 +8,19 @@ import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import { ExpiredTokenModal } from '../components/modals'
 
-import { useFightStore, useReviewStore, useStateStore } from '../stores'
-import { useScorecardStore } from '../stores/scorecards'
+import { useFightStore, useReviewStore } from '../stores'
+import { useScorecardStore } from '../stores/scorecards-store'
 
 const Shows = props => {
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
-    const { user } = useStateStore();
-    const { email, sub, username } = user;
+    const { user } = useScorecardStore();
+    const { 
+        email, 
+        sub, 
+        username 
+    } = user;
     const { fetchFights, fetchFightSummary, fightSummary, fights, selectedFight } = useFightStore();
     const { checkForUserReview, fetchReviewsByFight, putUserReview, selectedFightReviews, userReview } = useReviewStore();
     const { createGroupScorecard } = useScorecardStore();

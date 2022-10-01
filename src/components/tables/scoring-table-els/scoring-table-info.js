@@ -2,7 +2,10 @@ import React from 'react'
 import { Avatar, Box, Flex, Img, Stack, useColorModeValue as mode} from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
 
-export const ScoringTableInfo = ({ username, prediction }) => {
+export const ScoringTableInfo = ({ 
+  username, 
+  prediction 
+}) => {
   const usernameCheck = username => {
     if(username?.includes('@')){
       return username.slice(0, username.indexOf('@'))

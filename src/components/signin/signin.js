@@ -9,7 +9,7 @@ import { ForcedPasswordChange } from './forced-password-change'
 import { WaitingForCode } from './waiting-for-code-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useStateStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 
 export const SignIn = props => {
   const navigate = useNavigate();
@@ -37,7 +37,11 @@ export const SignIn = props => {
       isWaitingForNewPasswordCode: false
   })
 
-  const { setUser, setToken, setIdToken } = useStateStore();
+  const { 
+    setUser, 
+    setAccessToken, 
+    setIdToken 
+  } = useScorecardStore();
 
   Amplify.configure({
     Auth: {
@@ -88,12 +92,11 @@ export const SignIn = props => {
             Authorization: `Bearer ${idToken}`
           }
         });
-        setToken({
+        setAccessToken({
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
-        sessionStorage.setItem('isLoggedIn',true);
         return navigate('/scorecards', { username });
       }
     })
@@ -152,13 +155,11 @@ export const SignIn = props => {
           sub: user.signInUserSession.idToken.payload.sub 
         })
         const token = user.signInUserSession.accessToken.jwtToken;
-        setToken({headers: {
+        setAccessToken({headers: {
           Authorization: `Bearer ${token}`
         }})
-        sessionStorage.setItem('isLoggedIn',true);
         return navigate('/scorecards', { user });
       }).catch( err => {
-        console.log('err: ', err);
         if(Array.from(err).includes('InvalidPasswordException') > -1){
           alert('Password does not meet requirements.')
         }

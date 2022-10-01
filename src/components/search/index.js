@@ -1,1 +1,1 @@
-export * from './scorecards-search'
+export * from './scorecards-search-bar'

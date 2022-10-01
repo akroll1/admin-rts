@@ -5,9 +5,6 @@ import { useScorecardStore, useStateStore } from '../../stores'
 import { Notification } from '../notifications'
 
 export const ScoringSidebarRight = ({
-    // chatKey, 
-    username, 
-    setIncomingScore,
     tabs,
 }) => {    
     const {
@@ -71,9 +68,6 @@ export const ScoringSidebarRight = ({
             <ChatSidebar 
                 setNotifications={setNotifications}
                 setNotificationTimeout={setNotificationTimeout}
-                setIncomingScore={setIncomingScore}
-                chatKey={chatKey}
-                username={username}
                 tabs={tabs} 
             />
         </Flex>

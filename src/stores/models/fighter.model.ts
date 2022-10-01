@@ -14,3 +14,10 @@ export interface Fighter {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface FighterScore extends Record<keyof string, number>{}
+export interface FighterScores {
+    round: number
+    scorecardId: string
+    scores: any[] // why won't FighterScore work here?
+}

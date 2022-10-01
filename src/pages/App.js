@@ -19,7 +19,7 @@ import Shows from './shows'
 import MyScorecards from './my-scorecards'
 import theme from '../theme'
 import { PoundPage } from './pound'
-import { Scorecards } from './scorecards'
+import { ScorecardsSearch } from './scorecards-search'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn' ? true : false));
@@ -57,12 +57,12 @@ const App = () => {
             }/>
             <Route exact path="/scorecards/:initialScorecardId" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
-                <Scorecards /> 
+                <ScorecardsSearch /> 
               </PrivateRoute>
             }/>
             <Route exact path="/scorecards/user/:userId" element={
               <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
-                <Scorecards /> 
+                <ScorecardsSearch /> 
               </PrivateRoute>
             }/>
             <Route exact path="/analytics" element={

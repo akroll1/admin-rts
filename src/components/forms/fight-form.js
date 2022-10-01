@@ -4,8 +4,13 @@ import { FieldGroup } from '../../chakra'
 import { DeleteIcon } from '@chakra-ui/icons'
 import axios from 'axios'
 import { FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM, ROUND_LENGTH_ENUMS, WEIGHTCLASS_ENUMS } from '../../utils'
+import { useScorecardStore } from '../../stores'
 
-export const FightForm = ({ user, tokenConfig }) => {
+export const FightForm = () => {
+    const { 
+        accessToken,
+        user
+    } = useScorecardStore();
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightId, setFightId] = useState(null);
@@ -38,7 +43,7 @@ export const FightForm = ({ user, tokenConfig }) => {
         const judgeIds = guestJudgeIds.length > 0 ? guestJudgeIds : null;
         const fightObj = Object.assign(Object.create({}), form, {fighterIds: [fighterAId, fighterBId]}, { guestJudgeIds: judgeIds })
         const url = process.env.REACT_APP_API + `/fights/${fightId}`;
-        return axios.put(url, fightObj, tokenConfig)
+        return axios.put(url, fightObj, accessToken)
             .then( res => {
                 if(res.status === 200){
                     toast({ title: 'Fight updated!',
@@ -57,7 +62,7 @@ export const FightForm = ({ user, tokenConfig }) => {
         // TODO: I don't want odds on post, remove.
         const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId], rounds: parseInt(form.rounds)})
         console.log('postObj: ', postObj)
-        return axios.post(url, postObj, tokenConfig)
+        return axios.post(url, postObj, accessToken)
             .then( res => {
                 if(res.status === 200){
                     console.log('FIGHT: ', res.data);
@@ -73,7 +78,7 @@ export const FightForm = ({ user, tokenConfig }) => {
     const searchForFight = () => {
         setIsSubmitting(true);
         const url = process.env.REACT_APP_API + `/fights/${fightId}`;
-        return axios.get(url, tokenConfig)
+        return axios.get(url, accessToken)
             .then( res => {
                 if(res.status === 200){
                     const { fighterIds } = res.data;
@@ -88,7 +93,7 @@ export const FightForm = ({ user, tokenConfig }) => {
     const deleteFight = () => {
         setIsSubmitting(true);
         const url = process.env.REACT_APP_API + `/fights/${fightId}`;
-        return axios.delete(url, tokenConfig)
+        return axios.delete(url, accessToken)
             .then( res => console.log('res: ', res))
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));

@@ -4,14 +4,14 @@ import { useParams } from 'react-router'
 import { useStateStore } from '../stores'
 import axios from 'axios'
 import { ScorecardsPageScoringTable } from '../components/tables'
-import { ScorecardsSearch } from '../components/search'
+import { ScorecardsSearchBar } from '../components/search'
 import { ExpiredTokenModal } from '../components/modals'
 import { capFirstLetters } from '../utils'
 import { ScorecardsSearchTable } from '../components/tables/scorecards-search-table'
 import { useScorecardStore, useScoringStore } from '../stores'
 import { ScoringTable } from '../components/tables'
 
-export const Scorecards = () => {
+export const ScorecardsSearch = () => {
     const { tokenConfig } = useStateStore.getState();
     const { initialScorecardId, userId } = useParams();
     const [scorecardId, setScorecardId] = useState(initialScorecardId)
@@ -121,7 +121,7 @@ export const Scorecards = () => {
                 >
                     Search Scorecards
                 </Heading>
-                <ScorecardsSearch
+                <ScorecardsSearchBar
                     handleAutocompleteClick={handleAutocompleteClick}
                     handleUserSearch={handleUserSearch}    
                     search={search}

@@ -1,46 +1,46 @@
 import React, { createRef, useEffect, useState, useRef,} from 'react'
 import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { DividerWithText } from '../../../chakra'
-import { useStateStore } from '../../../stores'
-import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import { useScorecardStore } from '../../../stores'
+
 
 export const ChatSidebar = ({
-    chatKey, 
-    username, 
     setNotifications, 
     setNotificationTimeout,
-    setIncomingScore,
     tabs,
 }) => {
+    const { 
+        chatKey,
+        chatScorecard,
+        chatToken,
+        groupScorecard,
+        requestChatToken,
+        setChatScorecard,
+        setChatToken,
+        user
+    } = useScorecardStore()
 
-    // chatKey is room key for room ARN, required for chat metadata.
-
-    const { chatScorecard, setChatScorecard, tokenConfig } = useStateStore.getState();
-    const [moderator, setModerator] = useState(false);
-    const [avatar, setAvatar] = useState({});
-    const [chatToken, setChatToken] = useState(null);
+    const { username } = user
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
-
-    //////////////////////////////
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [powerShotDisabled, setPowerShotDisabled] = useState(false);
-    const [prediction, setPrediction] = useState('');
-    // refs
+
     const chatRef = createRef();
-    const predictionRef = createRef();
-    const messagesEndRef = createRef();
-    
     const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
     
     useEffect(() => {
         if(chatKey){
-            handleRequestToken()
+            requestChatToken(chatKey)
         }
     },[chatKey])
+
+    useEffect(() => {
+        initConnection(chatToken)
+    },[chatToken])
     
     useEffect(() => {
         if(chatScorecard?.scorecardId && socketActive()){
@@ -48,42 +48,6 @@ export const ChatSidebar = ({
             handleSendMessage('UPDATE')
         }
     },[chatScorecard])
-
-    const requestToken = (selectedUsername, isModerator, selectedAvatar) => {
-        // Set application state
-        setIsSubmitting(true);
-        setModerator(isModerator);
-        // setAvatar(selectedAvatar);
-    
-        const uuid = uuidv4();
-
-        const permissions = isModerator
-            ? ["SEND_MESSAGE", "DELETE_MESSAGE", "DISCONNECT_USER"]
-            : ["SEND_MESSAGE"];
-    
-        const data = {
-            chatKey,
-            attributes: {
-                username: `${username}`,
-                // avatar: `${selectedAvatar.src}`,
-            },
-            capabilities: permissions,
-            sessionDurationInMinutes: process.env.REACT_APP_TOKEN_REFRESH_IN_MINUTES,
-            userId: `${username}`,
-        };
-    
-        axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, data, tokenConfig)
-            .then( res => {
-                setChatToken(res.data);
-                initConnection(res.data);
-            })
-            .catch( err => {
-                setChatToken(null);
-                console.log(err);
-            }).finally(() => setIsSubmitting(false));
-        // Focus the input field UI
-        // chatRef.current.focus();
-    };
 
     const initConnection = async (token) => {
         const connectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
@@ -143,19 +107,17 @@ export const ChatSidebar = ({
             setNotificationTimeout(prev => !prev);
             setChatMessages(prev => [{ message, username: user, type: Type }, ...prev ]);
         } else if(Content === 'UPDATE'){
+            // CHAT SCORECARD DATA
             const update = JSON.parse(Attributes.UPDATE);
             setChatScorecard({})
-            setIncomingScore(update)
         }
     };
- 
-    // useEffect(() => {
-    //     const scrollToBottom = () => {
-    //         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    //     };
-    //     scrollToBottom();
-    // });
     
+    const handleRequestToken = () => {
+        if(chatKey && !socketActive()){
+            requestChatToken(chatKey);
+        }
+    };
     const handleChatChange = e => {
         setChatMessage(e.target.value);
     };
@@ -170,9 +132,6 @@ export const ChatSidebar = ({
     const socketActive = () => {
         return connection?.readyState === 1;
     };
-    const handleRequestToken = () => {
-        requestToken(username, true);
-    };
     // Renderers
     const renderMessage = (message, i) => {
         return (
@@ -185,7 +144,7 @@ export const ChatSidebar = ({
     const renderMessages = () => {
         return chatMessages.map( (message, i) => renderMessage(message, i))
     };
-   
+
     return (
         <Flex 
             display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}

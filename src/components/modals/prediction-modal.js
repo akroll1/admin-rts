@@ -3,7 +3,7 @@ import { Flex, Select, Icon, Button, Modal, ModalBody, ModalContent, ModalFooter
 import { FaTrophy } from 'react-icons/fa'
 import { capFirstLetters } from '../../utils'
 import { CustomOverlay } from '../custom-overlay'
-import { useScorecardStore, useScoringStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 
 export const PredictionModal = ({ 
     modals,
@@ -17,18 +17,16 @@ export const PredictionModal = ({
   
   const {
     fight,
-    fighters
+    fighters,
+    setTransformedPrediction,
   } = useScorecardStore();
-
-  const {
-    prediction,
-    submitPrediction,
-  } = useScoringStore();
 
   const totalRounds = new Array(fight?.rounds).fill(0);
 
-  const handleSubmit = () => {
-    console.log('form: ', form)
+  const handleSubmitPrediction = () => {
+    const predictionString = `${form.fighter},${form.result}`
+    setTransformedPrediction(predictionString)
+    setModals({ ...modals, predictionModal: false })
   }
 
   return (
@@ -57,7 +55,8 @@ export const PredictionModal = ({
               >
                 <Select 
                   _hover={{cursor: 'pointer'}} 
-                    onChange={e => setForm({ ...form, fighter: e.currentTarget.value })} 
+                  // _focus={{border: 'brand.100'}}
+                  onChange={e => setForm({ ...form, fighter: e.currentTarget.value })} 
                   m="1" 
                   placeholder="Select winner"
                 >
@@ -71,6 +70,7 @@ export const PredictionModal = ({
                 </Select>
                 <Select 
                   _hover={{cursor: 'pointer'}} 
+                  // _focus={{border: 'brand.100'}}
                   onChange={e => setForm({ ...form, result: e.currentTarget.value })} 
                   m="1" 
                   placeholder="Select Result"
@@ -90,7 +90,7 @@ export const PredictionModal = ({
           justifyContent="center"
         >
           <Button 
-            onClick={handleSubmit} 
+            onClick={handleSubmitPrediction} 
             colorScheme="blue" 
             mr={3}
           >
@@ -99,7 +99,7 @@ export const PredictionModal = ({
           <Button 
             variant="outline"   
             onClick={() => setModals({ ...modals, predictionModal: false})} 
-            colorScheme="blue" 
+            colorScheme="brand"
             mr={3}
           >
             Cancel

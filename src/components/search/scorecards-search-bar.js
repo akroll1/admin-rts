@@ -3,7 +3,7 @@ import { SearchIcon } from '@chakra-ui/icons'
 import { Flex, Input, InputGroup, InputLeftElement, Select } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 
-export const ScorecardsSearch = ({ 
+export const ScorecardsSearchBar = ({ 
   handleAutocompleteClick,
   handleUserSearch,
   search,

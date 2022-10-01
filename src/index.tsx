@@ -11,7 +11,7 @@ const tagManagerArgs = {
 }
 // TagManager.initialize(tagManagerArgs)
 const root = createRoot(document.getElementById('root')!);
-
+localStorage.setItem('chakra-ui-color-mode', 'dark')
 root.render(
   <BrowserRouter>
     <ColorModeScript />

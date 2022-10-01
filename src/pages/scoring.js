@@ -3,9 +3,7 @@ import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
 import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, MoneylineModal, PredictionModal } from '../components/modals'
-import { predictionIsLocked } from '../utils'
 import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
-import { capFirstLetters, FIGHT_STATUS_CONSTANTS } from '../utils'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { useStateStore, useScorecardStore, useScoringStore } from '../stores'
 import { useWindowResize } from '../hooks'
@@ -16,37 +14,27 @@ const Scoring = () => {
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
     //////////////////  SCORE STATE /////////////////////////
     const { 
-        chatScorecard, 
-        setChatScorecard, 
-        setStats, 
-        tokenConfig, 
+        accessToken, 
         user 
     } = useStateStore();
     const { 
-        activeGroupScorecard,
+        chatScorecard,
+        collateTableData,
+        fetchGroupScorecard,
         fight,
         fightComplete,
         fighters,
         fighterScores,
-        scorecards,
-        scoredRounds,
-        setFightComplete,
-        setScoredRounds,
-        setFighterScores,
-        show,
+        tokenExpired,
         userScorecard,
-        fetchGroupScorecard,
     } = useScorecardStore();
+
     const { 
-        collateTableData,
-        guestJudgeScorecards,
         fetchGuestJudgeScorecards,
         fetchPanelProps,
         panelProps,
-        prediction,
-        setPrediction
     } = useScoringStore();
-    const { sub, email, username } = user;
+
     const [tabs, setTabs] = useState({
         sidebar: false,
         scoring: true, 
@@ -73,8 +61,6 @@ const Scoring = () => {
     })
 
     const [props, setProps] = useState(null);
-    const [needsPrediction, setNeedsPrediction] = useState(false);
-    const [usernameAndUserId, setUsernameAndUserId] = useState([]);
     const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards/${groupscorecard_id}/summary`;
 
     useEffect(() => {
@@ -108,56 +94,28 @@ const Scoring = () => {
     },[windowWidth])
 
     useEffect(() => {
-        fetchGroupScorecard(groupscorecard_id)
+        const run = async () => {
+            await fetchGroupScorecard(groupscorecard_id)
+            await collateTableData()
+        }
+        run()
     },[])
+    
+    useEffect(() => {
+        if(tokenExpired){
+            setModals({ ...modals, expiredTokenModal: true })
+        }
+    },[tokenExpired])
+
+    useEffect(() => {
+        collateTableData()
+    },[chatScorecard])
 
     useEffect(() => {
         if(fight?.guestJudgeIds.length > 0){
             fetchGuestJudgeScorecards()
         }
     },[fight])
-
-    useEffect(() => {
-        collateTableData()
-    },[scorecards])
-
-    // const submitRoundScores = scoreUpdate => {
-    //     if(fightComplete) return
-    //     setIsSubmitting(true)
-    //     const totalRounds = fight.totalRounds;
-    //     const url = process.env.REACT_APP_SCORECARDS + `/${userScorecard.scorecardId}`
-    //     let update = {};
-    //     for(const [key, val] of Object.entries(fighterScores)){
-    //         if(key !== 'scorecardId'){
-    //             update[key] = val   
-    //         }
-    //     }
-    //     update = {
-    //         ...update,
-    //         ...scoreUpdate
-    //     };
-
-    //     setChatScorecard(update);
-
-    //     return axios.put(url, update, tokenConfig)
-    //         .then( res => {
-    //             if(res.status === 200){
-    //                 // UPDATES.
-    //                 setFighterScores({ ...fighterScores, round: fighterScores.round + 1, [fighters[0].lastName]: 10, [fighters[1].lastName]: 10 }); 
-    //                 const fightIsComplete = fighterScores.round + 1 > totalRounds;
-    //                 setScoredRounds(fightIsComplete ? totalRounds : fighterScores.round);
-        
-    //                 if(fightIsComplete){
-    //                     setFightComplete(true);
-    //                     setFightStatus(FIGHT_STATUS_CONSTANTS.COMPLETE)
-    //                     alert('FIGHT COMPLETE')
-    //                 }
-    //             }
-    //         })
-    //         .catch( err => console.log(err))
-    //         .finally(() => setIsSubmitting(false))
-    // };
-    // submit fight prediction.
 
     const handleOpenAddMemberSubmitModal = () => {
         if(userScorecard.ownerId !== groupScorecard.ownerId){
@@ -184,7 +142,7 @@ const Scoring = () => {
             rounds: fight.totalRounds,
             username: email
         }
-        return await axios.put(groupScorecardsUrl, update, tokenConfig)
+        return await axios.put(groupScorecardsUrl, update, accessToken)
             .then( res => {
                 setModals( modals => ({ ...modals, addMemberModal: false }));
                 if(res.status === 200){
@@ -249,7 +207,6 @@ const Scoring = () => {
                     modals={modals}
                     setModals={setModals}
                     tabs={tabs}
-                    usernameAndUserId={usernameAndUserId}
                 />
                 <ScoringMain
                     fightComplete={fightComplete}
@@ -261,11 +218,6 @@ const Scoring = () => {
                 />
                 <ScoringSidebarRight
                     tabs={tabs}
-                    // setIncomingScore={setIncomingScore}
-                    chatScorecard={chatScorecard}
-                    tokenConfig={tokenConfig}
-                    username={username}
-
                 />
             </Flex>
             <ScoringTable tabs={tabs} />
