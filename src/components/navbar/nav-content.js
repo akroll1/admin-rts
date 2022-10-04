@@ -4,21 +4,12 @@ import { NavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
 import { ToggleButton, Submenu } from '../../chakra'
 import { links } from './navbar_data'
-import { useNavigate } from 'react-router'
 import { ProfileButton } from './profile-button'
+import { useNavigate } from 'react-router'
 
 const MobileNavContext = props => {
-  const { isLoggedIn, setIsLoggedIn } = props;
-  const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
-  const handleButtonClick = () => {
-    if(isLoggedIn){
-      setIsLoggedIn(false);
-      sessionStorage.clear();
-      return navigate('/');
-    }
-    return navigate("/")
-  }
+
   return (
     <>
       <Flex 
@@ -41,16 +32,14 @@ const MobileNavContext = props => {
             </NavLink.Mobile>
           ),
         )}
-          <ProfileButton isLoggedIn={isLoggedIn} />
+          <ProfileButton />
       </NavMenu>
     </>
   )
 }
 
 const DesktopNavContent = props => {
-  const { isLoggedIn, setIsLoggedIn } = props;
   const navigate = useNavigate();
-
   // const message = stateStore.getState().broadcast;
   // const username = stateStore.getState().username;
   // const [broadcast, setBroadcast] = useState('');
@@ -128,7 +117,7 @@ const DesktopNavContent = props => {
         ))}
       </HStack>
       <HStack spacing="8" minW="200px" justify="space-between">
-        <ProfileButton isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <ProfileButton />
       </HStack>
     </Flex>
   )

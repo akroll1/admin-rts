@@ -11,6 +11,6 @@ export interface Show {
 	showName: string
 	showStatus: ShowStatus
 	isFeatured: boolean
-	createdAt: number
-	updatedAt: number
+	createdAt?: number
+	updatedAt?: number
 }

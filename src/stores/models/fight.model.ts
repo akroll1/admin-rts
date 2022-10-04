@@ -1,4 +1,5 @@
-import { FightStatus, Network, WeightClass } from './enums'
+import { FightStatus, Network, ShowStatus, WeightClass } from './enums'
+import { Fighter, Show } from './index'
 
 export interface Fight {
 	fightId: string;
@@ -14,52 +15,42 @@ export interface Fight {
 	rounds: number;
 	showId: string | null;
 	weightclass: WeightClass;
-	createdAt: number;
-	updatedAt: number;
+	createdAt?: number;
+	updatedAt?: number;
 }
 
-interface SummaryFightOptions {
-    fightStoryline: string;
-    fightQuickTitle: string;
-    odds: string;
-    fightId: string;
+export const fightSummaryStub = {
+	fight: {
+		fightId: '',
+		fighterIds: [],
+		fightQuickTitle: '',
+		fightStatus: FightStatus.PENDING,
+		fightStoryline: '',
+		guestJudgeIds: null,
+		isMainEvent: true,
+		isTitleFight: true,
+		odds: '',
+		officialResult: null,
+		rounds: 12,
+		showId: '',
+		weightclass: WeightClass.HEAVYWEIGHT,
+	}, 
+	fighters: [],
+	show: {
+		showId: '',
+		fightIds: [],
+		location: '',
+		network: Network.SHOWTIME,
+		promoter: '',
+		showStoryline: '',
+		showTime: 0,
+		showName: '',
+		showStatus: ShowStatus.UPCOMING,
+		isFeatured: true,
+	}
 }
-
-interface SummaryFighterOptions {
-    fighterId: string;
-    firstName: string;
-    lastName: string;
-    ringname: string;
-}
-
-interface SummaryShowOptions {
-    location: string;
-    network: Network;
-    promoter: string;
-    showId: string;
-    showTime: number;
-}
-
 export interface FightSummary {
-    fight: SummaryFightOptions,
-    fighters: SummaryFighterOptions[],
-    show: SummaryShowOptions
-}
-
-export interface Fight {
-	fightId: string;
-	fighterIds: string[];
-	fightQuickTitle: string; 
-	fightStatus: FightStatus;
-	fightStoryline?: string | null;
-	guestJudgeIds: string[] | null;
-	isMainEvent: boolean;
-	isTitleFight: boolean;
-	odds: string | null; 
-	officialResult: string | null;
-	rounds: number;
-	showId: string | null;
-	weightclass: WeightClass;
-	createdAt: number;
-	updatedAt: number;
+    fight: Fight,
+    fighters: Fighter[],
+    show: Show
 }

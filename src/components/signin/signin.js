@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, FormControl, FormLabel, Heading, Input, SimpleGrid, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react'
-import { DividerWithText, Card, Logo } from '../../chakra'
+import { Box, useColorModeValue } from '@chakra-ui/react'
 import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
 import { SubmitNewPasswordForm } from './submit-new-password-form'
@@ -11,7 +10,7 @@ import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useScorecardStore } from '../../stores'
 
-export const SignIn = props => {
+export const SignIn = () => {
   const navigate = useNavigate();
 
   let [searchParams, setSearchParams] = useSearchParams();
@@ -61,6 +60,7 @@ export const SignIn = props => {
     const { id, value } = e.currentTarget;
     setForm({...form, [id]: value.trim() });
   };
+  
   const handleSignIn = () => {
     setIsSubmitting(true);
     const { password, username} = form;

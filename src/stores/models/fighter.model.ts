@@ -11,8 +11,8 @@ export interface Fighter {
     dq: number;
     socials: string[] | null;
     home: string | null;
-	createdAt: string;
-	updatedAt: string;
+	createdAt?: string;
+	updatedAt?: string;
 }
 
 export interface FighterScore extends Record<keyof string, number>{}

@@ -11,8 +11,8 @@ export interface GroupScorecard {
 	members: string[]
 	ownerId: string
 	showId: string 
-	createdAt: string
-	updatedAt: string
+	createdAt?: string
+	updatedAt?: string
 }
 
 export interface CreateGroupScorecard {

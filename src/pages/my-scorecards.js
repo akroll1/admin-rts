@@ -3,33 +3,25 @@ import { Flex, Heading } from '@chakra-ui/react'
 import { MyScorecardsTable } from '../components/tables'
 import { ExpiredTokenModal } from '../components/modals'
 import { capFirstLetters } from '../utils'
-import { useScorecardStore, useStateStore } from '../stores'
+import { useScorecardStore } from '../stores'
 
 export const MyScorecards = () => {
   const [modals, setModals] = useState({
       expiredTokenModal: false
   });
 
-  const { 
-    user, 
-    setUser, 
-    setUserScorecards, 
-    tokenConfig,
-  } = useStateStore();
 
   const {
     fetchUserScorecards,
-    updateUser,
     userScorecards,
   } = useScorecardStore();
 
     useEffect(() => {
-      if(userScorecards.length === 0){
+      if(userScorecards.length < 1){
         fetchUserScorecards()
-        updateUser()
       }
-    },[])
-
+    },[userScorecards])
+    console.log('CARDS: ', userScorecards)
     return (
         <Flex flexDir="column" p="4">
             <ExpiredTokenModal 

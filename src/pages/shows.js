@@ -1,27 +1,26 @@
 import React, {useState, useEffect} from 'react'
 import { Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react'
-import axios from 'axios'
+
 import { ShowsSidebar } from '../components/sidebars'
 import { ReviewFormModal } from '../components/modals'
-import { useNavigate, useParams } from 'react-router'
 import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import { ExpiredTokenModal } from '../components/modals'
 
-import { useFightStore, useReviewStore } from '../stores'
+import { useReviewStore } from '../stores'
 import { useScorecardStore } from '../stores/scorecards-store'
 
 const Shows = props => {
-    const navigate = useNavigate();
-    const { id } = useParams();
+
     const toast = useToast();
-    const { user } = useScorecardStore();
     const { 
-        email, 
-        sub, 
-        username 
-    } = user;
-    const { fetchFights, fetchFightSummary, fightSummary, fights, selectedFight } = useFightStore();
+        fetchFights, 
+        fights, 
+        fightSummary, 
+        selectedFight,
+        user,
+     } = useScorecardStore();
+    const { email, sub, username } = user;
     const { checkForUserReview, fetchReviewsByFight, putUserReview, selectedFightReviews, userReview } = useReviewStore();
     const { createGroupScorecard } = useScorecardStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,13 +50,6 @@ const Shows = props => {
     useEffect(() => {
         fetchFights();
     },[])
-
-    useEffect(() => {
-        if(selectedFight.fightId){
-            fetchReviewsByFight(selectedFight.fightId);
-            fetchFightSummary(selectedFight.fightId);
-        }
-    }, [selectedFight]);
 
     useEffect(() => {
         if(fightReviewForm){

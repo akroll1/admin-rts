@@ -22,10 +22,9 @@ import { PoundPage } from './pound'
 import { ScorecardsSearch } from './scorecards-search'
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn' ? true : false));
   return (
     <ChakraProvider theme={theme}>
-        <Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}>
+        <Layout>
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/about" element={<About />} />
@@ -41,63 +40,63 @@ const App = () => {
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
             <Route exact path="/scorecards" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <MyScorecards /> 
               </PrivateRoute>
             }/>
             <Route exact path="/fighters" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Fighters /> 
               </PrivateRoute>
             }/>
             <Route exact path="/fighters/:id" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Fighters /> 
               </PrivateRoute>
             }/>
             <Route exact path="/scorecards/:initialScorecardId" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <ScorecardsSearch /> 
               </PrivateRoute>
             }/>
             <Route exact path="/scorecards/user/:userId" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <ScorecardsSearch /> 
               </PrivateRoute>
             }/>
             <Route exact path="/analytics" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Analytics /> 
               </PrivateRoute>
             }/>
             <Route exact path="/analytics/:getShowId" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Analytics /> 
               </PrivateRoute>
             }/>
             <Route exact path="/shows" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Shows /> 
               </PrivateRoute>
             }/>
             <Route exact path="/shows/:id" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Shows /> 
               </PrivateRoute>
             }/>
             <Route exact path="/shows" element={<Shows />} />
             <Route exact path="/pound" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <PoundPage />
               </PrivateRoute>
             }/>
             <Route exact path="/dashboard/:type" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Dashboard /> 
               </PrivateRoute>
             }/>
             <Route exact path="/dashboard/:type/:showId" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Dashboard />
               </PrivateRoute>
             } />

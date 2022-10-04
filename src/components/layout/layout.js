@@ -3,11 +3,10 @@ import { Footer } from './footer'
 import { Navbar } from './navbar'
 import { Box, calc, Flex } from '@chakra-ui/react'
 
-export const Layout = props => {
-        const { children, isLoggedIn, setIsLoggedIn } = props;
+export const Layout = ({ children }) => {
     return (
         <Flex flexDirection="column" position="relative">  
-            <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <Navbar />
             <Box as="main">{children}</Box>
             <Footer />
         </Flex>

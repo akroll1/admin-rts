@@ -2,15 +2,14 @@ import * as React from 'react'
 import { Rating } from './rating'
 import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useToast } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
-import { useReviewStore, useStateStore } from '../../../stores'
-import axios from 'axios';
+import { useReviewStore, useScorecardStore } from '../../../stores'
 
 export const FightReviews = ({ 
   setFightReviewForm, 
   fightReviewForm 
 }) => {
   const toast = useToast();
-  const { user: { sub } } = useStateStore();
+  const { user: { sub }} = useScorecardStore();
   const { selectedFightReviews } = useReviewStore();
 
   const openForm = () => {
@@ -19,7 +18,7 @@ export const FightReviews = ({
     }
     setFightReviewForm(fightReviewForm => !fightReviewForm)
   }
-
+  console.log('selectedFightReviews: ', selectedFightReviews)
   return (
     <Flex 
       id="reviews_predictions"

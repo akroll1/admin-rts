@@ -4,16 +4,28 @@ import { Flex, Stack } from '@chakra-ui/react'
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
-import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutline } from "react-icons/io5";
+import { 
+    IoStarOutline, 
+    IoGameControllerOutline, 
+    IoFlashOutline, 
+    IoBookmarkOutline 
+} from "react-icons/io5";
 import { DividerWithText } from '../../chakra'
-import { useFightStore } from '../../stores'
+import { useReviewStore, useScorecardStore } from '../../stores'
 
 export const ShowsSidebar = () => { 
-    const { fights, selectedFight, setSelectedFight } = useFightStore();
+    const {
+        fetchSelectedFightReviews
+    } = useReviewStore();
+    const { 
+        fetchFightSummary,
+        fights, 
+        selectedFight, 
+        setSelectedFight,
+    } = useScorecardStore();
     const [searchedFights, setSearchedFights] = useState(fights); 
     const [upcoming, setUpcoming] = useState([]);
     const [recent, setRecent] = useState([]);
-    const [selectedFightId, setSelectedFightId] = useState('');
 
     useEffect(() => {
         if(fights.length > 0){
@@ -21,15 +33,16 @@ export const ShowsSidebar = () => {
             setUpcoming(upcoming);
             const recent = fights.filter( fight => fight.fightStatus === 'COMPLETE');
             setRecent(recent);
-            if(upcoming.length > 0) setSelectedFight(upcoming[0].fightId);
+            if(upcoming.length > 0) {
+                setSelectedFight(upcoming[0].fightId);
+                Promise.all([
+                    fetchSelectedFightReviews(upcoming[0].fightId),
+                    fetchFightSummary(upcoming[0].fightId)
+                ])
+            }
         }
     }, [fights])
-    
-    useEffect(() => {
-        if(selectedFight?.fightId){
-            setSelectedFightId(selectedFight.fightId)
-        }
-    },[selectedFight]);
+
     const handleSearch = e => {
         const { value } = e.currentTarget;
         const regex = /^[a-z]+$/i;
@@ -42,6 +55,8 @@ export const ShowsSidebar = () => {
         const { name, id } = e.currentTarget;
         const [selected] = fights.filter( fight => fight.fightId === id);
         setSelectedFight(selected.fightId);
+        fetchSelectedFightReviews(selected.fightId)
+        fetchFightSummary(selected.fightId)
     }
     const historicalShows = [
         'Ali vs Frazier I', 'Hagler vs Hearns'

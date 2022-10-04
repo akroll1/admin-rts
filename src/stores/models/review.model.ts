@@ -12,8 +12,8 @@ export interface Review {
 	title: string;
 	unlikes: number;
 	username: string;
-	createdAt: string;
-	updatedAt: string;
+	createdAt?: string;
+	updatedAt?: string;
 }
 
 export interface ReviewPut {

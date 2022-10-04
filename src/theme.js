@@ -145,5 +145,5 @@ export const myTheme = {
   }
 };
 const theme = extendTheme({ config, ...chakraTheme, ...myTheme });
-// console.log('theme: ', theme)
+console.log('theme: ', theme)
 export default theme;

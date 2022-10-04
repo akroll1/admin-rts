@@ -3,7 +3,7 @@ import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
 import { FightReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
-import { useFightStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 
 export const ShowsMain = ({
     deleteMember,
@@ -16,9 +16,10 @@ export const ShowsMain = ({
     setFightReviewForm, 
     fightReviewForm, 
 }) => {
-    const { fightSummary } = useFightStore();
+    const { fightSummary } = useScorecardStore();
     const { show: { showTime }} = fightSummary;
     const UPCOMING = showTime > Date.now() ? true : false; 
+    
     return (
         <Flex 
             as="section"
