@@ -6,23 +6,26 @@ import { ReviewFormModal } from '../components/modals'
 import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import { ExpiredTokenModal } from '../components/modals'
-
-import { useReviewStore } from '../stores'
-import { useScorecardStore } from '../stores/scorecards-store'
+import { useScorecardStore } from '../stores'
 
 const Shows = props => {
 
     const toast = useToast();
     const { 
+        checkForUserFightReview,
+        createGroupScorecard,
         fetchFights, 
         fights, 
         fightSummary, 
+        putUserFightReview,
         selectedFight,
+        setTokenExpired,
+        tokenExpired,
         user,
+        userFightReview,
      } = useScorecardStore();
     const { email, sub, username } = user;
-    const { checkForUserReview, fetchReviewsByFight, putUserReview, selectedFightReviews, userReview } = useReviewStore();
-    const { createGroupScorecard } = useScorecardStore();
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [modals, setModals] = useState({
         expiredTokenModal: false
@@ -48,20 +51,27 @@ const Shows = props => {
     });
 
     useEffect(() => {
+        if(tokenExpired){
+            setTokenExpired(true)
+            setModals({ expiredTokenModal: true })
+        }
+    },[tokenExpired])
+
+    useEffect(() => {
         fetchFights();
     },[])
 
     useEffect(() => {
         if(fightReviewForm){
-            checkForUserReview(selectedFight.fightId);
+            checkForUserFightReview(selectedFight.fightId);
         }
     },[fightReviewForm])
 
     useEffect(() => {
-        if(userReview){
-            setReviewForm(userReview)
+        if(userFightReview){
+            setReviewForm(userFightReview)
         }
-    },[userReview]);
+    },[userFightReview]);
     
     const handleReviewFormSubmit = async () => {
         const putObj = Object.assign(reviewForm, {
@@ -71,7 +81,7 @@ const Shows = props => {
             username
         });
 
-        const success = await putUserReview(putObj);
+        const success = await putUserFightReview(putObj);
         if(success){
             toast({ 
                 title: 'Review Submitted!',
@@ -158,8 +168,10 @@ const Shows = props => {
             justifyContent="center" 
             mb={6} 
             pb={8}
+            bg="inherit"
         >    
             <ExpiredTokenModal modals={modals} setModals={setModals} />
+            
             { fightReviewForm && 
                 <ReviewFormModal
                     reviewForm={reviewForm}

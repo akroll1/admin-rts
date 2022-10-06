@@ -5,6 +5,7 @@ import { parseEpoch} from '../../../utils/utils'
 import { ReviewPostStars } from '../../stars'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
+
 export const ReviewItem = ({ 
   reviewItem 
 }) => {
@@ -12,6 +13,7 @@ export const ReviewItem = ({
   const [clickedUP, setClickedUP] = useState(false)
   const [clickedDOWN, setClickedDOWN] = useState(false)
   const { createdAt, likes, rating, review, reviewId, title, username } = reviewItem;
+
   useEffect(() => {
     setLocalLikes(likes > 0 ? likes * Math.ceil(Math.random()*100) : 1)
   },[likes]);

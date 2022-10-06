@@ -104,7 +104,23 @@ const DesktopNavContent = props => {
 
   return (
     <Flex className="nav-content__desktop" align="center" justify="space-between" {...props}>
-      <Button onClick={() => navigate('/')} bg="transparent" to="/">FightSync</Button>
+      <Button
+        colorScheme="solid"
+        _hover={{ 
+          background: 'transparent',
+          color: 'white'  
+        }} 
+        _focus={{ 
+          boxShadow: 'none !important',
+          color: 'white'
+        }}
+        color="#c8c8c8" 
+        onClick={() => navigate('/')} 
+        background="transparent"
+        to="/"
+      >
+        FightSync
+      </Button>
       <HStack as="ul" id="nav__primary-menu" aria-label="Main Menu" listStyleType="none">
         {links.map((link, idx) => (
           <Box as="li" key={idx} id={`nav__menuitem-${idx}`}>

@@ -8,17 +8,20 @@ export const FightReviews = ({
   setFightReviewForm, 
   fightReviewForm 
 }) => {
-  const toast = useToast();
-  const { user: { sub }} = useScorecardStore();
-  const { selectedFightReviews } = useReviewStore();
-
+  const toast = useToast()
+  const { 
+    selectedFightReviews, 
+    user 
+  } = useScorecardStore()
+  const { sub } = user
+  
   const openForm = () => {
     if(!sub){
       return alert('You must be registered to leave a Review.');
     }
     setFightReviewForm(fightReviewForm => !fightReviewForm)
   }
-  console.log('selectedFightReviews: ', selectedFightReviews)
+  
   return (
     <Flex 
       id="reviews_predictions"
@@ -71,7 +74,7 @@ export const FightReviews = ({
                   <Button 
                     onClick={() => openForm(!fightReviewForm)} 
                     size="lg" 
-                    colorScheme="blue"
+                    colorScheme="solid"
                   >
                     Write a Review
                   </Button>
@@ -90,7 +93,7 @@ export const FightReviews = ({
                 <Button 
                   onClick={() => openForm(!fightReviewForm)} 
                   size="lg" 
-                  colorScheme="blue"
+                  colorScheme="solid"
                 >
                   Write a Review
                 </Button>
@@ -105,7 +108,7 @@ export const FightReviews = ({
         flexWrap="wrap" 
         alignItems="center"
       >
-        { selectedFightReviews.length > 0 && selectedFightReviews.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
+        { selectedFightReviews?.length > 0 && selectedFightReviews.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
       </Flex>
     </Flex>
   )

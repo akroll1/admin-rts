@@ -57,7 +57,9 @@ export const SubscribeForm = (props) => {
             disabled={disableButton}
             onClick={subscribe}
             type="submit"
-            colorScheme="blue"
+            colorScheme="solid"
+            color="white"
+            size="md"
             flexShrink={0}
             width={{ base: 'full', md: 'auto' }}
             isLoading={isSubmitting}

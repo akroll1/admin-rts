@@ -17,7 +17,7 @@ export const Rating = (props) => {
             key={index}
             as={FaStar}
             fontSize={size}
-            color={index <= defaultValue ? activeColor : color}
+            color={index <= defaultValue ? '#ffd700' : color}
           />
         ))}
     </HStack>

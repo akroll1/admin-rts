@@ -1,4 +1,9 @@
-import { extendTheme, theme as chakraTheme} from "@chakra-ui/react";
+import { 
+  color,
+  extendTheme, 
+  theme as chakraTheme,
+  useColorModeValue as mode,
+} from "@chakra-ui/react";
 const config = {
   initialColorMode: localStorage.getItem('chakra-ui-color-mode')||'dark',
   useSystemColorMode: false,
@@ -6,7 +11,16 @@ const config = {
 };
 export const colors = {
   brand: {
-    base: '#1A202C'
+    50: "#C01616",  
+    100: "#C01616", 
+    200: "#C01616", 
+    300: "#C01616", 
+    400: "#C01616", 
+    500: "#C01616", 
+    600: "#C01616", 
+    700: "#C01616", 
+    800: "#C01616", 
+    900: "#C01616",
   },
   white: {
     base: '#fff',
@@ -68,24 +82,42 @@ export const transition = {
   easeOutBack: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   duration: '0.4s',
 };
-export const fontFamily = {
-  fonts: {
+export const fonts = {
     body: `Lato`,
     heading: `Koulen`
-  }
 }
-// export const typography = {
 export const letterSpacings = {
-
     normal: `0.05em`
-  // }
 }
-export const myTheme = {
-  ...colors,
-  ...fontFamily,
+
+export const fslTheme = {
+  semanticTokens: { 
+    colors: {
+      'fsl-body-bg': {
+        _dark: '#171717'
+      },
+      'chakra-body-text': {
+        _dark: '#C8C8C8'
+      },
+      'fsl-sidebar-bg': {
+        _dark: '#111111'
+      },
+      'fsl-nav-footer-bg': {
+        _dark: '#171717'
+      },
+      'fsl-heading-text': {
+        _dark: '#FAFAFA'
+      }
+    }
+  },
+  colors,
+  fonts,
   letterSpacings,
   ...gradient,
-  ...shadow,
+  shadow,
+  shadows: {
+    outline: '0 0 0 1px #FFF'
+  },
   breakpoints: {
     xs: '400px',
     s: '600px',
@@ -117,33 +149,150 @@ export const myTheme = {
       transition: 'all 0.25s ease-in-out',
     },
   },
-  colors: {
-    brand: {
-      100: '#C01616'
-    }
-  },
-  background: {
-    dark: 'blackAlpha.500'
-  },
-  components: {
-    Input: {
-      defaultProps: {
+  styles: {
+    global: {
+      body: {
+        '#socials > a': {
+          color: '#C8C8C8'
+        },
+        '#socials > a:focus': {
+          boxShadow: 'none',
+          color: 'white'
+        },
+        '#socials > a:hover': {
+          boxShadow: 'none',
+          color: 'white',
+          background: 'inherit'
+        },
+        '#socials > a:active': {
+          boxShadow: 'none',
+          color: 'white',
+          background: 'inherit'
+        },
+        '#scoring-table tr:nth-of-type(odd)': {
+          background: '#252525'
+        },
+        '#scoring-table tr:nth-of-type(even)': {
+          background: '#171717'
+        },
 
-        focusBorderColor: '5px solid red'
       },
-      baseStyle: {
-        field: {
-          focusBorderColor: '5px solid red'
-        }
-      }
+    },
+  },
+}
+const Button = {
+  Button: {
+    baseStyle: {
+      _focus: {
+        boxShadow: '0 0 0 1px gray',
+        borderColor: 'gray',
+        border: '1px solid gray'
+      },
     }
   },
-  borders: {
-    brand: {
-      100: '1px solid #C01616'
+  variants: {
+    solid: {
+      // baseStyle: {
+      //   _hover: {
+      //     color: 'blue'
+
+      //   }
+      // },
+      color: '#FBFBFB',
+      background: '#C01616',
+      _hover: {
+        boxShadow: 'none',
+        color: '#eeeaea',
+        borderColor: 'inherit',
+        background: '#e62b2b',
+        cursor: 'pointer',
+        color: 'white'
+      },
+      _focus: {
+        boxShadow: 'none',
+        borderColor: 'inherit',
+        background: '#e62b2b',
+        color: 'white'
+      }
+    },
+    outline: {
+      size: 'lg',
+      borderColor: 'gray',
+      _hover: {
+        background: 'inherit',
+        boxShadow: '0 0 0 1px gray',
+        color: '#C8C8C8',
+        borderColor: 'white',
+        border: '1px solid lightgray'
+      },
+    }
+  },
+  defaultProps: {
+    variant: 'solid',
+    colorScheme: 'solid',
+    size: 'lg'
+  }
+}
+
+const Input = {
+  variants: {
+    outline: {
+      field: {
+        border: '1px solid',
+        borderColor: '#795858',
+        _focus: {
+          boxShadow: '0 0 0 1px #C01616',
+          borderColor: '#867979',
+          
+        },
+        
+      },
     }
   }
-};
-const theme = extendTheme({ config, ...chakraTheme, ...myTheme });
+
+}
+
+const Link = {
+  baseStyle: {
+    _focus: {
+      boxShadow: 'none',
+      color: 'white'
+    }
+  }
+}
+
+const Table = {
+  variants: {
+    scoringTable: {
+      th: {
+        background: '#111111'
+      },
+    }
+  }
+}
+
+const Heading = {
+  baseStyle: {
+    color: '#FAFAFA',
+  }
+}
+
+const theme = extendTheme({ 
+  config, 
+  ...chakraTheme, 
+  ...fslTheme, 
+  components: {
+    Button,
+    Heading,
+    Input,
+    Link,
+    Table
+  }
+},
+  // withDefaultColorScheme({ 
+  //   colorScheme: 'brand',
+  //   components: ['Button'] 
+  // }),
+);
 console.log('theme: ', theme)
 export default theme;

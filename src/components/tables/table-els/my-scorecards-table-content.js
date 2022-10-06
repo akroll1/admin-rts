@@ -17,8 +17,8 @@ export const MyScorecardsTableContent = ({
   const navigate = useNavigate();
   return (
     <Flex overflow="scroll" w="100%">
-      <Table my="8" border="1px solid rgba(255, 255, 255, 0.16)" fontSize="sm" size={['sm', 'md']}>
-        <Thead bg={mode('gray.50', 'gray.800')}>
+      <Table variant="simple" my="8" border="1px solid rgba(255, 255, 255, 0.16)" fontSize="sm" size={['sm', 'md']}>
+        <Thead bg={mode('gray.50', '#262626')}>
           <Tr>
               <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
                 Scorecard  
@@ -51,7 +51,7 @@ export const MyScorecardsTableContent = ({
                 _hover={{
                   textAlign: "center",
                   cursor: 'pointer', 
-                  bg: 'gray.700', 
+                  bg: '#535353', 
                   color: '#fff', 
                   borderBottom: '2px solid #795858',
                   borderRadius: '5px'

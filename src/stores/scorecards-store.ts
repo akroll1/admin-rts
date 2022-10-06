@@ -4,8 +4,7 @@ import axios from 'axios'
 import { Scorecard } from "./models/scorecard.model"
 import { CreateGroupScorecard, GroupScorecard, GroupScorecardSummary } from "./models/group-scorecard.model"
 import { capFirstLetters } from '../utils'
-import { Fight, Fighter, FighterScores, FightSummary, fightSummaryStub, RoundScores, Show, TokenConfig, User } from './models'
-import { StatHelpText } from "@chakra-ui/react"
+import { Fight, Fighter, FighterScores, FightSummary, fightSummaryStub, Review, ReviewPut, RoundScores, Show, TokenConfig, User } from './models'
 
 interface ScorecardStore {
     accessToken: TokenConfig
@@ -13,11 +12,13 @@ interface ScorecardStore {
     chatKey: string
     chatScorecard: RoundScores
     chatToken: string
+    checkForUserFightReview(userId: string): void
     collateTableData(): void
     createGroupScorecard(scorecardObj: CreateGroupScorecard): Promise<boolean | undefined>
     fetchFights(): void
     fetchFightSummary(selectedFightId: string): void
     fetchGroupScorecard(groupScorecardId: string): void
+    fetchSelectedFightReviews(fightId: string): void;
     fetchUserScorecards(): void
     fight?: Fight
     fights: Fight[]
@@ -28,6 +29,7 @@ interface ScorecardStore {
     groupScorecards: GroupScorecard[]
     idToken: TokenConfig
     isSubmitting: boolean
+    putUserFightReview(reviewObj: ReviewPut): void
     requestChatToken(chatKey: string): void
     scorecards: Scorecard[]
     scoredRounds: number
@@ -35,6 +37,8 @@ interface ScorecardStore {
     setChatScorecard(update: RoundScores): void
     setFighterScores(): void
     selectedFight: Fight
+    selectedFightReview: Review
+    selectedFightReviews: Review[]
     setIdToken(headers: TokenConfig): void
     setScoredRounds(scoredRounds: number): void
     setSelectedFight(selectedFightId: string): void
@@ -49,6 +53,7 @@ interface ScorecardStore {
     tokenExpired: boolean
     transformedPrediction: string
     user: User
+    userFightReview: Review
     userScorecard: Scorecard
     userScorecards: any[]
     // addMemberToActiveScorecard(email: string): void
@@ -80,14 +85,25 @@ export const useScorecardStore = create<ScorecardStore>()(
             scorecards: [],
             scoredRounds: 0,
             selectedFight: {} as Fight,
+            selectedFightReviews: [],
+            selectedFightReview: {} as Review,
             show: {} as Show,
             stats: [],
             tableData: [],
             tokenExpired: false,
             transformedPrediction: '',
             user: {} as User,
+            userFightReview: {} as Review,
             userScorecard: {} as Scorecard,
             userScorecards: [],
+            checkForUserFightReview: async (userId: string) => {
+                const url = process.env.REACT_APP_API + `/reviews/${userId}/user`;
+                const res = await axios.get(url, get().accessToken);
+                const data = res.data;
+                if(data?.reviewId){
+                    set({ userFightReview: data })
+                };
+            },
             collateTableData: () => {
                 const s = get().scorecards.map( (scorecard: any) => {
                     let { username, prediction, scores } = scorecard
@@ -143,9 +159,12 @@ export const useScorecardStore = create<ScorecardStore>()(
                 if(res.status === 200) return true;
             },  
             fetchFights: async () => {
-                const url = process.env.REACT_APP_API + `/fights`;
-                const res = await axios.get(url, get().accessToken);
-                const data = res.data as Fight[];
+                const url = process.env.REACT_APP_API + `/fights`
+                const res = await axios.get(url, get().accessToken)
+                const data = res.data as Fight[]
+                if(res.data === 'Token expired!'){
+                    return set({ tokenExpired: true })
+                }
                 set( state => ({ fights: data }))
             },
             fetchFightSummary: async (selectedFightId: string) => {
@@ -221,6 +240,14 @@ export const useScorecardStore = create<ScorecardStore>()(
                 console.log('userScorecards: ', userScorecards)
                 set({ userScorecards })
             },
+            putUserFightReview: async (reviewObj: ReviewPut) => {
+                const url = process.env.REACT_APP_API + `/reviews`;
+                const res = await axios.put(url, reviewObj, get().accessToken);
+                if(res.status === 200) {
+                    get().fetchSelectedFightReviews(reviewObj.fightId);
+                    return true;
+                }
+            },
             requestChatToken: async (chatKey: string) => {    
                 const options = {
                     chatKey: chatKey,
@@ -231,10 +258,13 @@ export const useScorecardStore = create<ScorecardStore>()(
                     sessionDurationInMinutes: 60,
                     userId: `${get().user.username}`,
                 };
-            
+                
                 const res = await axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, options, get().accessToken)
                 const chatToken = res.data 
                 set({ chatToken })
+            },
+            setAccessToken: (accessToken: TokenConfig) => {
+                set({ accessToken })
             },
             setChatScorecard: async (chatScorecard: RoundScores) => {
                 set({ chatScorecard })
@@ -256,9 +286,6 @@ export const useScorecardStore = create<ScorecardStore>()(
             setIdToken: (idToken: TokenConfig) => {
                 set({ idToken })
             },
-            setAccessToken: (accessToken: TokenConfig) => {
-                set({ accessToken })
-            },
 
             setScoredRounds: (scoredRounds: number) => {
                 const totalRounds = get().fight?.rounds!;
@@ -272,6 +299,10 @@ export const useScorecardStore = create<ScorecardStore>()(
             setSelectedFight: ( selectedFightId: string) => {    
                 const [selectedFight] = get().fights.filter( fight => fight.fightId === selectedFightId);
                 set({ selectedFight });
+            },
+            setSelectedFightReview: (reviewId: string) => {
+                const [selected] = get().selectedFightReviews.filter( review => review.reviewId === reviewId);
+                set({ selectedFightReview: selected });
             },
             setTokenExpired: (tokenExpired: boolean) => {
                 set({ tokenExpired })
@@ -295,10 +326,12 @@ export const useScorecardStore = create<ScorecardStore>()(
             setUser: (user: User) => {
                 set({ user })
             },
-            updateUser: async () => {
-                const url = process.env.REACT_APP_API + `/users/${get().user.sub}`;
-                const res = await axios.put(url, { username: get().user.username, email: get().user.email } , get().accessToken)
-            },  
+            fetchSelectedFightReviews: async (fightId: string) => {
+                const url = process.env.REACT_APP_API + `/reviews/${fightId}/fight`;
+                const res = await axios.get(url, get().accessToken);
+                const data = res.data as Review[];
+                set({ selectedFightReviews: data })
+            }, 
             setUserScorecard: (userScorecard: Scorecard) => {
                 set({ userScorecard })
             },
@@ -319,10 +352,14 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const updatedScorecards = [...otherScorecards, scorecard]
                 set({ chatScorecard, scorecards: updatedScorecards })       
             },
+            updateUser: async () => {
+                const url = process.env.REACT_APP_API + `/users/${get().user.sub}`;
+                const res = await axios.put(url, { username: get().user.username, email: get().user.email } , get().accessToken)
+            },  
         }),
         {
             partialize: (state) => {
-                return ({ userScorecards: state.userScorecards, user: state.user })
+                return ({ ...state })
             },
             getStorage: () => sessionStorage,
             name: 'fsl',

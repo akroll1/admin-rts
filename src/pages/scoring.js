@@ -167,6 +167,7 @@ const Scoring = () => {
             justifyContent="center" 
             margin="auto" 
             p="4"
+            bg="inherit"
         >         
             <Flex>
                 

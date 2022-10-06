@@ -155,7 +155,7 @@ export const ChatSidebar = ({
             minH={["22rem"]} 
             maxH={["40vh", "40vh", "60vh"]}
             p="2" 
-            bg="gray.900" 
+            bg="fsl-sidebar-bg" 
             borderRadius="md" 
             overflowY="scroll"
         >
@@ -231,7 +231,7 @@ export const ChatSidebar = ({
                     maxW="100%"
                     flexDir="column" 
                     borderRadius="md"
-                    bg="gray.900" 
+                    bg="fsl-sidebar-bg" 
                     p="4"
                     color="white" 
                     fontSize="sm"

@@ -28,20 +28,20 @@ const Home = () => {
             <Heading>
               Here you go.
             </Heading>
-            <Text fontSize="lg" mt="4" color={mode('gray.600', 'gray.400')}>
+            <Text fontSize="lg" mt="4" color={mode('gray.600', 'fsl-body-text')}>
               Score fights in real-time and compete against other boxing fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live!
             </Text>
             <Button
               onClick={() => navigate('/learn-more')}
               className="group"
               mt="8"
-              colorScheme="blue"
               size="lg"
               px="8"
               fontWeight="bold"
               h="14"
               // bg="brand.100"
               iconSpacing="3"
+              colorScheme="solid"
               rightIcon={
                 <Box
                   as={FaArrowRight}

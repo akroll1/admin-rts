@@ -16,7 +16,7 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
   }
 
   const updateUser = () => {
-    const url = process.env.REACT_APP_USERS + `/${user.sub}`;
+    const url = process.env.REACT_APP_API + `/users/${user.sub}`;
     const { firstName, lastName, bio } = userProfile;
     const update = {
       firstName,
@@ -112,7 +112,7 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
               <Box>
                 <HStack spacing="5">
                   <Button leftIcon={<HiCloudUpload />}>Change photo</Button>
-                  <Button variant="ghost" colorScheme="red">
+                  <Button variant="outline" colorScheme="solid">
                     Delete
                   </Button>
                 </HStack>
@@ -125,7 +125,7 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
         </Stack>
         <FieldGroup mt="8">
           <HStack width="full">
-            <Button onClick={updateUser} type="submit" colorScheme="blue">
+            <Button onClick={updateUser} type="submit" colorScheme="solid">
               Save Changes
             </Button>
             <Button variant="outline">Cancel</Button>

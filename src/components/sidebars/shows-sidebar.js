@@ -11,21 +11,20 @@ import {
     IoBookmarkOutline 
 } from "react-icons/io5";
 import { DividerWithText } from '../../chakra'
-import { useReviewStore, useScorecardStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 
 export const ShowsSidebar = () => { 
-    const {
-        fetchSelectedFightReviews
-    } = useReviewStore();
     const { 
         fetchFightSummary,
+        fetchSelectedFightReviews,
         fights, 
         selectedFight, 
         setSelectedFight,
-    } = useScorecardStore();
-    const [searchedFights, setSearchedFights] = useState(fights); 
-    const [upcoming, setUpcoming] = useState([]);
-    const [recent, setRecent] = useState([]);
+    } = useScorecardStore()
+
+    const [searchedFights, setSearchedFights] = useState(fights)
+    const [upcoming, setUpcoming] = useState([])
+    const [recent, setRecent] = useState([])
 
     useEffect(() => {
         if(fights.length > 0){
@@ -80,7 +79,7 @@ export const ShowsSidebar = () => {
             borderRadius="lg"
             direction="column" 
             p="2" 
-            bg="gray.900" 
+            bg="fsl-sidebar-bg" 
             color="white" 
             fontSize="sm"
         >
@@ -104,8 +103,9 @@ export const ShowsSidebar = () => {
                 </NavGroup>
                 <NavGroup label="Recent">
                     {recent.length > 0 && recent.map( fight => {
+                        const active = fight.fightId === selectedFight?.fightId
                         return <UpcomingNavItem 
-                            active={fight.fightId === selectedFight?.fightId}
+                            active={active}
                             name={REVIEW_TYPE.REVIEW} 
                             icon={<IoStarOutline mt="-5px" /> } 
                             selectFight={selectFight} 

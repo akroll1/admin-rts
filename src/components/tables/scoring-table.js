@@ -13,16 +13,19 @@ export const ScoringTable = ({
     
     const {
         fight,
+        fighterScores,
         tableData, 
     } = useScorecardStore()
 
     // console.log('fight: ', fight)
     console.log('tableData: ', tableData)
+    console.log('fighterScores: ', fighterScores)
+    const currentRound = fighterScores.round
     const totalRounds = fight ? fight.rounds : 12;
 
-    const sort = (a, b) => a.username - b.username
+    const sortData = (a, b) => a.username - b.username
 
-    const sortedTable = tableData?.sort( sort )
+    const sortedTable = tableData?.sort(sortData)
     const columns = [
         {
             Header: 'Player',
@@ -42,7 +45,6 @@ export const ScoringTable = ({
 
     ];
     
-    // console.log('getPlayersData: ',getPlayersData)
     const rounds = new Array(totalRounds).fill('Round')
     const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : ''
     return (      
@@ -59,18 +61,19 @@ export const ScoringTable = ({
                 h="auto"
             >      
                 <Table 
+                    id="scoring-table"
                     style={{tableLayout:'auto', width: '100%'}} 
                     overflowX="scroll" 
                     overflowY="scroll" 
                     size={["sm", "md"]} 
-                    variant="striped" 
+                    variant="scoringTable" 
                     my="4" 
                     borderWidth="1px" 
                     fontSize="sm"
                     bg="whiteAlpha.50"
                 >
                     { fightStatus === `COMPLETE` && <TableCaption style={{margin: 'auto',width: '100%', captionSide:"top"}}>FIGHT IS OFFICIAL</TableCaption> }
-                    <Thead bg={mode('gray.50', 'gray.800')}>
+                    <Thead bg={mode('gray.50', '#111111')}>
                         <Tr>
                             {columns.map((column, index) => {
 
@@ -94,9 +97,10 @@ export const ScoringTable = ({
                                             <Th 
                                                 key={roundIndex} 
                                                 // style={roundIndex === currentRound ? {color:'white', fontWeight: 'bold', fontSize: '1.3rem', borderBottom:'1px dotted white'} : null} 
-                                                color="white" 
+
                                                 fontWeight="bold"
                                                 textAlign="center"
+                                                style={currentRound === (roundIndex + 1) ? { color: '#C01616', fontSize: '1.1rem' } : { color: '#c8c8c8'} }
                                             >
                                                 {roundIndex+1}
                                             </Th>
@@ -143,24 +147,23 @@ export const ScoringTable = ({
                                                     <Td key={i+88} p="0px !important">
                                                         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                             <Flex 
-                                                                color={i >= mappedScores.length ? 'transparent' : "black"}
+                                                                color={i >= mappedScores.length ? 'transparent' : "white"}
                                                                 borderRadius="2px"
                                                                 // borderX={(i) % 2 == 0 ? (i) >= currentRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
                                                                 w="100%"
                                                                 p="1"
-                                                                bg={roundScores[fighter1] ? "gray.500" : "gray.600"} 
+                                                                bg={roundScores[fighter1] ? "#4C4C4C" : "#383838"}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
-                                                                style={(i+1) == roundKO && (transformedPrediction == fighter1) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: '1px solid #2e3648'} }
+                                                                style={(i+1) == roundKO && (transformedPrediction == fighter1) ? currentRound === (i+1) ? { border: '2px solid #e56a54' } : { border:'1px solid white' } : { border: '1px solid #656565' } }
                                                             >   
                                                                 {roundScores[fighter1]}
                                                             </Flex>
                                                             <Flex 
                                                                 w="100%"
-                                                                style={(i+1) == roundKO && (transformedPrediction == fighter2) ? {border:'1px solid red', fontSize: '1.2rem'} : {border: "1px solid RGBA(0, 0, 0, 0.36)"} } 
-                                                                color={i >= mappedScores.length ? 'transparent' : "whiteAlpha.900"}
-
+                                                                style={(i+1) == roundKO && (transformedPrediction == fighter2) ? currentRound === (i+1) ? { border: '1px solid #e56a54' } : { border: '1px solid white' } : { border: "1px solid #656565" } } 
+                                                                color={i >= mappedScores.length ? 'transparent' : "white"}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
@@ -196,7 +199,8 @@ export const ScoringTable = ({
                                                             flexDirection="column" 
                                                             alignItems="center" 
                                                             justifyContent="center" 
-                                                            mt="0.5rem" w="100%"
+                                                            mt="0.5rem" 
+                                                            w="100%"
                                                         >
                                                             {totals[fighter2]}
                                                         </Flex>

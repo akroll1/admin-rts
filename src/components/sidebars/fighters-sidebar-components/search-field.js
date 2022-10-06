@@ -9,13 +9,12 @@ export const SearchField = ({ handleSearch, value }) => {
         <SearchIcon opacity={0.82} />
       </InputLeftElement>
       <Input
+        id="searchBar"
         style={{width: '100%'}}
         value={value}
         onChange={handleSearch}
         placeholder="Search"
         bg="whiteAlpha.400"
-        border={0}
-        focusBorderColor="whiteAlpha.800"
         _placeholder={{
           color: 'whiteAlpha.600',
         }}

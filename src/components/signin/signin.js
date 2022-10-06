@@ -237,7 +237,7 @@ export const SignIn = () => {
   // console.log('formState: ', formState)
   // console.log('form: ', form)
   return (
-    <Box bg={useColorModeValue('gray.500', 'gray.800')} py="12" px={{ base: '4', lg: '8' }}>
+    <Box bg={useColorModeValue('gray.500', 'inherit')} py="12" px={{ base: '4', lg: '8' }}>
       <Box maxW="md" mx="auto">
 
         { formState.isSignin &&

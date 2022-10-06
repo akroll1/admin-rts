@@ -7,7 +7,6 @@ export const PrivateRoute = ({ children }) => {
         user
     } = useScorecardStore()
     const auth = user.isLoggedIn;
-    console.log('USER: ', user)
     return auth ? children : <Navigate to="/signin" />;
 }
 

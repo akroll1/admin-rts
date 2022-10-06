@@ -41,7 +41,7 @@ export const ScoringSidebarRight = ({
             w="100%" 
             minH="100%"
             p="2" 
-            bg="gray.900" 
+            bg="fsl-sidebar-bg" 
             borderRadius="md" 
             overflowY="scroll"
         > 

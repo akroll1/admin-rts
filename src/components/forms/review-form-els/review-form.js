@@ -19,7 +19,6 @@ export const ReviewForm = ({
     setReviewForm({ ...reviewForm, rating})
   };
 
-  const { rating } = reviewForm;
   return (
     <form>
       <Stack spacing="6">
@@ -61,7 +60,7 @@ export const ReviewForm = ({
             <Button 
               onClick={handleReviewFormSubmit} 
               type="button" 
-              colorScheme="blue" 
+              colorScheme="solid" 
             >
               Submit review
             </Button>
@@ -70,7 +69,7 @@ export const ReviewForm = ({
               onClick={handleReviewFormClose} 
               type="button" 
               variant="outline" 
-              colorScheme="blue" 
+              colorScheme="solid" 
             >
               Close
             </Button>

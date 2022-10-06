@@ -40,7 +40,7 @@ export const SignUpForm = ({
         <Text 
           onClick={() => setFormState({ ...formState, isSignup: false, isSignin: true })} 
           _hover={{cursor: 'pointer'}} 
-          style={{marginLeft: '0.5rem', color: '#90cdf4'}}
+          style={{marginLeft: '0.5rem', color: '#FCFCFC' }}
         >
           Sign-In here!
         </Text>
@@ -80,10 +80,9 @@ export const SignUpForm = ({
               id="signup_button" 
               isLoading={isSubmitting}
               loadingText="Submitting..."
-              _hover={{cursor: 'pointer'}} 
               onClick={handleSignUp} 
               type="button" 
-              colorScheme="blue" 
+              colorScheme="solid" 
               size="lg" 
               fontSize="md"
             >

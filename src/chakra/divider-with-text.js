@@ -16,7 +16,7 @@ export const DividerWithText = props => {
       <Box flex="1">
         <Divider borderColor="currentcolor" />
       </Box>
-      <Text as="span" px="3" color={useColorModeValue('gray.600', 'gray.400')} fontWeight="medium">
+      <Text as="span" px="3" color={useColorModeValue('gray.600', 'whiteAlpha.900')} fontWeight="medium">
         {text}
       </Text>
       <Box flex="1">

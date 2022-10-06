@@ -54,7 +54,7 @@ export const PasswordField = React.forwardRef((props, ref) => {
           <Box 
             onClick={renderForgotPasswordForm}
             as="a" 
-            color={mode('blue.600', 'blue.200')} 
+            color={mode('blue.600', '#FCFCFC')} 
             fontWeight="semibold" 
             fontSize="sm"
             _hover={{ cursor: 'pointer' }}

@@ -6,9 +6,10 @@ import { useScorecardStore } from '../../stores'
 export const ProfileButton = () => {
     const navigate = useNavigate();
     const {
+        setUser,
         user
-      } = useScorecardStore();
-      const { isLoggedIn, setUser } = user;
+    } = useScorecardStore();
+    const { isLoggedIn } = user;
 
     const handleClick = () => {
         if(isLoggedIn){
@@ -19,6 +20,7 @@ export const ProfileButton = () => {
             navigate('/signin')
         }
     }
+
     const signin = () => {
         if(isLoggedIn) return
         return navigate('/signin')
@@ -32,7 +34,8 @@ export const ProfileButton = () => {
                     w='full'
                     size='sm'
                     as={Button} 
-                    colorScheme='blue'
+                    colorScheme='brand'
+                    color="white"
                     onClick={signin}
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
