@@ -15,20 +15,11 @@ export const ScoringTableInfo = ({
   }
 
   
-  console.log('fighters: ', fighters)
-  console.log('prediction: ', prediction)
-  console.log('username: ', username)
+  // console.log('fighters: ', fighters)
+  // console.log('prediction: ', prediction)
+  // console.log('username: ', username)
   
-  
-  const renders = (fighters, prediction, username) => {
-    // blue  #1d5d90, red
-    console.log('predictionWinner: ' , predictionWinner)
-    const [fighter1, fighter2] = fighters
-    
-    
-    
-  }
-  const predictionWinner = prediction ? prediction.split('-')[0] : `No Prediction`
+  const predictionWinner = prediction ? prediction.split('-')[0] : `No Prediction`;
   const predictionHow = prediction ? prediction.split('-')[1] : ``;
   return (
     <Flex 

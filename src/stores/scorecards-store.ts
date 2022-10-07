@@ -59,45 +59,49 @@ interface ScorecardStore {
     // addMemberToActiveScorecard(email: string): void
 }
 
+const initialState = {
+    isSubmitting: false,
+    accessToken: {} as TokenConfig,
+    chatKey: '',
+    chatScorecard: {} as RoundScores,
+    chatToken: '',
+    activeGroupScorecard: {} as GroupScorecard,
+    fight: undefined,
+    fights: [],
+    fightComplete: false,
+    fighters: [],
+    fighterScores: {} as FighterScores,
+    fightSummary: {
+        ...fightSummaryStub
+    },
+    groupScorecard: undefined,
+    groupScorecards: [],
+    idToken: {} as TokenConfig,
+    prediction: null,
+    scorecards: [],
+    scoredRounds: 0,
+    selectedFight: {} as Fight,
+    selectedFightReviews: [],
+    selectedFightReview: {} as Review,
+    show: {} as Show,
+    stats: [],
+    tableData: [],
+    tokenExpired: false,
+    transformedPrediction: '',
+    user: {
+        ...userStub,
+    },
+    userFightReview: {} as Review,
+    userScorecard: {} as Scorecard,
+    userScorecards: [],
+}
+
 const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards`;
 
 export const useScorecardStore = create<ScorecardStore>()(
     persist(
         (set, get) => ({
-            isSubmitting: false,
-            accessToken: {} as TokenConfig,
-            chatKey: '',
-            chatScorecard: {} as RoundScores,
-            chatToken: '',
-            activeGroupScorecard: {} as GroupScorecard,
-            fight: undefined,
-            fights: [],
-            fightComplete: false,
-            fighters: [],
-            fighterScores: {} as FighterScores,
-            fightSummary: {
-                ...fightSummaryStub
-            },
-            groupScorecard: undefined,
-            groupScorecards: [],
-            idToken: {} as TokenConfig,
-            prediction: null,
-            scorecards: [],
-            scoredRounds: 0,
-            selectedFight: {} as Fight,
-            selectedFightReviews: [],
-            selectedFightReview: {} as Review,
-            show: {} as Show,
-            stats: [],
-            tableData: [],
-            tokenExpired: false,
-            transformedPrediction: '',
-            user: {
-                ...userStub,
-            },
-            userFightReview: {} as Review,
-            userScorecard: {} as Scorecard,
-            userScorecards: [],
+            ...initialState,
             checkForUserFightReview: async (userId: string) => {
                 const url = process.env.REACT_APP_API + `/reviews/${userId}/user`;
                 const res = await axios.get(url, get().accessToken);
@@ -362,6 +366,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const url = process.env.REACT_APP_API + `/users/${get().user.sub}`;
                 const res = await axios.put(url, { username: get().user.username, email: get().user.email } , get().accessToken)
             },  
+            reset: () => set( state => initialState)
         }),
         {
             partialize: (state) => {
