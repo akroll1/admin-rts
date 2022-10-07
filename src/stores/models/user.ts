@@ -12,3 +12,12 @@ export interface User {
     sub: string
     username: string
 }
+
+export const userStub = {
+    email: '',
+    email_verified: false,
+    groups: [],
+    isLoggedIn: false,
+    sub: '',
+    username: ''
+}

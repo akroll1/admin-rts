@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Scorecard } from "./models/scorecard.model"
 import { CreateGroupScorecard, GroupScorecard, GroupScorecardSummary } from "./models/group-scorecard.model"
 import { capFirstLetters } from '../utils'
-import { Fight, Fighter, FighterScores, FightSummary, fightSummaryStub, Review, ReviewPut, RoundScores, Show, TokenConfig, User } from './models'
+import { Fight, Fighter, FighterScores, FightSummary, fightSummaryStub, Review, ReviewPut, RoundScores, Show, TokenConfig, User, userStub } from './models'
 
 interface ScorecardStore {
     accessToken: TokenConfig
@@ -92,7 +92,9 @@ export const useScorecardStore = create<ScorecardStore>()(
             tableData: [],
             tokenExpired: false,
             transformedPrediction: '',
-            user: {} as User,
+            user: {
+                ...userStub,
+            },
             userFightReview: {} as Review,
             userScorecard: {} as Scorecard,
             userScorecards: [],
@@ -188,7 +190,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const data = res.data as GroupScorecardSummary;
                 const [userScorecard] = data.scorecards.filter( scorecard => scorecard.ownerId === user.sub);
 
-                if(userScorecard.ownerId.includes('@')){
+                if(userScorecard.ownerId && userScorecard.ownerId.includes('@')){
                     const patchUrl = process.env.REACT_APP_API + `/scorecards/${userScorecard.scorecardId}`
                     const res = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, get().accessToken)
                 }
