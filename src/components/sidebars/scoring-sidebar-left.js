@@ -41,7 +41,7 @@ export const ScoringSidebarLeft = ({
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
     }
-    console.log('tabs: ', tabs)
+
     return (
         <Flex 
             display={tabs.info || tabs.all ? 'flex' : 'none'}
