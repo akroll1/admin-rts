@@ -25,7 +25,7 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
     const searchForFight = () => {
         if(fightId){
             setIsSubmitting(true);
-            const url = process.env.REACT_APP_FIGHTS + `/resolutions/${fightId}`;
+            const url = process.env.REACT_APP_API + `/fights/resolutions/${fightId}`;
             return axios.get(url, tokenConfig)
                 .then( res => setForm(res.data))
                 .catch( err => console.log(err))
@@ -34,7 +34,7 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
     };
     
     const handleSubmitResolution = () => {
-        const url = process.env.REACT_APP_FIGHTS + `/resolutions/${fightId}`;
+        const url = process.env.REACT_APP_API + `/fights/resolutions/${fightId}`;
         const resolutionObj = {
             officialResult: radio === `DR` ? `DR` : `${radio},${fightResolution}`,
             fightStatus: selectFightStatus

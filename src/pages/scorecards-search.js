@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import { useParams } from 'react-router'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 import axios from 'axios'
 import { ScorecardsPageScoringTable } from '../components/tables'
-import { ScorecardsSearch } from '../components/search'
+import { ScorecardsSearchBar } from '../components/search'
 import { ExpiredTokenModal } from '../components/modals'
 import { capFirstLetters } from '../utils'
 import { ScorecardsSearchTable } from '../components/tables/scorecards-search-table'
+import { useScorecardStore, useScoringStore } from '../stores'
+import { ScoringTable } from '../components/tables'
 
-export const Scorecards = () => {
-    const { tokenConfig } = stateStore.getState();
+export const ScorecardsSearch = () => {
+    const { tokenConfig } = useStateStore.getState();
     const { initialScorecardId, userId } = useParams();
     const [scorecardId, setScorecardId] = useState(initialScorecardId)
     const [search, setSearch] = useState('');
-    const [userScorecard, setUserScorecard] = useState({});
     const [searchResults, setSearchResults] = useState([]);
     const [searchedUsername, setSearchedUsername] = useState('')
     const [searchedUserScorecards, setSearchedUserScorecards] = useState([]);
@@ -23,86 +24,20 @@ export const Scorecards = () => {
     const [modals, setModals] = useState({
         expiredTokenModal: false
     });
+    const {
+        collateTableData
+    } = useScoringStore();
+    
+    const {
+        userScorecard,
+        userScorecards,
+    } = useScorecardStore();
 
     useEffect(() => {
-        if(scorecardId){
-            const getUserScorecard = async () => {
-                const url = process.env.REACT_APP_SCORECARDS + `/card/${scorecardId}`;
-                return axios.get(url, tokenConfig)
-                .then( res => {
-                    if(res.data.length > 0 && res.data?.includes('Token expired')) return setModals({ ...modals, expiredTokenModal: true });
-                    setUserScorecard(res.data)
-                }).catch( err => console.log(err))
-            }
-            getUserScorecard()
-        }
-    },[scorecardId]);
-    useEffect(() => {
-        if(userScorecard?.username){
-            getTableData(userScorecard);
+        if(userScorecard){
+            collateTableData(userScorecard);
         }
     },[userScorecard]);
-
-    const getTableData = userScorecard => {   
-        const s = [userScorecard].map( scorecard => {
-            const { fighterData, username } = scorecard;
-            const [fighter1, fighter2] = fighterData;
-            let { prediction } = scorecard.scorecard;
-            const { scores } = scorecard.scorecard;
-            const sortRoundAscending = (a, b) => a.round - b.round;
-
-            const getOfficialResultAndUserPrediction = () => {
-                // will always be 36, uuid.
-                const officialResult = scorecard.fight.officialResult.slice(0, 36) === fighter1.fighterId ? `${fighter1.lastName}` : `${fighter2.lastName}`;
-                // 38 here for a space in officialResult.
-                const officialHow = scorecard.fight.officialResult.slice(38);
-                const predictedWinner = prediction.slice(0, 36) === fighter1.fighterId ? `${fighter1.lastName}` : `${fighter2.lastName}`;
-                const predictedHow = prediction.slice(37);
-                setPrediction(`${capFirstLetters(predictedWinner)} ${predictedHow}`);
-                // setOfficialResult(`${capFirstLetters(officialResult)} ${officialHow}`)
-
-                return ({ 
-                    officialWinner: officialResult,
-                    officialHow,
-                    predictedWinner,
-                    predictedHow
-                });
-            }
-            
-            const totals = scores.reduce( (acc, curr) => {
-                if(curr[fighter1.lastName]){
-                    acc[fighter1.lastName] += curr[fighter1.lastName];
-                }
-                if(curr[fighter2.lastName]){
-                    acc[fighter2.lastName] += curr[fighter2.lastName];
-                }
-                return acc;
-            },{
-                [fighter1.lastName]: 0,
-                [fighter2.lastName]: 0
-            });
-            const mappedScores = scores.map( score => {
-                const { round } = score;
-                const f1name = fighter1.lastName;
-                const f2name = fighter2.lastName;
-                return ({
-                    round,
-                    [f1name]: score[fighter1.lastName] ? score[fighter1.lastName] : 0,
-                    [f2name]: score[fighter2.lastName] ? score[fighter2.lastName] : 0
-                })
-            })
-            .sort(sortRoundAscending);
-           
-            return ({
-                fighters: [fighter1, fighter2],
-                mappedScores,
-                prediction,
-                totals,
-                username,
-            })
-        })
-        setTableData(s);
-    }; 
 
     const getScorecardData = scorecard => {
         const [fighter1, fighter2] = scorecard.fighterData;
@@ -186,7 +121,7 @@ export const Scorecards = () => {
                 >
                     Search Scorecards
                 </Heading>
-                <ScorecardsSearch
+                <ScorecardsSearchBar
                     handleAutocompleteClick={handleAutocompleteClick}
                     handleUserSearch={handleUserSearch}    
                     search={search}
@@ -209,6 +144,7 @@ export const Scorecards = () => {
                     searchedUsername={searchedUsername} 
                 />
             }
+            <ScoringTable tabs={{ table: true }} />
         </Flex>
     )
 }

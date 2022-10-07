@@ -4,7 +4,6 @@ import { SettingsIcon } from '@chakra-ui/icons'
 import { FaListOl, FaEdit, FaRegBell, FaRegChartBar, FaRegQuestionCircle, FaUser, FaUserFriends } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
-import { MyScorecards } from './my-scorecards'
 import { CreateGroupScorecard } from './create-scorecard'
 import { 
   MyAccountForm, 
@@ -21,28 +20,25 @@ import {
   ShowForm 
 } from '../components/forms'
 import { MyPoundList } from '../components/lists'
-import { ExpiredTokenModal } from '../components/modals'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
-import { capFirstLetters } from '../utils'
-import { stateStore } from '../stores'
+import { ExpiredTokenModal } from '../components/modals'
+import { useStateStore } from '../stores'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
   const [modals, setModals] = useState({
     expiredTokenModal: false
   });
-  const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = stateStore( state => state);
+  const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = useStateStore( state => state);
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
-    { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaEdit, link: '/dashboard/scorecards' },
+    // { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaEdit, link: '/dashboard/scorecards' },
     { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound-list' },
     { value: "ACCOUNT", label:"Account Settings", type: 'User', icon: SettingsIcon, link: '/dashboard/account' },
     // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
     // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
-  const [scorecards, setScorecards] = useState(null);
 
   useEffect(() => {
     const setAuth = () => {
@@ -61,65 +57,6 @@ const Dashboard = props => {
       }
     }
     setAuth()
-  },[])
-  console.log('userScorecards: ', userScorecards)
-  // getScorecards && check if user exists.
-  useEffect(() => {
-    const getUserScorecards = async () => {
-      // this needs to be two promises, or figure out what's happening in prod, why nothing comes back sometimes.
-      const url = process.env.REACT_APP_SCORECARDS + `/${encodeURIComponent(user.sub)}-${encodeURIComponent(user.email)}`;
-      return axios.get(url, tokenConfig)
-        .then(res => {
-          if(res.data.includes('Token expired')){
-            return setModals({ ...modals, expiredTokenModal: true });
-          }
-          if(res.data?.length > 0 ) setUserScorecards(res.data)
-          // console.log('res: ',res);
-          const data = res.data?.map(obj => {
-            const { fighterData, fightStatus, scorecard } = obj;
-            const { finalScore, groupScorecardId, ownerId, rounds, scorecardId, scores } = scorecard;
-            if(ownerId.includes('@')){
-              const patchUrl = process.env.REACT_APP_SCORECARDS + `/${scorecardId}`;
-              const setOwnerId = axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, tokenConfig)
-                .then( res => res).catch( err => console.log(err));
-            }
-            const [fighter1, fighter2] = fighterData.map( ({ lastName }) => lastName);
-            const setPrediction = prediction => {
-                if(prediction){
-                    const [prediction] = fighterData.filter( fighter => fighter.fighterId === scorecard.prediction.slice(0,36));
-                    return `${capFirstLetters(prediction.lastName)} ${scorecard.prediction.slice(37)}`;
-                }
-                    return `No Prediction`
-            }
-            const prediction = setPrediction(scorecard.prediction);
-            const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
-            return ({
-              fightStatus,
-              finalScore,
-              groupScorecardId,
-              label,
-              prediction,
-              rounds,
-              scorecardId
-            })
-          });
-          // put scorecard info in for scorecards switcher.
-          if(res.data.length > 0){
-            setScorecards(data)
-            setUserScorecards(data)
-          }
-        }).catch(err => console.log(err))
-      } 
-      getUserScorecards();
-
-      // put user data into DB.
-      const updateUser = async () => {
-        // put a check on here so this isn't called every time.
-        const url = process.env.REACT_APP_USERS + `/${user.sub}`;
-        return await axios.put(url, { username: user.username, email: user.email } , tokenConfig)
-          .then( res => setUser({ ...user, ...res.data })).catch( err => console.log(err));
-      }
-      updateUser();
   },[])
 
   const handleFormSelect = e => {
@@ -194,7 +131,7 @@ const Dashboard = props => {
         borderRadius="md" 
         mt={0}
       >
-        { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} user={user} /> }
+        {/* { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} user={user} /> } */}
         { form === 'POUND' && <MyPoundList tokenConfig={tokenConfig} user={user} /> }
         { form === 'ACCOUNT' && <MyAccountForm tokenConfig={tokenConfig} user={user} /> }
         { form === 'PANELS_MEMBER' && <MyPanelsForm tokenConfig={tokenConfig} user={user} /> }

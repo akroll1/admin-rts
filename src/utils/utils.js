@@ -93,26 +93,30 @@ export const isValidEmail = email => {
     // console.log('validate email: ',re.test(email));
     return re.test(email) ? true : false;
 }
+
 export const removeBadEmails = emails => {
     return emails.filter( email => email != undefined && email.length > 0);
 }
 
 export const transformedWeightclass = weightclass => {
-    let temp;
-    if(weightclass.includes('LIGHT')){
-        if(weightclass.includes('LIGHTWEIGHT')){
-            return `${weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
-        }
-        temp = weightclass
+    if(weightclass){
+        
+        let temp;
+        if(weightclass.includes('LIGHT')){
+            if(weightclass.includes('LIGHTWEIGHT')){
+                return `${weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
+            }
+            temp = weightclass
             .slice(5).
             toLowerCase();
-        return `Light ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+            return `Light ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+        }
+        if(weightclass.includes('SUPER')){
+            temp = weightclass
+            .slice(5).
+            toLowerCase();
+            return `Super ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+        }
+        return `${ weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
     }
-    if(weightclass.includes('SUPER')){
-        temp = weightclass
-        .slice(5).
-        toLowerCase();
-        return `Super ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
-    }
-    return `${ weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
 }

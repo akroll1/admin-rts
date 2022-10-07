@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
-import { DividerWithText } from '../../../chakra'
 import { capFirstLetters } from '../../../utils'
-import { stateStore } from '../../../stores'
+import { useScorecardStore } from '../../../stores'
 
 export const FightStats = (props) => {
     const { label, tabs, value, ...boxProps } = props;
-    const { stats } = stateStore.getState();
+    const { 
+        stats
+    } = useScorecardStore();
 
     const [fighters, setFighters] = useState(null);
     
@@ -58,7 +59,7 @@ export const FightStats = (props) => {
     
     return (
         <Flex
-            display={window.innerWidth <= 768 && tabs.analytics ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
+            display={tabs.all || tabs.table ? 'flex' : 'none'}
             flexDirection="column"
             px="2"
             bg="bg-surface"
@@ -67,23 +68,23 @@ export const FightStats = (props) => {
             {...boxProps}
             alignItems="center"
             justifyContent="space-evenly"
+            w={["100%", "70%", "50%"]}
         >
-            <DividerWithText text={`Group Analytics`} />
             <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-evenly">
 
                 <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="sm" color="muted">
+                    <Text m="auto" fontSize="lg" color="muted">
                         {capFirstLetters(fighter1)}
                     </Text>
-                    <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
+                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
                         {fighter1Percentage ? fighter1Percentage : 0}&#37;	
                     </Heading>
                 </Stack>
                 <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="sm" color="muted">
+                    <Text m="auto" fontSize="lg" color="muted">
                         {capFirstLetters(fighter2)}
                     </Text>
-                    <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
+                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
                         {fighter2Percentage ? fighter2Percentage : 0}&#37;	
                     </Heading>
                 </Stack>

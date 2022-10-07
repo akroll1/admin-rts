@@ -27,9 +27,10 @@ export const ShowForm = ({ user, tokenConfig }) => {
     const searchForShow = () => {
         if(showId){
             setIsSubmitting(true);
-            const url = process.env.REACT_APP_SHOWS + `/${showId}`;
+            const url = process.env.REACT_APP_API + `/shows/${showId}`;
             return axios.get(url, tokenConfig)
                 .then( res => {
+                    console.log('res: ', res)
                     let { showTime } = res.data;
                     const time = parseISO(new Date(showTime).toISOString());
                     setForm({ ...res.data, showTime: time })
@@ -41,7 +42,7 @@ export const ShowForm = ({ user, tokenConfig }) => {
 
     const handlePostShow = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_SHOWS;
+        const url = process.env.REACT_APP_API + `/shows`;
         const { showTime, fightIds } = form;
         let postObj = Object.assign(form, {showTime: createTimestamp(showTime)}, {fightIds: [fightIds[0]]})
         // console.log('postObj: ', postObj);
@@ -59,7 +60,7 @@ export const ShowForm = ({ user, tokenConfig }) => {
     }
     const handlePutShow = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_SHOWS + `/${showId}`;
+        const url = process.env.REACT_APP_API + `/shows/${showId}`;
         const { guestScorerIds, location, showName, network, promoter, showStoryline, showStatus } = form;
         let { showTime } = form;
 
@@ -92,7 +93,7 @@ export const ShowForm = ({ user, tokenConfig }) => {
 
     const deleteShow = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_SHOWS + `/${showId}`;
+        const url = process.env.REACT_APP_API + `/shows/${showId}`;
 
         return axios.delete(url, tokenConfig)
             .then( res => {

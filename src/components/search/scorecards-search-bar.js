@@ -3,7 +3,7 @@ import { SearchIcon } from '@chakra-ui/icons'
 import { Flex, Input, InputGroup, InputLeftElement, Select } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 
-export const ScorecardsSearch = ({ 
+export const ScorecardsSearchBar = ({ 
   handleAutocompleteClick,
   handleUserSearch,
   search,
@@ -28,7 +28,7 @@ export const ScorecardsSearch = ({
           w="100%"
           value={search}
           onChange={handleUserSearch}
-          placeholder="Search"
+          placeholder="Username"
           bg="whiteAlpha.400"
           border={0}
           focusBorderColor="whiteAlpha.800"

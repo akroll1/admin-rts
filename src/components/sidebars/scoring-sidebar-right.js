@@ -1,15 +1,17 @@
-import React, { useState, createRef, useRef, useEffect } from 'react'
-import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
+import React, { useState, useEffect } from 'react'
+import { Flex } from '@chakra-ui/react'
 import { ChatSidebar, FightStats } from './chat-sidebar-components'
-import { stateStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 import { Notification } from '../notifications'
 
 export const ScoringSidebarRight = ({
-    chatKey, 
-    username, 
-    setIncomingScore,
     tabs,
 }) => {    
+    const {
+        activeGroupScorecard
+    } = useScorecardStore()
+    const chatKey = activeGroupScorecard.chatKey
+    
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
     useEffect(() => {
@@ -32,16 +34,15 @@ export const ScoringSidebarRight = ({
     };
     return (
         <Flex 
-            display={tabs.chat || tabs.analytics ? 'flex' : 'none'}
+            display={(tabs.all || tabs.chat) ? 'flex' : 'none'}
             id="scoring-sidebar-right"
             flexDir="column" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             w="100%" 
-            minH="100%"
             p="2" 
-            bg="gray.900" 
+            bg={tabs.all ? "fsl-sidebar-bg" : "inherit"}
             borderRadius="md" 
-            overflowY="scroll"
+            minH={tabs.chat ? "75vh" : "100%"}
         > 
             <Flex 
                 w={["100%","auto"]} 
@@ -62,13 +63,9 @@ export const ScoringSidebarRight = ({
                     /> 
                 )})}
             </Flex>  
-            <FightStats tabs={tabs} />
             <ChatSidebar 
                 setNotifications={setNotifications}
                 setNotificationTimeout={setNotificationTimeout}
-                setIncomingScore={setIncomingScore}
-                chatKey={chatKey}
-                username={username}
                 tabs={tabs} 
             />
         </Flex>

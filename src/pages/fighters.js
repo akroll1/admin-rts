@@ -6,19 +6,19 @@ import { useParams } from 'react-router'
 import { FightersSidebar } from '../components/sidebars'
 import { FightersPageFighterProfile } from '../components/sidebars'
 import { FightersPageFightersForm } from '../components/fighters-page'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 
 const Fighters = () => {
     const location = useLocation();
     const { id } = useParams();
     const [fighterId, setFighterId] = useState(id);
-    const { tokenConfig } = stateStore.getState();
+    const { tokenConfig } = useStateStore.getState();
     const [fighters, setFighters] = useState([]);
     const [ selectedFighter, setSelectedFighter] = useState({});
     
     useEffect(() => {
         const getAllFighters = async () => {
-            const url = process.env.REACT_APP_FIGHTERS;
+            const url = process.env.REACT_APP_API + `/fighters`;
             return await axios.get(url, tokenConfig)
                 .then(res => {
                     setFighters(res.data)
@@ -32,7 +32,7 @@ const Fighters = () => {
     useEffect(() => {  
         if(fighterId){
             const getFighter = async () => {
-                const url = process.env.REACT_APP_FIGHTERS + `/${fighterId}`;
+                const url = process.env.REACT_APP_API + `/fighters/${fighterId}`;
                 return await axios.get(url, tokenConfig)
                 .then( res => setSelectedFighter(res.data))
                 .catch( err => console.log(err))

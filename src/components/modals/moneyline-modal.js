@@ -2,16 +2,17 @@ import React, {useState} from 'react'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { ScoringMoneylineTable } from '../tables'
 import { CustomOverlay } from '../custom-overlay'
-
+import { useScorecardStore } from '../../stores'
 export const MoneylineModal = ({
-  fighterData,
   modals,
   props,
   setModals,
-  totalRounds
 }) => {
   const [overlay, setOverlay] = useState(<CustomOverlay />)
-  
+  const {
+    fight,
+    fighters
+  } = useScorecardStore()
   return (
     <Modal 
       size="lg"
@@ -22,12 +23,12 @@ export const MoneylineModal = ({
     >
       <ModalOverlay/>
       <ModalContent>
-        {/* <ModalHeader textAlign="center">Scoring Props</ModalHeader> */}
+        <ModalHeader textAlign="center">FightSync Props</ModalHeader>
         <ModalBody>
           <ScoringMoneylineTable 
-            fighterData={fighterData} 
+            fighters={fighters} 
             props={props} 
-            totalRounds={totalRounds}
+            totalRounds={fight?.totalRounds}
           />
         </ModalBody>
         <ModalFooter 
@@ -36,7 +37,11 @@ export const MoneylineModal = ({
           alignItems="center" 
           justifyContent="center"
         >
-          <Button minW="40%" onClick={() => setModals(modals => ({ ...modals, moneylineModal: false}))} colorScheme="blue">
+          <Button 
+            minW="40%" 
+            onClick={() => setModals(modals => ({ ...modals, moneylineModal: false}))} 
+            colorScheme="solid"
+          >
             Close
           </Button>
         </ModalFooter>

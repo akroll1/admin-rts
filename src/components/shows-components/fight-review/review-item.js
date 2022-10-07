@@ -5,26 +5,24 @@ import { parseEpoch} from '../../../utils/utils'
 import { ReviewPostStars } from '../../stars'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
+
 export const ReviewItem = ({ 
-  handleLikeClick,
   reviewItem 
 }) => {
   const [localLikes, setLocalLikes] = useState(0);
   const [clickedUP, setClickedUP] = useState(false)
   const [clickedDOWN, setClickedDOWN] = useState(false)
   const { createdAt, likes, rating, review, reviewId, title, username } = reviewItem;
+
   useEffect(() => {
     setLocalLikes(likes > 0 ? likes * Math.ceil(Math.random()*100) : 1)
   },[likes]);
 
   const handleVote = type => {
     if(type === 'up' && !clickedUP){
-      setLocalLikes(localLikes + 1);
-      setClickedUP(true);
-      handleLikeClick(reviewId, type);
+      console.log('Liked!')
     } else if(type ==='down' && !clickedDOWN) {
-      setClickedDOWN(true);
-      handleLikeClick(reviewId, type);
+      console.log('Downvoted.')
     }
   }
 

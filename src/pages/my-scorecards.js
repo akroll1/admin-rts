@@ -1,15 +1,35 @@
-import React from 'react'
-import { Heading, Center } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { MyScorecardsTable } from '../components/tables'
+import { ExpiredTokenModal } from '../components/modals'
+import { useScorecardStore } from '../stores'
 
-export const MyScorecards = ({ scorecards }) => {
+export const MyScorecards = () => {
+  const [modals, setModals] = useState({
+      expiredTokenModal: false
+  });
+
+
+  const {
+    fetchUserScorecards,
+    userScorecards,
+  } = useScorecardStore();
+
+    useEffect(() => {
+      if(userScorecards.length < 1){
+        fetchUserScorecards()
+      }
+    },[userScorecards])
+    console.log('userScorecards: ', userScorecards)
     return (
-        <>
-            <Center>
-                <Heading p="4" as="h1" size="xl">My Scorecards</Heading>
-            </Center>
-            <MyScorecardsTable scorecards={scorecards} />
-        </>
+        <Flex flexDir="column" p="4">
+            <ExpiredTokenModal 
+                modals={modals}
+                setModals={setModals}
+            />
+            <Heading textAlign="center">Scorecards</Heading>
+            <MyScorecardsTable scorecards={userScorecards} />
+        </Flex>
     )
 }
 export default MyScorecards

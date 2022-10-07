@@ -1,0 +1,7 @@
+export * from './fight.model'
+export * from './fighter.model'
+export * from './group-scorecard.model'
+export * from './review.model'
+export * from './scorecard.model'
+export * from './show.model'
+export * from './user'

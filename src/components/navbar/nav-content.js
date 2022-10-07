@@ -1,23 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, Button, Flex, HStack,useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Flex, HStack,MenuButton,useDisclosure } from '@chakra-ui/react'
 import { NavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
 import { ToggleButton, Submenu } from '../../chakra'
 import { links } from './navbar_data'
+import { ProfileButton } from './profile-button'
 import { useNavigate } from 'react-router'
 
 const MobileNavContext = props => {
-  const { isLoggedIn, setIsLoggedIn } = props;
-  const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
-  const handleButtonClick = () => {
-    if(isLoggedIn){
-      setIsLoggedIn(false);
-      sessionStorage.clear();
-      return navigate('/');
-    }
-    return navigate("/signin")
-  }
+
   return (
     <>
       <Flex 
@@ -40,23 +32,14 @@ const MobileNavContext = props => {
             </NavLink.Mobile>
           ),
         )}
-          <Button 
-            colorScheme="blue" 
-            w="full" 
-            size="sm" 
-            onClick={handleButtonClick}
-          >
-            {isLoggedIn ? `Sign Out` : `Sign In`}
-          </Button>
+          <ProfileButton />
       </NavMenu>
     </>
   )
 }
 
 const DesktopNavContent = props => {
-  const { isLoggedIn, setIsLoggedIn } = props;
   const navigate = useNavigate();
-
   // const message = stateStore.getState().broadcast;
   // const username = stateStore.getState().username;
   // const [broadcast, setBroadcast] = useState('');
@@ -118,17 +101,26 @@ const DesktopNavContent = props => {
 
 
   // const isLoggedIn = socketActive() ? true : false;
-  const handleButtonClick = () => {
-    if(isLoggedIn){
-      setIsLoggedIn(false);
-      sessionStorage.clear();
-      return navigate('/');
-    }
-    return navigate("/signin")
-  }
+
   return (
     <Flex className="nav-content__desktop" align="center" justify="space-between" {...props}>
-      <Button onClick={() => navigate('/')} bg="transparent" to="/">FightSync</Button>
+      <Button
+        colorScheme="solid"
+        _hover={{ 
+          background: 'transparent',
+          color: 'white'  
+        }} 
+        _focus={{ 
+          boxShadow: 'none !important',
+          color: 'white'
+        }}
+        color="#c8c8c8" 
+        onClick={() => navigate('/')} 
+        background="transparent"
+        to="/"
+      >
+        FightSync
+      </Button>
       <HStack as="ul" id="nav__primary-menu" aria-label="Main Menu" listStyleType="none">
         {links.map((link, idx) => (
           <Box as="li" key={idx} id={`nav__menuitem-${idx}`}>
@@ -141,9 +133,7 @@ const DesktopNavContent = props => {
         ))}
       </HStack>
       <HStack spacing="8" minW="200px" justify="space-between">
-        <Button colorScheme="blue" w="full" size="sm" onClick={handleButtonClick}>
-          {isLoggedIn ? `Sign Out` : `Sign In`}
-        </Button>
+        <ProfileButton />
       </HStack>
     </Flex>
   )

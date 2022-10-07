@@ -3,9 +3,14 @@ import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLa
 import { FieldGroup } from '../../chakra'
 import { DeleteIcon } from '@chakra-ui/icons'
 import axios from 'axios'
-import { FIGHT_STATUS_SELECT_CONSTANTS, ROUND_LENGTH_ENUMS,  WEIGHTCLASS_ENUMS } from '../../utils'
+import { FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM, ROUND_LENGTH_ENUMS, WEIGHTCLASS_ENUMS } from '../../utils'
+import { useScorecardStore } from '../../stores'
 
-export const FightForm = ({ user, tokenConfig }) => {
+export const FightForm = () => {
+    const { 
+        accessToken,
+        user
+    } = useScorecardStore();
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightId, setFightId] = useState(null);
@@ -35,9 +40,10 @@ export const FightForm = ({ user, tokenConfig }) => {
     
     const handlePutFight = () => {
         setIsSubmitting(true);
-        const fightObj = Object.assign(Object.create({}), form, {fighterIds: [fighterAId, fighterBId]}, { guestJudgeIds })
-        const url = process.env.REACT_APP_FIGHTS + `/${fightId}`;
-        return axios.put(url, fightObj, tokenConfig)
+        const judgeIds = guestJudgeIds.length > 0 ? guestJudgeIds : null;
+        const fightObj = Object.assign(Object.create({}), form, {fighterIds: [fighterAId, fighterBId]}, { guestJudgeIds: judgeIds })
+        const url = process.env.REACT_APP_API + `/fights/${fightId}`;
+        return axios.put(url, fightObj, accessToken)
             .then( res => {
                 if(res.status === 200){
                     toast({ title: 'Fight updated!',
@@ -52,10 +58,11 @@ export const FightForm = ({ user, tokenConfig }) => {
     
     const handlePostFight = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_FIGHTS;
-        const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId]})
+        const url = process.env.REACT_APP_API +`/fights`;
+        // TODO: I don't want odds on post, remove.
+        const postObj = Object.assign({}, form, {fighterIds: [fighterAId, fighterBId], rounds: parseInt(form.rounds)})
         console.log('postObj: ', postObj)
-        return axios.post(url, postObj, tokenConfig)
+        return axios.post(url, postObj, accessToken)
             .then( res => {
                 if(res.status === 200){
                     console.log('FIGHT: ', res.data);
@@ -70,8 +77,8 @@ export const FightForm = ({ user, tokenConfig }) => {
     
     const searchForFight = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_FIGHTS + `/${fightId}`
-        return axios.get(url, tokenConfig)
+        const url = process.env.REACT_APP_API + `/fights/${fightId}`;
+        return axios.get(url, accessToken)
             .then( res => {
                 if(res.status === 200){
                     const { fighterIds } = res.data;
@@ -85,8 +92,8 @@ export const FightForm = ({ user, tokenConfig }) => {
     };
     const deleteFight = () => {
         setIsSubmitting(true);
-        const url = process.env.REACT_APP_FIGHT + `/${fightId}`;
-        return axios.delete(url, tokenConfig)
+        const url = process.env.REACT_APP_API + `/fights/${fightId}`;
+        return axios.delete(url, accessToken)
             .then( res => console.log('res: ', res))
             .catch( err => console.log(err))
             .finally(() => setIsSubmitting(false));
@@ -183,7 +190,7 @@ export const FightForm = ({ user, tokenConfig }) => {
                                 <FormControl id="officialResult">
                                     <FormLabel htmlFor="officialResult">Official Result</FormLabel>
                                     <Select placeholder={form.officialResult || 'Official Result'} onChange={handleFormChange}>
-                                        { WEIGHTCLASS_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                        { OFFICIAL_RESULTS_ENUM.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                     </Select>
                                 </FormControl>
                                     <FormControl id="winnderId">

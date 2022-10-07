@@ -4,8 +4,8 @@ import { MdWeb } from 'react-icons/md'
 
 export const links = [
   { label: 'Shows', href: '/shows' },
-  { label: 'Analytics', href: '/analytics' },
-  { label: 'Dashboard', href: '/dashboard/scorecards' },
+  // { label: 'Analytics', href: '/analytics' },
+  { label: 'Scorecards', href: '/scorecards' },
   {
     label: 'FightCloud',
     children: [
@@ -28,9 +28,9 @@ export const links = [
         icon: <MdWeb />,
       },
       {
-        label: 'Counter-Punch',
+        label: 'FightSync Live!',
         description: 'The boxing trivia game show you can play, too!',
-        href: '/counterpunch',
+        href: '/live',
         icon: <IoCalendar />,
       },
     ],

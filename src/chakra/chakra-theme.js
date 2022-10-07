@@ -6,7 +6,7 @@ const config = {
 };
 export const colors = {
     white: {
-      base: '#fff',
+      base: '#000',
       light: '#f0f0f0',
       grey: '#cecece',
       dark: '#a0afd7',
@@ -64,49 +64,9 @@ export const colors = {
     easeOutBack: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
     duration: '0.4s',
   };
+
   
-  export const myTheme = {
-    colors,
-    gradient,
-    shadow,
-    breakpoints: {
-      xs: '400px',
-      s: '600px',
-      m: '900px',
-      l: '1200px',
-    },
-    fontFamily: {
-      // eslint-disable-next-line
-      body: `Open Sans,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
-      // eslint-disable-next-line
-      heading: `Candal, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
-    },
-    layout: {
-      article: '46rem',
-      base: '70rem',
-      big: '83.33333rem',
-    },
-    borderRadius: {
-      default: '0.4rem',
-      round: '100rem',
-    },
-    transitions: {
-      default: {
-        duration: transition.duration,
-        timing: transition.easeInOutCubic,
-        transition: `all ${transition.duration} ${transition.easeInOutCubic}`,
-      },
-      boom: {
-        duration: transition.duration,
-        timing: transition.easeOutBack,
-        transition: `all ${transition.duration} ${transition.easeOutBack}`,
-      },
-      headroom: {
-        transition: 'all 0.25s ease-in-out',
-      },
-    },
-  };
-  
-  const theme = extendTheme({ config, colors, shadow, myTheme});
+  const theme = extendTheme({ ...config, ...colors, ...shadow, ...transition });
+
   export default theme;
   

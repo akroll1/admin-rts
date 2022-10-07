@@ -1,6 +1,7 @@
-import { Link, useColorModeValue as mode } from '@chakra-ui/react'
 import * as React from 'react'
-import { Link as RRLink } from 'react-router-dom'
+import { Link, useColorModeValue as mode } from '@chakra-ui/react'
+import { NavLink as RRLink } from 'react-router-dom'
+// import { NavLink } from 'react-router';
 
 const DesktopNavLink = React.forwardRef((props, ref) => {
   const { active, href, ...rest } = props;
@@ -18,13 +19,15 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
       transition="all 0.2s"
       {...rest}
       _hover={{
-        color: 'gray.500', 
+        color: 'white', 
       }}
       _active={{
-        color: 'blue.600',
+        color: 'white',
+        boxShadow: 'none !important'
       }}
       _activeLink={{
-        color: 'blue.600',
+        boxShadow: 'none !important',
+        color: 'white',
         fontWeight: 'bold',
       }}
     />

@@ -5,14 +5,14 @@ import { AnalyticsSidebar } from '../components/sidebars'
 import { AnalyticsMain } from '../components/analytics'
 import { ExpiredTokenModal, MoneylineModal } from '../components/modals'
 import { AnalyticsTable } from '../components/tables'
-import { stateStore } from '../stores'
+import { useStateStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import axios from 'axios'
 
 const Analytics = () => {
     const { getShowId } = useParams(); // showId: /c8734c80-16e6-46d1-90f4-c103de4b8b92
     const windowWidth = useWindowResize();
-    const { tokenConfig } = stateStore.getState();
+    const { tokenConfig } = useStateStore.getState();
     const [tabs, setTabs] = useState({
         sidebar: false,
         scoring: true, 

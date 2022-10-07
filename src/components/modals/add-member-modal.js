@@ -53,7 +53,7 @@ export const AddMemberModal = ({
                     isLoading={isSubmitting} 
                     loadingText="Submitting" 
                     minW="50%" 
-                    colorScheme="blue"
+                    colorScheme="solid"
                 >
                     Add Member
                 </Button>

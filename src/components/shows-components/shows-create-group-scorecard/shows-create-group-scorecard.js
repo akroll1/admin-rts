@@ -23,8 +23,30 @@ export const ShowsCreateGroupScorecard = ({
                         { members.map((member, i) => {
                             return (
                                 <InputGroup key={i}>
-                                    <Input size="md" readOnly key={member} value={members[i]} placeholder="first.last@email.com" type="email" maxLength={255} />
-                                    <InputRightElement children={<DeleteIcon id={member} onClick={deleteMember} _hover={{cursor: 'pointer', color: 'gray'}} color="white" />} />
+                                    <Input 
+                                        mb="1"
+                                        size="md" 
+                                        readOnly 
+                                        key={member} 
+                                        value={members[i]} 
+                                        placeholder="first.last@email.com" 
+                                        type="email" 
+                                        maxLength={255} 
+                                        color={i == 0 ? 'lightgray' : 'white'}
+                                    />
+                                    <InputRightElement 
+                                        display={i === 0 ? 'none' : 'flex'} 
+                                        children={
+                                            <DeleteIcon 
+                                                id={member} 
+                                                onClick={deleteMember} 
+                                                _hover={{cursor: 'pointer', color: 'gray'}} 
+                                                color="white" 
+                                                alignItems="center"
+                                                justifyContent="center"
+                                            />
+                                        } 
+                                    />
                                 </InputGroup>
                             )
                         })}
@@ -32,19 +54,20 @@ export const ShowsCreateGroupScorecard = ({
                             onChange={e => handleFormChange(e)} 
                             value={ emailValue } 
                             id="emailValue" 
-                            _focus={{color: 'black',background: 'lightgray'}} 
+                            // _focus={{color: 'black',background: 'lightgray'}} 
                             mt="4" 
                             placeholder="email@example.com" 
                             type="email" maxLength={255} 
                         />
                         <Flex m="auto" alignItems="center" justifyContent="center" flexDir={['column', 'row']}>     
                             <Button 
-                                colorScheme="blue" 
                                 onClick={ handleEmailSubmit } 
                                 leftIcon={<AddIcon />} 
                                 m="2"
                                 mt={["4"]}
                                 type="button"
+                                colorScheme="solid" 
+                                size="lg"
                             >
                                 Add Members
                             </Button>
@@ -55,7 +78,7 @@ export const ShowsCreateGroupScorecard = ({
                                 mt={["4"]} 
                                 onClick={handleCreateGroupScorecard} 
                                 type="button" 
-                                colorScheme="blue"
+                                colorScheme="solid"
                             >
                                 Create Scorecard
                             </Button>
