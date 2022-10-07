@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
 import { useScorecardStore } from '../../stores'

@@ -20,7 +20,7 @@ export const MyScorecardsTable = ({ scorecards }) => {
   ];
   return (
     <Box 
-      w="80%" 
+      w="100%" 
       as="section" 
       py="4" 
       mx="auto" 

@@ -29,9 +29,9 @@ export const MyScorecardsTableContent = ({
               <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
                 Score
               </Th>
-              <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
+              {/* <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
                 Link
-              </Th>
+              </Th> */}
           </Tr>
         </Thead>
         <Tbody>
@@ -66,9 +66,9 @@ export const MyScorecardsTableContent = ({
                 <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
                   { renderScoreOrStatus() }                      
                 </Td>
-                <Td onClick={() => navigate(`/scorecards/${scorecardId}`)} textAlign="center" whiteSpace="nowrap">
+                {/* <Td onClick={() => navigate(`/scorecards/${scorecardId}`)} textAlign="center" whiteSpace="nowrap">
                   <ExternalLinkIcon /> 
-                </Td>
+                </Td> */}
               </Tr>
           )})}
         </Tbody>
