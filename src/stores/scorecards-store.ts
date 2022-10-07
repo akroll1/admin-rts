@@ -156,7 +156,6 @@ export const useScorecardStore = create<ScorecardStore>()(
                         prediction
                     })
                 })
-                console.log('COLLATED: ', collated)
                 set({ 
                     tableData: collated, 
                     stats: collated 
