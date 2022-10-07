@@ -182,8 +182,8 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.get(`${groupScorecardsUrl}/${groupScorecardId}/summary`, get().idToken);
                 console.log('GroupScorecard summary: ', res)
                 if(res.data === `Token expired!`){
-                get().setTokenExpired(true)
-                return
+                    get().setTokenExpired(true)
+                    return
                 }
                 const data = res.data as GroupScorecardSummary;
                 const [userScorecard] = data.scorecards.filter( scorecard => scorecard.ownerId === user.sub);

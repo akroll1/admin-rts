@@ -114,7 +114,7 @@ const Scoring = () => {
     },[chatScorecard])
 
     useEffect(() => {
-        if(fight?.guestJudgeIds.length > 0){
+        if(fight?.guestJudgeIds?.length > 0){
             fetchGuestJudgeScorecards()
         }
     },[fight])

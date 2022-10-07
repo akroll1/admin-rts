@@ -8,11 +8,25 @@ export const FighterInfoCard = props => {
   const { fighterId, firstName, lastName, ringname, bio, isVerified, ...stackProps } = props;
 
   return (
-    <Flex style={{cursor: 'pointer'}} flexDir="column" alignItems="center" onClick={() => navigate(`/fighters/${fighterId}`)}>
+    <Flex 
+      _hover={{cursor: 'pointer'}} 
+      flexDir="column" 
+      alignItems="center" 
+      // onClick={() => navigate(`/fighters/${fighterId}`)}
+    >
       <Avatar size="lg" />
       <VStack spacing="1" flex="1">
         <HStack>
-          <Text fontSize="lg" m="2" p="2" mb="0" textAlign="center" fontWeight="bold">{capFirstLetters(firstName)} {capFirstLetters(lastName)}</Text>
+          <Text 
+            fontSize="lg" 
+            m="2" 
+            p="2" 
+            mb="0" 
+            textAlign="center" 
+            fontWeight="bold"
+          >
+            {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`}
+          </Text>
         </HStack>
         <Text
           fontSize="sm"

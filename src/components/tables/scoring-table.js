@@ -70,7 +70,7 @@ export const ScoringTable = ({
                 h="auto"
             >      
                 <Table 
-                    id="scoring-table"
+                    id="scoring_table"
                     style={{tableLayout:'auto', width: '100%'}} 
                     overflowX="scroll" 
                     overflowY="scroll" 
@@ -144,7 +144,11 @@ export const ScoringTable = ({
                                         
                                         if(i === 0){
                                             return (
-                                                <Td className='first' key={i} p="0">
+                                                <Td 
+                                                    className='firstTd' 
+                                                    key={i} 
+                                                    p="0"
+                                                >
                                                     {element}
                                                 </Td>
                                             )
@@ -158,13 +162,13 @@ export const ScoringTable = ({
                                                             <Flex 
                                                                 color={i >= mappedScores.length ? 'transparent' : "white"}
                                                                 borderRadius="2px"
-                                                                // borderX={(i) % 2 == 0 ? (i) >= currentRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
                                                                 w="100%"
                                                                 p="1"
                                                                 bg={roundScores[fighter1] ? "#4C4C4C" : "#383838"}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
+                                                                // style={currentRound === (i+1) ? { border: '2px solid white' } : (i+1) == roundKO && (transformedPrediction == fighter1) ? currentRound === (i+1) ? { border: '2px solid #e56a54' } : { border:'1px solid white' } : { border: '1px solid #656565' } }
                                                                 style={(i+1) == roundKO && (transformedPrediction == fighter1) ? currentRound === (i+1) ? { border: '2px solid #e56a54' } : { border:'1px solid white' } : { border: '1px solid #656565' } }
                                                             >   
                                                                 {roundScores[fighter1]}
@@ -188,23 +192,37 @@ export const ScoringTable = ({
                                         }
                                         if(i === 2){
                                             return (
-                                                <Td p="0" key={i+44}>
-                                                    <Flex p="0" flexDirection="column" alignItems="center" justifyContent="center">
+                                                <Td 
+                                                    className="scoreTd"
+                                                    p="0" 
+                                                    key={i+44}
+                                                >
+                                                    <Flex 
+                                                        className="scoresTotal"
+                                                        p="0" 
+                                                        flexDirection="column" 
+                                                        alignItems="center" 
+                                                        justifyContent="center"
+                                                    >
                                                         <Flex 
+                                                            className="scores"
+                                                            bg="fsl-red"
                                                             fontWeight="bold" 
-                                                            fontSize="md" 
-                                                            color="gray.400" 
+                                                            fontSize="lg" 
+                                                            color="whiteAlpha.800" 
                                                             flexDirection="column" 
                                                             alignItems="center" 
                                                             justifyContent="center" 
                                                             w="100%"
-                                                        >
+                                                            >
                                                             {totals[fighter1]}
                                                         </Flex>
                                                         <Flex 
+                                                            className="scores"
+                                                            bg="fsl-scoring-blue"
                                                             fontWeight="bold" 
-                                                            fontSize="md" 
-                                                            color="whiteAlpha.900" 
+                                                            fontSize="lg" 
+                                                            color="whiteAlpha.800" 
                                                             flexDirection="column" 
                                                             alignItems="center" 
                                                             justifyContent="center" 

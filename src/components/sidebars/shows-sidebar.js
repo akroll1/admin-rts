@@ -120,7 +120,6 @@ export const ShowsSidebar = () => {
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.HISTORICAL} 
                             showId={'historical'} 
-                            // selectFight={selectFight} 
                             icon={<IoBookmarkOutline mt="-5px" />} 
                             label={fight} 
                             key={i}
@@ -132,7 +131,6 @@ export const ShowsSidebar = () => {
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.FANTASY} 
                             showId={'historical'} 
-                            // selectFight={selectFight} 
                             icon={<IoGameControllerOutline />} 
                             label={show} 
                             key={i} 

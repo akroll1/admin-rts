@@ -73,18 +73,18 @@ export const FightStats = (props) => {
             <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-evenly">
 
                 <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="sm" color="muted">
+                    <Text m="auto" fontSize="lg" color="muted">
                         {capFirstLetters(fighter1)}
                     </Text>
-                    <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
+                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
                         {fighter1Percentage ? fighter1Percentage : 0}&#37;	
                     </Heading>
                 </Stack>
                 <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="sm" color="muted">
+                    <Text m="auto" fontSize="lg" color="muted">
                         {capFirstLetters(fighter2)}
                     </Text>
-                    <Heading size={useBreakpointValue({base: 'sm', md: 'md'})}>
+                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
                         {fighter2Percentage ? fighter2Percentage : 0}&#37;	
                     </Heading>
                 </Stack>

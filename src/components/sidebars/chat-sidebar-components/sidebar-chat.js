@@ -153,7 +153,7 @@ export const ChatSidebar = ({
                     <span style={isSender ? isSenderStyles : notIsSenderStyles}>
                         {`${message.username}: `} &nbsp;
                     </span>
-                    <span style={{ color: '#CACACA' }}>
+                    <span style={{ color: '#FAFAFA' }}>
                         {`${message.message}`}
                     </span>
                 </p>

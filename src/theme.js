@@ -113,7 +113,11 @@ export const fslTheme = {
       },
       'fsl-text': {
         _dark: '#C8C8C8'
+      },
+      'fsl-scoring-blue': {
+        _dark: '#1d5d90'
       }
+
     }
   },
   colors,
@@ -175,17 +179,29 @@ export const fslTheme = {
           color: 'white',
           background: 'inherit'
         },
-        '#scoring-table tr:nth-of-type(odd)': {
+        '#scoring_table tr:nth-of-type(odd)': {
           background: '#252525'
         },
-        '#scoring-table tr:nth-of-type(even)': {
+        '#scoring_table tr:nth-of-type(even)': {
           background: '#171717'
+        },
+        '#scoring_table tr': {
+          // minHeight: '6rem',
+        },
+        '.firstTd': {
+          padding: '1.4rem',
+          paddingTop: 0,
+          minWidth: "100%"
         },
         '.username': {
           paddingTop: 0,
         },
-        '.first': {
-          paddingTop: 0,
+        '.scoreTd': {
+          padding: '5px',
+          margin: 0,
+        },
+        '.scores': {
+          padding: '5px'
         }
 
       },

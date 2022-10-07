@@ -7,6 +7,7 @@ export const FighterSwipe = ({
     fighter, 
     handleFighterSelect,
     notSelectedScore,
+    redCorner,
     selectedFighter,
 }) => {
 
@@ -24,7 +25,7 @@ export const FighterSwipe = ({
             background: '#2D3748'
         }
         const selectedStyles = {
-            borderBottom: '3px solid red',
+            borderBottom: redCorner ? '5px solid red' : '5px solid #1d5d90',
             background: '#2D3748',
         }
         const notSelectedStyles = {

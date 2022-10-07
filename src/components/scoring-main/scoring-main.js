@@ -86,7 +86,8 @@ export const ScoringMain = ({
         setSelectedFighter('');
         setNotSelectedScore(9)
     }
-
+    // console.log('fighters: ', fighters)
+    // console.log('selectedFighter: ', selectedFighter)
     return (
         <Flex 
             id="scoring-main"
@@ -94,6 +95,7 @@ export const ScoringMain = ({
             p={["0", "2"]} 
             m="auto"
             flexDir="column" 
+            justifyContent="flex-end"
             my="8"
             w="100%"
         >
@@ -117,6 +119,7 @@ export const ScoringMain = ({
                         selectedFighter={selectedFighter}
                         notSelectedScore={notSelectedScore}
                         evenRound={evenRound}
+                        redCorner={fighters[0].fighterId === selectedFighter}
                         key={i}
                     />
                 ))
