@@ -28,7 +28,7 @@ export const ExpiredTokenModal = ({
             <Text textAlign="center">Please sign in again.</Text>
         </ModalBody>
         <ModalFooter display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-          <Button w="50%" onClick={signin} colorScheme="blue" mr={3}>
+          <Button w="50%" onClick={signin} colorScheme="solid" mr={3}>
             Sign In 
           </Button>
         </ModalFooter>

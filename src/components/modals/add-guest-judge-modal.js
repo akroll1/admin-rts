@@ -117,13 +117,13 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModal
                             <Button 
                                 onClick={setJudges}
                                 loadingText="Submitting"  
-                                colorScheme="blue"
+                                colorScheme="solid"
                             >
                                 Set Judges
                             </Button>
                         }
                         <Button 
-                            colorScheme={availableGuestJudges.length > 0 ? "" : 'blue'} 
+                            colorScheme={availableGuestJudges.length > 0 ? "outline" : 'solid'} 
                             variant={availableGuestJudges.length > 0 ? 'outline' : 'solid'}
                             onClick={closeModal}
                         >

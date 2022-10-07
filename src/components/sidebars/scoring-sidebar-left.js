@@ -41,15 +41,10 @@ export const ScoringSidebarLeft = ({
     const openMemberModal = () => {
         handleOpenAddMemberSubmitModal();
     }
-
-    const gotToSearch = e => {
-        console.log('e: ', e)
-        const { id } = e.currentTarget;
-        navigate(`/search/${id}`);
-    }
+    console.log('tabs: ', tabs)
     return (
         <Flex 
-            display={tabs.sidebar ? 'flex' : 'none'}
+            display={tabs.info || tabs.all ? 'flex' : 'none'}
             id="scoring_sidebar_left" 
             w="100%" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
@@ -59,27 +54,28 @@ export const ScoringSidebarLeft = ({
             borderRadius="md"
             direction="column" 
             p="2" 
-            bg="fsl-sidebar-bg"  
-            color="white" 
+            bg={tabs.info ? "inherit" : "fsl-sidebar-bg"}
+            color={tabs.info ? "#FAFAFA" : "#c8c8c8"}
             fontSize="sm"
-            minH="100%"
+            minH={tabs.info ? "75vh" : "100%"}
         >
             <AccountSwitcher />
             <Stack 
-                h="auto" 
+                h={"auto"}
                 w="full" 
-                spacing="4" 
+                spacing="2" 
                 flex="1" 
                 overflowY="scroll" 
                 pt="8" 
                 p="2"
             >
-                <NavGroup label="Prediction">
+                <NavGroup tabs={tabs} label="Prediction">
                     <NavItem 
                         id="prediction"
                         icon={isLocked ? <FaLock /> : <FaLockOpen />} 
                         handlePredictionModalToggle={handlePredictionModalToggle}
                         label={<Button 
+                            color="fsl-text"
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 
@@ -89,7 +85,7 @@ export const ScoringSidebarLeft = ({
                             _focus={{bg:'transparent'}} 
                             _hover="transparent" 
                             variant="ghost" 
-                            size="sm" 
+                            size="xs" 
                             pl="0" 
                             m="0"
                         >
@@ -100,6 +96,7 @@ export const ScoringSidebarLeft = ({
                         button="button" 
                         icon={<FaTrophy />} 
                         label={<Button 
+                            color="fsl-text"
                             justifyContent="flex-start" 
                             textAlign="left" 
                             fontSize="md" 
@@ -114,18 +111,19 @@ export const ScoringSidebarLeft = ({
                     /> 
                 </NavGroup>
                
-                <NavGroup label="Show">
-                    <NavItem icon={<FaTv />} label={ network } />
-                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
+                <NavGroup tabs={tabs} label="Show">
+                    <NavItem icon={<FaTv />} color="fsl-text" label={ network } />
+                    <NavItem icon={<FaMapMarkerAlt />} color="fsl-text" label={ location } />
                     <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
                 </NavGroup>
 
-                <NavGroup label="Fight">
+                <NavGroup tabs={tabs} label="Fight">
                     <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
-                    <NavItem icon={<IoScaleOutline />} label={ weightclass } />
+                    <NavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
                     <NavItem 
                         icon={<FaRegMoneyBillAlt />} 
                         label={<Button 
+                            color="fsl-text"                             
                             onClick={() => setModals( modals => ({ ...modals, moneylineModal: true }))}
                             button={'button'}
                             justifyContent="flex-start" 
@@ -145,11 +143,12 @@ export const ScoringSidebarLeft = ({
                     />
                 </NavGroup>
                 
-                <NavGroup active={true} label="Official Judges">
-                    { availableGuestJudges?.length > 0 && availableGuestJudges.map( (judge, i) => <NavItem id={judge.guestJudgeId} icon={<BiUserCircle />} label={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`}  key={judge.guestJudgeId} />) }
+                <NavGroup tabs={tabs} active={true} label="Official Judges">
+                    { availableGuestJudges?.length > 0 && availableGuestJudges.map( (judge, i) => <NavItem color="fsl-text" id={judge.guestJudgeId} icon={<BiUserCircle />} label={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`}  key={judge.guestJudgeId} />) }
                     <NavItem 
                         icon={<FaPlusCircle />} 
                         label={<Button 
+                            color="fsl-text" 
                             onClick={() => setModals( modals => ({ ...modals, addGuestJudgeModal: true }))}
                             button={'button'}
                             justifyContent="flex-start" 
@@ -169,16 +168,17 @@ export const ScoringSidebarLeft = ({
                     />
                 </NavGroup>
 
-                <NavGroup label="Group Members">
+                <NavGroup tabs={tabs} label="Group Members">
                     {/* { usernameAndUserId.length > 0 && usernameAndUserId.map( ({ username, ownerId }, i) => {
                         const isAdmin = adminUsername.toLowerCase() == username ? true : false;
 
                         return <NavItem href={`/scorecards/search/${ownerId}`} icon={isAdmin ? <FaUserCog /> : <BiUser />} label={username} key={i} />
                     })} */}
                 
-                <NavItem 
+                <NavItem color="fsl-text" 
                     icon={<BiPlusCircle />} 
                     label={<Button 
+                        color="fsl-text" 
                         onClick={openMemberModal}
                         _focus={{bg:'transparent', border: 'none'}} 
                         _hover="transparent" 
@@ -197,7 +197,7 @@ export const ScoringSidebarLeft = ({
                     </Button>} 
                 />
                 </NavGroup>
-                <NavGroup label="Support">
+                <NavGroup tabs={tabs} label="Support">
                     <NavItem subtle icon={<BiCog />} label="Settings" />
                     <NavItem subtle icon={<BiBuoy />} label="Help & Support" />
                 </NavGroup>

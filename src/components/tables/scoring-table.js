@@ -1,8 +1,8 @@
-
-import React from 'react'
 import { Flex, Heading, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 import { useScorecardStore, useScoringStore } from '../../stores'
+import { FightStats } from '../sidebars/chat-sidebar-components'
+import { ScoringDividerWithText } from './table-els/scoring-divider-with-text'
 
 export const ScoringTable = ({ 
     tabs, 
@@ -30,8 +30,8 @@ export const ScoringTable = ({
         {
             Header: 'Player',
             accessor: 'player',
-            Cell: function TableCell(username, prediction) {
-                return <ScoringTableInfo username={username} prediction={prediction} />
+            Cell: function TableCell( fighters, prediction, username ) {
+                return <ScoringTableInfo fighters={fighters} prediction={prediction} username={username} />
             }
         },
         {
@@ -45,14 +45,23 @@ export const ScoringTable = ({
 
     ];
     
+
     const rounds = new Array(totalRounds).fill('Round')
     const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : ''
+
     return (      
         <>
-            <Heading mt={["2", "8"]} display={tabs.scoring ? 'none' : 'block'} textAlign="left" ml="0">Your Group</Heading>
+            <ScoringDividerWithText 
+                text="Your Group" 
+                tabs={tabs} 
+            />
+
+            <FightStats tabs={tabs} />
+
             <Flex 
                 overflow="scroll"
-                display={tabs.table ? 'flex' : 'none'}
+                display={tabs.all || tabs.table ? 'flex' : 'none'}
+                flexDirection="column"
                 id="score_table" 
                 w="100%" 
                 p="8"
@@ -114,7 +123,7 @@ export const ScoringTable = ({
                     </Thead>
                     <Tbody>
                         {sortedTable?.length > 0 && sortedTable?.map( (row, idx) => {
-                            const { mappedScores, prediction, totals, username } = row;;
+                            const { fighters, mappedScores, prediction, totals, username } = row;;
                             let filledMappedScores;   
                             if(mappedScores.length <= totalRounds){
                                 const numberToFill = totalRounds - (mappedScores.length);
@@ -131,11 +140,11 @@ export const ScoringTable = ({
                                     {columns.map( (column, i) => {
                                         // console.log('column: ',column)
                                         const cell = row[column.accessor];
-                                        const element = column.Cell?.(username, prediction) ?? cell;
+                                        const element = column.Cell?.( fighters, prediction, username ) ?? cell;
                                         
                                         if(i === 0){
                                             return (
-                                                <Td key={i} p="0">
+                                                <Td className='first' key={i} p="0">
                                                     {element}
                                                 </Td>
                                             )

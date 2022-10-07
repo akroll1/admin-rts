@@ -90,7 +90,7 @@ export const ScoringMain = ({
     return (
         <Flex 
             id="scoring-main"
-            display={tabs.scoring ? 'flex' : 'none'}
+            display={tabs.scoring || tabs.all ? 'flex' : 'none'}
             p={["0", "2"]} 
             m="auto"
             flexDir="column" 
@@ -141,7 +141,7 @@ export const ScoringMain = ({
                         h="1.7rem" 
                         p="1" 
                         border="1px solid gray" 
-                        />
+                    />
                     <MinusIcon 
                         onClick={handleAdjustScore}
                         ml="2"
@@ -150,7 +150,7 @@ export const ScoringMain = ({
                         h="1.7rem" 
                         p="1" 
                         border="1px solid gray" 
-                        />
+                    />
                 </Flex>
 
                 <Button

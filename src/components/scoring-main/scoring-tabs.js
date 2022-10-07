@@ -1,24 +1,29 @@
-import { Button, Flex, Heading, Icon, Stack, Text, VStack } from '@chakra-ui/react'
+
+import { useEffect, useState } from 'react'
+import { Flex, Icon, Text, VStack } from '@chakra-ui/react'
 import { FaUsers } from 'react-icons/fa'
-import { TiChartLineOutline } from 'react-icons/ti'
 import { GiBoxingRing } from 'react-icons/gi'
-import { ChatIcon, EditIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+import { ChatIcon } from '@chakra-ui/icons'
 import { HiOutlinePencil } from 'react-icons/hi'
 
 export const ScoringTabs = ({ 
-    setTabs 
+    setTabs,
+    tabs
 }) => {
+    const [activeTab, setActiveTab] = useState('scoring')
+ 
     const resetTabs = {
-        sidebar: false,
+        info: false,
         scoring: false, 
         table: false,
         chat: false,
-        analytics: false
+        analytics: false,
+        all: false
     }
     const tab_data = [
         {
             label: 'Info',
-            value: 'sidebar',
+            value: 'info',
             icon: GiBoxingRing
         },
         {
@@ -45,13 +50,14 @@ export const ScoringTabs = ({
 
     const handleTabClick = e => {
         const { id } = e.currentTarget;
+        setActiveTab(id)
         setTabs({ ...resetTabs, [id]: true })
     }
 
     return (
         <Flex 
             id="scoring_tabs"
-            display={['flex','flex', 'none']} 
+            display={tabs.all ? "none" : "flex"} 
             as="section" 
             bg="#121212" 
             flexDirection="row" 
@@ -73,8 +79,17 @@ export const ScoringTabs = ({
                         onClick={handleTabClick}
                     >
                         <VStack>
-                            <Icon as={tab.icon} />
-                            <Text fontSize={["xs", "md"]} textAlign="center">{tab.label}</Text>
+                            <Icon 
+                                as={tab.icon} 
+                                color={tab.value === activeTab ? '#C01616' : 'white'}
+                            />
+                            <Text 
+                                color={tab.value === activeTab ? '#C01616' : 'white'}
+                                fontSize={["xs", "md"]} 
+                                textAlign="center"
+                            >
+                                {tab.label}
+                            </Text>
                         </VStack>
                     </Flex>
                 )

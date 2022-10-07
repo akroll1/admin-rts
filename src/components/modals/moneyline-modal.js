@@ -37,7 +37,11 @@ export const MoneylineModal = ({
           alignItems="center" 
           justifyContent="center"
         >
-          <Button minW="40%" onClick={() => setModals(modals => ({ ...modals, moneylineModal: false}))} colorScheme="blue">
+          <Button 
+            minW="40%" 
+            onClick={() => setModals(modals => ({ ...modals, moneylineModal: false}))} 
+            colorScheme="solid"
+          >
             Close
           </Button>
         </ModalFooter>

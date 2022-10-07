@@ -107,6 +107,12 @@ export const fslTheme = {
       },
       'fsl-heading-text': {
         _dark: '#FAFAFA'
+      },
+      'fsl-red': {
+        _dark: '#C01616'
+      },
+      'fsl-text': {
+        _dark: '#C8C8C8'
       }
     }
   },
@@ -175,6 +181,12 @@ export const fslTheme = {
         '#scoring-table tr:nth-of-type(even)': {
           background: '#171717'
         },
+        '.username': {
+          paddingTop: 0,
+        },
+        '.first': {
+          paddingTop: 0,
+        }
 
       },
     },
@@ -192,12 +204,6 @@ const Button = {
   },
   variants: {
     solid: {
-      // baseStyle: {
-      //   _hover: {
-      //     color: 'blue'
-
-      //   }
-      // },
       color: '#FBFBFB',
       background: '#C01616',
       _hover: {
@@ -238,11 +244,12 @@ const Input = {
   variants: {
     outline: {
       field: {
+        boxShadow: '0 0 0 1px #676767',
         border: '1px solid',
-        borderColor: '#795858',
+        borderColor: '#393838',
         _focus: {
-          boxShadow: '0 0 0 1px #C01616',
-          borderColor: '#867979',
+          boxShadow: 'none',
+          borderColor: '#674545',
           
         },
         

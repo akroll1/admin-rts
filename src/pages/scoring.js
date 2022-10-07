@@ -36,7 +36,7 @@ const Scoring = () => {
     } = useScoringStore();
 
     const [tabs, setTabs] = useState({
-        sidebar: false,
+        info: false,
         scoring: true, 
         table: false,
         chat: false,
@@ -74,19 +74,21 @@ const Scoring = () => {
         const getWindowWidth = () => {
             if(windowWidth >= 768){
                 setTabs({
-                    sidebar: true,
-                    scoring: true, 
-                    table: true,
-                    chat: true,
-                    analytics: true
+                    info: false,
+                    scoring: false, 
+                    table: false,
+                    chat: false,
+                    analytics: false,
+                    all: true
                 })
             } else {
                 setTabs({
-                    sidebar: false,
+                    info: false,
                     scoring: true, 
                     table: false,
                     chat: false,
-                    analytics: false
+                    analytics: false,
+                    all: false
                 })
             }
         }
@@ -223,7 +225,10 @@ const Scoring = () => {
             </Flex>
             <ScoringTable tabs={tabs} />
 
-            <ScoringTabs tabs={tabs} setTabs={setTabs} />
+            <ScoringTabs 
+                tabs={tabs} 
+                setTabs={setTabs} 
+            />
         </Flex>
     )
 

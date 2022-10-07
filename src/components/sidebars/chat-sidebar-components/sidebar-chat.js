@@ -1,8 +1,9 @@
 import React, { createRef, useEffect, useState, useRef,} from 'react'
-import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { DividerWithText } from '../../../chakra'
 import { v4 as uuidv4 } from 'uuid'
 import { useScorecardStore } from '../../../stores'
+import { ScoringDividerWithText } from '../../tables/table-els/scoring-divider-with-text'
 
 
 export const ChatSidebar = ({
@@ -14,7 +15,6 @@ export const ChatSidebar = ({
         chatKey,
         chatScorecard,
         chatToken,
-        groupScorecard,
         requestChatToken,
         setChatScorecard,
         setChatToken,
@@ -28,6 +28,7 @@ export const ChatSidebar = ({
     const [powerShotDisabled, setPowerShotDisabled] = useState(false);
 
     const chatRef = createRef();
+    const messagesEndRef = createRef();
     const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
@@ -39,7 +40,9 @@ export const ChatSidebar = ({
     },[chatKey])
 
     useEffect(() => {
-        initConnection(chatToken)
+        if(chatToken){   
+            initConnection(chatToken)
+        }
     },[chatToken])
     
     useEffect(() => {
@@ -49,10 +52,17 @@ export const ChatSidebar = ({
         }
     },[chatScorecard])
 
+    useEffect(() => {
+        const scrollToBottom = () => {
+          messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        };
+        scrollToBottom();
+      });
+
     const initConnection = async (token) => {
         const connectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
         setConnection(connectionInit);
-    
+        setChatToken(null)
         connectionInit.onopen = (event) => {
             console.info("Connected to the chat room.");
             setChatMessages(prevState => [...prevState]);
@@ -134,10 +144,20 @@ export const ChatSidebar = ({
     };
     // Renderers
     const renderMessage = (message, i) => {
+        const isSender = message.username === username
+        const isSenderStyles = { color: 'red', textAlign: 'left', display: 'inline-flex' };
+        const notIsSenderStyles = { color: 'green', textAlign: 'right', display: 'inline-flex' }
         return (
-            <Flex key={i} display="flex" m="2" mb="0" mt="1">
-                <Text key={i}>{`${message.username}: ${message.message}`}</Text>
-            </Flex>
+            <Box display="inline-block" key={i} m="2" mb="0" mt="1">
+                <p style={{ overflowWrap: 'break-word' }}>
+                    <span style={isSender ? isSenderStyles : notIsSenderStyles}>
+                        {`${message.username}: `} &nbsp;
+                    </span>
+                    <span style={{ color: '#CACACA' }}>
+                        {`${message.message}`}
+                    </span>
+                </p>
+            </Box>
         );
     };
     
@@ -155,92 +175,102 @@ export const ChatSidebar = ({
             minH={["22rem"]} 
             maxH={["40vh", "40vh", "60vh"]}
             p="2" 
-            bg="fsl-sidebar-bg" 
+            bg={tabs.all ? "fsl-sidebar-bg" : "inherit"}
             borderRadius="md" 
-            overflowY="scroll"
+            justifyContent="space-between"
+            ref={chatRef}
+            overflow="hidden"
+            overscrollBehavior="none"
+            position="relative"
         >
-            <DividerWithText text={"Group Chat"} />
-            <Input
-                as="input"
-                m="1"
-                p="2"
-                size="sm"
-                ref={chatRef}
-                type="text"
-                color="whiteAlpha.800"
-                _placeholder={{color: 'whiteAlpha.400'}}
-                placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
-                isDisabled={!socketActive()}
-                value={chatMessage}
-                maxLength={150}
-                onChange={handleChatChange}
-                onKeyDown={handleChatKeydown}
-            />
-            <ButtonGroup p="2" pt="0" pb="0">
-                { socketActive() 
-                    ?
-                        <Button     
-                            w="100%"
-                            minH="1.5rem"
-                            m="1"
-                            p="1"
-                            size="sm"
-                            isLoading={isSubmitting} 
-                            loadingText="Joining..." 
-                            onClick={() => handleSendMessage('CHAT')} 
-                            variant="solid"
-                            colorScheme="teal"
-                        >
-                            Send
-                        </Button>
-                    :
-                        <Button     
-                            w="100%"
-                            minH="1.5rem"
-                            m="1"
-                            p="1"
-                            size="sm"
-                            isLoading={isSubmitting} 
-                            loadingText="Joining..." 
-                            onClick={handleRequestToken} 
-                            variant="solid"
-                            colorScheme="teal"
-                        >
-                            Join Chat
-                        </Button>
+            <DividerWithText fontSize={'1.5rem'} text="Group Chat" />
+            <Flex 
+                overflow="scroll"
+                flexDirection="column"
+            >
+                { chatMessages && 
+                    <Flex
+                        id="scroll-top"
+                        overflowY="scroll"
+                        maxW="100%"
+                        flexDir="column" 
+                        borderRadius="md"
+                        // bg="fsl-sidebar-bg" 
+                        p="4"
+                        color="white" 
+                        fontSize="sm"
+                    >    
+                        {renderMessages()}  
+                        <Flex ref={messagesEndRef}>
+                            <p>hey</p>    
+                        </Flex>                  
+                    </Flex>
                 }
-                <Button     
-                    w="100%"
-                    minH="1.5rem"
+                <Divider p="1" w="50%" mb="2" marginX="auto"/>
+                <Input
+                    as="input"
                     m="1"
-                    p="1"
+                    p="2"
                     size="sm"
-                    disabled={!socketActive() || powerShotDisabled}
-                    loadingText="Joining..." 
-                    onClick={() => handleSendMessage('PREDICTION')} 
-                    variant="outline"
-                    colorScheme="red"
-                >
-                    PowerShot
-                </Button>
-            </ButtonGroup>
-            <Divider p="1" w="50%" marginX="auto"/>
-
-            { chatMessages && 
-                <Flex
-                    maxW="100%"
-                    flexDir="column" 
-                    borderRadius="md"
-                    bg="fsl-sidebar-bg" 
-                    p="4"
-                    color="white" 
-                    fontSize="sm"
-                    overflow="scroll"
-                    wordBreak="break-all"
-                >    
-                    {renderMessages()}                    
-                </Flex>
-            }
+                    type="text"
+                    color="whiteAlpha.800"
+                    _placeholder={{color: 'whiteAlpha.400'}}
+                    placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
+                    isDisabled={!socketActive()}
+                    value={chatMessage}
+                    maxLength={150}
+                    onChange={handleChatChange}
+                    onKeyDown={handleChatKeydown}
+                />
+                <ButtonGroup p="2" pt="0" pb="0">
+                    { socketActive() 
+                        ?
+                            <Button     
+                                w="100%"
+                                minH="1.5rem"
+                                m="1"
+                                p="1"
+                                size="sm"
+                                isLoading={isSubmitting} 
+                                loadingText="Joining..." 
+                                onClick={() => handleSendMessage('CHAT')} 
+                                variant="solid"
+                                colorScheme="teal"
+                            >
+                                Send
+                            </Button>
+                        :
+                            <Button     
+                                w="100%"
+                                minH="1.5rem"
+                                m="1"
+                                p="1"
+                                size="sm"
+                                isLoading={isSubmitting} 
+                                loadingText="Joining..." 
+                                onClick={handleRequestToken} 
+                                variant="solid"
+                                colorScheme="teal"
+                            >
+                                Join Chat
+                            </Button>
+                    }
+                    <Button     
+                        w="100%"
+                        minH="1.5rem"
+                        m="1"
+                        p="1"
+                        size="sm"
+                        disabled={!socketActive() || powerShotDisabled}
+                        loadingText="Joining..." 
+                        onClick={() => handleSendMessage('PREDICTION')} 
+                        variant="outline"
+                        colorScheme="red"
+                    >
+                        PowerShot
+                    </Button>
+                </ButtonGroup>
+            </Flex>
         </Flex>
     )
 }

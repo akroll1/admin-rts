@@ -91,7 +91,7 @@ export const PredictionModal = ({
         >
           <Button 
             onClick={handleSubmitPrediction} 
-            colorScheme="blue" 
+            colorScheme="solid" 
             mr={3}
           >
             Save Prediction
@@ -99,7 +99,7 @@ export const PredictionModal = ({
           <Button 
             variant="outline"   
             onClick={() => setModals({ ...modals, predictionModal: false})} 
-            colorScheme="brand"
+            colorScheme="outline"
             mr={3}
           >
             Cancel

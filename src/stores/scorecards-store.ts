@@ -105,9 +105,9 @@ export const useScorecardStore = create<ScorecardStore>()(
                 };
             },
             collateTableData: () => {
-                const s = get().scorecards.map( (scorecard: any) => {
-                    let { username, prediction, scores } = scorecard
+                const collated = get().scorecards.map( (scorecard: any) => {
                     const [fighter1, fighter2] = get().fighters
+                    let { username, prediction, scores } = scorecard
                     const sortRoundAscending = (a: any, b: any) => a.round - b.round
 
                     if(prediction){
@@ -150,7 +150,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                         prediction
                     })
                 })
-                set({ tableData: s, stats: s })
+                console.log('COLLATED: ', collated)
+                set({ 
+                    tableData: collated, 
+                    stats: collated 
+                })
             },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
                 const url = process.env.REACT_APP_API + `/group-scorecards`;
