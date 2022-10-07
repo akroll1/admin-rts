@@ -16,11 +16,11 @@ export const ScoringMain = ({
     const [notSelectedScore, setNotSelectedScore] = useState(9);
     
     const {
+        currentRound,
         fight,
         fighters,
         fighterScores,
         submitRoundScores,
-        tableData,
     } = useScorecardStore();
 
     const totalRounds = fight ? fight.rounds : 12;
@@ -108,7 +108,7 @@ export const ScoringMain = ({
                 minH="2rem"
                 verticalAlign="middle"
             >
-                {`Round ${ round ? round : '' }`}
+                {`Round ${ currentRound}`}
             </Heading> 
             <Flex flexDir={["row"]} w={["100%", "80%"]} m="auto">
             {

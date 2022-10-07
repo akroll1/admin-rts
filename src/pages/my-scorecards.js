@@ -5,10 +5,6 @@ import { ExpiredTokenModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
 
 export const MyScorecards = () => {
-  const [modals, setModals] = useState({
-      expiredTokenModal: false
-  });
-
 
   const {
     fetchUserScorecards,
@@ -22,11 +18,13 @@ export const MyScorecards = () => {
     },[userScorecards])
     console.log('userScorecards: ', userScorecards)
     return (
-        <Flex flexDir="column" p="4">
-            <ExpiredTokenModal 
-                modals={modals}
-                setModals={setModals}
-            />
+        <Flex 
+          w={["100%", "80%"]}
+          m="auto"
+          flexDir="column" 
+          p="4"
+        >
+            <ExpiredTokenModal />
             <Heading textAlign="center">Scorecards</Heading>
             <MyScorecardsTable scorecards={userScorecards} />
         </Flex>

@@ -1,6 +1,5 @@
-import React, {useState} from 'react'
-import { Button, Flex, Stack } from '@chakra-ui/react'
-import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiUser, BiEdit, BiStar, BiUserCheck, BiPlusCircle } from 'react-icons/bi'
+import { Button, Flex, Stack, useToast } from '@chakra-ui/react'
+import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiPlusCircle } from 'react-icons/bi'
 import { AccountSwitcher } from './scoring-sidebar/account-switcher'
 import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
@@ -8,24 +7,20 @@ import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMone
 import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { useScorecardStore, useStateStore } from '../../stores'
-import { useNavigate } from 'react-router'
 
 export const ScoringSidebarLeft = ({ 
-    handleOpenAddMemberSubmitModal,
-    modals, 
-    setModals,
     tabs,
 }) => {
-    const navigate = useNavigate();
     const {
         fight,
-        transformedPrediction,
+        setModals,
         show,
+        transformedPrediction,
         userScorecard,
-    } = useScorecardStore();
-
-    const adminUsername = 'ADMIN, fix this';
-    const { availableGuestJudges } = useStateStore();
+    } = useScorecardStore()
+    const { availableGuestJudges } = useStateStore()
+    
+    const toast = useToast()
   
     const { odds, rounds, weightclass } = fight ? fight : '';
     const { finalScore } = userScorecard
@@ -36,10 +31,20 @@ export const ScoringSidebarLeft = ({
         if(isLocked){
             return alert('Predictions are locked.')
         }
-        setModals({ ...modals, predictionModal: true });
+        setModals('predictionModal', true);
     };
     const openMemberModal = () => {
-        handleOpenAddMemberSubmitModal();
+        const isAdmin = false
+        if(isAdmin){
+            setModals('addMemberModal', true)
+            return
+        }
+        toast({ 
+            title: `Only group admin can add members.`,
+            duration: 5000,
+            status: 'info',
+            isClosable: true
+        })
     }
 
     return (
@@ -124,7 +129,7 @@ export const ScoringSidebarLeft = ({
                         icon={<FaRegMoneyBillAlt />} 
                         label={<Button 
                             color="fsl-text"                             
-                            onClick={() => setModals( modals => ({ ...modals, moneylineModal: true }))}
+                            onClick={() => setModals('moneylineModal', true)}
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 
@@ -149,7 +154,7 @@ export const ScoringSidebarLeft = ({
                         icon={<FaPlusCircle />} 
                         label={<Button 
                             color="fsl-text" 
-                            onClick={() => setModals( modals => ({ ...modals, addGuestJudgeModal: true }))}
+                            onClick={() => setModals('addGuestJudgeModal', true)}
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 

@@ -256,6 +256,12 @@ const Button = {
   }
 }
 
+const Heading = {
+  baseStyle: {
+    color: '#FAFAFA',
+  }
+}
+
 const Input = {
   variants: {
     outline: {
@@ -284,6 +290,30 @@ const Link = {
   }
 }
 
+const Select = {
+  // variants: {
+    defaultProps: {
+      boxShadow: '0 0 0 1px #676767',
+      border: '1px solid',
+      borderColor: '#393838',
+      _hover: {
+        cursor: 'pointer'
+      }
+    },
+    
+  // }
+  // baseStyle: {
+  //   _active: {
+  //     boxShadow: '0 0 0 1px #676767',
+  //     border: '1px solid',
+  //     borderColor: '#393838',
+  //   },
+  //   boxShadow: '0 0 0 1px #676767',
+  //   border: '1px solid',
+  //   borderColor: '#393838',
+  // }
+}
+
 const Table = {
   variants: {
     scoringTable: {
@@ -291,12 +321,6 @@ const Table = {
         background: '#111111'
       },
     }
-  }
-}
-
-const Heading = {
-  baseStyle: {
-    color: '#FAFAFA',
   }
 }
 
@@ -309,8 +333,9 @@ const theme = extendTheme({
     Heading,
     Input,
     Link,
+    Select,
     Table
   }
 });
-// console.log('theme: ', theme)
+console.log('theme: ', theme)
 export default theme;

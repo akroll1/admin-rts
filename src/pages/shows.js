@@ -17,8 +17,10 @@ const Shows = props => {
         fetchFights, 
         fights, 
         fightSummary, 
+        modals,
         putUserFightReview,
         selectedFight,
+        setModals,
         setTokenExpired,
         tokenExpired,
         user,
@@ -27,9 +29,7 @@ const Shows = props => {
     const { email, sub, username } = user;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [modals, setModals] = useState({
-        expiredTokenModal: false
-    });
+
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
@@ -53,7 +53,7 @@ const Shows = props => {
     useEffect(() => {
         if(tokenExpired){
             setTokenExpired(true)
-            setModals({ expiredTokenModal: true })
+            setModals('expiredTokenModal', true)
         }
     },[tokenExpired])
 
@@ -170,7 +170,7 @@ const Shows = props => {
             pb={8}
             bg="inherit"
         >    
-            <ExpiredTokenModal modals={modals} setModals={setModals} />
+            <ExpiredTokenModal />
             
             { fightReviewForm && 
                 <ReviewFormModal
