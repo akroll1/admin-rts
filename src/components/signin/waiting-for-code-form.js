@@ -36,7 +36,7 @@ export const WaitingForCode = ({
                         as="a" 
                         onClick={handleConfirmCode} 
                         type="button" 
-                        colorScheme="blue" 
+                        colorScheme="solid" 
                         size="lg" 
                         fontSize="md"
                     >
@@ -44,7 +44,7 @@ export const WaitingForCode = ({
                     </Button>
                     <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
                     <Text as="span">Didn&apos;t receive a code?</Text>
-                    <Text onClick={resendVerificationCode} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Resend code!</Text>
+                    <Text onClick={resendVerificationCode} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#FCFCFC' }}>Resend code!</Text>
                     </Text>
                 </Stack>
             </Card>

@@ -38,11 +38,10 @@ export const ForgotPasswordForm = ({
                     </FormControl>
                     <Button 
                         id="forgot_password_button" 
-                        _hover={{cursor: 'pointer'}} 
                         as="a" 
                         onClick={handleForgotPassword} 
                         type="button" 
-                        colorScheme="blue" 
+                        colorScheme="solid" 
                         size="lg" 
                         fontSize="md"
                     >

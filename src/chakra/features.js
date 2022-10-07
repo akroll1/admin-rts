@@ -5,7 +5,7 @@ export const Feature = (props) => {
   const { title, children, icon } = props
   return (
     <Stack direction="row" w="100%" spacing="6">
-      <Center aria-hidden flexShrink={0} w="12" h="12" rounded="md" color="white" bg="blue.500">
+      <Center aria-hidden flexShrink={0} w="12" h="12" rounded="md" color="white" bg="#525252">
         {icon}
       </Center>
       <Stack>

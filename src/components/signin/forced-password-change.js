@@ -41,11 +41,10 @@ export const ForcedPasswordChange = ({
                     />
                     <Button 
                         id="forced_password_button" 
-                        _hover={{cursor: 'pointer'}} 
                         as="a" 
                         onClick={handleForcePWChange} 
                         type="button" 
-                        colorScheme="blue" 
+                        colorScheme="solid" 
                         size="lg" 
                         fontSize="md"
                     >

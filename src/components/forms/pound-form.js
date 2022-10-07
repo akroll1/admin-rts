@@ -7,7 +7,7 @@ import axios from 'axios';
 export const PoundForm = ({ user, tokenConfig }) => {
   const toast = useToast();
   const poundUrl = process.env.REACT_APP_POUND_LIST + `/${1}`;
-  const fightersUrl = process.env.REACT_APP_FIGHTERS;
+  const fightersUrl = process.env.REACT_APP_API + `/fighters`;
   const [poundList, setPoundList] = useState([]);
   const [fighterId, setFighterId] = useState('');
   const [fightersList, setFightersList] = useState([]);

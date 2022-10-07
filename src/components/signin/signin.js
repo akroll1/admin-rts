@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, FormControl, FormLabel, Heading, Input, SimpleGrid, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react'
-import { DividerWithText, Card, Logo } from '../../chakra'
+import { Box, useColorModeValue } from '@chakra-ui/react'
 import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
 import { SubmitNewPasswordForm } from './submit-new-password-form'
@@ -9,9 +8,9 @@ import { ForcedPasswordChange } from './forced-password-change'
 import { WaitingForCode } from './waiting-for-code-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { stateStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 
-export const SignIn = props => {
+export const SignIn = () => {
   const navigate = useNavigate();
 
   let [searchParams, setSearchParams] = useSearchParams();
@@ -37,7 +36,11 @@ export const SignIn = props => {
       isWaitingForNewPasswordCode: false
   })
 
-  const { setUser, setToken } = stateStore.getState();
+  const { 
+    setUser, 
+    setAccessToken, 
+    setIdToken 
+  } = useScorecardStore();
 
   Amplify.configure({
     Auth: {
@@ -57,6 +60,7 @@ export const SignIn = props => {
     const { id, value } = e.currentTarget;
     setForm({...form, [id]: value.trim() });
   };
+  
   const handleSignIn = () => {
     setIsSubmitting(true);
     const { password, username} = form;
@@ -82,10 +86,17 @@ export const SignIn = props => {
         const groups = user.signInUserSession.accessToken.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
         setUser({ ...attributes, username, isLoggedIn: true, groups });
         const token = user.signInUserSession.accessToken.jwtToken;
-        setToken({headers: {
-          Authorization: `Bearer ${token}`
-        }})
-        sessionStorage.setItem('isLoggedIn',true);
+        const idToken = user.signInUserSession.idToken.jwtToken;
+        setIdToken({
+          headers: {
+            Authorization: `Bearer ${idToken}`
+          }
+        });
+        setAccessToken({
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         return navigate('/scorecards', { username });
       }
     })
@@ -144,13 +155,11 @@ export const SignIn = props => {
           sub: user.signInUserSession.idToken.payload.sub 
         })
         const token = user.signInUserSession.accessToken.jwtToken;
-        setToken({headers: {
+        setAccessToken({headers: {
           Authorization: `Bearer ${token}`
         }})
-        sessionStorage.setItem('isLoggedIn',true);
         return navigate('/scorecards', { user });
       }).catch( err => {
-        console.log('err: ', err);
         if(Array.from(err).includes('InvalidPasswordException') > -1){
           alert('Password does not meet requirements.')
         }
@@ -228,7 +237,7 @@ export const SignIn = props => {
   // console.log('formState: ', formState)
   // console.log('form: ', form)
   return (
-    <Box bg={useColorModeValue('gray.500', 'gray.800')} py="12" px={{ base: '4', lg: '8' }}>
+    <Box bg={useColorModeValue('gray.500', 'inherit')} py="12" px={{ base: '4', lg: '8' }}>
       <Box maxW="md" mx="auto">
 
         { formState.isSignin &&

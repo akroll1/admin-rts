@@ -54,11 +54,10 @@ export const SubmitNewPasswordForm = ({
                         />
                         <Button 
                             id="request_new_pw_button"
-                            _hover={{cursor: 'pointer'}} 
                             as="a" 
                             onClick={handleSubmitNewPassword} 
                             type="button" 
-                            colorScheme="blue" 
+                            colorScheme="solid" 
                             size="lg" 
                             fontSize="md"
                         >

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Heading, Center, Button, ButtonGroup, Flex, Text, useColorModeValue as mode } from '@chakra-ui/react'
+import { Button, Heading, CenterButton, ButtonGroup, Flex, Text, useColorModeValue as mode } from '@chakra-ui/react'
 
 export const ScorecardsTablePagination = ({ total }) => {
   return (
@@ -12,10 +12,10 @@ export const ScorecardsTablePagination = ({ total }) => {
             </Text>
           
             <ButtonGroup variant="outline" size="sm">
-              <Button _hover={{cursor: 'pointer'}} as="a" rel="prev">
+              <Button _hover={{ cursor: 'pointer', border: '1px solid white' }} as="a" rel="prev">
                 Previous
               </Button>
-              <Button _hover={{cursor: 'pointer'}} as="a" rel="next">
+              <Button  _hover={{ cursor: 'pointer', border: '1px solid white' }} as="a" rel="next">
                 Next
               </Button>
             </ButtonGroup>

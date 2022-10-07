@@ -1,12 +1,26 @@
-import { extendTheme, theme as chakraTheme} from "@chakra-ui/react";
+import { 
+  color,
+  extendTheme, 
+  theme as chakraTheme,
+  useColorModeValue as mode,
+} from "@chakra-ui/react";
 const config = {
-  initialColorMode: "dark",
+  initialColorMode: localStorage.getItem('chakra-ui-color-mode')||'dark',
   useSystemColorMode: false,
   cssVarPrefix: 'fsl'
 };
 export const colors = {
   brand: {
-    base: '#1A202C'
+    50: "#C01616",  
+    100: "#C01616", 
+    200: "#C01616", 
+    300: "#C01616", 
+    400: "#C01616", 
+    500: "#C01616", 
+    600: "#C01616", 
+    700: "#C01616", 
+    800: "#C01616", 
+    900: "#C01616",
   },
   white: {
     base: '#fff',
@@ -31,7 +45,8 @@ export const colors = {
   image: {
     light: '#c24e4e',
     dark: 'darkred'
-  }
+  },
+  
 };
 
 export const shadow = {
@@ -67,23 +82,59 @@ export const transition = {
   easeOutBack: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   duration: '0.4s',
 };
+export const fonts = {
+    body: `Lato`,
+    heading: `Koulen`
+}
+export const letterSpacings = {
+    normal: `0.05em`
+}
 
-export const myTheme = {
+export const fslTheme = {
+  semanticTokens: { 
+    colors: {
+      'fsl-body-bg': {
+        _dark: '#171717'
+      },
+      'chakra-body-text': {
+        _dark: '#C8C8C8'
+      },
+      'fsl-sidebar-bg': {
+        _dark: '#111111'
+      },
+      'fsl-nav-footer-bg': {
+        _dark: '#171717'
+      },
+      'fsl-heading-text': {
+        _dark: '#FAFAFA'
+      },
+      'fsl-red': {
+        _dark: '#C01616'
+      },
+      'fsl-text': {
+        _dark: '#C8C8C8'
+      },
+      'fsl-scoring-blue': {
+        _dark: '#1d5d90'
+      }
+
+    }
+  },
   colors,
-  gradient,
+  fonts,
+  letterSpacings,
+  ...gradient,
   shadow,
+  shadows: {
+    outline: '0 0 0 1px #FFF'
+  },
   breakpoints: {
     xs: '400px',
     s: '600px',
     m: '900px',
     l: '1200px',
   },
-  fontFamily: {
-    // eslint-disable-next-line
-    body: `Open Sans,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
-    // eslint-disable-next-line
-    heading: `Candal, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
-  },
+
   layout: {
     article: '46rem',
     base: '70rem',
@@ -108,6 +159,163 @@ export const myTheme = {
       transition: 'all 0.25s ease-in-out',
     },
   },
-};
-const theme = extendTheme({ ...chakraTheme, ...myTheme, config });
+  styles: {
+    global: {
+      body: {
+        '#socials > a': {
+          color: '#C8C8C8'
+        },
+        '#socials > a:focus': {
+          boxShadow: 'none',
+          color: 'white'
+        },
+        '#socials > a:hover': {
+          boxShadow: 'none',
+          color: 'white',
+          background: 'inherit'
+        },
+        '#socials > a:active': {
+          boxShadow: 'none',
+          color: 'white',
+          background: 'inherit'
+        },
+        '#scoring_table tr:nth-of-type(odd)': {
+          background: '#252525'
+        },
+        '#scoring_table tr:nth-of-type(even)': {
+          background: '#171717'
+        },
+        '#scoring_table tr': {
+          // minHeight: '6rem',
+        },
+        '.firstTd': {
+          padding: '1.4rem',
+          paddingTop: 0,
+          minWidth: "100%"
+        },
+        '.username': {
+          paddingTop: 0,
+        },
+        '.scoreTd': {
+          padding: '5px',
+          margin: 0,
+        },
+        '.scores': {
+          padding: '5px'
+        }
+
+      },
+    },
+  },
+}
+const Button = {
+  Button: {
+    baseStyle: {
+      _focus: {
+        boxShadow: '0 0 0 1px gray',
+        borderColor: 'gray',
+        border: '1px solid gray'
+      },
+    }
+  },
+  variants: {
+    solid: {
+      color: '#FBFBFB',
+      background: '#C01616',
+      _hover: {
+        boxShadow: 'none',
+        color: '#eeeaea',
+        borderColor: 'inherit',
+        background: '#e62b2b',
+        cursor: 'pointer',
+        color: 'white'
+      },
+      _focus: {
+        boxShadow: 'none',
+        borderColor: 'inherit',
+        background: '#e62b2b',
+        color: 'white'
+      }
+    },
+    outline: {
+      size: 'lg',
+      borderColor: 'gray',
+      _hover: {
+        background: 'inherit',
+        boxShadow: '0 0 0 1px gray',
+        color: '#C8C8C8',
+        borderColor: 'white',
+        border: '1px solid lightgray'
+      },
+    }
+  },
+  defaultProps: {
+    variant: 'solid',
+    colorScheme: 'solid',
+    size: 'lg'
+  }
+}
+
+const Input = {
+  variants: {
+    outline: {
+      field: {
+        boxShadow: '0 0 0 1px #676767',
+        border: '1px solid',
+        borderColor: '#393838',
+        _focus: {
+          boxShadow: 'none',
+          borderColor: '#674545',
+          
+        },
+        
+      },
+    }
+  }
+
+}
+
+const Link = {
+  baseStyle: {
+    _focus: {
+      boxShadow: 'none',
+      color: 'white'
+    }
+  }
+}
+
+const Table = {
+  variants: {
+    scoringTable: {
+      th: {
+        background: '#111111'
+      },
+    }
+  }
+}
+
+const Heading = {
+  baseStyle: {
+    color: '#FAFAFA',
+  }
+}
+
+const theme = extendTheme({ 
+  config, 
+  ...chakraTheme, 
+  ...fslTheme, 
+  components: {
+    Button,
+    Heading,
+    Input,
+    Link,
+    Table
+  }
+},
+  // withDefaultColorScheme({ 
+  //   colorScheme: 'brand',
+  //   components: ['Button'] 
+  // }),
+);
+console.log('theme: ', theme)
 export default theme;

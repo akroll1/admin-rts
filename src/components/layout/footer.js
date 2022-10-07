@@ -8,7 +8,7 @@ export const Footer = () => (
     boxSizing="border-box"
     as="footer" 
     role="contentinfo" 
-    bg={mode('gray.800', 'white.500')} 
+    // bg={mode('gray.800', 'fsl-nav-footer-bg')} 
     mx="auto" 
     mt="1rem" 
     maxW={["90%","100%"]} 

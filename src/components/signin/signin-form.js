@@ -27,7 +27,7 @@ export const SignInForm = ({
       </Heading>
       <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
         <Text as="span">Don&apos;t have an account?</Text>
-        <Text onClick={() => setFormState({ ...formState, isSignin: false, isSignup: true })} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Sign-up now!</Text>
+        <Text onClick={() => setFormState({ ...formState, isSignin: false, isSignup: true })} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#FCFCFC'}}>Sign-up now!</Text>
       </Text>
       <Card>
         <chakra.form onSubmit={e => e.preventDefault()}>
@@ -52,11 +52,11 @@ export const SignInForm = ({
               isLoading={isSubmitting} 
               loadingText="Submitting" 
               id="signin_button" 
-              _hover={{cursor: 'pointer'}} 
+              // _hover={{cursor: 'pointer'}} 
               as="a" 
               onClick={handleSignIn} 
               type="button" 
-              colorScheme="blue" 
+              colorScheme="solid" 
               size="lg" 
               fontSize="md"
             >

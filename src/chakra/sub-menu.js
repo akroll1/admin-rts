@@ -1,6 +1,6 @@
+import * as React from 'react'
 import { useNavMenu } from './use-nav-menu'
 import { Box, Collapse, SimpleGrid, useDisclosure } from '@chakra-ui/react'
-import * as React from 'react'
 import { FaChevronDown } from 'react-icons/fa'
 import { NavLink, NavMenu } from '../components/navbar'
 import { SubmenuItem as DesktopMenuItem } from './sub-menu-item'
@@ -19,7 +19,13 @@ const DesktopSubmenu = (props) => {
         fontWeight="semibold"
         {...getTriggerProps()}
       >
-        <Box>{link.label}</Box>
+        <Box
+          _hover={{ 
+            color: 'white',
+         }}
+        >
+          {link.label}
+        </Box>
         <Box marginStart="2" as={FaChevronDown} fontSize="xs" />
       </NavLink.Desktop>
 
@@ -50,6 +56,8 @@ const MobileSubMenu = (props) => {
         cursor="pointer"
         onClick={onToggle}
         paddingEnd="4"
+        _active={{ border: '1px solid red'}}
+        _hover={{ background: 'white' }}
       >
         <Box flex="1">{link.label}</Box>
         <Box as={FaChevronDown} transform={`rotate(${isOpen ? '180deg' : '0deg'})`} />

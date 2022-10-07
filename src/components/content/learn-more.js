@@ -1,7 +1,9 @@
+import * as React from 'react'
 import {
     Box,
     Button,
     Center,
+    Flex,
     Grid,
     Heading,
     SimpleGrid,
@@ -9,12 +11,12 @@ import {
     Text,
     useColorModeValue as mode,
   } from '@chakra-ui/react'
-  import * as React from 'react'
   import { useNavigate } from 'react-router'
   import { BiRightArrowAlt } from 'react-icons/bi'
   import { FaPlayCircle } from 'react-icons/fa'
   import { LearnMoreLogo, Testimonial } from '../../chakra'
-  
+  import JWPlayer from '@jwplayer/jwplayer-react';
+
   const Feature = props => {
     const { title, children } = props
     return (
@@ -24,15 +26,21 @@ import {
       </Stack>
     )
   }
-  
+  const styles = {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+  }
   export const LearnMore = () => {
     const navigate = useNavigate();
     return (
-      <Box as="section" py="8" bg={mode('gray.100', 'gray.800')}>
+      <Box as="section" py="8" bg={mode('gray.100', 'inherit')}>
         <Box maxW={{ base: 'xl', md: '7xl' }} mx="auto" px={{ base: '6', md: '8' }}>
           <Grid templateColumns={{ base: '1fr', md: '360px 1fr' }} gap="64px">
             <Box>
-              <Heading size="3xl" letterSpacing="tight" fontWeight="extrabold">
+              <Heading size="2xl" letterSpacing="tight" fontWeight="bold">
                 Score Fights In Real Time
               </Heading>
               <Text mt="6" mb="8" fontSize="lg" fontWeight="medium">
@@ -50,16 +58,23 @@ import {
                 &ldquo;Watch me score the fight in real-time on the FightSync app. Search all my past scorecards and see my predictions.&rdquo;
               </Testimonial>
             </Box>
-            <Box>
-              <Center
-                bg={mode('white', 'gray.700')}
-                shadow="lg"
-                minH={{ base: '320px', lg: '480px' }}
-                rounded="lg"
-              >
-                {/* Replace this with your screenshot */}
-                <Box cursor="pointer" as={FaPlayCircle} fontSize="90px" color="gray.300" />
-              </Center>
+            <Box position="relative" w="100%" h="100%" m="autp">
+              <Flex minH={{ base: '320px', lg: '480px' }}>
+
+                {/* <Center
+                  bg={mode('white', 'gray.700')}
+                  shadow="lg"
+                  minH={{ base: '320px', lg: '480px' }}
+                  rounded="lg"
+                  > */}
+
+                  <JWPlayer
+                    playlist="https://cdn.jwplayer.com/v2/playlists/kTtEBPkU"
+                    library='https://cdn.jwplayer.com/libraries/WBqqdo2h.js'
+                    />  
+                {/* </Center> */}
+                {/* <Box onClick={() => console.log('click')} cursor="pointer" as={FaPlayCircle} fontSize="90px" color="gray.300" /> */}
+              </Flex>
               <SimpleGrid
                 rounded="lg"
                 mt="10"

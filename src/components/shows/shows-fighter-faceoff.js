@@ -25,8 +25,8 @@ export const ShowsFighterFaceoff = ({
         shadow={{ md: 'base' }}
         maxW={["100%", "90%", "80%"]}
       >
-        { fighters?.length > 0 && fighters?.map( fighter => {
-          console.log('fighter: ', fighter)
+        { fighters.length > 0 && fighters.map( fighter => {
+          // console.log('fighter: ', fighter)
           const { fighterId, firstName, lastName, ringname } = fighter;
           return (
             <Flex 

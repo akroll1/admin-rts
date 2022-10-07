@@ -74,7 +74,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
 
     useEffect(() => {
         if(showId){
-            const showsUrl = process.env.REACT_APP_SHOWS + `/${showId}`;
+            const showsUrl = process.env.REACT_APP_API + `/shows/${showId}`;
             axios.get(showsUrl, accessTokenConfig)
             .then( res => {
                 setSelectedShow(res.data);

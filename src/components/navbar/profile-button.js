@@ -1,24 +1,26 @@
 import React from 'react'
 import { Box, Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
-import { stateStore } from '../../stores'
-export const ProfileButton = ({ 
-    isLoggedIn,
-    setIsLoggedIn 
-}) => {
+import { useScorecardStore } from '../../stores'
+
+export const ProfileButton = () => {
     const navigate = useNavigate();
+    const {
+        setUser,
+        user
+    } = useScorecardStore();
+    const { isLoggedIn } = user;
 
     const handleClick = () => {
-        const { reset } = stateStore.getState();
         if(isLoggedIn){
-            setIsLoggedIn(false)
-            reset();
+            setUser({ ...user, isLoggedIn: false })
             navigate('/');
         } else {
-            setIsLoggedIn(false)
+            setUser({ ...user, isLoggedIn: false })
             navigate('/signin')
         }
     }
+
     const signin = () => {
         if(isLoggedIn) return
         return navigate('/signin')
@@ -32,7 +34,8 @@ export const ProfileButton = ({
                     w='full'
                     size='sm'
                     as={Button} 
-                    colorScheme='blue'
+                    colorScheme='brand'
+                    color="white"
                     onClick={signin}
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
