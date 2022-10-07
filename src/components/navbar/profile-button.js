@@ -6,6 +6,7 @@ import { useScorecardStore } from '../../stores'
 export const ProfileButton = () => {
     const navigate = useNavigate();
     const {
+        reset,
         setUser,
         user
     } = useScorecardStore();
@@ -14,6 +15,7 @@ export const ProfileButton = () => {
     const handleClick = () => {
         if(isLoggedIn){
             setUser({ ...user, isLoggedIn: false })
+            reset()
             navigate('/');
         } else {
             setUser({ ...user, isLoggedIn: false })

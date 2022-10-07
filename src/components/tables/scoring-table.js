@@ -17,9 +17,6 @@ export const ScoringTable = ({
         tableData, 
     } = useScorecardStore()
 
-    // console.log('fight: ', fight)
-    console.log('tableData: ', tableData)
-    console.log('fighterScores: ', fighterScores)
     const currentRound = fighterScores.round
     const totalRounds = fight ? fight.rounds : 12;
 
