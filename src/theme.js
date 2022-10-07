@@ -311,11 +311,6 @@ const theme = extendTheme({
     Link,
     Table
   }
-},
-  // withDefaultColorScheme({ 
-  //   colorScheme: 'brand',
-  //   components: ['Button'] 
-  // }),
-);
-console.log('theme: ', theme)
+});
+// console.log('theme: ', theme)
 export default theme;

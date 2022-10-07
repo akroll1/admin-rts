@@ -1,4 +1,5 @@
 import '@fontsource/koulen'
+import '@fontsource/lato'
 import { createRoot } from 'react-dom/client'
 import App from './pages/App'
 import { BrowserRouter } from "react-router-dom"
