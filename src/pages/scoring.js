@@ -5,7 +5,7 @@ import { ScoringTable } from '../components/tables'
 import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, MoneylineModal, PredictionModal } from '../components/modals'
 import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
-import { useStateStore, useScorecardStore, useScoringStore } from '../stores'
+import { useScorecardStore, useScoringStore } from '../stores'
 import { useWindowResize } from '../hooks'
 
 const Scoring = () => {
@@ -14,10 +14,7 @@ const Scoring = () => {
     const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
     //////////////////  SCORE STATE /////////////////////////
     const { 
-        accessToken, 
-        user 
-    } = useStateStore();
-    const { 
+        accessToken,
         chatScorecard,
         collateTableData,
         fetchGroupScorecard,
@@ -25,6 +22,8 @@ const Scoring = () => {
         fightComplete,
         fighters,
         fighterScores,
+        modals,
+        setModals,
         tokenExpired,
         userScorecard,
     } = useScorecardStore();
@@ -50,15 +49,6 @@ const Scoring = () => {
         fighterB: '', 
         scorecardName: '',
     });
-    // const [fightComplete, setFightComplete] = useState(false);
-    //////////////////  MODALS  /////////////////////////
-    const [modals, setModals] = useState({
-        addMemberModal: false,
-        addGuestJudgeModal: false,
-        expiredTokenModal: false,
-        moneylineModal: false,
-        predictionModal: false,
-    })
 
     const [props, setProps] = useState(null);
     const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards/${groupscorecard_id}/summary`;
@@ -96,16 +86,12 @@ const Scoring = () => {
     },[windowWidth])
 
     useEffect(() => {
-        const run = async () => {
-            await fetchGroupScorecard(groupscorecard_id)
-            await collateTableData()
-        }
-        run()
+        fetchGroupScorecard(groupscorecard_id)
     },[])
     
     useEffect(() => {
         if(tokenExpired){
-            setModals({ ...modals, expiredTokenModal: true })
+            setModals('expiredTokenModal', true)
         }
     },[tokenExpired])
 
@@ -119,17 +105,7 @@ const Scoring = () => {
         }
     },[fight])
 
-    const handleOpenAddMemberSubmitModal = () => {
-        if(userScorecard.ownerId !== groupScorecard.ownerId){
-            return toast({ 
-                title: `Only group admin can add members.`,
-                duration: 5000,
-                status: 'info',
-                isClosable: true
-            })
-        }
-        setModals({ ...modals, addMemberModal: true });
-    }
+
     const handleAddMemberSubmit = async email => {
         setIsSubmitting(true);
         const { admin, groupScorecardId, groupScorecardName, fightId } = groupScorecard;
@@ -146,7 +122,7 @@ const Scoring = () => {
         }
         return await axios.put(groupScorecardsUrl, update, accessToken)
             .then( res => {
-                setModals( modals => ({ ...modals, addMemberModal: false }));
+                setModals('addMemberModal', false);
                 if(res.status === 200){
                     return toast({ 
                         title: `Email invite was sent to member.`,
@@ -174,29 +150,14 @@ const Scoring = () => {
             <Flex>
                 
                 <AddGuestJudgeModal 
-                    modals={modals}
-                    setModals={setModals} 
                     fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
                 />
-                <AddMemberModal 
-                    modals={modals}
-                    setModals={setModals} 
-                    handleAddMemberSubmit={handleAddMemberSubmit}
-                    isSubmitting={isSubmitting}
-                />
-                <ExpiredTokenModal 
-                    modals={modals}
-                    setModals={setModals} 
-                />
+                <AddMemberModal />
+                <ExpiredTokenModal />
                 <MoneylineModal
-                    modals={modals}
                     props={props}
-                    setModals={setModals} 
                 />
-                <PredictionModal 
-                    modals={modals}
-                    setModals={setModals} 
-                />
+                <PredictionModal />
             </Flex>
             <Flex 
                 display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
@@ -206,9 +167,6 @@ const Scoring = () => {
                 maxH="60vh"
             >
                 <ScoringSidebarLeft
-                    handleOpenAddMemberSubmitModal={handleOpenAddMemberSubmitModal}
-                    modals={modals}
-                    setModals={setModals}
                     tabs={tabs}
                 />
                 <ScoringMain

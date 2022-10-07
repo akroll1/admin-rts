@@ -5,10 +5,7 @@ import { capFirstLetters } from '../../utils'
 import { CustomOverlay } from '../custom-overlay'
 import { useScorecardStore } from '../../stores'
 
-export const PredictionModal = ({ 
-    modals,
-    setModals,
-}) => {
+export const PredictionModal = () => {
   const [overlay, setOverlay] = useState(<CustomOverlay />)
   const [form, setForm] = useState({
     fighter:'',
@@ -18,15 +15,18 @@ export const PredictionModal = ({
   const {
     fight,
     fighters,
-    setTransformedPrediction,
+    modals,
+    patchPrediction,
+    setModals,
   } = useScorecardStore();
 
   const totalRounds = new Array(fight?.rounds).fill(0);
 
   const handleSubmitPrediction = () => {
+    if(!form.fighter || !form.result) return setModals('predictionModal', false)
     const predictionString = `${form.fighter},${form.result}`
-    setTransformedPrediction(predictionString)
-    setModals({ ...modals, predictionModal: false })
+    patchPrediction(predictionString)
+    setModals('predictionModal', false)
   }
 
   return (
@@ -54,7 +54,7 @@ export const PredictionModal = ({
                 justifyContent="center"
               >
                 <Select 
-                  _hover={{cursor: 'pointer'}} 
+                  // _hover={{cursor: 'pointer'}} 
                   // _focus={{border: 'brand.100'}}
                   onChange={e => setForm({ ...form, fighter: e.currentTarget.value })} 
                   m="1" 
@@ -69,7 +69,7 @@ export const PredictionModal = ({
                     }
                 </Select>
                 <Select 
-                  _hover={{cursor: 'pointer'}} 
+                  // _hover={{cursor: 'pointer'}} 
                   // _focus={{border: 'brand.100'}}
                   onChange={e => setForm({ ...form, result: e.currentTarget.value })} 
                   m="1" 
@@ -92,11 +92,13 @@ export const PredictionModal = ({
           <Button 
             onClick={handleSubmitPrediction} 
             colorScheme="solid" 
+            size="md"
             mr={3}
           >
             Save Prediction
           </Button>
           <Button 
+            size="md"
             variant="outline"   
             onClick={() => setModals({ ...modals, predictionModal: false})} 
             colorScheme="outline"

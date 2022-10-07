@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Heading, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
 import { useScorecardStore } from '../../stores'
 
-export const ExpiredTokenModal = ({
-    modals, 
-  }) => {
-  const { setTokenExpired } = useScorecardStore()
+export const ExpiredTokenModal = () => {
+  const { 
+    modals,
+    setTokenExpired 
+  } = useScorecardStore()
   const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const signin = () => {

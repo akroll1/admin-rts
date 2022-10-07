@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import { Button, ButtonGroup, Input, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { isValidEmail } from '../../utils';
 import { CustomOverlay } from '../custom-overlay';
+import { useScorecardStore } from '../../stores';
 
 export const AddMemberModal = ({ 
-    modals,
-    setModals,
     handleAddMemberSubmit, 
-    handleOpenAddMemberSubmitModal,
     isSubmitting, 
 }) => {
+    const { 
+        modals,
+        setModals
+    } = useScorecardStore()
+
     const [overlay, setOverlay] = useState(<CustomOverlay />)
     const [email, setEmail] = useState('');
     const isInvalid = isValidEmail(email) ? false : true;
@@ -18,7 +21,7 @@ export const AddMemberModal = ({
     }
     const closeModal = () => {
         setEmail('');
-        setModals({ ...modals, addMemberModal: false })
+        setModals('addMemberModal', false)
     }
     return ( 
         <Modal
@@ -48,6 +51,7 @@ export const AddMemberModal = ({
             >
             <ButtonGroup spacing="4">
                 <Button 
+                    size="md"
                     onClick={addMember}
                     isDisabled={isInvalid} 
                     isLoading={isSubmitting} 
@@ -57,7 +61,12 @@ export const AddMemberModal = ({
                 >
                     Add Member
                 </Button>
-                <Button minW="50%" variant="outline" onClick={closeModal}>
+                <Button 
+                    size="md"
+                    minW="50%" 
+                    variant="outline" 
+                    onClick={closeModal}
+                >
                     Cancel
                 </Button>
             </ButtonGroup>

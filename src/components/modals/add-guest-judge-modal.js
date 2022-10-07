@@ -2,14 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
-import { useStateStore } from '../../stores'
+import { useScorecardStore, useStateStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
 import { CustomOverlay } from '../custom-overlay';
 
 // now in scoring.ts
-export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModals }) => {
+export const AddGuestJudgeModal = ({ 
+    fetchGuestJudgeScorecards 
+}) => {
     const toast = useToast();
-    const { myGuestJudges, setMyGuestJudges } = useStateStore.getState();
+    const { myGuestJudges, setMyGuestJudges } = useStateStore()
+    const {
+        modals, 
+        setModals
+    } = useScorecardStore()
+
     const availableGuestJudges = useStateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
     const [overlay, setOverlay] = useState(<CustomOverlay />)
@@ -22,7 +29,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModal
     
     const closeModal = () => {
         setMyJudges([]);
-        setModals( modals => ({ ...modals, addGuestJudgeModal: false }))
+        setModals('addGuestJudgeModal', false)
     }
  
     const localAddGuestJudge = e => {
@@ -115,6 +122,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModal
                     <ButtonGroup m="auto" spacing="4">
                         { availableGuestJudges.length < 0 && 
                             <Button 
+                                size="md"
                                 onClick={setJudges}
                                 loadingText="Submitting"  
                                 colorScheme="solid"
@@ -123,6 +131,7 @@ export const AddGuestJudgeModal = ({ fetchGuestJudgeScorecards, modals, setModal
                             </Button>
                         }
                         <Button 
+                            size="md"
                             colorScheme={availableGuestJudges.length > 0 ? "outline" : 'solid'} 
                             variant={availableGuestJudges.length > 0 ? 'outline' : 'solid'}
                             onClick={closeModal}

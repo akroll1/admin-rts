@@ -1,4 +1,4 @@
-import { Flex, Heading, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 import { useScorecardStore, useScoringStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
@@ -12,12 +12,11 @@ export const ScoringTable = ({
     } = useScoringStore()
     
     const {
+        currentRound,
         fight,
-        fighterScores,
         tableData, 
     } = useScorecardStore()
 
-    const currentRound = fighterScores.round
     const totalRounds = fight ? fight.rounds : 12;
 
     const sortData = (a, b) => a.username - b.username
@@ -45,6 +44,19 @@ export const ScoringTable = ({
 
     const rounds = new Array(totalRounds).fill('Round')
     const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : ''
+    const renderRoundStyles = (i, roundKO, transformedPrediction, fighter) => {
+        // console.log('fihgter1: ', transformedPrediction)
+        if((i+1) == roundKO && transformedPrediction == fighter){
+            if(currentRound === (i+1)){
+                return ({ border: '2px solid #e56a54' })    
+            } else {
+                return ({ border: '1px solid white' })
+            }
+        } else {
+            return ({ border: '1px solid #656565' })
+        }
+    }
+
 
     return (      
         <>
@@ -165,14 +177,14 @@ export const ScoringTable = ({
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
-                                                                // style={currentRound === (i+1) ? { border: '2px solid white' } : (i+1) == roundKO && (transformedPrediction == fighter1) ? currentRound === (i+1) ? { border: '2px solid #e56a54' } : { border:'1px solid white' } : { border: '1px solid #656565' } }
-                                                                style={(i+1) == roundKO && (transformedPrediction == fighter1) ? currentRound === (i+1) ? { border: '2px solid #e56a54' } : { border:'1px solid white' } : { border: '1px solid #656565' } }
+                                                                style={renderRoundStyles(i, roundKO, transformedPrediction, fighter1)}
                                                             >   
                                                                 {roundScores[fighter1]}
                                                             </Flex>
                                                             <Flex 
                                                                 w="100%"
-                                                                style={(i+1) == roundKO && (transformedPrediction == fighter2) ? currentRound === (i+1) ? { border: '1px solid #e56a54' } : { border: '1px solid white' } : { border: "1px solid #656565" } } 
+                                                                style={renderRoundStyles(i, roundKO, transformedPrediction, fighter2)}
+                                                                // style={(i+1) == roundKO && (transformedPrediction == fighter2) ? currentRound === (i+1) ? { border: '1px solid #e56a54' } : { border: '1px solid white' } : { border: "1px solid #656565" } } 
                                                                 color={i >= mappedScores.length ? 'transparent' : "white"}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 

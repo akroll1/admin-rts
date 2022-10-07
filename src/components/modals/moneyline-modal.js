@@ -3,15 +3,16 @@ import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Modal
 import { ScoringMoneylineTable } from '../tables'
 import { CustomOverlay } from '../custom-overlay'
 import { useScorecardStore } from '../../stores'
+
 export const MoneylineModal = ({
-  modals,
   props,
-  setModals,
 }) => {
   const [overlay, setOverlay] = useState(<CustomOverlay />)
   const {
     fight,
-    fighters
+    fighters,
+    modals,
+    setModals,
   } = useScorecardStore()
   return (
     <Modal 
@@ -38,8 +39,9 @@ export const MoneylineModal = ({
           justifyContent="center"
         >
           <Button 
+            size="md"
             minW="40%" 
-            onClick={() => setModals(modals => ({ ...modals, moneylineModal: false}))} 
+            onClick={() => setModals('moneylineModal', false)} 
             colorScheme="solid"
           >
             Close
