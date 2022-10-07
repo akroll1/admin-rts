@@ -54,7 +54,7 @@ export const ChatSidebar = ({
 
     useEffect(() => {
         const scrollToBottom = () => {
-          messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+          messagesEndRef.current.scrollTop = 0
         };
         scrollToBottom();
       });
@@ -145,8 +145,8 @@ export const ChatSidebar = ({
     // Renderers
     const renderMessage = (message, i) => {
         const isSender = message.username === username
-        const isSenderStyles = { color: 'red', textAlign: 'left', display: 'inline-flex' };
-        const notIsSenderStyles = { color: 'green', textAlign: 'right', display: 'inline-flex' }
+        const isSenderStyles = { color: 'red', textAlign: 'left' };
+        const notIsSenderStyles = { color: 'green', textAlign: 'left' }
         return (
             <Box display="inline-block" key={i} m="2" mb="0" mt="1">
                 <p style={{ overflowWrap: 'break-word' }}>
@@ -167,14 +167,12 @@ export const ChatSidebar = ({
 
     return (
         <Flex 
+            p="1"
             display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
             id="chat-sidebar"
             flexDir="column" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
-            w="100%" 
-            minH={["22rem"]} 
-            maxH={["40vh", "40vh", "60vh"]}
-            p="2" 
+            maxW="100%" 
             bg={tabs.all ? "fsl-sidebar-bg" : "inherit"}
             borderRadius="md" 
             justifyContent="space-between"
@@ -201,16 +199,14 @@ export const ChatSidebar = ({
                         fontSize="sm"
                     >    
                         {renderMessages()}  
-                        <Flex ref={messagesEndRef}>
-                            <p>hey</p>    
+                        <Flex ref={messagesEndRef}>   
                         </Flex>                  
                     </Flex>
                 }
                 <Divider p="1" w="50%" mb="2" marginX="auto"/>
                 <Input
+                    mb="1"
                     as="input"
-                    m="1"
-                    p="2"
                     size="sm"
                     type="text"
                     color="whiteAlpha.800"
@@ -222,7 +218,7 @@ export const ChatSidebar = ({
                     onChange={handleChatChange}
                     onKeyDown={handleChatKeydown}
                 />
-                <ButtonGroup p="2" pt="0" pb="0">
+                <ButtonGroup p="2" pt="2" pb="0">
                     { socketActive() 
                         ?
                             <Button     

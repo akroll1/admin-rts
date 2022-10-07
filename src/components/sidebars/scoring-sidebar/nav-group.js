@@ -12,7 +12,7 @@ export const NavGroup = (props) => {
         fontSize={tabs.all ? "xs" : "lg"}
         fontWeight={tabs.all ? "semibold" : "extrabold"}
         textTransform="uppercase"
-        color={tabs.all ? "#c8c8c8" : "#FFF"}
+        color={tabs.all ? "#fafafa" : "#dadada"}
         letterSpacing={tabs.all ? "wide" : "tight"}
         mb="1"
       >

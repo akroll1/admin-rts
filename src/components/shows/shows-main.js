@@ -5,6 +5,7 @@ import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 
+
 export const ShowsMain = ({
     deleteMember,
     emailValue,
@@ -58,7 +59,10 @@ export const ShowsMain = ({
                     />
                 :
                     <>
-                        <DividerWithText text={`Reviews`} />
+                        <DividerWithText 
+                            text={`Reviews`} 
+                            fsize={"3rem"}
+                        />
                         <FightReviews 
                             fightReviewForm={fightReviewForm} 
                             setFightReviewForm={setFightReviewForm} 

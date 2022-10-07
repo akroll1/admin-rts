@@ -55,7 +55,7 @@ export const ScoringSidebarLeft = ({
             direction="column" 
             p="2" 
             bg={tabs.info ? "inherit" : "fsl-sidebar-bg"}
-            color={tabs.info ? "#FAFAFA" : "#c8c8c8"}
+            color={tabs.info ? "#dadada" : "#c8c8c8"}
             fontSize="sm"
             minH={tabs.info ? "75vh" : "100%"}
         >
