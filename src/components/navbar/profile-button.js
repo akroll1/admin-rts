@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Box, Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
 import { useScorecardStore } from '../../stores'
@@ -9,22 +10,24 @@ export const ProfileButton = () => {
         setUser,
         user
     } = useScorecardStore();
-    const { isLoggedIn } = user;
+    const { isLoggedIn } = user
+    const [open, setOpen] = useState(false)
 
-    const handleClick = () => {
-        if(isLoggedIn){
-            setUser({ ...user, isLoggedIn: false })
-            reset()
-            navigate('/');
-        } else {
-            setUser({ ...user, isLoggedIn: false })
-            navigate('/signin')
-        }
+    const openProfile = () => {
+        if(isLoggedIn) return setOpen(true)
+        if(!isLoggedIn) navigate('/signin')
     }
 
-    const signin = () => {
-        if(isLoggedIn) return
-        return navigate('/signin')
+    const handleSignOutClick = () => {
+        setOpen(false)
+        reset()
+        navigate('/')
+    }
+
+    const handleNavigate = e => {
+        setOpen(false)
+        const { value } = e.currentTarget
+        navigate(value)
     }
 
     return (
@@ -37,16 +40,16 @@ export const ProfileButton = () => {
                     as={Button} 
                     colorScheme='brand'
                     color="white"
-                    onClick={signin}
+                    onClick={openProfile}
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
-                {isLoggedIn &&
+                {open &&
                     <MenuList>
-                        <MenuItem onClick={() => navigate('/scorecards')}>Scorecards</MenuItem>
-                        <MenuItem onClick={() => navigate('/dashboard/account')}>Profile</MenuItem>
+                        <MenuItem value="/scorecards" onClick={handleNavigate}>Scorecards</MenuItem>
+                        <MenuItem value="/dashboard/account" onClick={handleNavigate}>Profile</MenuItem>
                         <MenuDivider />
-                        <MenuItem onClick={() => handleClick()}>{isLoggedIn ? `Sign Out` : `Sign In`}</MenuItem>
+                        <MenuItem onClick={() => handleSignOutClick()}>Sign Out</MenuItem>
                     </MenuList>
                 }
             </Menu>
