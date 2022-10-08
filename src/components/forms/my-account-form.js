@@ -1,40 +1,56 @@
-import React, {useEffect, useState} from 'react'
-import { Avatar, Box, Button, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { 
+  Avatar, 
+  Box, 
+  Button, 
+  Checkbox, 
+  FormControl, 
+  FormHelperText, 
+  FormLabel, 
+  Heading, 
+  HStack, 
+  Input, 
+  Stack, 
+  StackDivider, 
+  Text, 
+  Textarea, 
+  useColorModeValue as mode, 
+  useToast, 
+  VStack 
+} from '@chakra-ui/react'
 import { HiCloudUpload } from 'react-icons/hi'
 import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect, FieldGroup } from '../../chakra'
-import axios from 'axios'
+import { useScorecardStore } from '../../stores'
 
+export const MyAccountForm = () => {
+  const { 
+    fetchDBUser,
+    updateDBUser
+  } = useScorecardStore()
 
-export const MyAccountForm = ({ user, tokenConfig }) => {
-  const toast = useToast();
-  const [userProfile, setUserProfile] = useState(user)
+  const [userProfile, setUserProfile] = useState({
+    firstName: '',
+    lastName: '',
+    bio: ''
+  })
 
+  useEffect(() => {
+    fetchDBUser()
+  },[])
+  
   const handleFormInput = e => {
     const {id, value} = e.currentTarget;
     setUserProfile({...userProfile, [id]: value})
   }
 
-  const updateUser = () => {
-    const url = process.env.REACT_APP_API + `/users/${user.sub}`;
-    const { firstName, lastName, bio } = userProfile;
-    const update = {
-      firstName,
-      lastName,
-      bio
-    };
-    axios.put(url, userProfile, tokenConfig)
-      .then(res => {
-        if(res.status === 200){
-          return toast({ 
-            title: 'User Updated',
-            duration: 3000,
-            status: 'success',
-            isClosable: true
-          })
-        }
-      }).catch(err => console.log(err));
-  }
+  // const update = {
+  //   firstName,
+  //   lastName,
+  //   bio
+  // };
+  // updateDBUser(userProfile) 
+
   const handleCheckbox = () => {
     setUserProfile({...userProfile, isPublic: !isPublic});
   };
@@ -87,7 +103,7 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
           </FieldGroup>
           <FieldGroup title="Public Profile">
             <Stack width="full" spacing="4">
-              <Checkbox defaultChecked isChecked={isPublic} id="isPublic" onChange={() => handleCheckbox()}>Allow your account to be public.</Checkbox>
+              <Checkbox defaultChecked isChecked={isPublic} id="isPublic" onChange={handleCheckbox}>Allow your account to be public.</Checkbox>
             </Stack>
           </FieldGroup>
           <FieldGroup title="Language">
@@ -116,7 +132,7 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
                     Delete
                   </Button>
                 </HStack>
-                <Text fontSize="sm" mt="3" color={useColorModeValue('gray.500', 'whiteAlpha.600')}>
+                <Text fontSize="sm" mt="3" color={mode('gray.500', 'whiteAlpha.600')}>
                   .jpg, .gif, or .png. Max file size 700K.
                 </Text>
               </Box>
@@ -125,10 +141,18 @@ export const MyAccountForm = ({ user, tokenConfig }) => {
         </Stack>
         <FieldGroup mt="8">
           <HStack width="full">
-            <Button onClick={updateUser} type="submit" colorScheme="solid">
+            <Button 
+              onClick={updateDBUser} 
+              type="submit" 
+              colorScheme="solid"
+            >
               Save Changes
             </Button>
-            <Button variant="outline">Cancel</Button>
+            <Button 
+              variant="outline"
+            >
+              Cancel
+            </Button>
           </HStack>
         </FieldGroup>
       </form>

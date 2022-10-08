@@ -116,7 +116,7 @@ export const CreateGroupScorecard = ({ user, accessTokenConfig, showId }) => {
         return setGroupScorecard({...groupScorecard, members: tempMembersArr});
     }
     const submitGroupScorecard = () => {
-        const url = process.env.REACT_APP_GROUP_SCORECARDS;
+        const url = process.env.REACT_APP_API + `/scorecards`;
         const { fightDateTime, members } = groupScorecard;
         const groupScorecardObj = {
             ...groupScorecard,

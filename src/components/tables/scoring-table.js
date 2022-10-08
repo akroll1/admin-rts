@@ -44,8 +44,8 @@ export const ScoringTable = ({
 
     const rounds = new Array(totalRounds).fill('Round')
     const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : ''
+    
     const renderRoundStyles = (i, roundKO, transformedPrediction, fighter) => {
-        // console.log('fihgter1: ', transformedPrediction)
         if((i+1) == roundKO && transformedPrediction == fighter){
             if(currentRound === (i+1)){
                 return ({ border: '2px solid #e56a54' })    
@@ -56,7 +56,6 @@ export const ScoringTable = ({
             return ({ border: '1px solid #656565' })
         }
     }
-
 
     return (      
         <>
@@ -99,7 +98,6 @@ export const ScoringTable = ({
                                     return (    
                                         <Th 
                                             key={index} 
-                                            // style={{transform:'rotate(-90deg)', width: '5%'}} 
                                             color="white" 
                                             fontWeight="bold" 
                                             whiteSpace="nowrap" 
@@ -139,7 +137,6 @@ export const ScoringTable = ({
                                 const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1]:0, [fighter2]: 0}));
                                 filledMappedScores = mappedScores.concat(addingRounds)
                             }
-                            const currentRound = mappedScores.length;
                             const index = prediction ? prediction.indexOf('-') : '';
                             const transformedPrediction = prediction ? prediction.slice(0, index) : '';
                             const predictionResult = prediction ? prediction.slice(index+2) : '';
@@ -163,13 +160,13 @@ export const ScoringTable = ({
                                             )
                                         }
                                         if(i === 1){
-                                            return filledMappedScores?.map( (roundScores, i) => {
+                                            return filledMappedScores?.map( (roundScores, _i) => {
                                                 // console.log('roundScores: ', roundScores);
                                                 return (
                                                     <Td key={i+88} p="0px !important">
                                                         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                             <Flex 
-                                                                color={i >= mappedScores.length ? 'transparent' : "white"}
+                                                                color={_i >= mappedScores.length ? 'transparent' : "white"}
                                                                 borderRadius="2px"
                                                                 w="100%"
                                                                 p="1"
@@ -177,7 +174,7 @@ export const ScoringTable = ({
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
-                                                                style={renderRoundStyles(i, roundKO, transformedPrediction, fighter1)}
+                                                                style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter1)}
                                                             >   
                                                                 {roundScores[fighter1]}
                                                             </Flex>
@@ -185,7 +182,7 @@ export const ScoringTable = ({
                                                                 w="100%"
                                                                 style={renderRoundStyles(i, roundKO, transformedPrediction, fighter2)}
                                                                 // style={(i+1) == roundKO && (transformedPrediction == fighter2) ? currentRound === (i+1) ? { border: '1px solid #e56a54' } : { border: '1px solid white' } : { border: "1px solid #656565" } } 
-                                                                color={i >= mappedScores.length ? 'transparent' : "white"}
+                                                                color={_i >= mappedScores.length ? 'transparent' : "white"}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
