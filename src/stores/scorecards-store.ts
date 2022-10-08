@@ -79,7 +79,7 @@ interface ScorecardStore {
     tableData: any[]
     tokenExpired: boolean
     transformedPrediction: string
-    fetchDBUser(options: DBUser): void
+    updateDBUser(): void
     user: User
     userFightReview: Review
     userScorecard: Scorecard
@@ -225,16 +225,23 @@ export const useScorecardStore = create<ScorecardStore>()(
                     return
                 }
                 const data = res.data as GroupScorecardSummary;
-                const [userScorecard] = data.scorecards.filter( scorecard => scorecard.ownerId === user.sub)
+
+                const [userScorecard] = data.scorecards.filter( scorecard => {
+                    if(scorecard.ownerId === get().user.sub || scorecard.ownerId === get().user.email){
+                        return scorecard
+                    }
+                })
                 if(!userScorecard.prediction){
                     setTimeout(() => {
                         set({ modals: { ...resetModals, predictionModal: true }})
                     },5000)
                 }
+                console.log('userScorecard: ', userScorecard)
                 const currentRound = userScorecard.scores.length + 1
-                if(userScorecard.ownerId && userScorecard.ownerId.includes('@')){
+                if(userScorecard.ownerId.includes('@')){
                     const patchUrl = process.env.REACT_APP_API + `/scorecards/${userScorecard.scorecardId}`
-                    const res = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, get().accessToken)
+                    const updatedScorecard = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, get().accessToken)
+                    const update = await get().updateDBUser()
                 }
                 await set({ 
                     activeGroupScorecard: data.groupScorecard, 
@@ -442,16 +449,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const url = process.env.REACT_APP_API + `/users/${get().user.sub}`;
                 const res = await axios.put(url, { username: get().user.username, email: get().user.email } , get().accessToken)
             },  
-            updateDBUser: async (options: DBUser) => {
-                const url = process.env.REACT_APP_API + `/users/${get().user.sub}`;
-                const { firstName, lastName, bio } = options;
-                const update = {
-                    firstName: firstName ? firstName : '',
-                    lastName: lastName ? lastName : '',
-                    bio: bio ? bio : ''
-                }
+            updateDBUser: async () => {
+                const url = process.env.REACT_APP_API + `/users`;
+                const { email, sub, username } = get().user;
                 
-                const res = await axios.patch(url, update, get().accessToken)
+                const res = await axios.post(url, { email, sub, username }, get().accessToken)
                 if(res.status === 200){
                     console.log('updated user!')
                 }
