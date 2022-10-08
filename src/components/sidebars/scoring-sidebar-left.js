@@ -52,7 +52,7 @@ export const ScoringSidebarLeft = ({
             display={tabs.info || tabs.all ? 'flex' : 'none'}
             id="scoring_sidebar_left" 
             w="100%" 
-            flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
+            flex={["1 0 25%"]} 
             position="relative" 
             alignItems="center" 
             justifyContent="center"
@@ -84,15 +84,14 @@ export const ScoringSidebarLeft = ({
                             button={'button'}
                             justifyContent="flex-start" 
                             textAlign="left" 
-                            fontSize="md" 
                             w="100%" 
-                            my="-2" 
                             _focus={{bg:'transparent'}} 
                             _hover="transparent" 
                             variant="ghost" 
-                            size="xs" 
                             pl="0" 
                             m="0"
+                            my="-2" 
+                            fontSize="sm"
                         >
                             { transformedPrediction ? transformedPrediction : 'Set Prediction' }
                         </Button>} 

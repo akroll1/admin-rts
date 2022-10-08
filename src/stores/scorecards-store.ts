@@ -8,6 +8,7 @@ import {
     Fight, 
     Fighter, 
     FighterScores, 
+    FightResolutionOptions,
     FightSummary, 
     fightSummaryStub, 
     Modals, 
@@ -36,10 +37,11 @@ interface ScorecardStore {
     fetchFights(): void
     fetchFightSummary(selectedFightId: string): void
     fetchGroupScorecard(groupScorecardId: string): void
+    fetchMyPoundList(): void
     fetchSelectedFightReviews(fightId: string): void;
     fetchDBUser(): void
     fetchUserScorecards(): void
-    fight?: Fight
+    fight: Fight
     fights: Fight[]
     fightComplete: boolean
     fighters: Fighter[]
@@ -49,6 +51,7 @@ interface ScorecardStore {
     idToken: TokenConfig
     isSubmitting: boolean
     modals: Modals
+    myPoundList: string[]
     patchPrediction(prediction: string): void
     putUserFightReview(reviewObj: ReviewPut): void
     requestChatToken(chatKey: string): void
@@ -71,6 +74,7 @@ interface ScorecardStore {
     setUserScorecard(scorecard: Scorecard): void
     show: Show
     stats: any[]
+    submitFightResolution(resolution: FightResolutionOptions, fightId: string): void
     submitRoundScores(chatScorecard: RoundScores): void
     tableData: any[]
     tokenExpired: boolean
@@ -92,7 +96,7 @@ const initialState = {
     chatToken: '',
     currentRound: 12,
     dbUser: {} as DBUser,
-    fight: undefined,
+    fight: {} as Fight,
     fights: [],
     fightComplete: false,
     fighters: [],
@@ -102,6 +106,7 @@ const initialState = {
     groupScorecards: [],
     idToken: {} as TokenConfig,
     modals: {} as Modals,
+    myPoundList: [],
     prediction: null,
     scorecards: [],
     scoredRounds: 0,
@@ -250,6 +255,12 @@ export const useScorecardStore = create<ScorecardStore>()(
                 get().setFighterScores()
                 get().collateTableData()
             },
+            fetchMyPoundList: async () => {
+                const url = process.env.REACT_APP_API + `/${get().user.sub}`
+                const res = await axios.get(url, get().accessToken);
+                const myPoundList = res.data as string[];
+                set({ myPoundList })
+            },
             fetchSelectedFightReviews: async (fightId: string) => {
                 const url = process.env.REACT_APP_API + `/reviews/${fightId}/fight`;
                 const res = await axios.get(url, get().accessToken);
@@ -288,7 +299,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                         scorecardId
                     })
                 }));
-                console.log('userScorecards: ', userScorecards)
+                // console.log('userScorecards: ', userScorecards)
                 set({ userScorecards })
             },
             patchPrediction: async (prediction: string) => {
@@ -397,6 +408,12 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             setUserScorecard: (userScorecard: Scorecard) => {
                 set({ userScorecard })
+            },
+            submitFightResolution: async (resolution: FightResolutionOptions, fightId: string) => {
+                const url = process.env.REACT_APP_API + `/resolutions/${fightId}`
+                const res = await axios.put(url, resolution, get().accessToken)
+                const data = res.data
+                console.log('data: ', data)
             },
             submitRoundScores: async (chatScorecard: RoundScores) => {
                 console.log('chatScorecard: ', chatScorecard)

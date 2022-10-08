@@ -25,15 +25,12 @@ import { useScorecardStore } from '../../stores'
 
 export const MyAccountForm = () => {
   const { 
+    dbUser,
     fetchDBUser,
     updateDBUser
   } = useScorecardStore()
 
-  const [userProfile, setUserProfile] = useState({
-    firstName: '',
-    lastName: '',
-    bio: ''
-  })
+  const [userProfile, setUserProfile] = useState(dbUser)
 
   useEffect(() => {
     fetchDBUser()
@@ -113,7 +110,7 @@ export const MyAccountForm = () => {
           </FieldGroup>
           <FieldGroup title="Connect accounts">
             <HStack width="full">
-              <Button variant="outline" leftIcon={<Box as={FaGoogle} color="red.400" />}>
+              <Button size="md" variant="outline" leftIcon={<Box as={FaGoogle} color="red.400" />}>
                 Google
               </Button>
             </HStack>
@@ -122,13 +119,13 @@ export const MyAccountForm = () => {
             <Stack direction="row" spacing="6" align="center" width="full">
               <Avatar
                 size="xl"
-                name="Alyssa Mall"
+                name="Dan Abramov"
                 src="https://bit.ly/dan-abramov"
               />
               <Box>
                 <HStack spacing="5">
-                  <Button leftIcon={<HiCloudUpload />}>Change photo</Button>
-                  <Button variant="outline" colorScheme="solid">
+                  <Button size="md" leftIcon={<HiCloudUpload />}>Change photo</Button>
+                  <Button size="md" variant="outline" colorScheme="solid">
                     Delete
                   </Button>
                 </HStack>
@@ -142,6 +139,7 @@ export const MyAccountForm = () => {
         <FieldGroup mt="8">
           <HStack width="full">
             <Button 
+
               onClick={updateDBUser} 
               type="submit" 
               colorScheme="solid"

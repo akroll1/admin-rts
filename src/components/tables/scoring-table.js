@@ -1,16 +1,12 @@
 import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
-import { useScorecardStore, useScoringStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
 import { ScoringDividerWithText } from './table-els/scoring-divider-with-text'
 
 export const ScoringTable = ({ 
     tabs, 
 }) => {
-    const {
-        fightStatus,
-    } = useScoringStore()
-    
     const {
         currentRound,
         fight,
@@ -76,6 +72,7 @@ export const ScoringTable = ({
                 pt="2"
                 my="auto"
                 h="auto"
+                // maxH={["60vh", "70vh"]}
             >      
                 <Table 
                     id="scoring_table"
@@ -89,7 +86,7 @@ export const ScoringTable = ({
                     fontSize="sm"
                     bg="whiteAlpha.50"
                 >
-                    { fightStatus === `COMPLETE` && <TableCaption style={{margin: 'auto',width: '100%', captionSide:"top"}}>FIGHT IS OFFICIAL</TableCaption> }
+                    { fight?.fightStatus === `COMPLETE` && <TableCaption style={{margin: 'auto',width: '100%', captionSide:"top"}}>FIGHT IS OFFICIAL</TableCaption> }
                     <Thead bg={mode('gray.50', '#111111')}>
                         <Tr>
                             {columns.map((column, index) => {

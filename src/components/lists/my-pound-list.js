@@ -18,9 +18,9 @@ export const MyPoundList = ({ tokenConfig, user }) => {
   const [combinedList, setCombinedList] = useState([]);
   const [selectedFighter, setSelectedFighter] = useState({});
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
-  const baseUrl = process.env.REACT_APP_POUND_LIST;
   
   ////////////////////////////////////////////////////////
+  const baseUrl = 'fix this'
   useEffect(() => {
     if(user.sub){
       const getLists = async () => {
@@ -129,7 +129,11 @@ export const MyPoundList = ({ tokenConfig, user }) => {
           mt="0"
         >
           <ButtonGroup mb="1rem">
-            <Button onClick={submitMyList} type="button" colorScheme="blue">
+            <Button 
+              onClick={submitMyList} 
+              type="button" 
+              colorScheme="solid"
+            >
               Save My List
             </Button>
             <Button variant="outline">Cancel</Button>

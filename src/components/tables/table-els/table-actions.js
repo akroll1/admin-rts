@@ -13,10 +13,19 @@ export const TableActions = ({ options, create }) => {
             <InputLeftElement pointerEvents="none" color="gray.400">
               <BsSearch />
             </InputLeftElement>
-            <Input rounded="base" type="search" placeholder="Search..." />
+            <Input 
+              rounded="base" 
+              type="search" 
+              placeholder="Search..." 
+            />
           </InputGroup>
         </FormControl>
-        <Select w="50%" rounded="base" size="sm" placeholder="Status">
+        <Select  
+          rounded="base" 
+          size="sm" 
+          placeholder="Status"
+          _hover={{cursor: 'pointer'}}
+        >
           {
             options && options.length > 0 && options.map( option => <option key={option.value} value={option.value} label={option.label} />)
           }

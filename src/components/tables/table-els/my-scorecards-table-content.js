@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
-import { CopyIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
@@ -17,7 +16,13 @@ export const MyScorecardsTableContent = ({
   const navigate = useNavigate();
   return (
     <Flex overflow="scroll" w="100%">
-      <Table variant="simple" my="8" border="1px solid rgba(255, 255, 255, 0.16)" fontSize="sm" size={['sm', 'md']}>
+      <Table 
+        variant="simple" 
+        my="8" 
+        border="1px solid rgba(255, 255, 255, 0.16)" 
+        fontSize="sm" 
+        size={['sm', 'md']}
+      >
         <Thead bg={mode('gray.50', '#262626')}>
           <Tr>
               <Th style={{textAlign:'center'}} whiteSpace="nowrap" scope="col">
