@@ -13,6 +13,11 @@ export interface User {
     username: string
 }
 
+export interface DBUser {
+    firstName?: string
+    lastName?: string
+    bio?: string
+}
 export const userStub = {
     email: '',
     email_verified: false,

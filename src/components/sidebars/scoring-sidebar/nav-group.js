@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import * as React from 'react'
 
 export const NavGroup = (props) => {
@@ -9,14 +9,14 @@ export const NavGroup = (props) => {
       <Text
         // px="1"
         pl="0"
-        fontSize={tabs.all ? "xs" : "lg"}
+        fontSize={tabs.all ? "md" : "xl"}
         fontWeight={tabs.all ? "semibold" : "extrabold"}
         textTransform="uppercase"
         color={tabs.all ? "#fafafa" : "#dadada"}
         letterSpacing={tabs.all ? "wide" : "tight"}
         mb="1"
       >
-        {label}
+        <Heading as="h3" size="xs">{label}</Heading>
       </Text>
       <Stack spacing="0">{children}</Stack>
     </Box>

@@ -7,11 +7,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 import axios from 'axios';
 
 const Discussion = () => {
-    const username = sessionStorage.getItem('username');
-    const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.'+ process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID + '.' + username + '.accessToken');
-    const accessTokenConfig = {
-        headers: { Authorization: `Bearer ${accessToken}` }
-    };   
+    const accessTokenConfig = ''
     const { id } = useParams();
     const [discussion, setDiscussion] = useState({});
     const [discussions, setDiscussions] = useState([]);

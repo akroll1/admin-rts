@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Button, ButtonGroup, Flex, FormControl, FormLabel, Heading, HStack, Input, Radio, RadioGroup, Select, Stack, StackDivider, useToast, VStack } from '@chakra-ui/react'
 import { DividerWithText, FieldGroup } from '../../chakra'
 import axios from 'axios'
 import { capFirstLetters, FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM } from '../../utils'
+import { useScorecardStore } from '../../stores'
 
-export const FightResolutionForm = ({ user, tokenConfig }) => {
+export const FightResolutionForm = () => {
+    const { 
+        fightSummary, 
+        fetchFightSummary,
+        submitFightResolution
+    } = useScorecardStore()
+
     const toast = useToast();
     const [fightResolution, setFightResolution] = useState('');
     const [selectFightStatus, setSelectFightStatus] = useState('');
     const [radio, setRadio] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [fightId, setFightId] = useState(null);
+    const [fightId, setFightId] = useState('68319d2f-2769-4aee-b1ea-115277ed7a7b');
     const [form, setForm] = useState({
         fight: {
             fightQuickTitle: '',
@@ -21,49 +28,39 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
         },
         fighters: []
     })  
-
-    const searchForFight = () => {
-        if(fightId){
-            setIsSubmitting(true);
-            const url = process.env.REACT_APP_API + `/fights/resolutions/${fightId}`;
-            return axios.get(url, tokenConfig)
-                .then( res => setForm(res.data))
-                .catch( err => console.log(err))
-                .finally(() => setIsSubmitting(false));
+    useEffect(() => {
+        if(fightSummary.fighters.length > 0 ){
+            setForm(fightSummary)
         }
-    };
-    
+    },[fightSummary])
     const handleSubmitResolution = () => {
-        const url = process.env.REACT_APP_API + `/fights/resolutions/${fightId}`;
         const resolutionObj = {
             officialResult: radio === `DR` ? `DR` : `${radio},${fightResolution}`,
             fightStatus: selectFightStatus
         };
+        if(!resolutionObj.officialResult || !resolutionObj.fightStatus){
+            alert('Please select a resolution.')
+            return
+        }
         console.log('resolutionObj: ', resolutionObj);
-        return axios.put(url, resolutionObj, tokenConfig)
-            .then( res => {
-                if(res.status === 200){
-                    toast({ title: 'Fight Resolution updated!',
-                    status: 'success',
-                    duration: 5000,
-                    isClosable: true,})   
-                }
-            }).catch( err => console.log(err));
-    };
+        submitFightResolution(resolutionObj, fightId)
+    }
 
     const setOfficalResult = () => {
         if(!officialResult) return `No official result.`;
-        const [fighter1, fighter2] = fighters;
+        const [fighter1, fighter2] = form.fighters;
         const winner = officialResult.slice(0, 36) === fighter1.fighterId ? `${capFirstLetters(fighter1.firstName)} ${capFirstLetters(fighter1.lastName)}` : `${capFirstLetters(fighter2.firstName)} ${capFirstLetters(fighter2.lastName)}`
         const wonHow = officialResult.slice(37);
         return `${winner}: ${wonHow}`;
     }
-    
-    //    02e3e0a4-8b4a-43b9-8919-4f7d498aa36c
-    const { fight, fighters } = form;
-    const { fightQuickTitle, fightStatus, officialResult, rounds, weightclass } = fight;
-    const [fighter1, fighter2] = fighters.length > 0 ? fighters : '';
-    const theOfficialResult = fighters.length > 0 ? setOfficalResult() : '';
+    const handleFetchFightSummary = () => {
+        fetchFightSummary(fightId)
+    }
+
+    const { fightQuickTitle, fightStatus, officialResult, rounds, weightclass } = form.fight;
+    const [fighter1, fighter2] = form.fighters
+    const theOfficialResult = form.fighters.length > 0 ? setOfficalResult() : '';
+    console.log('form: ', form)
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
@@ -84,9 +81,9 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
                                     minW="33%" 
                                     isLoading={isSubmitting} 
                                     loadingText="Searching..." 
-                                    onClick={searchForFight} 
+                                    onClick={handleFetchFightSummary} 
                                     type="button" 
-                                    colorScheme="blue"
+                                    colorScheme="solid"
                                 >
                                     Search
                                 </Button>
@@ -95,7 +92,7 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
                     </FieldGroup>
                 </Stack>
             </form>
-            { fighters.length > 0 && 
+            { form.fighters.length > 0 && 
                 <Flex flexDir="column">
                     <DividerWithText text="The Officials" />
                     <Flex flexDir="column">
@@ -139,7 +136,7 @@ export const FightResolutionForm = ({ user, tokenConfig }) => {
                                 minW="33%"
                                 onClick={handleSubmitResolution} 
                                 type="button" 
-                                colorScheme="blue"
+                                colorScheme="solid"
                                 isLoading={isSubmitting}
                                 loadingText="Submitting..."
                             >

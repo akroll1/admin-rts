@@ -7,7 +7,7 @@ export const SignUpForm = ({
   form,
   formState, 
   handleFormChange, 
-  handleSignUp, 
+  // handleSignUp, 
   isSubmitting,
   renderForgotPasswordForm,
   setFormState
@@ -80,11 +80,12 @@ export const SignUpForm = ({
               id="signup_button" 
               isLoading={isSubmitting}
               loadingText="Submitting..."
-              onClick={handleSignUp} 
+              // onClick={handleSignUp} 
               type="button" 
               colorScheme="solid" 
               size="lg" 
               fontSize="md"
+              disabled={true}
             >
               Sign-Up
             </Button>

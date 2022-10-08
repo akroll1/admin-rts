@@ -12,14 +12,12 @@ export const MyScorecards = () => {
   } = useScorecardStore();
 
     useEffect(() => {
-      if(userScorecards.length < 1){
-        fetchUserScorecards()
-      }
-    },[userScorecards])
-    console.log('userScorecards: ', userScorecards)
+      fetchUserScorecards()
+    },[])
+    // console.log('userScorecards: ', userScorecards)
     return (
         <Flex 
-          w={["100%", "80%"]}
+          w={["100%", "80%", "60%"]}
           m="auto"
           flexDir="column" 
           p="4"
