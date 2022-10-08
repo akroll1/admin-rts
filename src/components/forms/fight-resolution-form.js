@@ -61,7 +61,7 @@ export const FightResolutionForm = () => {
     const [fighter1, fighter2] = form.fighters
     const theOfficialResult = form.fighters.length > 0 ? setOfficalResult() : '';
     console.log('form: ', form)
-
+    console.log('fightId: ', '68319d2f-2769-4aee-b1ea-115277ed7a7b')
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
             <form id="fight_resolution_form" onSubmit={(e) => {e.preventDefault()}}>
