@@ -22,6 +22,7 @@ import { HiCloudUpload } from 'react-icons/hi'
 import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect, FieldGroup } from '../../chakra'
 import { useScorecardStore } from '../../stores'
+import { sectionFooterPrimaryContent } from 'aws-amplify'
 
 export const MyAccountForm = () => {
   const { 
@@ -31,11 +32,32 @@ export const MyAccountForm = () => {
   } = useScorecardStore()
 
   const [userProfile, setUserProfile] = useState(dbUser)
+  const [form, setForm] = useState({
+    bio: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    username: '',
+    boxCoins: 100
+  })
 
   useEffect(() => {
     fetchDBUser()
   },[])
   
+  useEffect(() => {
+    if(dbUser.boxCoins > 0){
+
+      setForm({
+        bio: dbUser.bio ? dbUser.bio : '',
+        firstName: dbUser.firstName ? dbUser.firstName : '',
+        lastName: dbUser.lastName ? dbUser.lastName : '',
+        email: dbUser.email,
+        username: dbUser.username,
+        boxCoins: dbUser.boxCoins
+      })
+    }
+  },[dbUser])
   const handleFormInput = e => {
     const {id, value} = e.currentTarget;
     setUserProfile({...userProfile, [id]: value})
@@ -52,7 +74,7 @@ export const MyAccountForm = () => {
     setUserProfile({...userProfile, isPublic: !isPublic});
   };
 
-  const { email, firstName, lastName, username, bio, isPublic, boxCoins } = userProfile;
+  const { email, firstName, lastName, username, bio, isPublic, boxCoins } = form;
   // console.log('userProfile: ', userProfile);
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
