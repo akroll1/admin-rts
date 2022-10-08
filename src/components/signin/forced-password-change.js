@@ -15,7 +15,7 @@ export const ForcedPasswordChange = ({
     useEffect(() => {
         inputRef3.current.focus();
     },[]);
-    console.log('isForgotPassword: ', isForgotPassword)
+
     return (
         <Box>
             <Heading textAlign="center" size="xl" fontWeight="extrabold">

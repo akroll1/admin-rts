@@ -160,7 +160,7 @@ export const ScoringTable = ({
                                             return filledMappedScores?.map( (roundScores, _i) => {
                                                 // console.log('roundScores: ', roundScores);
                                                 return (
-                                                    <Td key={i+88} p="0px !important">
+                                                    <Td key={_i} p="0px !important">
                                                         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                             <Flex 
                                                                 color={_i >= mappedScores.length ? 'transparent' : "white"}
@@ -177,7 +177,7 @@ export const ScoringTable = ({
                                                             </Flex>
                                                             <Flex 
                                                                 w="100%"
-                                                                style={renderRoundStyles(i, roundKO, transformedPrediction, fighter2)}
+                                                                style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2)}
                                                                 // style={(i+1) == roundKO && (transformedPrediction == fighter2) ? currentRound === (i+1) ? { border: '1px solid #e56a54' } : { border: '1px solid white' } : { border: "1px solid #656565" } } 
                                                                 color={_i >= mappedScores.length ? 'transparent' : "white"}
                                                                 flexDirection="column" 

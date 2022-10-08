@@ -67,11 +67,12 @@ export const ShowsCreateGroupScorecard = ({
                                 mt={["4"]}
                                 type="button"
                                 colorScheme="solid" 
-                                size="lg"
+                                size="md"
                             >
                                 Add Members
                             </Button>
                             <Button 
+                                size="md"
                                 isLoading={isSubmitting}
                                 loadingText="Submitting"
                                 m="2" 

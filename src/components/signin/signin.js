@@ -144,7 +144,6 @@ export const SignIn = () => {
   };
   const handleForcePWChange = () => {
     const { username, password, user, email } = form;
-    console.log('user: ', user)
     Auth.completeNewPassword( user, password )
       .then( user => { 
         const { username, challengeParam: {  userAttributes } } = user;
