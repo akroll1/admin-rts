@@ -68,18 +68,18 @@ export const ScorecardsSearch = () => {
         setSearch(value);
         const url = process.env.REACT_APP_USERS + `/search/${search}`;
         if(value.length > 3){
-            return axios.get(url, tokenConfig)
-                .then( res => {
-                    console.log('res.data: ', res.data);
-                    setSearchResults(res.data)
-                })
-                .catch( err => console.log(err));
+            // return axios.get(url, tokenConfig)
+            //     .then( res => {
+            //         console.log('res.data: ', res.data);
+            //         setSearchResults(res.data)
+            //     })
+            //     .catch( err => console.log(err));
         }
     }
 
     const handleAutocompleteClick = e => {
         const { id, value } = e.currentTarget;
-        const url = process.env.REACT_APP_SCORECARDS + `/search/${id}`;
+        const url = process.env.REACT_APP_API + `/scorecards/search/${id}`;
         return axios.get(url, tokenConfig)
             .then( res => {
                 setSearchedUsername(value)

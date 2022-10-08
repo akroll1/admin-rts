@@ -22,22 +22,21 @@ import {
 import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
 import { ExpiredTokenModal } from '../components/modals'
-import { useStateStore } from '../stores'
+import { useScorecardStore } from '../stores'
 
 const Dashboard = props => {
   const { type, showId } = useParams();
-  const [modals, setModals] = useState({
-    expiredTokenModal: false
-  });
-  const { user, setUser, setUserScorecards, tokenConfig, userScorecards } = useStateStore( state => state);
+  const { 
+    modals,
+    setUser, 
+    user, 
+  } = useScorecardStore()
+
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
-    // { value: "SCORECARDS", label:"Scorecards", type: 'Scorecard', icon: FaEdit, link: '/dashboard/scorecards' },
     { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound-list' },
     { value: "ACCOUNT", label:"Account Settings", type: 'User', icon: SettingsIcon, link: '/dashboard/account' },
-    // { value: "CREATE-SCORECARD", label:"Create Scorecard", type: 'Create-Scorecard', icon: FaRegBell, link: '/dashboard/create-scorecard' },
-    // { value: "UPCOMING-FIGHTS", label:"My Fight Schedule", type: 'Fight-Schedule', icon: FaRegChartBar, link: '/dashboard/schedule' },
   ]);
 
   useEffect(() => {
@@ -97,15 +96,25 @@ const Dashboard = props => {
   }
   return (
     <Flex height="auto" width={{ base: 'full'}} direction="row" color="white" flexWrap="wrap" px={6} py={8}>
-      <ExpiredTokenModal 
-        modals={modals}
-        setModals={setModals}
-      />
+      <ExpiredTokenModal />
       <Box flex="1 0 25%">
         <Stack spacing={6}>
           <Box fontSize="sm" lineHeight="tall">
-            <Box as="a" href="#" p="3" display="block" transition="background 0.1s" rounded="xl" _hover={{ bg: 'whiteAlpha.200' }} whiteSpace="nowrap">
-              <UserInfo setForm={setForm} setActive={setActive} name={user?.username ? user.username : ''} email={user?.email ? user.email : ''} />
+            <Box  
+              as="a" 
+              href="#" 
+              p="3" 
+              transition="background 0.1s" 
+              rounded="xl" 
+              _hover={{ bg: 'whiteAlpha.200' }} 
+              whiteSpace="nowrap"
+            >
+              <UserInfo 
+                setForm={setForm} 
+                setActive={setActive} 
+                name={user?.username ? user.username : ''} 
+                email={user?.email ? user.email : ''} 
+              />
             </Box>
           </Box>
         </Stack>
@@ -131,21 +140,20 @@ const Dashboard = props => {
         borderRadius="md" 
         mt={0}
       >
-        {/* { form === 'SCORECARDS' && <MyScorecards scorecards={scorecards} user={user} /> } */}
-        { form === 'POUND' && <MyPoundList tokenConfig={tokenConfig} user={user} /> }
-        { form === 'ACCOUNT' && <MyAccountForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'PANELS_MEMBER' && <MyPanelsForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'PANELIST' && <PanelistForm setModals={setModals} tokenConfig={tokenConfig} user={user} /> }
-        { form === 'CREATE_PANEL' && <CreatePanelForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard showId={showId ? showId : ''} tokenConfig={tokenConfig} /> }
-        { form === 'POUNDFORM' && <PoundForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'SHOW-FORM' && <ShowForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'FIGHTERS' && <FightersForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'FIGHT-RESOLUTION' && <FightResolutionForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'DISCUSSIONS' && <DiscussionsForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'GUEST-JUDGES' && <GuestJudgeForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'BROADCAST' && <BroadcastForm tokenConfig={tokenConfig} user={user} /> }
-        { form === 'FIGHT-FORM' && <FightForm tokenConfig={tokenConfig} user={user} /> }
+        { form === 'POUND' && <MyPoundList /> }
+        { form === 'ACCOUNT' && <MyAccountForm /> }
+        { form === 'PANELS_MEMBER' && <MyPanelsForm /> }
+        { form === 'PANELIST' && <PanelistForm /> }
+        { form === 'CREATE_PANEL' && <CreatePanelForm /> }
+        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard /> }
+        { form === 'POUNDFORM' && <PoundForm /> }
+        { form === 'SHOW-FORM' && <ShowForm /> }
+        { form === 'FIGHTERS' && <FightersForm /> }
+        { form === 'FIGHT-RESOLUTION' && <FightResolutionForm /> }
+        { form === 'DISCUSSIONS' && <DiscussionsForm /> }
+        { form === 'GUEST-JUDGES' && <GuestJudgeForm /> }
+        { form === 'BROADCAST' && <BroadcastForm /> }
+        { form === 'FIGHT-FORM' && <FightForm /> }
       </Box>
     </Flex>
   )

@@ -54,3 +54,9 @@ export interface FightSummary {
     fighters: Fighter[],
     show: Show
 }
+
+export interface FightResolutionOptions {
+    fightId: string
+    fightStatus: string
+    officialResult: string
+}
