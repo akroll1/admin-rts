@@ -8,19 +8,21 @@ import {
     Fight, 
     Fighter, 
     FighterScores, 
+    FightPostObj,
     FightResolutionOptions,
     FightSummary, 
     fightSummaryStub, 
+    List,
     Modals, 
     resetModals, 
+    PanelSummary,
     Review, 
     ReviewPut, 
     RoundScores, 
     Show, 
     TokenConfig, 
-    User, 
-    userStub,
-    DBUser
+    User,
+    FightUpdateOptions, 
 } from './models'
 
 interface ScorecardStore {
@@ -31,15 +33,20 @@ interface ScorecardStore {
     chatToken: string
     checkForUserFightReview(userId: string): void
     collateTableData(): void
+    createFight(createFightObj: FightPostObj): void
     createGroupScorecard(scorecardObj: CreateGroupScorecard): Promise<boolean | undefined>
+    createPanel(panelId: string): void
+    createUser(user: User): void
     currentRound: number
-    dbUser: DBUser
+    fetchFight(fightId: string): void
     fetchFights(): void
     fetchFightSummary(selectedFightId: string): void
     fetchGroupScorecard(groupScorecardId: string): void
-    fetchMyPoundList(): void
+    fetchList(listType: string): void
+    fetchPanel(panelId: string): void
+    fetchPanelSummaries(): void
     fetchSelectedFightReviews(fightId: string): void;
-    fetchDBUser(): void
+    fetchUser(): void
     fetchUserScorecards(): void
     fight: Fight
     fights: Fight[]
@@ -51,8 +58,10 @@ interface ScorecardStore {
     idToken: TokenConfig
     isSubmitting: boolean
     modals: Modals
-    myPoundList: string[]
+    panelSummaries: PanelSummary[]
     patchPrediction(prediction: string): void
+    poundListOfficial: List
+    poundListUser: List
     putUserFightReview(reviewObj: ReviewPut): void
     requestChatToken(chatKey: string): void
     scorecards: Scorecard[]
@@ -68,6 +77,7 @@ interface ScorecardStore {
     setModals(modal: string, boolean: boolean): void
     setScoredRounds(scoredRounds: number): void
     setSelectedFight(selectedFightId: string): void
+    setToast(toastOptions: ToastOptions): void
     setTokenExpired(state: boolean): void
     setTransformedPrediction(rawPrediction: string | null): void
     setUser(user: User): void
@@ -75,16 +85,25 @@ interface ScorecardStore {
     show: Show
     stats: any[]
     submitFightResolution(resolution: FightResolutionOptions, fightId: string): void
+    submitList(list: List): void
     submitRoundScores(chatScorecard: RoundScores): void
     tableData: any[]
+    toast: ToastOptions
     tokenExpired: boolean
     transformedPrediction: string
-    updateDBUser(): void
+    updateFight(fightUpdateOptions: FightUpdateOptions): void
+    updateUser(updateOptions: Partial<User>): void
     user: User
     userFightReview: Review
     userScorecard: Scorecard
     userScorecards: any[]
     // addMemberToActiveScorecard(email: string): void
+}
+interface ToastOptions {
+    title: string
+    duration: number
+    status: string
+    isClosable: boolean
 }
 
 const initialState = {
@@ -95,7 +114,6 @@ const initialState = {
     chatScorecard: {} as RoundScores,
     chatToken: '',
     currentRound: 12,
-    dbUser: {} as DBUser,
     fight: {} as Fight,
     fights: [],
     fightComplete: false,
@@ -106,7 +124,9 @@ const initialState = {
     groupScorecards: [],
     idToken: {} as TokenConfig,
     modals: {} as Modals,
-    myPoundList: [],
+    panelSummaries: [],
+    poundListOfficial: {} as List,
+    poundListUser: {} as List,
     prediction: null,
     scorecards: [],
     scoredRounds: 0,
@@ -116,22 +136,23 @@ const initialState = {
     show: {} as Show,
     stats: [],
     tableData: [],
+    toast: {} as ToastOptions,
     tokenExpired: false,
     transformedPrediction: '',
-    user: userStub,
+    user: {} as User,
     userFightReview: {} as Review,
     userScorecard: {} as Scorecard,
     userScorecards: [],
 }
 
-const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards`;
+const baseUrl = process.env.REACT_APP_API;
 
 export const useScorecardStore = create<ScorecardStore>()(
     persist(
         (set, get) => ({
             ...initialState,
             checkForUserFightReview: async (userId: string) => {
-                const url = process.env.REACT_APP_API + `/reviews/${userId}/user`;
+                const url = baseUrl + `/reviews/${userId}/user`;
                 const res = await axios.get(url, get().accessToken);
                 const data = res.data;
                 if(data?.reviewId){
@@ -141,7 +162,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             collateTableData: () => {
                 const collated = get().scorecards.map( (scorecard: any) => {
                     const [fighter1, fighter2] = get().fighters
-                    let { username, prediction, scores } = scorecard
+                    let { finalScore, prediction, scores, username } = scorecard
                     const sortRoundAscending = (a: any, b: any) => a.round - b.round
 
                     if(prediction){
@@ -177,11 +198,12 @@ export const useScorecardStore = create<ScorecardStore>()(
                     .sort(sortRoundAscending);
                 
                     return ({
-                        mappedScores,
-                        username,
-                        totals,
                         fighters: [fighter1.lastName, fighter2.lastName],
-                        prediction
+                        finalScore,
+                        mappedScores,
+                        prediction,
+                        totals,
+                        username,
                     })
                 })
                 set({ 
@@ -189,21 +211,31 @@ export const useScorecardStore = create<ScorecardStore>()(
                     stats: collated 
                 })
             },
+            createFight: async (createObj: FightPostObj) => {
+                const res = await axios.post(`${baseUrl}/fights`, createObj, get().accessToken)
+                console.log('res.data: ', res.data)
+            },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
-                const url = process.env.REACT_APP_API + `/group-scorecards`;
+                const url = baseUrl + `/group-scorecards`;
                 const res = await axios.post(url, scorecardObj, get().accessToken);
                 const data = res.data as GroupScorecard;
                 if(res.status === 200) return true;
             },  
-            fetchDBUser: async () => {
-                const url = process.env.REACT_APP_API + `/users/${get().user.sub}`
-                const res = await axios.get(url, get().accessToken)
-                const dbUser = res.data as DBUser
-                set({ dbUser })
-
+            createPanel: async (panelId: string) => {
+                const res = await axios.post(`${baseUrl}/panels`, { panelId }, get().accessToken)
+                console.log('res.data: ', res.data)
+            },
+            createUser: async (user: User) => {
+                const url = baseUrl + `/users`
+                const res = await axios.post(url, get().user, get().accessToken)
+            },
+            fetchFight: async (fightId: string) => {
+                const res = await axios.get(`${baseUrl}/fights/${fightId}`, get().accessToken)
+                const fight = res.data as Fight
+                set({ fight })
             },
             fetchFights: async () => {
-                const url = process.env.REACT_APP_API + `/fights`
+                const url = baseUrl + `/fights`
                 const res = await axios.get(url, get().accessToken)
                 const data = res.data as Fight[]
                 if(res.data === 'Token expired!'){
@@ -212,14 +244,15 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set( state => ({ fights: data }))
             },
             fetchFightSummary: async (selectedFightId: string) => {
-                const url = process.env.REACT_APP_API + `/fights/${selectedFightId}/summary`;
-                const res = await axios.get(url, get().accessToken);
-                const data = res.data as FightSummary;
-                set({ fightSummary: data });
+                const url = baseUrl + `/fights/${selectedFightId}/summary`
+                const res = await axios.get(url, get().accessToken)
+                const data = res.data as FightSummary
+                set({ fightSummary: data, toast: { title: 'Fight updated!', status: 'success', duration: 5000, isClosable: true,} })
+
             },
             fetchGroupScorecard: async (groupScorecardId: string) => {
                 const user = get().user;
-                const res = await axios.get(`${groupScorecardsUrl}/${groupScorecardId}/summary`, get().idToken);
+                const res = await axios.get(`${baseUrl}/group-scorecards/${groupScorecardId}/summary`, get().idToken);
                 if(res.data === `Token expired!`){
                     get().setTokenExpired(true)
                     return
@@ -236,12 +269,17 @@ export const useScorecardStore = create<ScorecardStore>()(
                         set({ modals: { ...resetModals, predictionModal: true }})
                     },5000)
                 }
-                console.log('userScorecard: ', userScorecard)
+                // console.log('userScorecard: ', userScorecard)
                 const currentRound = userScorecard.scores.length + 1
                 if(userScorecard.ownerId.includes('@')){
-                    const patchUrl = process.env.REACT_APP_API + `/scorecards/${userScorecard.scorecardId}`
+                    const patchUrl = baseUrl + `/scorecards/${userScorecard.scorecardId}`
                     const updatedScorecard = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, get().accessToken)
-                    const update = await get().updateDBUser()
+                    const update = {
+                        sub: get().user.sub,
+                        username: get().user.username,
+                        eamil: get().user.email
+                    }
+                    const updateUser = await get().updateUser(update)
                 }
                 await set({ 
                     activeGroupScorecard: data.groupScorecard, 
@@ -262,20 +300,43 @@ export const useScorecardStore = create<ScorecardStore>()(
                 get().setFighterScores()
                 get().collateTableData()
             },
-            fetchMyPoundList: async () => {
-                const url = process.env.REACT_APP_API + `/${get().user.sub}`
+            fetchList: async (listType: string) => {
+                const url = baseUrl + `/lists/${get().user.sub}/${listType}`
                 const res = await axios.get(url, get().accessToken);
-                const myPoundList = res.data as string[];
-                set({ myPoundList })
+                const data = res.data as any;
+                if(listType === "pound"){
+                    set({ poundListUser: data.userPoundList, poundListOfficial: data.officialPoundList })
+                }
+            },
+            fetchPanel: async (panelId: string) => {
+                const res = await axios.get(`${baseUrl}/${panelId}`, get().accessToken)
+                console.log('res: ', res)
+            },
+            fetchPanelSummaries: async () => {
+                const res = await axios.get(`${baseUrl}/panels`, get().accessToken)
+                const panelSummaries = res.data as PanelSummary[]
+                set({ panelSummaries })
             },
             fetchSelectedFightReviews: async (fightId: string) => {
-                const url = process.env.REACT_APP_API + `/reviews/${fightId}/fight`;
+                const url = baseUrl + `/reviews/${fightId}/fight`;
                 const res = await axios.get(url, get().accessToken);
                 const data = res.data as Review[];
                 set({ selectedFightReviews: data })
             }, 
+            fetchUser: async () => {
+                const url = baseUrl + `/users/${get().user.sub}`
+                const res = await axios.get(url, get().accessToken)
+                if(res.data === 'No user found.'){
+                    const user = get().user
+                    get().createUser({ sub: user.sub, email: user.email, username: user.username })
+                    return
+                }
+                const user = res.data as User
+                Object.assign(user, get().user)
+                set({ user })
+            },
             fetchUserScorecards: async () => {
-                const url = process.env.REACT_APP_API + `/scorecards/${encodeURIComponent(get().user.sub)}-${encodeURIComponent(get().user.email)}/all`;
+                const url = baseUrl + `/scorecards/${encodeURIComponent(get().user.sub!)}-${encodeURIComponent(get().user.email!)}/all`;
                 const res = await axios.get(url, get().accessToken)
                 const data = res.data as any[]
 
@@ -310,7 +371,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ userScorecards })
             },
             patchPrediction: async (prediction: string) => {
-                const url = process.env.REACT_APP_API + `/scorecards/${get().userScorecard.scorecardId}`;
+                const url = baseUrl + `/scorecards/${get().userScorecard.scorecardId}`;
                 const res = await axios.patch(url, { prediction }, get().accessToken)
                 if(res.status === 200){
                     get().setTransformedPrediction(prediction)
@@ -319,7 +380,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
             },
             putUserFightReview: async (reviewObj: ReviewPut) => {
-                const url = process.env.REACT_APP_API + `/reviews`;
+                const url = baseUrl + `/reviews`;
                 const res = await axios.put(url, reviewObj, get().accessToken);
                 if(res.status === 200) {
                     get().fetchSelectedFightReviews(reviewObj.fightId);
@@ -391,6 +452,12 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const [selected] = get().selectedFightReviews.filter( review => review.reviewId === reviewId);
                 set({ selectedFightReview: selected });
             },
+            setToast: (options: ToastOptions) => {
+                set({ toast: options })
+                setTimeout(() => {
+                    set({ toast: { title: '', status: '', duration: 0, isClosable: true,} })
+                },6000)
+            },
             setTokenExpired: (tokenExpired: boolean) => {
                 set({ tokenExpired })
             },
@@ -417,14 +484,24 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ userScorecard })
             },
             submitFightResolution: async (resolution: FightResolutionOptions, fightId: string) => {
-                const url = process.env.REACT_APP_API + `/resolutions/${fightId}`
+                const url = baseUrl + `/resolutions/${fightId}`
                 const res = await axios.put(url, resolution, get().accessToken)
                 const data = res.data
                 console.log('data: ', data)
             },
+            submitList: async (list: List) => {
+                const res = await axios.put(`${baseUrl}/lists/${get().user.sub}/${list.listType}`, list, get().accessToken)
+                console.log('res.data: ', res.data)
+            },
+            submitPanelPredictions: async (predictionObj: Record<string, string[]>) => {
+                Object.assign(predictionObj, { panelistId: get().user.sub })
+                const res = await axios.put(`${baseUrl}/panels`, predictionObj, get().accessToken)
+                const data = res.data
+                console.log('DATA: ', data)
+            },
             submitRoundScores: async (chatScorecard: RoundScores) => {
                 console.log('chatScorecard: ', chatScorecard)
-                const url = process.env.REACT_APP_API + `/scorecards/${get().userScorecard.scorecardId}`
+                const url = baseUrl + `/scorecards/${get().userScorecard.scorecardId}`
                 const res = await axios.put(url, chatScorecard, get().accessToken)
                 const data = res.data
                 ///////////////////////////////////////////////////////   
@@ -445,25 +522,15 @@ export const useScorecardStore = create<ScorecardStore>()(
                     scorecards: updatedScorecards 
                 })       
             },
-            updateUser: async () => {
-                const url = process.env.REACT_APP_API + `/users/${get().user.sub}`;
-                const res = await axios.put(url, { username: get().user.username, email: get().user.email } , get().accessToken)
-            },  
-            updateDBUser: async () => {
-                const url = process.env.REACT_APP_API + `/users`;
-                const { email, sub, username } = get().user;
-                
-                const res = await axios.post(url, { email, sub, username }, get().accessToken)
-                if(res.status === 200){
-                    console.log('updated user!')
-                }
-                    //   return toast({ 
-                    //     title: 'User Updated',
-                    //     duration: 3000,
-                    //     status: 'success',
-                    //     isClosable: true
-
+            updateFight: async (fightUpdateOptions: FightUpdateOptions) => {
+                const res = await axios.put(`${baseUrl}/fights/${fightUpdateOptions.fightId}`, fightUpdateOptions, get().accessToken)
+                console.log('res.data: ', res.data)
             },
+            updateUser: async (updateOptions: Partial<User>) => {
+                const url = baseUrl + `/users/${get().user.sub}`;
+                const res = await axios.put(url, updateOptions , get().accessToken)
+                // console.log('USER res: ', res)
+            },  
             reset: () => set( state => initialState)
         }),
         {

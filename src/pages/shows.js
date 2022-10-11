@@ -167,7 +167,7 @@ const Shows = props => {
             alignItems="flex-start" 
             justifyContent="center" 
             mb={6} 
-            pb={8}
+            pb={["8", "2"]}
             bg="inherit"
         >    
             <ExpiredTokenModal />

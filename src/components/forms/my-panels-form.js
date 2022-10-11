@@ -4,7 +4,7 @@ import { DragHandleIcon } from '@chakra-ui/icons'
 import { capFirstLetters, PANELIST_PREDICTIONS_OPTIONS } from '../../utils'
 import { MyPanelsFormTable } from '../tables'
 import { MyPanelsRadioButtons } from './my-panels-form-els'
-import axios from 'axios'
+import { useScorecardStore } from '../../stores'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -13,15 +13,19 @@ const initialDnDState = {
   originalOrder: [],
   updatedOrder: []
 }
-export const MyPanelsForm = ({ 
-    tokenConfig, 
-    user 
-}) => {
+export const MyPanelsForm = () => {
+  const {
+    fetchPanelSummaries,
+    panelSummaries,
+    submitPanelPredictions,
+  } = useScorecardStore()
+
   const toast = useToast();  
+  const [summaries, setSummaries] = useState([])
+  const [selectedSummary, setSelectedSummary] = useState({})
   const [rerender, setRerender] = useState(false);
   const [predictionsList, setPredictionsList] = useState([]);
   const [winner, setWinner] = useState('');
-  const [panels, setPanels] = useState([]);
   const [selectedPanel, setSelectedPanel] = useState({
     fighters: [],
     rounds: []
@@ -29,21 +33,20 @@ export const MyPanelsForm = ({
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
 
   useEffect(() => {
-    const getAllPanels = async () => {
-      const url = process.env.REACT_APP_PANELS;
-      return axios.get(url, tokenConfig)
-        .then( res => {
-          // console.log('res: ', res)
-          setPanels(res.data)
-          setSelectedPanel(res.data.length > 0 ? res.data[0] : {})
-        }).catch( err => console.log(err));
-    }
-    getAllPanels();
-  },[]);
+    fetchPanelSummaries()
+  },[])
 
   useEffect(() => {
-    if(selectedPanel.fighters.length === 2 || rerender){
-      const [fighter1, fighter2] = selectedPanel.fighters;
+    if(panelSummaries.length > 0){
+      setSummaries(panelSummaries)
+      setSelectedSummary(panelSummaries[0])
+    }
+  },[panelSummaries])
+
+
+  useEffect(() => {
+    if(selectedSummary.fighters?.length === 2){
+      const [fighter1, fighter2] = selectedSummary.fighters;
       const createPredictionsList = () => {
         return [fighter1, fighter2].map( fighter => {
           return PANELIST_PREDICTIONS_OPTIONS.map( option => {
@@ -60,8 +63,9 @@ export const MyPanelsForm = ({
       },[])
       setPredictionsList(reducedList);
     }
-    // return setPredictionsList(prev => [...prev, ...list])
-  }, [selectedPanel.fighters, rerender])
+  }, [selectedSummary])
+
+
   const onDragStart = e => {
     const initialPosition = Number(e.currentTarget.dataset.position);
     setDragAndDrop({
@@ -109,60 +113,26 @@ export const MyPanelsForm = ({
       draggedTo: null
     });
   }
-  const submitMyPredictions = () => {
-    const predictionsListValues = predictionsList.length > 0 && predictionsList.map( prediction => prediction.value);
-    const userPredictionsObj = {
-      panelistPredictions: predictionsListValues,
-      panelistId: `${user.sub}`,
-    }
-    const url = process.env.REACT_APP_PANELS + `/${selectedPanel.panelId}`;
 
-//   const arr = [
-//     [
-//       "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,DC",
-//       "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO13",
-//       "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO46",
-//       "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO79",
-//       "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO10",
-//       "5b3bbb72-71c2-4334-9972-1f82cb83bece,DC",
-//       "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO13",
-//       "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO46",
-//       "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO79",
-//       "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO10"
-//   ],
-//   [
-//     "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO13",
-//     "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO10",
-//     "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO10",
-//     "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO13",
-//     "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO46",
-//     "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,KO79",
-//     "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO46",
-//     "5b3bbb72-71c2-4334-9972-1f82cb83bece,KO79",
-//     "0d31c804-45c7-4a12-b5bb-a4a91440b6d4,DC",
-//     "5b3bbb72-71c2-4334-9972-1f82cb83bece,DC"
-//   ]
-// ];
-  
-    return axios.put(url, userPredictionsObj, tokenConfig)
-      .then(res => {
-        if(res.status === 200){
-          toast({ 
-            title: 'Submitted!',
-            status: 'success',
-            duration: 5000,
-            isClosable: true
-          })
-      }})
-      .catch(err => console.log(err))
+  const handleSubmitPredictions = () => {
+    const predictionsListValues = predictionsList.length > 0 && predictionsList.map( prediction => prediction.value);
+    const predictionObj = {
+      panelistPredictions: predictionsListValues,
+      panelId: selectedSummary.panelId
+    }
+    // console.log('predictionObj: ', predictionObj)
+    submitPanelPredictions(predictionObj)
   }
+
   const handlePanelSelect = e => {
     const { id } = e.currentTarget;
-    const [panel] = panels.filter( panel => panel.fightId === id);
-    setSelectedPanel(panel);
+    const [panel] = summaries.filter( summary => summary.panelId === id);
+    setSelectedSummary(panel);
   }
-  const [fighter1, fighter2] = selectedPanel.fighters.length === 2 ? selectedPanel.fighters : [];
 
+  const [fighter1, fighter2] = selectedSummary?.fighters?.length === 2 ? selectedSummary.fighters : [];
+  console.log('summaries: ', summaries)
+  console.log('selectedSummary: ', selectedSummary)
   return (
     <Flex 
       id="my_panels_form" 
@@ -188,9 +158,17 @@ export const MyPanelsForm = ({
         justifyContent="center"
       >
 
-        <MyPanelsFormTable handlePanelSelect={handlePanelSelect} panels={panels} />
+        <MyPanelsFormTable 
+          handlePanelSelect={handlePanelSelect} 
+          summaries={summaries} 
+        />
 
-        <Heading as="h2" size={["sm", "md"]}>{`${fighter1?.lastName ? capFirstLetters(fighter1.lastName) : ''} vs ${fighter2?.lastName ? capFirstLetters(fighter2.lastName) : ''}`}</Heading>
+        <Heading 
+          as="h2" 
+          size={["sm", "md"]}
+        >
+          {`${fighter1?.lastName ? capFirstLetters(fighter1.lastName) : ''} vs ${fighter2?.lastName ? capFirstLetters(fighter2.lastName) : ''}`}
+        </Heading>
 
           <OrderedList 
             overflow="scroll" 
@@ -242,10 +220,19 @@ export const MyPanelsForm = ({
           )})}
           </OrderedList>
         <ButtonGroup m="4" p="4">
-          <Button onClick={submitMyPredictions} type="button" colorScheme="blue">
+          <Button 
+            onClick={handleSubmitPredictions} 
+            type="button" 
+            colorScheme="solid"
+          >
             Submit My Predictions
           </Button>
-          <Button onClick={() => setRerender(true)} variant="outline">Cancel</Button>
+          <Button 
+            onClick={() => setRerender(true)} 
+            variant="outline"
+          >
+            Cancel
+          </Button>
         </ButtonGroup>
       </Flex>
     </Flex>

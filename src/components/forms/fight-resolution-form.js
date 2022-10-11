@@ -9,15 +9,16 @@ export const FightResolutionForm = () => {
     const { 
         fightSummary, 
         fetchFightSummary,
-        submitFightResolution
+        submitFightResolution,
+        toast
     } = useScorecardStore()
 
-    const toast = useToast();
-    const [fightResolution, setFightResolution] = useState('');
-    const [selectFightStatus, setSelectFightStatus] = useState('');
+    const toaster = useToast()
+    const [fightResolution, setFightResolution] = useState('')
+    const [selectFightStatus, setSelectFightStatus] = useState('')
     const [radio, setRadio] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [fightId, setFightId] = useState('68319d2f-2769-4aee-b1ea-115277ed7a7b');
+    const [fightId, setFightId] = useState('')
     const [form, setForm] = useState({
         fight: {
             fightQuickTitle: '',
@@ -28,11 +29,18 @@ export const FightResolutionForm = () => {
         },
         fighters: []
     })  
+
+    // useEffect(() => {
+    //     toaster(toast)
+    //     // setTimeout
+    // },[toast])
+
     useEffect(() => {
         if(fightSummary.fighters.length > 0 ){
             setForm(fightSummary)
         }
     },[fightSummary])
+
     const handleSubmitResolution = () => {
         const resolutionObj = {
             officialResult: radio === `DR` ? `DR` : `${radio},${fightResolution}`,
@@ -60,8 +68,7 @@ export const FightResolutionForm = () => {
     const { fightQuickTitle, fightStatus, officialResult, rounds, weightclass } = form.fight;
     const [fighter1, fighter2] = form.fighters
     const theOfficialResult = form.fighters.length > 0 ? setOfficalResult() : '';
-    console.log('form: ', form)
-    console.log('fightId: ', '68319d2f-2769-4aee-b1ea-115277ed7a7b')
+
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
             <form id="fight_resolution_form" onSubmit={(e) => {e.preventDefault()}}>

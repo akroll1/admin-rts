@@ -3,7 +3,7 @@ import { Box, Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui
 import { DividerWithText } from '../../../chakra'
 import { v4 as uuidv4 } from 'uuid'
 import { useScorecardStore } from '../../../stores'
-import { ScoringDividerWithText } from '../../tables/table-els/scoring-divider-with-text'
+import { SidebarsDividerWithText } from '../../../chakra'
 
 
 export const ChatSidebar = ({
@@ -181,7 +181,11 @@ export const ChatSidebar = ({
             overscrollBehavior="none"
             position="relative"
         >
-            <DividerWithText fontSize={'1.5rem'} text="Group Chat" />
+            <SidebarsDividerWithText 
+                fontSize={'1.5rem'} 
+                text="Group Chat" 
+                centered={tabs.all ? true : false}
+            />
             <Flex 
                 overflow="scroll"
                 flexDirection="column"
@@ -191,9 +195,8 @@ export const ChatSidebar = ({
                         id="scroll-top"
                         overflowY="scroll"
                         maxW="100%"
-                        flexDir="column" 
+                        flexDir="column-reverse" 
                         borderRadius="md"
-                        // bg="fsl-sidebar-bg" 
                         p="4"
                         color="white" 
                         fontSize="sm"

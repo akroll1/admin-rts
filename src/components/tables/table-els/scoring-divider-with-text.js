@@ -2,7 +2,8 @@ import * as React from 'react'
 import { Box, Divider, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 
 export const ScoringDividerWithText = props => {
-  const { tabs, text } = props;
+  const { centered, tabs, text } = props;
+  console.log('centered: ', centered)
   return (
     <Flex 
       display={tabs.all || tabs.table ? 'flex' : 'none'}
@@ -12,9 +13,11 @@ export const ScoringDividerWithText = props => {
       m="auto" 
       my="4" 
     >
-      <Box flex="1">
-        <Divider borderColor="currentcolor" />
-      </Box>
+      {centered && 
+        <Box flex="1">
+          <Divider borderColor="currentcolor" />
+        </Box>
+      }
       <Text 
         as="span" 
         px="3" 

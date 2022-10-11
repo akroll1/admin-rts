@@ -2,7 +2,10 @@ import React from 'react'
 import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 
-export const CreatePanelAllPanelsTable = ({ panels, handleSelectPanel }) => {
+export const CreatePanelAllPanelsTable = ({ 
+  handleSelectPanel,
+  summaries, 
+}) => {
   return (
     <Flex 
       flexDir="column" 
@@ -13,7 +16,10 @@ export const CreatePanelAllPanelsTable = ({ panels, handleSelectPanel }) => {
       mt="1rem" 
       px={{ base: '6', md: '8' }}
     >
-      <CreatePanelAllPanelsTableContent panels={panels} handleSelectPanel={handleSelectPanel} />
+      <CreatePanelAllPanelsTableContent 
+        summaries={summaries} 
+        handleSelectPanel={handleSelectPanel} 
+      />
     </Flex>
   )
 }
@@ -29,7 +35,10 @@ const columns = [
       accessor: 'fightQuickTitle',
   }
 ];
-const CreatePanelAllPanelsTableContent = ({ panels, handleSelectPanel }) => {
+const CreatePanelAllPanelsTableContent = ({ 
+  handleSelectPanel, 
+  summaries 
+}) => {
 
   return (
     <Table my="8" mt="0" borderWidth="1px" fontSize="sm">
@@ -49,11 +58,16 @@ const CreatePanelAllPanelsTableContent = ({ panels, handleSelectPanel }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {panels?.length > 0 && panels.map( (panel, i) => {
+        {summaries?.length > 0 && summaries.map( (panel, i) => {
             return (
-                <Tr onClick={handleSelectPanel} _hover={{cursor: 'pointer'}} id={panel.panelId} key={panel.panelId}>
-                    <Td>{capFirstLetters(panel.fightQuickTitle)}</Td>
-                </Tr>
+              <Tr 
+                onClick={handleSelectPanel} 
+                _hover={{cursor: 'pointer'}} 
+                id={panel.panelId} 
+                key={panel.panelId}
+              >
+                  <Td>{capFirstLetters(panel.fightQuickTitle)}</Td>
+              </Tr>
             )
         })}
       </Tbody>

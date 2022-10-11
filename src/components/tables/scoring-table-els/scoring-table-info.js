@@ -4,6 +4,7 @@ import { capFirstLetters } from '../../../utils'
 
 export const ScoringTableInfo = ({ 
   fighters,
+  finalScore,
   prediction,
   username, 
 }) => {
@@ -31,7 +32,8 @@ export const ScoringTableInfo = ({
       justifyContent="flex-start"
       minW="10rem"
     >
-      <Box 
+      <Flex 
+        flexDirection="row"
         className='username' 
         p="1" 
         m="0" 
@@ -40,10 +42,13 @@ export const ScoringTableInfo = ({
         fontSize="sm"  
         color="white" 
         fontWeight="bold"
-        textAlign="center"
+        // textAlign="center"
+        justifyContent="space-between"
+        alignItems="center"
       >
-          { usernameCheck(username) }
-      </Box>
+          <Text>{`${usernameCheck(username)}`}</Text>
+          <Text color="fsl-text">{`${finalScore ? "Score: " + finalScore : ""}`}</Text> 
+      </Flex>
       { fighters?.length > 0 && fighters.map( (fighter, i) => {
         const isPredicted = predictionWinner === fighters[i];  
         return (

@@ -5,24 +5,17 @@ export interface TokenConfig {
 interface Token extends Record<string, string>{}
 
 export interface User {
-    email: string
-    email_verified: boolean
-    groups: string[]
-    isLoggedIn: boolean
-    sub: string
-    username: string
-}
-
-export interface DBUser {
-    firstName?: string
-    lastName?: string
+    email?: string
+    email_verified?: boolean
+    groups?: string[]
+    isLoggedIn?: boolean
+    sub?: string
+    username?: string
     bio?: string
-}
-export const userStub = {
-    email: '',
-    email_verified: false,
-    groups: [],
-    isLoggedIn: false,
-    sub: '',
-    username: ''
+    fightCoins?: number
+    firstName?: string
+    isPanelist?: boolean
+    isPublic?: boolean
+    isSuperAdmin?: boolean
+    lastName?: string
 }

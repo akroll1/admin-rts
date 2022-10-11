@@ -1,4 +1,4 @@
-import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { Flex, Heading, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 import { useScorecardStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
@@ -12,7 +12,7 @@ export const ScoringTable = ({
         fight,
         tableData, 
     } = useScorecardStore()
-
+    console.log('tableData: ', tableData)
     const totalRounds = fight ? fight.rounds : 12;
 
     const sortData = (a, b) => a.username - b.username
@@ -22,8 +22,15 @@ export const ScoringTable = ({
         {
             Header: 'Player',
             accessor: 'player',
-            Cell: function TableCell( fighters, prediction, username ) {
-                return <ScoringTableInfo fighters={fighters} prediction={prediction} username={username} />
+            Cell: function TableCell( fighters, prediction, username, finalScore ) {
+                return (
+                    <ScoringTableInfo 
+                        fighters={fighters} 
+                        prediction={prediction} 
+                        username={username} 
+                        finalScore={finalScore}
+                    />
+                )
             }
         },
         {
@@ -58,6 +65,7 @@ export const ScoringTable = ({
             <ScoringDividerWithText 
                 text="Your Group" 
                 tabs={tabs} 
+                centered={tabs.all ? true : false}
             />
 
             <FightStats tabs={tabs} />
@@ -86,7 +94,7 @@ export const ScoringTable = ({
                     fontSize="sm"
                     bg="whiteAlpha.50"
                 >
-                    { fight?.fightStatus === `COMPLETE` && <TableCaption style={{margin: 'auto',width: '100%', captionSide:"top"}}>FIGHT IS OFFICIAL</TableCaption> }
+                    { fight?.fightStatus === `COMPLETE` && <TableCaption placement="top"><Heading size="md">FIGHT IS OFFICIAL</Heading></TableCaption> }
                     <Thead bg={mode('gray.50', '#111111')}>
                         <Tr>
                             {columns.map((column, index) => {
@@ -97,7 +105,7 @@ export const ScoringTable = ({
                                             key={index} 
                                             color="white" 
                                             fontWeight="bold" 
-                                            whiteSpace="nowrap" 
+                                            whiteSpace="nowrap"
                                             scope="col"
                                             textAlign="center"
                                         >
@@ -113,7 +121,7 @@ export const ScoringTable = ({
 
                                                 fontWeight="bold"
                                                 textAlign="center"
-                                                style={currentRound === (roundIndex + 1) ? { color: '#C01616', fontSize: '1.1rem' } : { color: '#c8c8c8'} }
+                                                style={currentRound === (roundIndex + 1) ? { color: 'white', fontSize: '1.2rem' } : { color: '#c8c8c8'} }
                                             >
                                                 {roundIndex+1}
                                             </Th>
@@ -127,7 +135,7 @@ export const ScoringTable = ({
                     </Thead>
                     <Tbody>
                         {sortedTable?.length > 0 && sortedTable?.map( (row, idx) => {
-                            const { fighters, mappedScores, prediction, totals, username } = row;;
+                            const { fighters, finalScore, mappedScores, prediction, totals, username } = row;;
                             let filledMappedScores;   
                             if(mappedScores.length <= totalRounds){
                                 const numberToFill = totalRounds - (mappedScores.length);
@@ -143,7 +151,7 @@ export const ScoringTable = ({
                                     {columns.map( (column, i) => {
                                         // console.log('column: ',column)
                                         const cell = row[column.accessor];
-                                        const element = column.Cell?.( fighters, prediction, username ) ?? cell;
+                                        const element = column.Cell?.( fighters, prediction, username, finalScore ) ?? cell;
                                         
                                         if(i === 0){
                                             return (

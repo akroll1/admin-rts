@@ -42,9 +42,13 @@ export const ShowsMain = ({
                 fighters={fightSummary.fighters} 
                 showTime={showTime}
             />
-            <DividerWithText text="The Storyline" />
+            <DividerWithText 
+                fontSize="2xl" 
+                text="Storyline" 
+                mt="2"
+                mb="0"
+            />
             <FightStoryline fightSummary={fightSummary} /> 
-
             
             { UPCOMING 
                 ?
@@ -61,7 +65,10 @@ export const ShowsMain = ({
                     <>
                         <DividerWithText 
                             text={`Reviews`} 
-                            fsize={"3rem"}
+                            fontSize={"2xl"}
+                            mb="2"
+                            mt="4"
+
                         />
                         <FightReviews 
                             fightReviewForm={fightReviewForm} 

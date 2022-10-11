@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
 import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
@@ -143,6 +143,7 @@ export const SignIn = () => {
       }).finally(() => setIsSubmitting(false))
   };
   const handleForcePWChange = () => {
+    console.log('handleForcePWChange')
     const { username, password, user, email } = form;
     Auth.completeNewPassword( user, password )
       .then( user => { 
@@ -153,14 +154,19 @@ export const SignIn = () => {
           groups: [], 
           sub: user.signInUserSession.idToken.payload.sub 
         })
-        const token = user.signInUserSession.accessToken.jwtToken;
+          const accessToken = user.signInUserSession.accessToken.jwtToken;
+          const idToken = user.signInUserSession.idToken.jwtToken;
         setAccessToken({headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${accessToken}`
         }})
-        return navigate('/scorecards', { user });
-      }).catch( err => {
+        setIdToken({headers: {
+          Authorization: `Bearer ${idToken}`
+        }})
+      })
+      .then(() => handleSignIn(form.username, form.password))
+      .catch( err => {
         if(Array.from(err).includes('InvalidPasswordException') > -1){
-          alert('Password does not meet requirements.')
+          alert(err)
         }
       });
   }
@@ -188,7 +194,7 @@ export const SignIn = () => {
       .then(res => {
         alert('New code sent.')
       })
-      .catch((e) => {
+      .catch( e => {
         console.log(e);
       });
   };
@@ -233,8 +239,6 @@ export const SignIn = () => {
       .finally( () => setIsSubmitting(false))
   };
 
-  // console.log('formState: ', formState)
-  // console.log('form: ', form)
   return (
     <Box bg={useColorModeValue('gray.500', 'inherit')} py="12" px={{ base: '4', lg: '8' }}>
       <Box maxW="md" mx="auto">

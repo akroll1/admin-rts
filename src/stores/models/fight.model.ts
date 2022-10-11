@@ -10,7 +10,6 @@ export interface Fight {
 	guestJudgeIds: string[] | null;
 	isMainEvent: boolean;
 	isTitleFight: boolean;
-	odds: string | null; 
 	officialResult: string | null;
 	rounds: number;
 	showId: string | null;
@@ -59,4 +58,28 @@ export interface FightResolutionOptions {
     fightId: string
     fightStatus: string
     officialResult: string
+}
+
+export interface FightPostObj {
+	fighterIds: string[];
+	fightQuickTitle: string; 
+	fightStoryline?: string | null;
+	isMainEvent: boolean;
+	isTitleFight: boolean;
+	rounds: number;
+	weightclass: WeightClass;
+}
+
+export interface FightUpdateOptions {
+	fightId: string
+	fightQuickTitle?: string; 
+	fightStatus?: FightStatus;
+	fightStoryline?: string | null;
+	guestJudgeIds?: string[] | null;
+	isMainEvent?: boolean;
+	isTitleFight?: boolean;
+	officialResult?: string | null;
+	rounds?: number;
+	showId?: string | null;
+	weightclass?: WeightClass;
 }

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useInsertionEffect} from 'react'
-import { Box, Divider, Flex, Spacer, Stack } from '@chakra-ui/react'
+import { Box, Divider, Flex, Link, Spacer, Stack } from '@chakra-ui/react'
 import { SettingsIcon } from '@chakra-ui/icons'
 import { FaListOl, FaEdit, FaRegBell, FaRegChartBar, FaRegQuestionCircle, FaUser, FaUserFriends } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
@@ -100,14 +100,16 @@ const Dashboard = props => {
       <Box flex="1 0 25%">
         <Stack spacing={6}>
           <Box fontSize="sm" lineHeight="tall">
-            <Box  
-              as="a" 
-              href="#" 
-              p="3" 
+            <Link  
+              as="button" 
+              to="/dashboard/account" 
+              p="4"
+              w="100%" 
               transition="background 0.1s" 
               rounded="xl" 
               _hover={{ bg: 'whiteAlpha.200' }} 
               whiteSpace="nowrap"
+              textAlign="left"
             >
               <UserInfo 
                 setForm={setForm} 
@@ -115,7 +117,7 @@ const Dashboard = props => {
                 name={user?.username ? user.username : ''} 
                 email={user?.email ? user.email : ''} 
               />
-            </Box>
+            </Link>
           </Box>
         </Stack>
         <Divider borderColor="whiteAlpha.400" />
