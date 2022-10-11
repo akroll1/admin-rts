@@ -2,10 +2,22 @@ import React from 'react'
 import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 
-export const PanelistsTable = ({ panelists, handleSelectedPanelist }) => {
+export const PanelistsTable = ({ 
+  handleSelectedPanelist,
+  panelists, 
+}) => {
   return (
-    <Flex flexDir="column" maxH="20rem" mx="auto" mt="1rem" px={{ base: '6', md: '8' }}>
-      <PanelistsTableContent panelists={panelists} handleSelectedPanelist={handleSelectedPanelist} />
+    <Flex 
+      flexDir="column" 
+      maxH="20rem" 
+      mx="auto" 
+      mt="1rem" 
+      px={{ base: '6', md: '8' }}
+    >
+      <PanelistsTableContent 
+        panelists={panelists} 
+        handleSelectedPanelist={handleSelectedPanelist} 
+      />
     </Flex>
   )
 }
@@ -29,7 +41,10 @@ const columns = [
     accessor: 'displayName'
   }
 ];
-const PanelistsTableContent = ({ panelists, handleSelectedPanelist }) => {
+const PanelistsTableContent = ({ 
+  handleSelectedPanelist,
+  panelists, 
+}) => {
    
   return (
     <Table my="8" borderWidth="1px" fontSize="sm" overflowY="scroll">

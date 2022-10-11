@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Button, ButtonGroup, Flex, FormControl, FormLabel, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import axios from 'axios';
 import { PanelistsTable } from '../tables';
+import { useScorecardStore } from '../../stores';
 
-export const PanelistForm = ({ setModals, tokenConfig }) => {
-    const toast = useToast();
+export const PanelistForm = () => {
+    const {
+        createPanelist,
+        deletePanelist,
+        fetchPanelist,
+        panelist,
+        updatePanelist,
+    } = useScorecardStore()
+
+    const [panelistId, setPanelistId] = useState(null)
     const [allPanelists, setAllPanelists] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [searchByFight, setSearchByFight] = useState('');
     const [search, setSearch] = useState('');
     const [form, setForm] = useState({
-        panelistId: '',
         bio: '',
         displayName: '',
         firstName: '',
@@ -20,54 +26,33 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
         link: '',
         tagline: ''
     });
+
     useEffect(() => {
-        const fetchAllPanelists = async () => {
-            const url = process.env.REACT_APP_PANELISTS;
-            return axios.get(url, tokenConfig)
-                .then( res => {
-                    setAllPanelists(res.data)
-                    setForm(res.data[0])
-                }).catch( err => console.log(err));
+        if(panelist.panelistId){
+            setForm(panelist)
         }
-        fetchAllPanelists();
-    },[]);
+    },[panelist])
+    
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
         return setForm({...form, [id]: value });
     }
-    const searchForPanelist = () => {
-        if(search){
-            setIsSubmitting(true);
-            const url = process.env.REACT_APP_PANELISTS + `/${search}`;
-            return axios.get(url, tokenConfig)
-                .then( res => setForm({ ...res.data }))
-                .catch( err => console.log(err))
-                .finally(() => setIsSubmitting(false));
-        }
-    };
     
-    const putPanelist = () => {
-        const url = process.env.REACT_APP_PANELISTS;
-        return axios.put(url, form, tokenConfig)
-            .then(res => {
-                if(res.status === 200){
-                    console.log('res: ', res)
-                    if(res.data.includes('Token expired')) return setModals({ expiredTokenModal: true })
-
-                    toast({ title: 'Updated panelists.',
-                        status: 'success',
-                        duration: 5000,
-                        isClosable: true,})
-                }})
-            .catch(err => console.log(err))
+    const handleFetchPanelist = e => {
+        fetchPanelist(panelistId)
     }
+
+    const handleUpdatePanelist = e => {
+        const updateObj = {}
+        updatePanelist(updateObj)
+    }
+
     const handleSelectedPanelist = e => {
         const { id } = e.currentTarget;
         const [panelist] = allPanelists.filter( panelist => panelist.panelistId === id);
         setForm(panelist);    
     }
-    const { bio, displayName, firstName, panelistId, lastName, img, links, tagline } = form;
-    console.log('allPanelists: ', allPanelists);
+    const { bio, displayName, firstName, img, lastName, links, tagline } = form;
 
     return (
         <>
@@ -81,7 +66,15 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
                                     <Input value={search} onChange={ ({ currentTarget: {value} }) => setSearch(value.length == 36 ? value : '')} type="text" maxLength={36} />
                                 </FormControl>
                                 <HStack justifyContent="center" width="full">
-                                    <Button disabled={!search}  minW="33%" isLoading={isSubmitting} loadingText="Searching..." onClick={searchForPanelist} type="button" colorScheme="blue">
+                                    <Button 
+                                        disabled={!panelistId}  
+                                        minW="33%" 
+                                        isLoading={isSubmitting} 
+                                        loadingText="Searching..." 
+                                        onClick={handleFetchPanelist} 
+                                        type="button" 
+                                        colorScheme="solid"
+                                    >
                                         Search
                                     </Button>
                                 </HStack>
@@ -131,15 +124,27 @@ export const PanelistForm = ({ setModals, tokenConfig }) => {
                     </Stack>
                     <FieldGroup mt="8">
                         <ButtonGroup width="full">
-                            <Button onClick={putPanelist} type="submit" colorScheme="blue">
+                            <Button 
+                                onClick={handleUpdatePanelist} 
+                                type="submit" 
+                                colorScheme="solid"
+                            >
                                 Submit
                             </Button>
-                            <Button variant="outline">Cancel</Button>
+                            <Button 
+                                onClick={deletePanelist}
+                                variant="outline"
+                            >
+                                Delete
+                            </Button>
                         </ButtonGroup>
                     </FieldGroup>
                 </form>
             </Box>
-            <PanelistsTable panelists={allPanelists} handleSelectedPanelist={handleSelectedPanelist} />
+            <PanelistsTable 
+                panelists={allPanelists} 
+                handleSelectedPanelist={handleSelectedPanelist} 
+            />
         </>
 
     )

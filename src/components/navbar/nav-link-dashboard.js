@@ -4,7 +4,7 @@ import { Link as RRLink } from 'react-router-dom'
 
 export const NavLinkDashboard = props => {
   // console.log('props: ',props);
-  const { icon, isActive, label, value, link, ...rest } = props
+  const { icon, active, label, value, link, ...rest } = props
   return (
     <Link
       as={RRLink}
@@ -16,7 +16,7 @@ export const NavLinkDashboard = props => {
       transition="all 0.3s"
       fontWeight="medium"
       lineHeight="1.5rem"
-      aria-current={isActive ? 'page' : undefined}
+      aria-current={active ? 'page' : undefined}
       color="whiteAlpha.900"
       _hover={{
         bg: 'blue.500',

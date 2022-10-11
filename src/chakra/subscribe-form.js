@@ -50,8 +50,7 @@ export const SubscribeForm = (props) => {
               opacity: 1,
               color: useColorModeValue('gray.500', 'whiteAlpha.700'),
             }}
-            errorBorderColor='crimson'  
-            onError={true}          
+            errorBorderColor='crimson'     
           />
           <Button
             disabled={disableButton}

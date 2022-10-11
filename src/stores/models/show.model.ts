@@ -14,3 +14,13 @@ export interface Show {
 	createdAt?: number
 	updatedAt?: number
 }
+
+export interface ShowCreate {
+	showName: string
+    fightIds: string[]
+    location: string
+    network: string
+    promoter: string
+    showStoryline: string
+    showTime: number
+}

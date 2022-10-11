@@ -29,7 +29,7 @@ const Shows = props => {
     const { email, sub, username } = user;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const [activeFightSummary, setActiveFightSummary] = useState({})
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
@@ -58,7 +58,10 @@ const Shows = props => {
     },[tokenExpired])
 
     useEffect(() => {
-        fetchFights();
+        const run = async () => {
+            await fetchFights();
+            setActiveFightSummary(fightSummary)
+        }
     },[])
 
     useEffect(() => {

@@ -5,6 +5,7 @@ import { Scorecard } from "./models/scorecard.model"
 import { CreateGroupScorecard, GroupScorecard, GroupScorecardSummary } from "./models/group-scorecard.model"
 import { capFirstLetters } from '../utils'
 import { 
+    Discussion,
     Fight, 
     Fighter, 
     FighterScores, 
@@ -15,6 +16,7 @@ import {
     List,
     Modals, 
     resetModals, 
+    Panelist,
     PanelSummary,
     Review, 
     ReviewPut, 
@@ -24,6 +26,7 @@ import {
     User,
     FightUpdateOptions, 
 } from './models'
+import { IoConstructOutline } from "react-icons/io5"
 
 interface ScorecardStore {
     accessToken: TokenConfig
@@ -33,22 +36,39 @@ interface ScorecardStore {
     chatToken: string
     checkForUserFightReview(userId: string): void
     collateTableData(): void
+    createDiscussion(discussionObj: Partial<Discussion>): void
     createFight(createFightObj: FightPostObj): void
+    createFighter(createFighterObj: Fighter): void
     createGroupScorecard(scorecardObj: CreateGroupScorecard): Promise<boolean | undefined>
     createPanel(panelId: string): void
+    createPanelist(panelistObj: Partial<Panelist>): void
+    createShow(createShowObj: Partial<Show>): void
     createUser(user: User): void
     currentRound: number
+    deleteDiscussion(discussionId: string): void
+    deleteFight(fightId: string): void
+    deleteFighter(fighterId: string): void
+    deletePanelist(panelistId: string): void
+    deleteShow(showId: string): void
+    discussion: Discussion
+    discussions: Discussion[]
+    fetchAllDiscussions(): void
+    fetchDiscussion(discussionId: string): void
     fetchFight(fightId: string): void
+    fetchFighter(fighterId: string): void
     fetchFights(): void
     fetchFightSummary(selectedFightId: string): void
     fetchGroupScorecard(groupScorecardId: string): void
     fetchList(listType: string): void
     fetchPanel(panelId: string): void
+    fetchPanelist(panelistId: string): void
     fetchPanelSummaries(): void
     fetchSelectedFightReviews(fightId: string): void;
+    fetchShow(showId: string): void
     fetchUser(): void
     fetchUserScorecards(): void
     fight: Fight
+    fighter: Fighter
     fights: Fight[]
     fightComplete: boolean
     fighters: Fighter[]
@@ -58,6 +78,7 @@ interface ScorecardStore {
     idToken: TokenConfig
     isSubmitting: boolean
     modals: Modals
+    panelist: Panelist
     panelSummaries: PanelSummary[]
     patchPrediction(prediction: string): void
     poundListOfficial: List
@@ -91,7 +112,11 @@ interface ScorecardStore {
     toast: ToastOptions
     tokenExpired: boolean
     transformedPrediction: string
+    updateDiscussion(discussionObj: Partial<Discussion>): void
     updateFight(fightUpdateOptions: FightUpdateOptions): void
+    updateFighter(updateFighterObj: Partial<Fighter>): void
+    updatePanelist(updateObj: Partial<Panelist>): void
+    updateShow(update: any): void
     updateUser(updateOptions: Partial<User>): void
     user: User
     userFightReview: Review
@@ -114,9 +139,12 @@ const initialState = {
     chatScorecard: {} as RoundScores,
     chatToken: '',
     currentRound: 12,
+    discussion: {} as Discussion,
+    discussions: [],
     fight: {} as Fight,
-    fights: [],
+    fighter: {} as Fighter,
     fightComplete: false,
+    fights: [],
     fighters: [],
     fighterScores: {} as FighterScores,
     fightSummary: fightSummaryStub,
@@ -124,6 +152,7 @@ const initialState = {
     groupScorecards: [],
     idToken: {} as TokenConfig,
     modals: {} as Modals,
+    panelist: {} as Panelist,
     panelSummaries: [],
     poundListOfficial: {} as List,
     poundListUser: {} as List,
@@ -211,9 +240,17 @@ export const useScorecardStore = create<ScorecardStore>()(
                     stats: collated 
                 })
             },
+            createDiscussion: async (discussionObj: Partial<Discussion>) => {
+                const res = await axios.post(`${baseUrl}/discussions`, discussionObj, get().accessToken)
+                console.log('DISCUSSION- create res.data: ', discussionObj)
+            },
             createFight: async (createObj: FightPostObj) => {
                 const res = await axios.post(`${baseUrl}/fights`, createObj, get().accessToken)
                 console.log('res.data: ', res.data)
+            },
+            createFighter: async (createFighterObj: Fighter) => {
+                const res = await axios.post(`${baseUrl}/fighters`, createFighterObj, get().accessToken)
+                console.log('FIGHTER- create res.data: ', res.data);
             },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
                 const url = baseUrl + `/group-scorecards`;
@@ -225,14 +262,57 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.post(`${baseUrl}/panels`, { panelId }, get().accessToken)
                 console.log('res.data: ', res.data)
             },
+            createPanelist: async (panelistObj: Partial<Panelist>) => {
+                const res = await axios.post(`${baseUrl}/panelists/`, panelistObj, get().accessToken)
+                console.log('PANELIST- create res.data: ', res.data)
+            },
+            createShow: async (createShowObj: Partial<Show>) => {
+                const res = await axios.post(`${baseUrl}/shows`, createShowObj, get().accessToken)
+                const show = res.data as Show
+            },
             createUser: async (user: User) => {
                 const url = baseUrl + `/users`
                 const res = await axios.post(url, get().user, get().accessToken)
+            },
+            deleteDiscussion: async (discussionId: string) => {
+                const res = await axios.delete(`${baseUrl}/discussions/${discussionId}`)
+                console.log('DISCUSSION- delete res.data: ', res.data)
+            },
+            deleteFight: async (fightId: string) => {
+                const res = await axios.delete(`${baseUrl}/fights/${fightId}`, get().accessToken)
+                console.log('FIGHT- deleted res.data: ', res.data)
+            },
+            deleteFighter: async (fighterId: string) => {
+                const res = await axios.delete(`${baseUrl}/fighters/${fighterId}`, get().accessToken)
+                console.log('FIGHTER- delete res.data: ', res.data)
+            },
+            deletePanelist: async (panelistId: string) => {
+                const res = await axios.delete(`${baseUrl}/panelists/${panelistId}`)
+                console.log('PANELIST- delete res.data: ', res.data)
+            },
+            deleteShow: async (showId: string) => {
+                const res = await axios.delete(`${baseUrl}/shows/${showId}`, get().accessToken)
+                console.log('res.data: ', res.data)
+            },
+            fetchAllDiscussions: async () => {
+                const res = await axios.get(`${baseUrl}/discussions`, get().accessToken)
+                const discussions = res.data as Discussion[]
+                set({ discussions })
+            },
+            fetchDiscussion: async (discussionId: string) => {
+                const res = await axios.get(`${baseUrl}/discussions/${discussionId}`, get().accessToken)
+                const discussion = res.data as Discussion
+                set({ discussion })
             },
             fetchFight: async (fightId: string) => {
                 const res = await axios.get(`${baseUrl}/fights/${fightId}`, get().accessToken)
                 const fight = res.data as Fight
                 set({ fight })
+            },
+            fetchFighter: async (fighterId: string) => {
+                const res = await axios.get(`${baseUrl}/fighters/${fighterId}`, get().accessToken)
+                const fighter = res.data as Fighter
+                set({ fighter })
             },
             fetchFights: async () => {
                 const url = baseUrl + `/fights`
@@ -312,6 +392,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.get(`${baseUrl}/${panelId}`, get().accessToken)
                 console.log('res: ', res)
             },
+            fetchPanelist: async (panelistId: string) => {
+                const res = await axios.get(`${baseUrl}/panelists/${panelistId}`)
+                const panelist = res.data as Panelist
+                set({ panelist })
+            },
             fetchPanelSummaries: async () => {
                 const res = await axios.get(`${baseUrl}/panels`, get().accessToken)
                 const panelSummaries = res.data as PanelSummary[]
@@ -320,9 +405,14 @@ export const useScorecardStore = create<ScorecardStore>()(
             fetchSelectedFightReviews: async (fightId: string) => {
                 const url = baseUrl + `/reviews/${fightId}/fight`;
                 const res = await axios.get(url, get().accessToken);
-                const data = res.data as Review[];
-                set({ selectedFightReviews: data })
+                const selectedFightReviews = res.data as Review[];
+                set({ selectedFightReviews })
             }, 
+            fetchShow: async (showId: string) => {
+                const res = await axios.get(`${baseUrl}/shows/${showId}`, get().accessToken)
+                const show = res.data as Show
+                set({ show })
+            },
             fetchUser: async () => {
                 const url = baseUrl + `/users/${get().user.sub}`
                 const res = await axios.get(url, get().accessToken)
@@ -522,8 +612,24 @@ export const useScorecardStore = create<ScorecardStore>()(
                     scorecards: updatedScorecards 
                 })       
             },
+            updateDiscussion: async (updateObj: Partial<Discussion>) => {
+                const res = await axios.put(`${baseUrl}/discussions/${updateObj.discussionId}`, updateObj, get().accessToken)
+                console.log('DISCUSSION- update res.data: ', res.data)
+            },
             updateFight: async (fightUpdateOptions: FightUpdateOptions) => {
                 const res = await axios.put(`${baseUrl}/fights/${fightUpdateOptions.fightId}`, fightUpdateOptions, get().accessToken)
+                console.log('res.data: ', res.data)
+            },
+            updateFighter: async (updateFighterObj: Partial<Fighter>) => {
+                const res = await axios.put(`${baseUrl}/fighters/${updateFighterObj.fighterId}`, updateFighterObj, get().accessToken)
+                console.log('FIGHTER- update res.data: ', res.data)
+            },
+            updatePanelist: async (updateObj: Partial<Panelist>) => {
+                const res = await axios.put(`${baseUrl}/panelists/${updateObj.panelistId}`, updateObj, get().accessToken)
+                console.log('PANELIST- update, res.data: ', res.data)
+            },
+            updateShow: async (update: any) => {
+                const res = await axios.put(`${baseUrl}/shows/${update.showId}`, update, get().accessToken)
                 console.log('res.data: ', res.data)
             },
             updateUser: async (updateOptions: Partial<User>) => {

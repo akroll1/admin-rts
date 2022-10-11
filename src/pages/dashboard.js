@@ -27,7 +27,6 @@ import { useScorecardStore } from '../stores'
 const Dashboard = props => {
   const { type, showId } = useParams();
   const { 
-    modals,
     setUser, 
     user, 
   } = useScorecardStore()
@@ -83,19 +82,26 @@ const Dashboard = props => {
       const { value, label, icon, link } = option;
       return (
         <NavLinkDashboard   
-          subtle={true} 
+          key={i}
           link={link} 
           id={value} 
-          key={value} 
           onClick={handleFormSelect} 
           label={label} 
           icon={icon} 
-          isActive={active === value ? true : false} 
+          active={active === value ? true : false} 
         />)
     })
   }
   return (
-    <Flex height="auto" width={{ base: 'full'}} direction="row" color="white" flexWrap="wrap" px={6} py={8}>
+    <Flex 
+      height="auto" 
+      width={{ base: 'full'}} 
+      direction="row" 
+      color="white" 
+      flexWrap="wrap" 
+      px={6} 
+      py={8}
+    >
       <ExpiredTokenModal />
       <Box flex="1 0 25%">
         <Stack spacing={6}>
@@ -127,8 +133,16 @@ const Dashboard = props => {
           </Stack>
           <Divider borderColor="whiteAlpha.400" />
           <Stack>
-            <NavLinkDashboard link="#" label="Notifications" icon={FaRegBell} />
-            <NavLinkDashboard link="#" label="Help Center" icon={FaRegQuestionCircle} />
+            <NavLinkDashboard   
+              link="#" 
+              label="Notifications" 
+              icon={FaRegBell} 
+            />
+            <NavLinkDashboard 
+              link="#" 
+              label="Help Center" 
+              icon={FaRegQuestionCircle} 
+            />
           </Stack>
         <Spacer />
         </Stack>

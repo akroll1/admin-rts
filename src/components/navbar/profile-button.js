@@ -31,15 +31,19 @@ export const ProfileButton = () => {
     }
 
     return (
-        <Box w="full">
+        <Box 
+            w="full" 
+        >
             <Menu>
                 <MenuButton 
                     w='full'
-                    as={Button} 
-                    colorScheme='solid'
-                    size='xs'
-                    color="white"
+                    size='md'
+                    color="#C8C8C8"
+                    _hover={{color: 'white'}}
+                    fontSize="20px"
+                    fontWeight="600"
                     onClick={openProfile}
+
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
