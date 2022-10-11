@@ -25,18 +25,16 @@ export const ScoringMain = ({
 
     const totalRounds = fight ? fight.rounds : 12;
     const fightComplete = round === totalRounds;
-
-    // console.log('tableData: ', tableData)
-    // console.log('fighterScores: ', fighterScores)
     
     useEffect(() => {
-        if(fightComplete || fighterScores.round + 1 > totalRounds){
+        console.log('fighterScores.round === currentRound: ', fighterScores.round === currentRound)
+        if(fightComplete || fighterScores.round === currentRound){
             setIsDisabled(true)
             return setRound(totalRounds);
         }
         return fighterScores.round === totalRounds ? setRound(parseInt(totalRounds)) : setRound(parseInt(fighterScores.round));
 
-    }, [fighterScores])
+    }, [fighterScores, currentRound])
 
     useEffect(() => {
         if(isSubmitting){ 
@@ -108,7 +106,7 @@ export const ScoringMain = ({
                 minH="2rem"
                 verticalAlign="middle"
             >
-                {`Round ${ currentRound}`}
+                {`Round ${ currentRound }`}
             </Heading> 
             <Flex flexDir={["row"]} w={["100%", "80%"]} m="auto">
             {

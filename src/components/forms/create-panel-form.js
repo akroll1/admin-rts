@@ -1,74 +1,40 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Button, Flex, FormControl, FormLabel, Heading, HStack, Input, InputGroup, InputRightElement, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import axios from 'axios';
 import { CreatePanelAllPanelsTable, PanelistsTable } from '../tables';
 import { PanelistFormCheckbox } from './my-panels-form-els';
 import { DeleteIcon } from '@chakra-ui/icons';
+import { useScorecardStore } from '../../stores';
 
 
-export const CreatePanelForm = ({ user, tokenConfig }) => {
+export const CreatePanelForm = () => {
+    
+    const {
+        createPanel,
+        fetchPanelSummaries,
+        panelSummaries,
+    } = useScorecardStore();
+
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [panelistIds, setPanelistIds] = useState([]);
-    const [selectedPanelists, setSelectedPanelists] = useState([]);
-    const [allPanels, setAllPanels] = useState([]);
-    const [allPanelists, setAllPanelists] = useState([]);
-    const [selectedPanel, setSelectedPanel] = useState(null);
+    const [summaries, setSummaries] = useState([]);
+    const [selectedSummary, setSelectedSummary] = useState(null);
     const [search, setSearch] = useState('');
-    const [fightId, setFightId] = useState(null);
     const [newPanelist, setNewPanelist] = useState('');
     const [form, setForm] = useState({
         panelId: '',
         fightQuickTitle: ''
     })
     useEffect(() => {
-        const fetchAllPanels = async () => {
-            const url = process.env.REACT_APP_PANELS + `/all`;
-            return axios.get(url, tokenConfig)
-                .then( res => {
-                    if(res.data.length > 0){
-                        setAllPanels(res.data);
-                    }
-                }).catch( err => console.log(err));
-        }
-        const fetchAllPanelists = async () => {
-            const url = process.env.REACT_APP_PANELISTS;
-            return axios.get(url, tokenConfig)
-                .then( res => {
-                    setAllPanelists(res.data)
-                    // setForm(res.data[0])
-                }).catch( err => console.log(err));
-        }
-        fetchAllPanels();
-        fetchAllPanelists();
+        fetchPanelSummaries()
     },[])
 
-    // useEffect(() => {
-    //     if(selectedPanel?.panelId){
-    //         const fetchPanelMembers = async => {
-    //             const url = process.env.REACT_APP_PANELIST_PREDICTIONS + `/${selectedPanel.panelId}`;
-    //             return axios.get(url, tokenConfig)
-    //                 .then( res => setSelectedPanelists(res.data))
-    //                 .catch( err => console.log(err));
-    //         }
-    //         fetchPanelMembers()
-    //     }
-    // },[selectedPanel])
-    
-    const searchForPanel = async () => {
-        // console.log('form: ', form)
-        const url = process.env.REACT_APP_PANELS + `/${form.panelId}`;
-        return axios.get(url, tokenConfig)
-            .then( res => {
-                if(res.data.fightQuickTitle){
-                    setForm({
-                        fightQuickTitle: res.data.fightQuickTitle,
-                        panelId: res.data.panel.panelId
-                    })
-                    setFightId(res.data.panel.panelId)
-                }}).catch( err => console.log(err));
-    };
+    useEffect(() => {
+        if(panelSummaries.length > 0){
+            setSummaries(panelSummaries)
+            setSelectedSummary(panelSummaries[0])
+        }
+    },[panelSummaries])
 
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
@@ -84,8 +50,8 @@ export const CreatePanelForm = ({ user, tokenConfig }) => {
     }
     const handleSelectPanel = e => {
         const { id } = e.currentTarget;
-        const [selected] = allPanels.filter( panel => panel.panelId === id);
-        setSelectedPanel(selected)
+        const [selected] = summaries.filter( panel => panel.panelId === id);
+        setSelectedSummary(selected)
         setForm(selected);
     }
     const handleDeleteFromPanel = e => {
@@ -102,31 +68,16 @@ export const CreatePanelForm = ({ user, tokenConfig }) => {
         console.log('id: ', id)
     }
     const handleCreatePanel = () => {
-        const url = process.env.REACT_APP_PANELS;
-        // if(!form.panelId) return alert('Select a fight for panelId.')
-        const postObj = {
-            panelId: form.panelId,
-        };
-        console.log('postObj: ', postObj)
-        return axios.post(url, postObj, tokenConfig)
-            .then( res => {
-                console.log('res: ', res)
-                if(res.status === 200){
-                    return  toast({ 
-                        title: 'Created panel.',
-                        status: 'success',
-                        duration: 5000,
-                        isClosable: true
-                    })
-                }
-            }).catch( err => console.log(err));
+        createPanel(form.panelId)
     }
     console.log('form: ', form)
+    console.log('selectedSummary: ', selectedSummary)
+    console.log('summaries: ', summaries)
     return (
         <>
             <Box px={{base: '4', md: '4'}} py="4" maxWidth="3xl" mx="auto">
                 <CreatePanelAllPanelsTable 
-                    panels={allPanels} 
+                    summaries={summaries} 
                     handleSelectPanel={handleSelectPanel} 
                 />
                 <FieldGroup title="Search for Panel">
@@ -145,9 +96,9 @@ export const CreatePanelForm = ({ user, tokenConfig }) => {
                                 minW="33%" 
                                 isLoading={isSubmitting} 
                                 loadingText="Searching..." 
-                                onClick={searchForPanel} 
+                                // onClick={searchForPanel} 
                                 type="button" 
-                                colorScheme="blue"
+                                colorScheme="solid"
                             >
                                 Search
                             </Button>
@@ -188,7 +139,7 @@ export const CreatePanelForm = ({ user, tokenConfig }) => {
                             isDisabled={!form.panelId}
                             onClick={handleCreatePanel} 
                             type="submit" 
-                            colorScheme="blue"
+                            colorScheme="solid"
                         >
                             Submit Panel
                         </Button>

@@ -22,60 +22,59 @@ import { HiCloudUpload } from 'react-icons/hi'
 import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect, FieldGroup } from '../../chakra'
 import { useScorecardStore } from '../../stores'
-import { sectionFooterPrimaryContent } from 'aws-amplify'
 
 export const MyAccountForm = () => {
   const { 
-    dbUser,
-    fetchDBUser,
-    updateDBUser
+    user,
+    fetchUser,
+    updateUser
   } = useScorecardStore()
 
-  const [userProfile, setUserProfile] = useState(dbUser)
   const [form, setForm] = useState({
     bio: '',
-    firstName: '',
-    lastName: '',
     email: '',
+    fightCoins: 0,
+    firstName: '',
+    isPublic: true,
+    lastName: '',
+    sub: '',
     username: '',
-    boxCoins: 100
   })
 
   useEffect(() => {
-    fetchDBUser()
+    if(user.email_verified){
+      fetchUser(user)
+    }
   },[])
   
   useEffect(() => {
-    if(dbUser.boxCoins > 0){
+      setForm(user)
+  },[user])
 
-      setForm({
-        bio: dbUser.bio ? dbUser.bio : '',
-        firstName: dbUser.firstName ? dbUser.firstName : '',
-        lastName: dbUser.lastName ? dbUser.lastName : '',
-        email: dbUser.email,
-        username: dbUser.username,
-        boxCoins: dbUser.boxCoins
-      })
-    }
-  },[dbUser])
   const handleFormInput = e => {
     const {id, value} = e.currentTarget;
-    setUserProfile({...userProfile, [id]: value})
+    setForm({...form, [id]: value})
   }
 
-  // const update = {
-  //   firstName,
-  //   lastName,
-  //   bio
-  // };
-  // updateDBUser(userProfile) 
-
   const handleCheckbox = () => {
-    setUserProfile({...userProfile, isPublic: !isPublic});
+    setForm({ ...form, isPublic: !isPublic });
   };
 
-  const { email, firstName, lastName, username, bio, isPublic, boxCoins } = form;
-  // console.log('userProfile: ', userProfile);
+  const handleUpdateUser = () => {
+    const options = {
+      bio: form.bio,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      isPublic: form.isPublic,
+      sub: form.sub,
+      username: form.username,
+      email: form.email
+    }
+    updateUser(options)
+  }
+
+  const { email, firstName, lastName, username, bio, isPublic, fightCoins } = form;
+
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={e => e.preventDefault()}>
@@ -84,9 +83,9 @@ export const MyAccountForm = () => {
             Account Settings
           </Heading>
           <FieldGroup title="FightCoins">
-            <FormControl id="boxCoins">
+            <FormControl id="fightCoins">
               <FormLabel>Total</FormLabel>
-              <Input w="25%" readOnly type="number" value={boxCoins} />
+              <Input w="25%" readOnly type="number" value={fightCoins} />
             </FormControl>
           </FieldGroup>
           <FieldGroup title="Personal Info">
@@ -122,7 +121,14 @@ export const MyAccountForm = () => {
           </FieldGroup>
           <FieldGroup title="Public Profile">
             <Stack width="full" spacing="4">
-              <Checkbox defaultChecked isChecked={isPublic} id="isPublic" onChange={handleCheckbox}>Allow your account to be public.</Checkbox>
+              <Checkbox 
+                defaultChecked
+                isChecked={isPublic} 
+                id="isPublic" 
+                onChange={handleCheckbox}
+              >
+                Allow your account to be public.
+              </Checkbox>
             </Stack>
           </FieldGroup>
           <FieldGroup title="Language">
@@ -132,13 +138,22 @@ export const MyAccountForm = () => {
           </FieldGroup>
           <FieldGroup title="Connect accounts">
             <HStack width="full">
-              <Button size="md" variant="outline" leftIcon={<Box as={FaGoogle} color="red.400" />}>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                leftIcon={<Box as={FaGoogle} color="red.400" />}
+              >
                 Google
               </Button>
             </HStack>
           </FieldGroup>
           <FieldGroup title="Profile Image">
-            <Stack direction="row" spacing="6" align="center" width="full">
+            <Stack 
+              direction="row" 
+              spacing="6" 
+              align="center" 
+              width="full"
+            >
               <Avatar
                 size="xl"
                 name="Dan Abramov"
@@ -146,8 +161,17 @@ export const MyAccountForm = () => {
               />
               <Box>
                 <HStack spacing="5">
-                  <Button size="md" leftIcon={<HiCloudUpload />}>Change photo</Button>
-                  <Button size="md" variant="outline" colorScheme="solid">
+                  <Button 
+                    size="sm" 
+                    leftIcon={<HiCloudUpload />}
+                  >
+                    Change photo
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    colorScheme="solid"
+                  >
                     Delete
                   </Button>
                 </HStack>
@@ -162,7 +186,7 @@ export const MyAccountForm = () => {
           <HStack width="full">
             <Button 
 
-              onClick={updateDBUser} 
+              onClick={handleUpdateUser} 
               type="submit" 
               colorScheme="solid"
             >

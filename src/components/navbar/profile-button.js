@@ -34,11 +34,10 @@ export const ProfileButton = () => {
         <Box w="full">
             <Menu>
                 <MenuButton 
-                    mt="4"
                     w='full'
-                    size='sm'
                     as={Button} 
-                    colorScheme='brand'
+                    colorScheme='solid'
+                    size='xs'
                     color="white"
                     onClick={openProfile}
                 >

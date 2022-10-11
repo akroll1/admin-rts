@@ -21,3 +21,10 @@ export interface FighterScores {
     scorecardId: string
     scores: any[] // why won't FighterScore work here?
 }
+
+export interface FighterOptions {
+    fighterId: string
+    firstName: string
+    lastName: string
+    ringname: string
+}

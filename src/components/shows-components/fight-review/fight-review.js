@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { Rating } from './rating'
-import { Button, ButtonGroup, Flex, Heading, HStack, Stack, Text, useToast } from '@chakra-ui/react'
+import { Button, ButtonGroup, Flex, Heading, IconButton, Stack, Text, useToast } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
-import { useReviewStore, useScorecardStore } from '../../../stores'
+import { useScorecardStore } from '../../../stores'
+import { HiOutlinePencil } from 'react-icons/hi'
 
 export const FightReviews = ({ 
   setFightReviewForm, 
@@ -33,31 +34,50 @@ export const FightReviews = ({
       maxW="100%" 
       p="2" 
     >
-      <Stack spacing="6" m="auto">
         { selectedFightReviews.length > 0 && 
-          <Stack spacing={{base: '6'}}>
-            <Heading textAlign="center" fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
-              Fan Reviews
-            </Heading>
-            <Stack 
-              spacing="5" 
-              direction="row" 
-              alignItems="center" 
-              justifyContent="center"
-              shouldWrapChildren
-              margin="auto"
+          <Flex 
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="space-between"
+            pl={["4", "8"]}
+          >
+            <Text
+              mr="2"
+              fontSize="4xl" 
+              fontWeight="extrabold" 
+              lineHeight="1"
             >
-              <Text fontSize="4xl" fontWeight="medium" lineHeight="1">
-                4.3
+              4.3
+            </Text>
+            <Stack 
+              spacing="1"
+            >
+              <Rating defaultValue={4} size="sm" />
+              <Text lineHeight="1" color={'gray.600'}>
+                {`Based on ${Math.floor(Math.random()* 1000)} Reviews`}
               </Text>
-              <Stack spacing="1">
-                <Rating defaultValue={4} size="sm" />
-                <Text lineHeight="1" color={'gray.600'}>
-                  {`Based on ${Math.floor(Math.random()* 1000)} Reviews`}
-                </Text>
-              </Stack>
             </Stack>
-          </Stack>
+            <ButtonGroup 
+              m="auto" 
+              flexDir={['column', 'row']} 
+              size={["sm", "sm"]} 
+            >
+              <Button 
+                variant="outline"
+                // size="md"
+              >
+                See all Reviews
+              </Button>
+              <Button 
+                // size="md"
+                onClick={() => openForm(!fightReviewForm)} 
+                colorScheme="solid"
+                leftIcon={<HiOutlinePencil />}
+              >
+                Write a Review
+              </Button>
+            </ButtonGroup>
+          </Flex>
         }
           <Flex m="auto" flexDirection="column" alignItems="center" justifyContent="center">
             { selectedFightReviews.length === 0 && 
@@ -73,7 +93,7 @@ export const FightReviews = ({
                 >
                   <Button 
                     onClick={() => openForm(!fightReviewForm)} 
-                    size="lg" 
+                    size="md" 
                     colorScheme="solid"
                   >
                     Write a Review
@@ -81,27 +101,10 @@ export const FightReviews = ({
                 </ButtonGroup>
               </>
             }
-            { selectedFightReviews.length > 0 && 
-              <ButtonGroup 
-                m="auto" 
-                flexDir={['column', 'row']} 
-                size={["sm", "md", "lg"]} 
-              >
-                <Button variant="outline">
-                  See all Reviews
-                </Button>
-                <Button 
-                  onClick={() => openForm(!fightReviewForm)} 
-                  size="lg" 
-                  colorScheme="solid"
-                >
-                  Write a Review
-                </Button>
-              </ButtonGroup>
-            }
           </Flex> 
-        </Stack>
+
       <Flex 
+        mt="6"
         px="4" 
         w="100%" 
         flexDir={["column", "row"]} 

@@ -25,7 +25,6 @@ const Scoring = () => {
         modals,
         setModals,
         tokenExpired,
-        userScorecard,
     } = useScorecardStore();
 
     const { 

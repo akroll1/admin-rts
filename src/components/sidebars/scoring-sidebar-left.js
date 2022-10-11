@@ -1,12 +1,12 @@
 import { Button, Flex, Stack, useToast } from '@chakra-ui/react'
 import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiPlusCircle } from 'react-icons/bi'
-import { AccountSwitcher } from './scoring-sidebar/account-switcher'
 import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
 import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { useScorecardStore, useStateStore } from '../../stores'
+import { SidebarsDividerWithText } from '../../chakra'
 
 export const ScoringSidebarLeft = ({ 
     tabs,
@@ -64,7 +64,11 @@ export const ScoringSidebarLeft = ({
             fontSize="sm"
             minH={tabs.info ? "75vh" : "100%"}
         >
-            <AccountSwitcher />
+            <SidebarsDividerWithText 
+                fontSize={'1.5rem'} 
+                text="Show Info" 
+                centered={tabs.all ? true : false}
+            />
             <Stack 
                 h={"auto"}
                 w="full" 
@@ -116,8 +120,8 @@ export const ScoringSidebarLeft = ({
                 </NavGroup>
                
                 <NavGroup tabs={tabs} label="Show">
-                    <NavItem icon={<FaTv />} color="fsl-text" label={ network } />
-                    <NavItem icon={<FaMapMarkerAlt />} color="fsl-text" label={ location } />
+                    <NavItem icon={<FaTv />} label={ network } />
+                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
                     <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
                 </NavGroup>
 

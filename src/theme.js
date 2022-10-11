@@ -1,5 +1,4 @@
 import { 
-  color,
   extendTheme, 
   theme as chakraTheme,
   useColorModeValue as mode,
@@ -252,7 +251,7 @@ const Button = {
   defaultProps: {
     variant: 'solid',
     colorScheme: 'solid',
-    size: 'lg'
+    size: 'md'
   }
 }
 

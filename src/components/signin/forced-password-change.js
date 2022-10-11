@@ -1,4 +1,4 @@
-import React, { useEffect, createRef } from 'react'
+import { useEffect, createRef } from 'react'
 import { Box, Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
 import { PasswordField } from './password-field'
 import { Card } from '../../chakra'
@@ -15,7 +15,6 @@ export const ForcedPasswordChange = ({
     useEffect(() => {
         inputRef3.current.focus();
     },[]);
-
     return (
         <Box>
             <Heading textAlign="center" size="xl" fontWeight="extrabold">
@@ -27,7 +26,6 @@ export const ForcedPasswordChange = ({
                     <FormControl id="username">
                         <FormLabel>Username</FormLabel>
                         <Input 
-                            ref={inputRef3}
                             value={username} 
                             name="username" 
                             type="text" 
@@ -35,6 +33,7 @@ export const ForcedPasswordChange = ({
                         />
                     </FormControl>
                     <PasswordField 
+                        ref={inputRef3}
                         formState={formState}
                         handleFormChange={handleFormChange}
                         password={password} 

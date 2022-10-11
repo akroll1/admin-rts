@@ -44,8 +44,8 @@ export const NavItem = ({
         fontSize="sm" 
         alignSelf="center"
         flex="1" 
-        fontWeight="inherit" 
-        color={subtle ? 'gray.400' : undefined}
+        fontWeight="bold" 
+        color={subtle ? 'fsl-text' : undefined}
       >
         {label}
       </Flex>

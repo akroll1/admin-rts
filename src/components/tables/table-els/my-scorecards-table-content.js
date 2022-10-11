@@ -54,7 +54,7 @@ export const MyScorecardsTableContent = ({
                 border="none"
                 key={index} 
                 _hover={{
-                  textAlign: "center",
+                  textAlign: "left",
                   cursor: 'pointer', 
                   bg: '#535353', 
                   color: '#fff', 
@@ -62,10 +62,10 @@ export const MyScorecardsTableContent = ({
                   borderRadius: '5px'
                 }} 
               >
-                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
+                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} whiteSpace="nowrap">
                   { label }
                 </Td>
-                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
+                <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} whiteSpace="nowrap">
                   { prediction }                      
                 </Td>
                 <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
