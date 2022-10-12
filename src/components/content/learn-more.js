@@ -13,8 +13,7 @@ import {
   } from '@chakra-ui/react'
   import { useNavigate } from 'react-router'
   import { BiRightArrowAlt } from 'react-icons/bi'
-  import { FaPlayCircle } from 'react-icons/fa'
-  import { LearnMoreLogo, Testimonial } from '../../chakra'
+  import { Testimonial } from '../../chakra'
   import JWPlayer from '@jwplayer/jwplayer-react';
 
   const Feature = props => {
@@ -67,20 +66,10 @@ import {
             </Box>
             <Box position="relative" w="100%" h="100%" m="autp">
               <Flex minH={{ base: '320px', lg: '480px' }}>
-
-                {/* <Center
-                  bg={mode('white', 'gray.700')}
-                  shadow="lg"
-                  minH={{ base: '320px', lg: '480px' }}
-                  rounded="lg"
-                  > */}
-
-                  <JWPlayer
-                    playlist="https://cdn.jwplayer.com/v2/playlists/kTtEBPkU"
-                    library='https://cdn.jwplayer.com/libraries/WBqqdo2h.js'
-                    />  
-                {/* </Center> */}
-                {/* <Box onClick={() => console.log('click')} cursor="pointer" as={FaPlayCircle} fontSize="90px" color="gray.300" /> */}
+                <JWPlayer
+                  playlist="https://cdn.jwplayer.com/v2/playlists/kTtEBPkU"
+                  library='https://cdn.jwplayer.com/libraries/WBqqdo2h.js'
+                />  
               </Flex>
               <SimpleGrid
                 rounded="lg"

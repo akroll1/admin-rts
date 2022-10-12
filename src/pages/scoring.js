@@ -180,7 +180,9 @@ const Scoring = () => {
                     tabs={tabs}
                 />
             </Flex>
-            <ScoringTable tabs={tabs} />
+            <ScoringTable 
+                tabs={tabs} 
+            />
 
             <ScoringTabs 
                 tabs={tabs} 

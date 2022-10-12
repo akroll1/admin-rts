@@ -1,10 +1,9 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
 import { FightReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
-
 
 export const ShowsMain = ({
     deleteMember,
@@ -17,10 +16,20 @@ export const ShowsMain = ({
     setFightReviewForm, 
     fightReviewForm, 
 }) => {
-    const { fightSummary } = useScorecardStore();
+    const {
+        fightSummary,
+    } = useScorecardStore()
+    const [time, setTime] = useState(0)
     const showTime = fightSummary?.show?.showTime ? fightSummary?.show?.showTime : 0;
-    const UPCOMING = showTime > Date.now() ? true : false; 
     
+    useEffect(() => {
+        if(fightSummary?.show?.showTime){
+            setTime(fightSummary.show.showTime)
+        }
+    },[fightSummary?.show?.showTime])
+
+    const UPCOMING = time > Date.now() ? true : false; 
+
     return (
         <Flex 
             as="section"

@@ -3,7 +3,6 @@ import { Box, Divider, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 
 export const ScoringDividerWithText = props => {
   const { centered, tabs, text } = props;
-  console.log('centered: ', centered)
   return (
     <Flex 
       display={tabs.all || tabs.table ? 'flex' : 'none'}
