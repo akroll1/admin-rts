@@ -121,17 +121,17 @@ export const FightersForm = () => {
                         <VStack width="full" spacing="6">
                             <FormControl id="firstName">
                                 <FormLabel>First Name</FormLabel>
-                                <Input value={firstName.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
+                                <Input value={firstName?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="lastName">
                                 <FormLabel>Last Name</FormLabel>
-                                <Input value={lastName.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
+                                <Input value={lastName?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="ringname">
                                 <FormLabel>Ring Name</FormLabel>
-                                <Input value={ringname.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
+                                <Input value={ringname?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="home">

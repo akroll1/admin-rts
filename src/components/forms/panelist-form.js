@@ -8,15 +8,16 @@ export const PanelistForm = () => {
     const {
         createPanelist,
         deletePanelist,
+        fetchAllPanelists,
         fetchPanelist,
         panelist,
+        panelists,
         updatePanelist,
     } = useScorecardStore()
 
     const [panelistId, setPanelistId] = useState(null)
     const [allPanelists, setAllPanelists] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [search, setSearch] = useState('');
     const [form, setForm] = useState({
         bio: '',
         displayName: '',
@@ -28,11 +29,21 @@ export const PanelistForm = () => {
     });
 
     useEffect(() => {
+        fetchAllPanelists()
+    },[])
+
+    useEffect(() => {
+        if(panelists.length > 0){
+            setAllPanelists(panelists)
+        }
+    },[panelists])
+
+    useEffect(() => {
         if(panelist.panelistId){
             setForm(panelist)
         }
     },[panelist])
-    
+
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
         return setForm({...form, [id]: value });
@@ -43,14 +54,24 @@ export const PanelistForm = () => {
     }
 
     const handleUpdatePanelist = e => {
-        const updateObj = {}
-        updatePanelist(updateObj)
+        console.log('UPDATE: form: ', form)
+        updatePanelist(form)
+    }
+
+    const handleCreatePanelist = e => {
+        console.log('CREATE form: ', form)
+        // createPanelist(createObj)
+    }
+
+    const handleDeletePanelist = e => {
+        deletePanelist(panelistId)
     }
 
     const handleSelectedPanelist = e => {
         const { id } = e.currentTarget;
         const [panelist] = allPanelists.filter( panelist => panelist.panelistId === id);
-        setForm(panelist);    
+        setForm(panelist);  
+        setPanelistId(panelist.panelistId)  
     }
     const { bio, displayName, firstName, img, lastName, links, tagline } = form;
 
@@ -61,9 +82,9 @@ export const PanelistForm = () => {
                     <Stack spacing="4" divider={<StackDivider />}>
                         <FieldGroup title="Search for a Panelist">
                             <VStack width="full" spacing="6">
-                                <FormControl id="search">
+                                <FormControl id="panelistId">
                                     <FormLabel htmlFor="panelistId">Panelist ID</FormLabel>
-                                    <Input value={search} onChange={ ({ currentTarget: {value} }) => setSearch(value.length == 36 ? value : '')} type="text" maxLength={36} />
+                                    <Input value={panelistId} onChange={ ({ currentTarget: {value} }) => setPanelistId(value.length == 36 ? value : '')} type="text" maxLength={36} />
                                 </FormControl>
                                 <HStack justifyContent="center" width="full">
                                     <Button 
@@ -125,14 +146,14 @@ export const PanelistForm = () => {
                     <FieldGroup mt="8">
                         <ButtonGroup width="full">
                             <Button 
-                                onClick={handleUpdatePanelist} 
+                                onClick={panelistId ? handleUpdatePanelist : handleCreatePanelist} 
                                 type="submit" 
                                 colorScheme="solid"
                             >
-                                Submit
+                                {panelistId ? `Update Panelist` : `Create Panelist`}
                             </Button>
                             <Button 
-                                onClick={deletePanelist}
+                                onClick={handleDeletePanelist}
                                 variant="outline"
                             >
                                 Delete

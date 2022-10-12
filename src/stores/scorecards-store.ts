@@ -53,6 +53,7 @@ interface ScorecardStore {
     discussion: Discussion
     discussions: Discussion[]
     fetchAllDiscussions(): void
+    fetchAllPanelists(): void
     fetchDiscussion(discussionId: string): void
     fetchFight(fightId: string): void
     fetchFighter(fighterId: string): void
@@ -79,6 +80,7 @@ interface ScorecardStore {
     isSubmitting: boolean
     modals: Modals
     panelist: Panelist
+    panelists: Panelist[]
     panelSummaries: PanelSummary[]
     patchPrediction(prediction: string): void
     poundListOfficial: List
@@ -153,6 +155,7 @@ const initialState = {
     idToken: {} as TokenConfig,
     modals: {} as Modals,
     panelist: {} as Panelist,
+    panelists: [],
     panelSummaries: [],
     poundListOfficial: {} as List,
     poundListUser: {} as List,
@@ -299,6 +302,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const discussions = res.data as Discussion[]
                 set({ discussions })
             },
+            fetchAllPanelists: async () => {
+                const res = await axios.get(`${baseUrl}/panelists`, get().accessToken)
+                const panelists = res.data as Panelist[]
+                set({ panelists })
+            },
             fetchDiscussion: async (discussionId: string) => {
                 const res = await axios.get(`${baseUrl}/discussions/${discussionId}`, get().accessToken)
                 const discussion = res.data as Discussion
@@ -393,7 +401,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 console.log('res: ', res)
             },
             fetchPanelist: async (panelistId: string) => {
-                const res = await axios.get(`${baseUrl}/panelists/${panelistId}`)
+                const res = await axios.get(`${baseUrl}/panelists/${panelistId}`, get().accessToken)
                 const panelist = res.data as Panelist
                 set({ panelist })
             },
