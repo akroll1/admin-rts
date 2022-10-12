@@ -58,11 +58,14 @@ const Shows = props => {
     },[tokenExpired])
 
     useEffect(() => {
-        const run = async () => {
-            await fetchFights();
-            setActiveFightSummary(fightSummary)
-        }
+        fetchFights();    
     },[])
+
+    useEffect(() => {
+        // if(){
+            setActiveFightSummary(fightSummary)
+        // }
+    },[fightSummary])
 
     useEffect(() => {
         if(fightReviewForm){

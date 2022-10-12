@@ -8,13 +8,22 @@ const Home = () => {
   const navigate = useNavigate();
   return (
 
-    <Box as="section" bg="brand.base" py="3">
-      {/* <Center>
-        <Heading p="4" as="h1" mt="0" size="3xl" pt="0" mb="4" letterSpacing="normal">Score Fights in Real Time</Heading>
-      </Center> */}
-      <Box maxW={{ base: 'xl', md: '7xl' }} mx="auto" px={{ base: '6', md: '8' }}>
-        <Stack p="8" m="auto" spacing={{ base: '4', lg: '20' }} direction={{ base: 'column', lg: 'row' }}>
-          
+    <Box 
+      as="section" 
+      bg="brand.base" 
+      py="3"
+    >
+      <Box 
+        maxW={{ base: 'xl', md: '7xl' }} 
+        mx="auto" 
+        px={{ base: '6', md: '8' }}
+      >
+        <Stack 
+          p="4" 
+          m="auto" 
+          spacing={{ base: '4', lg: '4' }} 
+          direction={{ base: 'column', lg: 'row' }}
+        >
           <Box maxW={{ lg: 'lg' }}>
             <Heading
               size="xl"
@@ -28,6 +37,9 @@ const Home = () => {
             <Heading>
               Here you go.
             </Heading>
+
+
+            
             <Text fontSize="lg" mt="4" color={mode('gray.600', 'fsl-body-text')}>
               Score fights in real-time and compete against other boxing fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live!
             </Text>
@@ -54,7 +66,11 @@ const Home = () => {
               Learn more
             </Button>
           </Box>
-          <Center flex="1" shadow="lg" maxW={{ lg: 'xl' }}>
+          <Center 
+            flex="1" 
+            shadow="lg" 
+            maxW={{ lg: 'xl' }}
+          >
             <Img
               borderRadius="5"
               objectFit="cover"
@@ -62,7 +78,7 @@ const Home = () => {
               h="full"
               htmlWidth="576px"
               htmlHeight="420px"
-              src="https://images.unsplash.com/photo-1609921205586-7e8a57516512?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTl8fGRlc2lnbmVyfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+              src="home_page_2.jpg"
               alt="Person on phone scoring a fight"
             />
           </Center>

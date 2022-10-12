@@ -54,7 +54,6 @@ export const PanelistForm = () => {
     }
 
     const handleUpdatePanelist = e => {
-        console.log('UPDATE: form: ', form)
         updatePanelist(form)
     }
 
