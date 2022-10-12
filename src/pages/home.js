@@ -46,8 +46,8 @@ const Home = () => {
             <Button
               onClick={() => navigate('/learn-more')}
               className="group"
-              mt="8"
-              size="lg"
+              mt={["4", "8"]}
+              size={["lg", "xl"]}
               px="8"
               fontWeight="bold"
               h="14"
@@ -83,7 +83,9 @@ const Home = () => {
             />
           </Center>
         </Stack>
-        <Divider my="20" opacity={1} />
+        <Divider my={["8", "20"]} 
+          opacity={1} 
+        />
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: '12', md: '8' }}>
           <Feature title="Win Prizes" icon={<FaHandsHelping />}>
             Win prizes for making correct pre-fight and in-fight predictions.

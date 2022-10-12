@@ -46,7 +46,13 @@ import {
               <Text mt="6" mb="8" fontSize="lg" fontWeight="medium">
                 Score fights in real-time, all scorecards saved in the cloud.
               </Text>
-              <Button size="lg" colorScheme="blue" minH="14" rightIcon={<BiRightArrowAlt />}>
+              <Button 
+                size="lg" 
+                colorScheme="solid" 
+                minH="14" 
+                rightIcon={<BiRightArrowAlt />}
+                onClick={() => navigate('/signin')}
+              >
               {/* <Button onClick={() => navigate('/dashboard/create-scorecard')} size="lg" colorScheme="blue" minH="14" rightIcon={<BiRightArrowAlt />}> */}
                 Get Started now
               </Button>
