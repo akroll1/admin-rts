@@ -60,11 +60,12 @@ export const capFirstLetters = word => {
     if(word == undefined || word.length === 0){
         return '';
     } else {
-        const words = word.split(' ');
+        word.replace(/,/i, '')
+        let words = word.split(' ');
         if(words.length === 1){
             return words.map(el => el.charAt(0).toUpperCase() + el.slice(1));
         }
-        return words.map(el => el.charAt(0).toUpperCase() + el.slice(1) + ' ');
+        return words.map(el => el.charAt(0).toUpperCase() + el.slice(1) + ' ').join('');
     } 
 };
 
@@ -92,40 +93,30 @@ export const isValidEmail = email => {
     // console.log('validate email: ',re.test(email));
     return re.test(email) ? true : false;
 }
+
 export const removeBadEmails = emails => {
     return emails.filter( email => email != undefined && email.length > 0);
 }
-export const slicedGame = (str) => {
-    let index = str.indexOf('-');
-    if(index > -1){
-        return str.slice(0,index);
-    } else {
-        return str;
-    }
-};
-
-export const getGameType = (path) => {
-    if(path.includes('poll')) return 'poll';
-    if(path.includes('quiz')) return 'quiz';
-    if(path.includes('predictive')) return 'predictive';
-};
 
 export const transformedWeightclass = weightclass => {
-    let temp;
-    if(weightclass.includes('LIGHT')){
-        if(weightclass.includes('LIGHTWEIGHT')){
-            return `${weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
-        }
-        temp = weightclass
+    if(weightclass){
+        
+        let temp;
+        if(weightclass.includes('LIGHT')){
+            if(weightclass.includes('LIGHTWEIGHT')){
+                return `${weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
+            }
+            temp = weightclass
             .slice(5).
             toLowerCase();
-        return `Light ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+            return `Light ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+        }
+        if(weightclass.includes('SUPER')){
+            temp = weightclass
+            .slice(5).
+            toLowerCase();
+            return `Super ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
+        }
+        return `${ weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
     }
-    if(weightclass.includes('SUPER')){
-        temp = weightclass
-        .slice(5).
-        toLowerCase();
-        return `Super ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
-    }
-    return `${ weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
 }

@@ -15,7 +15,7 @@ export const SubmenuItem = (props) => {
       transition="all 0.2s"
       rounded="lg"
       _hover={{
-        bg: mode('gray.50', 'gray.600'),
+        bg: mode('gray.50', 'gray.600')
       }}
       _focus={{
         shadow: 'outline',
@@ -37,9 +37,9 @@ export const SubmenuItem = (props) => {
         <HStack as="dt">
           <Text
             fontWeight="semibold"
-            color={mode('gray.900', 'white')}
+            color={mode('gray.900', '#DADADA')}
             _groupHover={{
-              color: mode('blue.600', 'inherit'),
+              color: mode('blue.600', 'white'),
             }}
           >
             {title}
@@ -49,12 +49,15 @@ export const SubmenuItem = (props) => {
             as={FaChevronRight}
             transition="all 0.2s"
             _groupHover={{
-              color: mode('blue.600', 'inherit'),
+              color: mode('blue.600', 'white'),
               transform: 'translateX(2px)',
             }}
           />
         </HStack>
-        <Text as="dd" color={mode('gray.500', 'gray.400')}>
+        <Text 
+          as="dd" 
+          color={mode('gray.500', 'gray.400')}
+        >
           {children}
         </Text>
       </Box>

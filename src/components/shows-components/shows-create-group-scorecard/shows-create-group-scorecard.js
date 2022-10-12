@@ -3,7 +3,15 @@ import { Button, Flex, FormControl, FormGroup, FormLabel, Input, InputGroup, Inp
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { DividerWithText, FieldGroup } from '../../../chakra'
 
-export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmailSubmit, handleFormChange, handleCreateGroupScorecard, members }) => {
+export const ShowsCreateGroupScorecard = ({ 
+    deleteMember, 
+    emailValue, 
+    handleEmailSubmit, 
+    handleFormChange, 
+    handleCreateGroupScorecard, 
+    isSubmitting,
+    members 
+}) => {
     return ( 
         <>
             <DividerWithText text={'Create a Group Scorecard'} />
@@ -15,8 +23,30 @@ export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmai
                         { members.map((member, i) => {
                             return (
                                 <InputGroup key={i}>
-                                    <Input size="md" readOnly key={member} value={members[i]} placeholder="first.last@email.com" type="email" maxLength={255} />
-                                    <InputRightElement children={<DeleteIcon id={member} onClick={deleteMember} _hover={{cursor: 'pointer', color: 'gray'}} color="white" />} />
+                                    <Input 
+                                        mb="1"
+                                        size="md" 
+                                        readOnly 
+                                        key={member} 
+                                        value={members[i]} 
+                                        placeholder="first.last@email.com" 
+                                        type="email" 
+                                        maxLength={255} 
+                                        color={i == 0 ? 'lightgray' : 'white'}
+                                    />
+                                    <InputRightElement 
+                                        display={i === 0 ? 'none' : 'flex'} 
+                                        children={
+                                            <DeleteIcon 
+                                                id={member} 
+                                                onClick={deleteMember} 
+                                                _hover={{cursor: 'pointer', color: 'gray'}} 
+                                                color="white" 
+                                                alignItems="center"
+                                                justifyContent="center"
+                                            />
+                                        } 
+                                    />
                                 </InputGroup>
                             )
                         })}
@@ -24,23 +54,33 @@ export const ShowsCreateGroupScorecard = ({ deleteMember, emailValue, handleEmai
                             onChange={e => handleFormChange(e)} 
                             value={ emailValue } 
                             id="emailValue" 
-                            _focus={{color: 'black',background: 'lightgray'}} 
+                            // _focus={{color: 'black',background: 'lightgray'}} 
                             mt="4" 
                             placeholder="email@example.com" 
                             type="email" maxLength={255} 
                         />
                         <Flex m="auto" alignItems="center" justifyContent="center" flexDir={['column', 'row']}>     
                             <Button 
-                                colorScheme="blue" 
                                 onClick={ handleEmailSubmit } 
                                 leftIcon={<AddIcon />} 
                                 m="2"
                                 mt={["4"]}
                                 type="button"
-                                >
+                                colorScheme="solid" 
+                                size="md"
+                            >
                                 Add Members
                             </Button>
-                            <Button m="2" mt={["4"]} onClick={handleCreateGroupScorecard} type="button" colorScheme="blue">
+                            <Button 
+                                size="md"
+                                isLoading={isSubmitting}
+                                loadingText="Submitting"
+                                m="2" 
+                                mt={["4"]} 
+                                onClick={handleCreateGroupScorecard} 
+                                type="button" 
+                                colorScheme="solid"
+                            >
                                 Create Scorecard
                             </Button>
                         </Flex>

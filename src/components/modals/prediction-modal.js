@@ -1,45 +1,32 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Flex, Select, Icon, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { FaTrophy } from 'react-icons/fa'
 import { capFirstLetters } from '../../utils'
+import { CustomOverlay } from '../custom-overlay'
+import { useScorecardStore } from '../../stores'
 
-const CustomOverlay = () => (
-  <ModalOverlay
-    bg='none'
-    backdropFilter='auto'
-    backdropInvert='60%'
-    backdropBlur='2px'
-  />
-)
-export const PredictionModal = ({ 
-    modals,
-    setModals,
-    rounds,
-    fighterData,
-    handleSubmitPrediction 
-}) => {
-  const [overlay, setOverlay] = React.useState(<CustomOverlay />)
-  const [localPrediction, setLocalPrediction] = useState({
-      fighter:'',
-      result: ''
+export const PredictionModal = () => {
+  const [overlay, setOverlay] = useState(<CustomOverlay />)
+  const [form, setForm] = useState({
+    fighter:'',
+    result: ''
   });
+  
+  const {
+    fight,
+    fighters,
+    modals,
+    patchPrediction,
+    setModals,
+  } = useScorecardStore();
 
-  const totalRounds = new Array(rounds).fill(0);
-  const getFighter = e => {
-      const { id, value } = e.currentTarget;
-      console.log('')
-      setLocalPrediction({ ...localPrediction, fighter: value });
-  }
-  const getResult = e => {
-      const { value } = e.currentTarget;
-      setLocalPrediction({...localPrediction, result: value});
-  }
-  const handleLocalPredictionSubmit = () => {
-    const { fighter, result } = localPrediction;
-    if(!fighter || !result) return alert('Please select a value!');
-    const predictionString = localPrediction.fighter +','+ localPrediction.result;
-    handleSubmitPrediction(predictionString);
-    setModals({ ...modals, predictionModal: false })
+  const totalRounds = new Array(fight?.rounds).fill(0);
+
+  const handleSubmitPrediction = () => {
+    if(!form.fighter || !form.result) return setModals('predictionModal', false)
+    const predictionString = `${form.fighter},${form.result}`
+    patchPrediction(predictionString)
+    setModals('predictionModal', false)
   }
 
   return (
@@ -66,8 +53,14 @@ export const PredictionModal = ({
                 alignItems="center" 
                 justifyContent="center"
               >
-                <Select _hover={{cursor: 'pointer'}} onChange={e => getFighter(e)} m="1" placeholder="Select winner">
-                  { fighterData.map( fighter => {
+                <Select 
+                  // _hover={{cursor: 'pointer'}} 
+                  // _focus={{border: 'brand.100'}}
+                  onChange={e => setForm({ ...form, fighter: e.currentTarget.value })} 
+                  m="1" 
+                  placeholder="Select winner"
+                >
+                  { fighters.map( fighter => {
                       const { fighterId, firstName, lastName, ringname } = fighter;
                       return (
                         <option key={fighterId} id={fighterId} value={fighterId}>{`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`}</option>
@@ -75,13 +68,14 @@ export const PredictionModal = ({
                       })
                     }
                 </Select>
-                <Select _hover={{cursor: 'pointer'}} onChange={e => getResult(e)} m="1" placeholder="Select Result">
-                    <option value="UD">Unanimous Decision</option>
-                    <option value="SD">Split Decision</option>
-                    <option value="MD">Majority Decision</option>
-                    <option value="DR">Draw</option>
-                    <option value="MR">Majority Draw</option>
-                    <option value="DQ">Disqualification</option>
+                <Select 
+                  // _hover={{cursor: 'pointer'}} 
+                  // _focus={{border: 'brand.100'}}
+                  onChange={e => setForm({ ...form, result: e.currentTarget.value })} 
+                  m="1" 
+                  placeholder="Select Result"
+                >
+                    <option value="DC">Decision</option>
                     {totalRounds.map( (round,i) => {
                         return <option key={i} value={'KO'+(i+1)}>KO{i+1}</option>
                     })}
@@ -95,10 +89,21 @@ export const PredictionModal = ({
           alignItems="center" 
           justifyContent="center"
         >
-          <Button onClick={() => handleLocalPredictionSubmit()} colorScheme="blue" mr={3}>
+          <Button 
+            onClick={handleSubmitPrediction} 
+            colorScheme="solid" 
+            size="md"
+            mr={3}
+          >
             Save Prediction
           </Button>
-          <Button variant="outline" onClick={() => setModals({ ...modals, predictionModal: false})} colorScheme="blue" mr={3}>
+          <Button 
+            size="md"
+            variant="outline"   
+            onClick={() => setModals({ ...modals, predictionModal: false})} 
+            colorScheme="outline"
+            mr={3}
+          >
             Cancel
           </Button>
         </ModalFooter>

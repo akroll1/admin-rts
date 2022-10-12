@@ -1,15 +1,31 @@
-import React from 'react'
-import { Heading, Center } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { MyScorecardsTable } from '../components/tables'
+import { ExpiredTokenModal } from '../components/modals'
+import { useScorecardStore } from '../stores'
 
-export const MyScorecards = ({ scorecards, handleFormSelect }) => {
+export const MyScorecards = () => {
+
+  const {
+    fetchUserScorecards,
+    userScorecards,
+  } = useScorecardStore();
+
+    useEffect(() => {
+      fetchUserScorecards()
+    },[])
+    // console.log('userScorecards: ', userScorecards)
     return (
-        <>
-            <Center>
-                <Heading p="4" as="h1" size="xl">My Scorecards</Heading>
-            </Center>
-            <MyScorecardsTable handleFormSelect={handleFormSelect} scorecards={scorecards} />
-        </>
+        <Flex 
+          w={["100%", "80%", "60%"]}
+          m="auto"
+          flexDir="column" 
+          p="4"
+        >
+            <ExpiredTokenModal />
+            <Heading textAlign="center">Scorecards</Heading>
+            <MyScorecardsTable scorecards={userScorecards} />
+        </Flex>
     )
 }
 export default MyScorecards

@@ -3,7 +3,6 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack, 
 import { ReviewForm } from '../forms'
 
 export const ReviewFormModal = ({ 
-    stars,
     reviewForm, 
     setReviewForm, 
     handleReviewFormClose, 

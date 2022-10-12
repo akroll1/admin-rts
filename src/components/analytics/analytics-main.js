@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flex, Heading, useColorModeValue as mode} from '@chakra-ui/react'
 import { StatsHeader } from '../analytics'
 import { AnalyticsGuestJudgeTable } from '../tables/analytics-guest-judge-table'
+import { stateStore } from '../../stores'
 
-export const AnalyticsMain = ({ showData }) => {
-    const { fight: { fightQuickTitle }} = showData;
-        
+export const AnalyticsMain = ({
+    selectedAnalyticsShow
+}) => {
+    const { fight, guestJudges } = selectedAnalyticsShow?.fight ? selectedAnalyticsShow : '';
+    const [judges, setGuestJudges] = useState([]);
+
+    useEffect(() => {
+        setGuestJudges(guestJudges)
+    },[guestJudges]);
+    
     return (
         <Flex 
             flexDirection="column"
@@ -15,13 +23,13 @@ export const AnalyticsMain = ({ showData }) => {
             id="analytics_main"
             p="4"
             pb="1"
-            flex="1 0 65%" 
+            flex="1 0 60%" 
             bg={mode('gray.900', 'white.500')} 
             boxSizing="border-box" 
         >
-            <Heading textAlign="center" as="h1" size="lg">{fightQuickTitle}</Heading>
+            <Heading textAlign="center" as="h1" size="lg">{ fight?.fightQuickTitle ? fight.fightQuickTitle : ''}</Heading>
             <StatsHeader />
-            <AnalyticsGuestJudgeTable guestJudges={showData.guestJudges} />
+            <AnalyticsGuestJudgeTable guestJudges={guestJudges} />
         </Flex>
     )
 }

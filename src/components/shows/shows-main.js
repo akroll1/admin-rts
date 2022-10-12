@@ -1,25 +1,26 @@
 import React from 'react'
 import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
-import { PredictionsReviews, ShowsCreateGroupScorecard, ShowsMetadata, FightStoryline } from '../shows-components'
+import { FightReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
+import { useScorecardStore } from '../../stores'
+
 
 export const ShowsMain = ({
-    predictionsAndReviews,
-    showReviewForm, 
-    setShowReviewForm, 
-    selectedShow, 
-    reviewType,
-    handleEmailSubmit, 
     deleteMember,
-    members,
     emailValue,
-    handleFormChange,
     handleCreateGroupScorecard,
+    handleEmailSubmit, 
+    handleFormChange,
+    isSubmitting,
+    members,
+    setFightReviewForm, 
+    fightReviewForm, 
 }) => {
-    const { show: { showTime }} = selectedShow;
+    const { fightSummary } = useScorecardStore();
+    const showTime = fightSummary?.show?.showTime ? fightSummary?.show?.showTime : 0;
     const UPCOMING = showTime > Date.now() ? true : false; 
-    // console.log('selectedShowFight: ', selectedShowFight);
+    
     return (
         <Flex 
             as="section"
@@ -27,40 +28,53 @@ export const ShowsMain = ({
             p="4"
             pb="1"
             flex="1 0 65%" 
-            bg={mode('gray.900', 'white.500')} 
+            bg="inherit"
             flexDirection="column" 
             justifyContent="center"
             alignItems="center"
             boxSizing="border-box" 
         >
-            <ShowsMetadata
-                showTime={showTime}
-                selectedShow={selectedShow}
+            <FightMetadata
+                fightSummary={fightSummary}
             /> 
             
             <ShowsFighterFaceoff 
-                fighters={selectedShow.fighters} 
+                fighters={fightSummary.fighters} 
                 showTime={showTime}
             />
-            <DividerWithText text="The Storyline" />
-            <FightStoryline selectedShow={selectedShow} /> 
-
-            <DividerWithText text={UPCOMING ? 'Predictions' : 'Reviews'} />
-            <PredictionsReviews 
-                reviewType={reviewType}
-                predictionsAndReviews={predictionsAndReviews}
-                showReviewForm={showReviewForm} 
-                setShowReviewForm={setShowReviewForm} 
+            <DividerWithText 
+                fontSize="2xl" 
+                text="Storyline" 
+                mt="2"
+                mb="0"
             />
-            { UPCOMING && 
-                <ShowsCreateGroupScorecard 
-                    deleteMember={deleteMember} 
-                    emailValue={emailValue} 
-                    handleEmailSubmit={handleEmailSubmit} 
-                    handleFormChange={handleFormChange} 
-                    handleCreateGroupScorecard={handleCreateGroupScorecard} 
-                    members={members} 
-                />
+            <FightStoryline fightSummary={fightSummary} /> 
+            
+            { UPCOMING 
+                ?
+                    <ShowsCreateGroupScorecard 
+                        deleteMember={deleteMember} 
+                        emailValue={emailValue} 
+                        handleEmailSubmit={handleEmailSubmit} 
+                        handleFormChange={handleFormChange} 
+                        handleCreateGroupScorecard={handleCreateGroupScorecard} 
+                        isSubmitting={isSubmitting}
+                        members={members} 
+                    />
+                :
+                    <>
+                        <DividerWithText 
+                            text={`Reviews`} 
+                            fontSize={"2xl"}
+                            mb="2"
+                            mt="4"
+
+                        />
+                        <FightReviews 
+                            fightReviewForm={fightReviewForm} 
+                            setFightReviewForm={setFightReviewForm} 
+                        />
+                    </>
             } 
         </Flex>    
     )

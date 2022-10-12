@@ -1,3 +1,4 @@
+
 export const REVIEW_TYPE = {
     FANTASY: 'FANTASY',
     HISTORICAL: 'HISTORICAL',
@@ -27,48 +28,44 @@ export const WEIGHTCLASS_ENUMS = [
 ];
 
 export const NETWORK_ENUMS = [
+	{ value: 'DAZN', label: 'DAZN' },
 	{ value: 'ESPN', label: 'ESPN' },
 	{ value: 'ESPN+', label: 'ESPN+' },
+	{ value: 'FIGHTSYNC', label: 'FightSync' },
+	{ value: 'FIGHTTV', label: 'Fight TV' },
+	{ value: 'FOXSPORTS', label: 'Fox Sports' },
 	{ value: 'HBO', label: 'HBO' },
-	{ value: 'HBOPPV', label: 'HBOPPV' },
-	{ value: 'DAZN', label: 'DAZN' },
-	{ value: 'SHOWTIME',  label: 'SHOWTIME' },
-	{ value: 'SHOWTIMEPPV', label: 'SHOWTIMEPPV' },
-	{ value: 'FIGHTSYNC', label: 'FIGHTSYNC' },
-	{ value: 'FIGHTTV', label: 'FIGHTTV' },
+	{ value: 'HBOPPV', label: 'HBO PPV' },
+	{ value: 'SHOWTIME',  label: 'Showtime' },
+	{ value: 'SHOWTIMEPPV', label: 'Showtime PPV' },
 	{ value: 'NONE', label: 'NONE' }
 ];
 
-export const FIGHT_SHOW_STATUS_ENUMS = [
+export const FIGHT_STATUS_SELECT_CONSTANTS = [
 	{ value: 'ACTIVE', label: 'ACTIVE' },
 	{ value: 'CANCELED', label: 'CANCELED' },
-	{ value: 'COMPLETED', label: 'COMPLETED' },
+	{ value: 'COMPLETE', label: 'COMPLETE' },
 	{ value: 'FANTASY', label: 'FANTASY' },
 	{ value: 'PENDING', label: 'PENDING' }
 ];
 
-export const FIGHT_SHOW_STATUS_CONSTANTS = {
+export const FIGHT_STATUS_CONSTANTS = {
 	ACTIVE: 'ACTIVE',
 	CANCELED: 'CANCELED',
-	COMPLETED: 'COMPLETED',
+	COMPLETE: 'COMPLETE',
 	FANTASY: 'FANTASY',
 	PENDING: 'PENDING'
 };
-export const STATUS_CONSTANTS = {
-	ACTIVE: 'ACTIVE',
-	CANCELED: 'CANCELED',
-	COMPLETED: 'COMPLETED',
-	FANTASY: 'FANTASY',
-	PENDING: 'PENDING',
-};
 
-export const OFFICIAL_RESULTS_ARRAY = [
-    { value: 'UD', label: 'UD' },
-    { value: 'MD', label: 'MD' },
-    { value: 'MDD', label: 'MDD' },
-    { value: 'SD', label: 'SD' },
-    { value: 'SDD', label: 'SDD' },
-    { value: 'DQ', label: 'DQ' },
+export const OFFICIAL_RESULTS_ENUM = [
+    { value: 'DC', label: 'Decision' },
+    { value: 'DR', label: 'Draw' },
+    { value: 'UD', label: 'Unanimous Decision' },
+    { value: 'MD', label: 'Majority Decision' },
+    { value: 'MDD', label: 'Majority Decision Draw' },
+    { value: 'SD', label: 'Split Decision' },
+    { value: 'SDD', label: 'Split Decision Draw' },
+    { value: 'DQ', label: 'Disqualification' },
     { value: 'KO1', label: 'KO1' },
     { value: 'KO2', label: 'KO2' },
     { value: 'KO3', label: 'KO3' },
@@ -83,20 +80,14 @@ export const OFFICIAL_RESULTS_ARRAY = [
     { value: 'KO12', label: 'KO12' },
     { value: 'KO13', label: 'KO13' },
     { value: 'KO14', label: 'KO14' },
-    { value: 'KO15', label: 'KO15' },
-    { value: 'TKO1', label: 'TKO1' },
-    { value: 'TKO2', label: 'TKO2' },
-    { value: 'TKO3', label: 'TKO3' },
-    { value: 'TKO4', label: 'TKO4' },
-    { value: 'TKO5', label: 'TKO5' },
-    { value: 'TKO6', label: 'TKO6' },
-    { value: 'TKO7', label: 'TKO7' },
-    { value: 'TKO8', label: 'TKO8' },
-    { value: 'TKO9', label: 'TKO9' },
-    { value: 'TKO10', label: 'TKO10' },
-    { value: 'TKO11', label: 'TKO11' },
-    { value: 'TKO12', label: 'TKO12' },
-    { value: 'TKO13', label: 'TKO13' },
-    { value: 'TKO14', label: 'TKO14' },
-    { value: 'TKO15', label: 'TKO15' }
+    { value: 'KO15', label: 'KO15' }
 ];
+
+export const PANELIST_PREDICTIONS_OPTIONS = [
+	{ value: 'DC', label: 'Decision' },
+	{ value: 'SD', label: 'Split Decision' },
+	{ value: 'KO13' , label: 'KO - Rds 1-3' },
+	{ value: 'KO46' , label: 'KO - Rds 4-6' },
+	{ value: 'KO79' , label: 'KO - Rds 7-9' },
+	{ value: 'KO10' , label: 'KO - Rds 10-12' }
+]

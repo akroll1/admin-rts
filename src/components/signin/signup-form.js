@@ -1,84 +1,97 @@
 import React, { useEffect, createRef } from 'react'
-import { chakra, Button, FormControl, FormLabel, Input, Stack, Text } from '@chakra-ui/react'
+import { Box, chakra, Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
 import { PasswordField } from './password-field'
+import { Card } from '../../chakra'
 
 export const SignUpForm = ({ 
-  handleForgotPassword,
-  isSubmitting,
-  resendVerificationCode, 
-  handleConfirmCode, 
-  waitingForCode, 
-  handleSignUp, 
+  form,
+  formState, 
   handleFormChange, 
-  form 
+  // handleSignUp, 
+  isSubmitting,
+  renderForgotPasswordForm,
+  setFormState
 }) => {
-  const inputRef = createRef();
+  const inputRef2 = createRef();
   const { username, email, password, code } = form;
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef2.current.focus();
   },[]);
 
   return (
-    <chakra.form onSubmit={e => e.preventDefault()}>
-      {waitingForCode
-      ? <Stack spacing="6">
-          <FormControl id="code">
-            <FormLabel>Code</FormLabel>
-            <Input onChange={handleFormChange} value={code} name="code" type="text" required />
-          </FormControl>
-          <Button _hover={{cursor: 'pointer'}} as="a" onClick={handleConfirmCode} type="button" colorScheme="blue" size="lg" fontSize="md">
-            Verify Code
-          </Button>
-          <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-            <Text as="span">Didn&apos;t receive a code?</Text>
-            <Text onClick={resendVerificationCode} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Resend code!</Text>
-          </Text>
-        </Stack>
-      : <Stack spacing="6">
-          <FormControl id="username">
-            <FormLabel>Username</FormLabel>
-            <Input 
-              ref={inputRef} 
-              onChange={handleFormChange} 
-              value={username} 
-              name="username" 
-              type="text" 
-              required 
+    <Box>
+      <Heading textAlign="center" size="xl" fontWeight="extrabold">
+        Create An Account
+      </Heading>
+      <Text 
+        mt="4" 
+        mb="8" 
+        align="center" 
+        textAlign="center" 
+        maxW="md" 
+        fontWeight="medium" 
+        display="flex" 
+        flexDirection={["column", "row" ]}
+        alignItems="center" 
+        justifyContent="center"
+      >
+        <Text as="span">Already have an account?</Text>
+        <Text 
+          onClick={() => setFormState({ ...formState, isSignup: false, isSignin: true })} 
+          _hover={{cursor: 'pointer'}} 
+          style={{marginLeft: '0.5rem', color: '#FCFCFC' }}
+        >
+          Sign-In here!
+        </Text>
+      </Text>
+
+      <Card>
+        <chakra.form onSubmit={e => e.preventDefault()}>
+          <Stack spacing="6">
+            <FormControl id="username">
+              <FormLabel>Username</FormLabel>
+              <Input 
+                ref={inputRef2} 
+                onChange={handleFormChange} 
+                value={username} 
+                name="username" 
+                type="text" 
+                required 
+              />
+            </FormControl>
+            <FormControl id="email">
+              <FormLabel>Email</FormLabel>
+              <Input 
+                onChange={handleFormChange} 
+                value={email} name="email" 
+                type="email" 
+                autoComplete="email" 
+                required 
+              />
+            </FormControl>
+            <PasswordField 
+              formState={formState}
+              handleFormChange={handleFormChange} 
+              password={password} 
+              renderForgotPasswordForm={renderForgotPasswordForm}
             />
-          </FormControl>
-          <FormControl id="email">
-            <FormLabel>Email</FormLabel>
-            <Input 
-              onChange={handleFormChange} 
-              value={email} name="email" 
-              type="email" 
-              autoComplete="email" 
-              required 
-            />
-          </FormControl>
-          <PasswordField 
-            handleForgotPassword={handleForgotPassword}
-            password={password} 
-            handleFormChange={handleFormChange} 
-          />
-          <Button 
-            id="signin_button" 
-            isLoading={isSubmitting}
-            loadingText="Submitting..."
-            _hover={{cursor: 'pointer'}} 
-            as="a" 
-            disabled
-            // onClick={handleSignUp} 
-            type="button" 
-            colorScheme="blue" 
-            size="lg" 
-            fontSize="md"
-          >
-            Sign-Up
-          </Button>
-        </Stack>
-      }
-    </chakra.form>
+            <Button 
+              id="signup_button" 
+              isLoading={isSubmitting}
+              loadingText="Submitting..."
+              // onClick={handleSignUp} 
+              type="button" 
+              colorScheme="solid" 
+              size="lg" 
+              fontSize="md"
+              disabled={true}
+            >
+              Sign-Up
+            </Button>
+          </Stack>
+        </chakra.form>
+      </Card>
+    </Box>  
   )
 }

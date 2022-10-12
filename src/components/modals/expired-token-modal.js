@@ -1,13 +1,19 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Heading, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
+import { useScorecardStore } from '../../stores'
 
-export const ExpiredTokenModal = ({
-  modals, 
-  setModals
- }) => {
-  const navigate = useNavigate();
+export const ExpiredTokenModal = () => {
+  const { 
+    modals,
+    setTokenExpired 
+  } = useScorecardStore()
+  const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const signin = () => {
+    setTokenExpired(false)
+    navigate('/signin')
+  }
   return (
     <Modal
       isCentered
@@ -23,7 +29,7 @@ export const ExpiredTokenModal = ({
             <Text textAlign="center">Please sign in again.</Text>
         </ModalBody>
         <ModalFooter display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-          <Button w="50%" onClick={() => navigate('/signin', {page:'/scoring'})} colorScheme="blue" mr={3}>
+          <Button w="50%" onClick={signin} colorScheme="solid" mr={3}>
             Sign In 
           </Button>
         </ModalFooter>

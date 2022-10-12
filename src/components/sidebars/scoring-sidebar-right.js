@@ -1,15 +1,17 @@
-import React, { useState, createRef, useRef, useEffect } from 'react'
-import { Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
+import React, { useState, useEffect } from 'react'
+import { Flex } from '@chakra-ui/react'
 import { ChatSidebar, FightStats } from './chat-sidebar-components'
-import { stateStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 import { Notification } from '../notifications'
 
 export const ScoringSidebarRight = ({
-    chatKey, 
-    username, 
-    setIncomingScore,
     tabs,
 }) => {    
+    const {
+        activeGroupScorecard
+    } = useScorecardStore()
+    const chatKey = activeGroupScorecard.chatKey
+    
     const [notificationTimeout, setNotificationTimeout] = useState(false);
     const [notifications, setNotifications] = useState([]);
     useEffect(() => {
@@ -18,8 +20,8 @@ export const ScoringSidebarRight = ({
                 const temp = notifications;
                 temp.shift(temp.length -1)
                 setNotifications(temp);
-                setNotificationTimeout(prev => !prev);
-            }, 3000)
+                // setNotificationTimeout(prev => !prev);
+            }, 10000)
             return () => clearTimeout(timer);
         }
     },[notificationTimeout])
@@ -32,44 +34,38 @@ export const ScoringSidebarRight = ({
     };
     return (
         <Flex 
-            display={tabs.chat || tabs.analytics ? 'flex' : 'none'}
+            display={(tabs.all || tabs.chat) ? 'flex' : 'none'}
             id="scoring-sidebar-right"
             flexDir="column" 
-            flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
+            flex={["1 0 25%"]} 
             w="100%" 
-            minH="100%"
             p="2" 
-            bg="gray.900" 
+            bg={tabs.all ? "fsl-sidebar-bg" : "inherit"}
             borderRadius="md" 
-            overflowY="scroll"
+            minH={tabs.chat ? "75vh" : "100%"}
         > 
+            <Flex 
+                w={["100%","auto"]} 
+                position="fixed" 
+                top="3rem" 
+                right="0" 
+                flexDir="column" 
+                zIndex="10000"
+            >
             {notifications.length > 0 && notifications.map( ({notification, username}) => {
                 return (
-                    <Flex 
-                        w={["100%","auto"]} 
-                        position="fixed" 
-                        top="3rem" 
-                        right="0" 
-                        flexDir="column" 
-                        zIndex="10000"
-                    >
-                        <Notification
-                            key={notification}
-                            id={notification}
-                            handleCloseNotification={handleCloseNotification}
-                            notification={notification} 
-                            username={username}
-                        /> 
-                    </Flex>  
-                )  
-            })}
-            <FightStats tabs={tabs} />
+                    <Notification
+                        key={notification}
+                        id={notification}
+                        handleCloseNotification={handleCloseNotification}
+                        notification={notification} 
+                        username={username}
+                    /> 
+                )})}
+            </Flex>  
             <ChatSidebar 
                 setNotifications={setNotifications}
                 setNotificationTimeout={setNotificationTimeout}
-                setIncomingScore={setIncomingScore}
-                chatKey={chatKey}
-                username={username}
                 tabs={tabs} 
             />
         </Flex>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { Button, ButtonGroup, Flex, Heading, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
-import axios from 'axios'
+import { DragHandleIcon } from '@chakra-ui/icons'
+import { useScorecardStore } from '../../stores'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -10,37 +11,35 @@ const initialDnDState = {
   originalOrder: [],
   updatedOrder: []
 }
-export const MyPoundList = ({ tokenConfig, user }) => {
+export const MyPoundList = () => {
+  const { 
+    poundListUser,
+    poundListOfficial,
+    fetchList
+  } = useScorecardStore()
+
   const toast = useToast();  
   const [officialPoundList, setOfficialPoundList] = useState([]);
   const [myPoundList, setMyPoundList] = useState([]);
   const [combinedList, setCombinedList] = useState([]);
   const [selectedFighter, setSelectedFighter] = useState({});
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
-  const baseUrl = process.env.REACT_APP_POUND_LIST;
   
-  ////////////////////////////////////////////////////////
   useEffect(() => {
-    if(user.sub){
-      const getLists = async () => {
-        const url = baseUrl + `/${user.sub}`;
-        return await axios.get(url, tokenConfig)
-        .then(res => {
-          const { usersList, officialList } = res.data;
-          const bothLists = res.data.usersList.concat(res.data.officialList);
-          const usersListIds = usersList.map( fighter => fighter.fighterId);
-          const filtered = officialList.filter( fighterObj => {
-            return !usersListIds.includes(fighterObj.fighterId)
-          });
-          setCombinedList([...usersList, ...filtered])
-          setOfficialPoundList(officialList)
-          setSelectedFighter(res.data.usersList[0])
-        })
-        .catch(err => console.log(err));
-      }
-      getLists();
+    fetchList('pound')
+  },[])
+
+  useEffect(() => {
+    if(poundListUser?.list?.length > 0){
+      setMyPoundList(poundListUser.list)
     }
-  }, [user.sub]);
+    if(poundListOfficial?.list?.length > 0){
+      setOfficialPoundList(poundListOfficial.list)
+    }
+    if(poundListUser?.list?.length > 0 && poundListOfficial?.list?.length > 0){
+      setCombinedList([...poundListUser.list, ...poundListOfficial.list])
+    }
+  },[poundListOfficial, poundListUser])
 
   const onDragStart = e => {
     const initialPosition = Number(e.currentTarget.dataset.position);
@@ -90,32 +89,34 @@ export const MyPoundList = ({ tokenConfig, user }) => {
     });
   }
 
-  const submitMyList = () => {
-    const list = combinedList.slice(0, 5).map( fighter => fighter.fighterId);
-    const poundObj = {
-      list,
-      updatedAt: new Date(),
-      owner: `${user.sub}`
-    }
-    const url = baseUrl + `/${user.sub}`;
-    return axios.put(url, poundObj, tokenConfig)
-      .then(res => {
-        if(res.status === 200){
-          toast({ title: 'Updated P4P List!',
-              status: 'success',
-              duration: 5000,
-              isClosable: true,})
-      }})
-      .catch(err => console.log(err))
-  }
-
   const officialListStyles = { fontWeight: 'bold', color: '#e80000'};
   const myListStyles = { };
 
   return (
-    <Flex id="pound_lists" boxSizing="border-box" flexDir="column" alignItems="center" justifyContent="center">
-      <Heading as="h2" size={["sm", "md", "lg"]} p="4" m="1">Pound-4-Pound Lists</Heading>
-      <Flex p="4" m="4" mt="0" w={["100%", "90%", "80%"]} flexDir={["column", "row"]} alignItems="flex-start" justifyContent="space-evenly">
+    <Flex 
+      id="pound_lists" 
+      boxSizing="border-box" 
+      flexDir="column" 
+      alignItems="center" 
+      justifyContent="center"
+    >
+      <Heading 
+        as="h2" 
+        size={["sm", "md", "lg"]} 
+        p="4" 
+        m="1"
+      >
+        Pound-4-Pound Lists
+      </Heading>
+      <Flex 
+        p="4" 
+        m="4" 
+        mt="0" 
+        w={["100%", "90%", "80%"]} 
+        flexDir={["column", "row"]} 
+        alignItems="flex-start" 
+        justifyContent="space-evenly"
+      >
         <Flex 
           as="section" 
           flex="1 0 40%" 
@@ -128,7 +129,11 @@ export const MyPoundList = ({ tokenConfig, user }) => {
           mt="0"
         >
           <ButtonGroup mb="1rem">
-            <Button onClick={submitMyList} type="button" colorScheme="blue">
+            <Button 
+              // onClick={submitMyList} 
+              type="button" 
+              colorScheme="solid"
+            >
               Save My List
             </Button>
             <Button variant="outline">Cancel</Button>
@@ -140,25 +145,37 @@ export const MyPoundList = ({ tokenConfig, user }) => {
                 if(!item) return;
                 return (
                   <ListItem
-                    display="flex" 
-                    alignItems="center" 
-                    justifyContent="flex-start"
-                    p="4"
-                    m="2"
-                    borderRadius="5px"
-                    bg={i > 4 ? "whiteAlpha.200" : "whiteAlpha.400"}
-                    height='2.5rem'
-                    // w="100%"
-                    key={i}
-                    data-position={i}
-                    draggable
-                    onDragStart={onDragStart}
-                    onDragOver={onDragOver}
-                    onDrop={onDrop}
-                    onDragLeave={onDragLeave}
-                    _hover={{ cursor: 'pointer' }}>
-                  <Text as="p" style={i > 4 ? myListStyles : officialListStyles}>{i + 1} </Text>&nbsp;&nbsp;{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)}
-                </ListItem>
+                  display="flex" 
+                  alignItems="center" 
+                  justifyContent="flex-start"
+                  p="4"
+                  m="2"
+                  borderRadius="5px"
+                  bg={i > 4 ? "whiteAlpha.200" : "whiteAlpha.400"}
+                  height='2.5rem'
+                  // w="100%"
+                  key={i}
+                  data-position={i}
+                  draggable
+                  onDragStart={onDragStart}
+                  onDragOver={onDragOver}
+                  onDrop={onDrop}
+                  onDragLeave={onDragLeave}
+                  _hover={{ cursor: 'pointer' }}
+                  >
+                    <Flex 
+                      w="100%" 
+                      flexDirection="row" 
+                      alignItems="center" 
+                      justifyContent="space-between"
+                    >
+                      <Flex>
+                        <Text as="p" style={i > 4 ? myListStyles : officialListStyles}>{i + 1} </Text><Text ml="2" textAlign="left">{capFirstLetters(item.firstName)} {capFirstLetters(item.lastName)} </Text>
+
+                      </Flex>
+                      <Icon mr="0" as={DragHandleIcon} />
+                    </Flex>
+                  </ListItem>
               )})}
           </UnorderedList>
         </Flex>
@@ -173,8 +190,20 @@ export const MyPoundList = ({ tokenConfig, user }) => {
           m="4"
           mt="0"
         >
-          <Heading as="h3" p="4" pt="0" size={["sm", "md", "lg"]}>The FightSync List</Heading> 
-          <UnorderedList  h="30rem" boxSizing="border-box" w="100%" listStyleType="none">
+          <Heading 
+            as="h3" 
+            p="4" 
+            pt="0" 
+            size={["sm", "md"]}
+          >
+            The FightSync List
+          </Heading> 
+          <UnorderedList  
+            h="30rem" 
+            boxSizing="border-box" 
+            w="100%" 
+            listStyleType="none"
+          >
               {officialPoundList?.length > 0 && officialPoundList.slice(0,10).map((item, i) => {
                 // console.log('item: ',item)
                 if(!item) return;

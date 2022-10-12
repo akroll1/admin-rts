@@ -1,15 +1,35 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Button, FormControl, FormLabel, Heading, HStack, Input, Stack, StackDivider, VStack, Flex, useToast } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { 
+    Box, 
+    Button, 
+    FormControl, 
+    FormLabel, 
+    Heading, 
+    HStack, 
+    Input, 
+    Stack, 
+    StackDivider, 
+    VStack, 
+    Flex, 
+    useToast 
+} from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { FightersTable } from '../tables';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid'
+import { useScorecardStore } from '../../stores'
 
-export const FightersForm = ({ user, tokenConfig }) => {
+export const FightersForm = () => {
+    const { 
+        createFighter,
+        deleteFighter,
+        fetchFighter,
+        fighter,
+        updateFighter,
+    } = useScorecardStore()
+
     const toast = useToast();
-    const fightersUrl = process.env.REACT_APP_FIGHTERS;
-    const [fighters, setFighters] = useState([]);
-    const [fighter, setFighter] = useState({
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
+    const [searchFighterId, setSearchFighterId] = useState('');
+    const [form, setForm] = useState({
         fighterId: '',
         firstName: '',
         lastName: '',
@@ -19,62 +39,80 @@ export const FightersForm = ({ user, tokenConfig }) => {
         draws: 0,
         kos: 0,
         dq: 0,
-        socials: [],
-        home: ''
+        socials: null,
+        home: null
     });
 
-    const setFighterInfo = e => {
-        const { id, value } = e.currentTarget;
+    useEffect(() => {
+        setForm(fighter)
+    },[fighter])
 
-        return setFighter({...fighter, [id]: value });
+    const handleFormChange = e => {
+        const { id, name, value } = e.currentTarget;
+        if(name === 'stats'){
+            setForm({ ...form, [id]: parseInt(value) });
+            return;
+        }
+        setForm({ ...form, [id]: value });
     }
-    const submitFighter = () => {
-        // console.log('inside submit fighter: ',fighter);
-        const url = fightersUrl + `/${fighter.fighterId}`;
-        // console.log('fighter: ',fighter);
-        return axios.put(url, fighter, tokenConfig)
-            .then(res => {
-                if(res.status === 200){
-                    toast({ title: 'Fighter updated!',
-                    status: 'success',
-                    duration: 5000,
-                    isClosable: true,});
-                    setFighter({
-                        fighterId: '',
-                        firstName: '',
-                        lastName: '',
-                        ringname: '',
-                        wins: 0,
-                        losses: 0,
-                        draws: 0,
-                        kos: 0,
-                        dq: 0,
-                        socials: [],
-                        home: ''
-                    })
-                }
-            })
-            .catch(err => console.log(err))
+
+    const handleUpdateFighter = () => {
+        Object.assign(form, {
+            fighterId: searchFighterId
+        })
+        updateFighter(form)
     }
-    const deleteFighter = e => {
-        const { id } = e.currentTarget
-        const newList = fighters.filter( fighter => fighter.fighterId !== id);
-        setFighters(newList);
+    
+    const handleCreateFighter = () => {
+        createFighter(form)
+    }    
+    
+    const searchForFighter = e => {
+        fetchFighter(searchFighterId)
     }
-    const selectFighter = e => {
-        const { id } = e.currentTarget;
-        console.log('id: ',id);
-        const selected = fighters.filter( fighter => fighter.fighterId === id);
-        setFighter({...selected[0]})
-    };
-    // console.log('fighters: ',fighters);
-    // console.log('fighter: ',fighter)
-    const { fighterId, firstName, lastName, ringname, wins, losses, draws, kos, dq, socials, home } = fighter;
-    console.log('fighterId: ', fighterId);
+
+    const handleDeleteFighter = e => {
+        deleteFighter(searchFighterId)
+    }
+
+    const { 
+        firstName, 
+        lastName, 
+        ringname, 
+        wins, 
+        losses, 
+        draws, 
+        kos, 
+        dq, 
+        socials, 
+        home 
+    } = form;
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto" height="auto">
-            <form id="settings-form" onSubmit={e => {e.preventDefault()}}>
+            <FieldGroup title="Search for a Fight">
+                <VStack width="full" spacing="6">
+                    <FormControl id="searchFighterId">
+                        <FormLabel htmlFor="searchFighterId">Fighter ID</FormLabel>
+                        <Input value={searchFighterId} onChange={({currentTarget: {value}}) => setSearchFighterId(value.length === 36 ? value : '')} type="text" maxLength={36} />
+                    </FormControl>
+                    <HStack justifyContent="center" width="full">
+                        <Button 
+                            disabled={!searchFighterId} 
+                            minW="33%" 
+                            isLoading={isSubmittingSearch} 
+                            loadingText="Searching..." 
+                            onClick={searchForFighter} 
+                            type="button" 
+                            colorScheme="solid"
+                        >
+                            Search
+                        </Button>
+                    </HStack>
+                </VStack>
+            </FieldGroup>
+
+            <form id="fighters_form" onSubmit={e => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
                     Fighter Form
@@ -83,27 +121,27 @@ export const FightersForm = ({ user, tokenConfig }) => {
                         <VStack width="full" spacing="6">
                             <FormControl id="firstName">
                                 <FormLabel>First Name</FormLabel>
-                                <Input value={firstName.toLowerCase()} required onChange={e => setFighterInfo(e)} type="text" maxLength={255} />
+                                <Input value={firstName?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="lastName">
                                 <FormLabel>Last Name</FormLabel>
-                                <Input value={lastName.toLowerCase()} required onChange={e => setFighterInfo(e)} type="text" maxLength={255} />
+                                <Input value={lastName?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="ringname">
                                 <FormLabel>Ring Name</FormLabel>
-                                <Input value={ringname.toLowerCase()} required onChange={e => setFighterInfo(e)} type="text" maxLength={255} />
+                                <Input value={ringname?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="home">
                                 <FormLabel>Home</FormLabel>
-                                <Input value={home} onChange={e => setFighterInfo(e)} type="text" maxLength={255} />
+                                <Input value={home} onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
-             
+            
                             <FormControl id="socials">
                                 <FormLabel>Socials</FormLabel>
-                                <Input value={socials} onChange={e => setFighterInfo(e)} type="text" maxLength={255} />
+                                <Input value={socials} onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
                         </VStack>
                     </FieldGroup>
@@ -112,24 +150,23 @@ export const FightersForm = ({ user, tokenConfig }) => {
                             <Flex flexDirection="row" flexWrap="wrap">
                                 <FormControl m="3" style={{width: '25%'}} id="wins">
                                     <FormLabel>Wins</FormLabel>
-                                    <Input value={wins} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={wins} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
-
                                 <FormControl m="3" style={{width: '25%'}} id="losses">
                                     <FormLabel>Losses</FormLabel>
-                                    <Input value={losses} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={losses} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="draws">
                                     <FormLabel>Draws</FormLabel>
-                                    <Input value={draws} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={draws} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="kos">
                                     <FormLabel>KO's</FormLabel>
-                                    <Input value={kos} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={kos} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="dq">
                                     <FormLabel>DQ's</FormLabel>
-                                    <Input value={dq} required onChange={e => setFighterInfo(e)} type="number" maxLength={3} />
+                                    <Input name="stats" value={dq} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                             </Flex>
                         </HStack>
@@ -137,16 +174,26 @@ export const FightersForm = ({ user, tokenConfig }) => {
                 </Stack>
                 <FieldGroup mt="8">
                     <HStack width="full">
-                    <Button onClick={submitFighter} type="submit" colorScheme="blue">
-                        Save Changes
+                    <Button 
+                        onClick={searchFighterId ? handleUpdateFighter : handleCreateFighter} 
+                        isLoading={isSubmitting} 
+                        loadingText="Submitting..." 
+                        type="submit" 
+                        colorScheme="solid"
+                        minW="33%"
+                    >
+                        {searchFighterId ? `Update Fighter` : `Create Fighter`}
                     </Button>
-                    <Button variant="outline">Cancel</Button>
+                    <Button 
+                        minW="33%"
+                        variant="outline"
+                        onClick={handleDeleteFighter}
+                    >
+                        Delete
+                    </Button>
                     </HStack>
                 </FieldGroup>
             </form>
-            <Flex maxH="15rem" overflowY="scroll">
-                <FightersTable p="1" fighters={fighters} deleteFighter={deleteFighter} selectFighter={selectFighter} />
-            </Flex>
         </Box>
     )
 }

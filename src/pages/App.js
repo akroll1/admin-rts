@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from '../components/layout'
 import Home from './home'
@@ -16,63 +16,87 @@ import Fighters from './fighters'
 import Discussion from './discussions'
 import Analytics from './analytics'
 import Shows from './shows'
+import MyScorecards from './my-scorecards'
 import theme from '../theme'
 import { PoundPage } from './pound'
+import { ScorecardsSearch } from './scorecards-search'
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn' ? true : false));
   return (
     <ChakraProvider theme={theme}>
-        <Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}>
+        <Layout>
           <Routes>
             <Route exact path="/" element={<Home />} />
-            {/* <Route exact path="/about" element={<About />} /> */}
+            <Route exact path="/about" element={<About />} />
             <Route exact path="/signin" element={<SignIn />} />
             <Route exact path="/logout" element={<Home />} />
             <Route exact path="/learn-more" element={<LearnMore />} />
             <Route exact path="/scoring/:groupScorecardId" element={<Scoring />} />
             <Route exact path="/scoring" element={<Scoring />} />
-            <Route exact path="/fighters" element={<Fighters />} />
-            <Route exact path="/fighters/:id" element={<Fighters />} />
             <Route exact path="/blog" element={<Blog />} />
             <Route exact path="/blog/:id" element={<BlogArticle />} />
             <Route exact path="/featured-fights/:id" element={<FeaturedFights />} />
-            <Route exact path="/counterpunch" element={<CounterPunch />} />
+            <Route exact path="/live" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
+            <Route exact path="/scorecards" element={
+              <PrivateRoute>
+                <MyScorecards /> 
+              </PrivateRoute>
+            }/>
+            <Route exact path="/fighters" element={
+              <PrivateRoute>
+                <Fighters /> 
+              </PrivateRoute>
+            }/>
+            <Route exact path="/fighters/:id" element={
+              <PrivateRoute>
+                <Fighters /> 
+              </PrivateRoute>
+            }/>
+            <Route exact path="/scorecards/:initialScorecardId" element={
+              <PrivateRoute>
+                <ScorecardsSearch /> 
+              </PrivateRoute>
+            }/>
+            <Route exact path="/scorecards/user/:userId" element={
+              <PrivateRoute>
+                <ScorecardsSearch /> 
+              </PrivateRoute>
+            }/>
             <Route exact path="/analytics" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Analytics /> 
               </PrivateRoute>
             }/>
-            <Route exact path="/analytics/:showId" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+            <Route exact path="/analytics/:getShowId" element={
+              <PrivateRoute>
                 <Analytics /> 
               </PrivateRoute>
             }/>
             <Route exact path="/shows" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Shows /> 
               </PrivateRoute>
             }/>
             <Route exact path="/shows/:id" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Shows /> 
               </PrivateRoute>
             }/>
             <Route exact path="/shows" element={<Shows />} />
             <Route exact path="/pound" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <PoundPage />
               </PrivateRoute>
             }/>
             <Route exact path="/dashboard/:type" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Dashboard /> 
               </PrivateRoute>
             }/>
             <Route exact path="/dashboard/:type/:showId" element={
-              <PrivateRoute setIsLoggedIn={setIsLoggedIn}>
+              <PrivateRoute>
                 <Dashboard />
               </PrivateRoute>
             } />

@@ -1,18 +1,11 @@
 import React,{ useState } from 'react'
 import { Heading, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Text, Box, Tag, ModalFooter, Button }  from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils/utils';
+import { CustomOverlay } from '../custom-overlay';
 
-const CustomOverlay = () => (
-    <ModalOverlay
-      bg='none'
-      backdropFilter='auto'
-      backdropInvert='60%'
-      backdropBlur='2px'
-    />
-  )
-  export const ScoringModal = props => {
-      const { submitScores, currentRound, scoringModal, toggleScoringModal, fighterA, fighterASlider, fighterB, fighterBSlider, handleReasonClick, reason } = props;
-      const [overlay, setOverlay] = React.useState(<CustomOverlay />)
+export const ScoringModal = props => {
+    const { submitScores, currentRound, scoringModal, toggleScoringModal, fighterA, fighterASlider, fighterB, fighterBSlider, handleReasonClick, reason } = props;
+    const [overlay, setOverlay] = useState(<CustomOverlay />)
     const handleModalClose = e => {
         e.preventDefault();
         toggleScoringModal(!scoringModal)

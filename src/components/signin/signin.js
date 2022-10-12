@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Button, FormLabel, Heading, SimpleGrid, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react'
-import { FaFacebook, FaGoogle } from 'react-icons/fa'
-import { DividerWithText, Card, Logo } from '../../chakra'
+import { useState, useEffect } from 'react'
+import { Box, useColorModeValue } from '@chakra-ui/react'
 import { SignUpForm } from './signup-form'
 import { SignInForm } from './signin-form'
+import { SubmitNewPasswordForm } from './submit-new-password-form'
+import { ForgotPasswordForm } from './forgot-password-form'
 import { ForcedPasswordChange } from './forced-password-change'
+import { WaitingForCode } from './waiting-for-code-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { stateStore } from '../../stores'
+import { useScorecardStore } from '../../stores'
 
-export const SignIn = props => {
+export const SignIn = () => {
+  const navigate = useNavigate();
+
   let [searchParams, setSearchParams] = useSearchParams();
   const name = searchParams.get('name');
   const pw = searchParams.get('pw');
   const nonce = searchParams.get('nonce');
 
-  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSignin, setIsSignin] = useState(true);
-  const [waitingForCode, setWaitingForCode] = useState(false);
   const [form, setForm] = useState({
     user: {},
     username: '',
@@ -26,10 +26,21 @@ export const SignIn = props => {
     password: '',
     code: ''
   });
-  const [isForcePasswordChange, setIsForcePasswordChange] = useState(false)
-  const [forgotPassword, setForgotPassword] = useState(false);
 
-  const { setUser, setToken } = stateStore.getState();
+  const [formState, setFormState] = useState({
+      isSignin: true, 
+      isSignup: false, 
+      isForgotPassword: false, 
+      isForcedPasswordChange: false, 
+      isWaitingForCode: false,
+      isWaitingForNewPasswordCode: false
+  })
+
+  const { 
+    setUser, 
+    setAccessToken, 
+    setIdToken 
+  } = useScorecardStore();
 
   Amplify.configure({
     Auth: {
@@ -49,38 +60,62 @@ export const SignIn = props => {
     const { id, value } = e.currentTarget;
     setForm({...form, [id]: value.trim() });
   };
-  const handleSignIn = (username = form.username, password = form.password) => {
+  
+  const handleSignIn = () => {
     setIsSubmitting(true);
+    const { password, username} = form;
     Auth.signIn({
       username,
       password
     })
     .then((user) => {
       const { attributes } = user;
+      setForm({ ...form, user})
+      setForm({ ...form, password: '', user });
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
-        setIsForcePasswordChange(true);
-        setForm({ ...form, password: '', user });
-        setIsSignin(false)
+
+        setFormState({ 
+          isSignin: false, 
+          isSignup: false, 
+          isForgotPassword: false, 
+          isForcedPasswordChange: true, 
+          isWaitingForCode: false,
+          isWaitingForNewPasswordCode: false
+        })
       } else {
         const groups = user.signInUserSession.accessToken.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
         setUser({ ...attributes, username, isLoggedIn: true, groups });
         const token = user.signInUserSession.accessToken.jwtToken;
-        setToken({headers: {
-          Authorization: `Bearer ${token}`
-        }})
-        sessionStorage.setItem('isLoggedIn',true);
-        return navigate('/dashboard/scorecards', { username });
+        const idToken = user.signInUserSession.idToken.jwtToken;
+        setIdToken({
+          headers: {
+            Authorization: `Bearer ${idToken}`
+          }
+        });
+        setAccessToken({
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        return navigate('/scorecards', { username });
       }
     })
     .catch((err) => {
       console.log('handleSignin err: ', err);
       if(err == 'UserNotConfirmedException: User is not confirmed.'){
-        alert('Please confirm your account.');
-        setWaitingForCode(true);
-        setIsSignin(false);
-        return;
+        setForm({ ...form, password: '' })
+        alert(err.message);
+        setFormState({ 
+          isSignin: false, 
+          isSignup: false, 
+          isForgotPassword: false, 
+          isForcedPasswordChange: true, 
+          isWaitingForCode: false,
+          isWaitingForNewPasswordCode: false
+        })
+      } else {
+        alert('Incorrect Username or Password')
       }
-      alert('Incorrect Username or Password')
     }).finally(() => setIsSubmitting(false));
   }
   const handleSignUp = e => {
@@ -89,31 +124,49 @@ export const SignIn = props => {
     const { email, password, username } = form;
     Auth.signUp({ username, password, attributes: { email } })
       .then( data => {
-        setWaitingForCode(true);
+        setFormState({ 
+          isSignin: false, 
+          isSignup: false, 
+          isForgotPassword: false, 
+          isForcedPasswordChange: false, 
+          isWaitingForCode: true,
+          isWaitingForNewPasswordCode: false
+      })
       })
       .catch((err) => {
-        setIsSubmitting(false);
+        if(err.code === 'InvalidPasswordException'){
+          alert('Password Policy \n Minimum 8 Characters \n 1 Uppercase Letter \n 1 Lowercase letter \n 1 Number \n 1 Special character')
+        }
         if(err.message.includes('User already exists')){
-          alert('User already exists!')
+          alert(err.message)
         }
       }).finally(() => setIsSubmitting(false))
   };
   const handleForcePWChange = () => {
+    console.log('handleForcePWChange')
     const { username, password, user, email } = form;
     Auth.completeNewPassword( user, password )
       .then( user => { 
         const { username, challengeParam: {  userAttributes } } = user;
-        setUser({ username, ...userAttributes, groups: [], sub: user.signInUserSession.idToken.payload.sub })
-        const token = user.signInUserSession.accessToken.jwtToken;
-        setToken({headers: {
-          Authorization: `Bearer ${token}`
+        setUser({ 
+          username, 
+          ...userAttributes, 
+          groups: [], 
+          sub: user.signInUserSession.idToken.payload.sub 
+        })
+          const accessToken = user.signInUserSession.accessToken.jwtToken;
+          const idToken = user.signInUserSession.idToken.jwtToken;
+        setAccessToken({headers: {
+          Authorization: `Bearer ${accessToken}`
         }})
-        sessionStorage.setItem('isLoggedIn',true);
-        return navigate('/dashboard/scorecards', { user });
-      }).catch( err => {
-        console.log('err: ', err);
+        setIdToken({headers: {
+          Authorization: `Bearer ${idToken}`
+        }})
+      })
+      .then(() => handleSignIn(form.username, form.password))
+      .catch( err => {
         if(Array.from(err).includes('InvalidPasswordException') > -1){
-          alert('Password does not meet requirements.')
+          alert(err)
         }
       });
   }
@@ -129,8 +182,9 @@ export const SignIn = props => {
         }
       })
       .catch(err => {
-        console.log(err)
-        alert('Invalid verification code provided, please try again.')
+        if(err.code === 'CodeMismatchException'){
+          alert('Invalid verification code.')
+        }
       });
   };
 
@@ -140,88 +194,119 @@ export const SignIn = props => {
       .then(res => {
         alert('New code sent.')
       })
-      .catch((e) => {
+      .catch( e => {
         console.log(e);
       });
   };
-  
+  const renderForgotPasswordForm = () => {
+    setForm({ ...form, password: '' });
+    setFormState({ 
+      isSignin: false, 
+      isSignup: false, 
+      isForgotPassword: true, 
+      isForcedPasswordChange: false, 
+      isWaitingForCode: false,
+      isWaitingForNewPasswordCode: false
+    })
+  }
   const handleForgotPassword = e => {
     e.preventDefault();
     const { username } = form;
-    setForgotPassword(true);
+    setFormState({ 
+      isSignin: false, 
+      isSignup: false, 
+      isForgotPassword: false, 
+      isForcedPasswordChange: false, 
+      isWaitingForCode: false,
+      isWaitingForNewPasswordCode: true
+    })
     Auth.forgotPassword( username )
+      .then( res => res)
+      .catch( err => console.log(err))
   }
+  
+  const handleSubmitNewPassword = e => {
+    setIsSubmitting(true)
+    e.preventDefault();
+    const { code, password, username } = form;
+    Auth.forgotPasswordSubmit( username, code, password )
+      .then( res => {
+        if(res === 'SUCCESS'){
+          handleSignIn(username, password);
+        }
+      })
+      .catch( err => alert(err.message))
+      .finally( () => setIsSubmitting(false))
+  };
+
   return (
-    <Box bg={useColorModeValue('gray.500', 'gray.800')} py="12" px={{ base: '4', lg: '8' }}>
+    <Box bg={useColorModeValue('gray.500', 'inherit')} py="12" px={{ base: '4', lg: '8' }}>
       <Box maxW="md" mx="auto">
-        {isSignin && !isForcePasswordChange &&
-          <>
-            <Heading textAlign="center" size="xl" fontWeight="extrabold">
-              Sign in to your account
-            </Heading>
-            <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-              <Text as="span">Don&apos;t have an account?</Text>
-              <Text onClick={() => setIsSignin(false)} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Sign-up now!</Text>
-            </Text>
-          </>
+
+        { formState.isSignin &&
+          <SignInForm 
+            form={form} 
+            formState={formState}
+            handleFormChange={handleFormChange} 
+            handleSignIn={handleSignIn} 
+            isSubmitting={isSubmitting}
+            renderForgotPasswordForm={renderForgotPasswordForm} 
+            setFormState={setFormState}
+          />
         }
-        { !isSignin && !isForcePasswordChange &&
-          <>
-            <Heading textAlign="center" size="xl" fontWeight="extrabold">
-              Create An Account
-            </Heading>
-            <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-              <Text as="span">Already have an account?</Text>
-              <Text onClick={() => setIsSignin(true)} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#90cdf4'}}>Sign-In here!</Text>
-            </Text>
-          </>  
+
+        { formState.isSignup &&
+          <SignUpForm 
+            form={form} 
+            formState={formState}
+            handleFormChange={handleFormChange} 
+            handleSignUp={handleSignUp} 
+            isSubmitting={isSubmitting} 
+            renderForgotPasswordForm={renderForgotPasswordForm}
+            setFormState={setFormState}
+          />
         }
-          {isSignin && !isForcePasswordChange && 
-            <Card>
-              <SignInForm 
-                handleForgotPassword={handleForgotPassword}
-                isSubmitting={isSubmitting} 
-                handleSignIn={handleSignIn} 
-                handleFormChange={handleFormChange} 
-                form={form} 
-              />
-              <DividerWithText mt="6">or continue with</DividerWithText>
-              <SimpleGrid mt="6" columns={2} spacing="3">
-                <Button color="currentColor" variant="outline">
-                  <VisuallyHidden>Login with Facebook</VisuallyHidden>
-                  <FaFacebook />
-                </Button>
-                <Button color="currentColor" variant="outline">
-                  <VisuallyHidden>Login with Google</VisuallyHidden>
-                  <FaGoogle />
-                </Button>
-              </SimpleGrid>
-            </Card>
-          }
-          { !isSignin && !isForcePasswordChange && 
-            <Card>
-              <SignUpForm 
-                handleForgotPassword={handleForgotPassword}
-                isSubmitting={isSubmitting} 
-                resendVerificationCode={resendVerificationCode} 
-                handleConfirmCode={handleConfirmCode} 
-                waitingForCode={waitingForCode} 
-                handleSignUp={handleSignUp} 
-                setIsSignin={setIsSignin} 
-                handleSignIn={handleSignIn} 
-                handleFormChange={handleFormChange} 
-                form={form} 
-              />
-            </Card>
-          }
-        { isForcePasswordChange && 
+
+        { formState.isForcedPasswordChange && 
           <ForcedPasswordChange 
+            formState={formState}
             handleForcePWChange={handleForcePWChange} 
             handleFormChange={handleFormChange} 
+            isForgotPassword={formState.isForgotPassword}
             password={form.password} 
+            username={form.username}
           /> 
         }
 
+        { formState.isForgotPassword &&
+          <ForgotPasswordForm
+            form={form}
+            formState={formState}
+            handleForgotPassword={handleForgotPassword}
+            handleFormChange={handleFormChange}
+            setFormState={setFormState}
+          />
+        }
+
+        { formState.isWaitingForCode && 
+          <WaitingForCode
+            form={form}
+            handleConfirmCode={handleConfirmCode}
+            handleFormChange={handleFormChange}
+            resendVerificationCode={resendVerificationCode}
+          />
+        }
+
+        { formState.isWaitingForNewPasswordCode && 
+          <SubmitNewPasswordForm 
+            form={form}
+            formState={formState}
+            handleFormChange={handleFormChange}
+            handleSubmitNewPassword={handleSubmitNewPassword}
+            renderForgotPasswordForm={renderForgotPasswordForm}
+            resendVerificationCode={resendVerificationCode}
+          />
+        }
       </Box>
     </Box>
   )

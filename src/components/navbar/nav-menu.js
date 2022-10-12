@@ -9,7 +9,7 @@ export const NavMenu = React.forwardRef((props, ref) => (
     variants={variants}
     outline="0"
     opacity="0"
-    bg={useColorModeValue('white', 'gray.700')}
+    bg={useColorModeValue('white', '#252525')}
     w="full"
     shadow="lg"
     px="4"

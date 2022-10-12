@@ -3,6 +3,7 @@ import { Box, Center, chakra, VisuallyHidden } from '@chakra-ui/react'
 
 const Bar = chakra('span', {
   baseStyle: {
+    color: "white",
     display: 'block',
     pos: 'absolute',
     w: '1.25rem',
@@ -19,6 +20,7 @@ const ToggleIcon = (props) => {
   const { active } = props
   return (
     <Box
+      bg="inherit"
       className="group"
       data-active={active ? '' : undefined}
       as="span"
@@ -55,9 +57,9 @@ export const ToggleButton = (props) => {
       px="4"
       py="4"
       as="button"
-      color="gray.400"
+      color="white"
       _active={{
-        color: 'blue.600',
+        color: 'white',
       }}
       onClick={onClick}
     >

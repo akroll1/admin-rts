@@ -11,7 +11,7 @@ import {
   import * as React from 'react'
 import { FiArrowDownRight, FiArrowUpRight, FiMoreVertical } from 'react-icons/fi'
   
-export const Stat = (props) => {
+export const Stat = props => {
 const { label, value, delta } = props
 return (
     <Flex

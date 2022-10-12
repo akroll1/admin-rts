@@ -4,40 +4,58 @@ import { Flex, Stack } from '@chakra-ui/react'
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
-import { IoStarOutline, IoGameControllerOutline, IoFlashOutline, IoBookmarkOutline } from "react-icons/io5";
+import { 
+    IoStarOutline, 
+    IoGameControllerOutline, 
+    IoFlashOutline, 
+    IoBookmarkOutline 
+} from "react-icons/io5";
 import { DividerWithText } from '../../chakra'
+import { useScorecardStore } from '../../stores'
 
-export const ShowsSidebar = ({ 
-    shows, 
-    handleShowSelect 
-}) => { 
-    const [searchedShows, setSearchedShows] = useState(shows); 
-    const [upcoming, setUpcoming] = useState([]);
-    const [recent, setRecent] = useState([]);
+export const ShowsSidebar = () => { 
+    const { 
+        fetchFightSummary,
+        fetchSelectedFightReviews,
+        fights, 
+        selectedFight, 
+        setSelectedFight,
+    } = useScorecardStore()
+
+    const [searchedFights, setSearchedFights] = useState(fights)
+    const [upcoming, setUpcoming] = useState([])
+    const [recent, setRecent] = useState([])
+
     useEffect(() => {
-        if(shows.length > 0){
-            const upcoming = shows.filter( ({ show }) => show.showTime > Date.now()).reverse();
+        if(fights.length > 0){
+            const upcoming = fights.filter( fight => fight.fightStatus === 'PENDING').reverse();
             setUpcoming(upcoming);
-            const recent = shows.filter( ({ show }) => show.showTime < Date.now());
+            const recent = fights.filter( fight => fight.fightStatus === 'COMPLETE');
             setRecent(recent);
-            handleShowSelect(upcoming[0].show.showId, REVIEW_TYPE.PREDICTION)
+            if(upcoming.length > 0) {
+                setSelectedFight(upcoming[0].fightId);
+                Promise.all([
+                    fetchSelectedFightReviews(upcoming[0].fightId),
+                    fetchFightSummary(upcoming[0].fightId)
+                ])
+            }
         }
-    }, [shows])
-   
+    }, [fights])
+
     const handleSearch = e => {
         const { value } = e.currentTarget;
         const regex = /^[a-z]+$/i;
         if(regex.test(value)){
-            const searchedShows = shows.filter( show => {
-                const { showName } = show;
-                return showName.toLowerCase().includes(value.toLowerCase())
-            })
-            setSearchedShows(searchedShows)
+            const searchedFights = fights.filter( fight => fight.fightQuickTitle)
+            setSearchedFights(searchedFights)
         }
     }
-    const selectShow = target => {
-        const { name, id } = target;
-        handleShowSelect(id, name);
+    const selectFight = e => {
+        const { name, id } = e.currentTarget;
+        const [selected] = fights.filter( fight => fight.fightId === id);
+        setSelectedFight(selected.fightId);
+        fetchSelectedFightReviews(selected.fightId)
+        fetchFightSummary(selected.fightId)
     }
     const historicalShows = [
         'Ali vs Frazier I', 'Hagler vs Hearns'
@@ -61,7 +79,7 @@ export const ShowsSidebar = ({
             borderRadius="lg"
             direction="column" 
             p="2" 
-            bg="gray.900" 
+            bg="fsl-sidebar-bg" 
             color="white" 
             fontSize="sm"
         >
@@ -69,41 +87,41 @@ export const ShowsSidebar = ({
             <DividerWithText text="Shows" />
             <Stack w="100%" spacing="4" flex="1" overflow="auto" pt="0">
                 <NavGroup label="Upcoming">
-                    {upcoming.length > 0 && upcoming.map( show => {
-                        const { show: { fightQuickTitle, showId }} = show;
-                        const isTitleFight = true;
+                    { upcoming.length > 0 && upcoming.map( fight => {
+                        const { fightId, fightQuickTitle, isTitleFight } = fight;
                         return <UpcomingNavItem 
+                            active={fightId === selectedFight?.fightId}
                             name={REVIEW_TYPE.PREDICTION} 
-                            showId={showId} 
-                            selectShow={e => selectShow(e.currentTarget)} 
+                            fightId={fight.fightId} 
+                            selectFight={selectFight} 
                             icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
                             label={fightQuickTitle} 
-                            key={showId} 
+                            key={fight.fightId} 
                             isPlaying
                         />
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">
-                    {recent.length > 0 && recent.map( show => {
-                        const { show: { fightQuickTitle, showId }} = show;
+                    {recent.length > 0 && recent.map( fight => {
+                        const active = fight.fightId === selectedFight?.fightId
                         return <UpcomingNavItem 
+                            active={active}
                             name={REVIEW_TYPE.REVIEW} 
                             icon={<IoStarOutline mt="-5px" /> } 
-                            selectShow={e => selectShow(e.currentTarget)} 
-                            showId={showId} 
-                            label={fightQuickTitle} 
-                            key={showId} 
+                            selectFight={selectFight} 
+                            fightId={fight.fightId} 
+                            label={fight.fightQuickTitle} 
+                            key={fight.fightId} 
                         />
                     })}
                 </NavGroup>
                 <NavGroup label="Historical">
-                    {historicalShows && historicalShows.length > 0 && historicalShows.map( (show,i) => {
+                    {historicalShows && historicalShows.length > 0 && historicalShows.map( (fight,i) => {
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.HISTORICAL} 
                             showId={'historical'} 
-                            selectShow={e => selectShow(e.currentTarget)} 
                             icon={<IoBookmarkOutline mt="-5px" />} 
-                            label={show} 
+                            label={fight} 
                             key={i}
                         />
                     })}
@@ -113,7 +131,6 @@ export const ShowsSidebar = ({
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.FANTASY} 
                             showId={'historical'} 
-                            selectShow={e => selectShow(e.currentTarget)} 
                             icon={<IoGameControllerOutline />} 
                             label={show} 
                             key={i} 

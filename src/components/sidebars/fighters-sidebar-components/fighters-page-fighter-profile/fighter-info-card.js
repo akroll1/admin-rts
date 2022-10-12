@@ -11,7 +11,7 @@ export const FighterInfoCard = props => {
         {/* {isVerified && <Icon as={HiBadgeCheck} color="red.300" verticalAlign="text-bottom" />} */}
       </HStack>
       <Text fontSize="sm" textAlign="center" noOfLines={1} color={useColorModeValue('gray.600', 'gray.400')}>
-        {ringname}
+        {`${capFirstLetters(ringname)}`}
       </Text>
     </VStack>
   )

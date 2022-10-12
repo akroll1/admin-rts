@@ -1,35 +1,75 @@
 import React from 'react'
-import { Avatar, Box, Flex, Img, Stack, useColorModeValue as mode} from '@chakra-ui/react'
+import { Box, Flex, Text, useColorModeValue as mode} from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
 
-export const ScoringTableInfo = ({ username, prediction }) => {
+export const ScoringTableInfo = ({ 
+  fighters,
+  finalScore,
+  prediction,
+  username, 
+}) => {
   const usernameCheck = username => {
     if(username?.includes('@')){
       return username.slice(0, username.indexOf('@'))
     } 
     return username; 
   }
+
+  
+  // console.log('fighters: ', fighters)
+  // console.log('prediction: ', prediction)
+  // console.log('username: ', username)
+  
+  const predictionWinner = prediction ? prediction.split('-')[0] : `No Prediction`;
+  const predictionHow = prediction ? prediction.split('-')[1] : ``;
   return (
-    <Stack direction="row" spacing="4" align="center">
-      <Flex p="1" flexDirection="column" flex="1 0 50%" h="10" alignItems="center" justifyContent="center">
-        {/* <Avatar mt="-1" textAlign="center" size="xs" /> */}
-        <Box mt="2" fontSize="sm"  color="white" fontWeight="bold">
-            { usernameCheck(username) }
-        </Box>
-        <Box mt="2" fontSize="sm"  color="white" fontWeight="normal">
-          {prediction ? `${capFirstLetters(prediction.replace(/,/g,"-"))}` : ''}
-        </Box>
-        {/* <Img
-          objectFit="cover"
-          htmlWidth="160px"
-          htmlHeight="160px"
-          w="10"
-          h="10"
-          rounded="full"
-          src={image}
-          alt=""
-        /> */}
+    <Flex 
+      mt="0" 
+      p="1" 
+      pt="0" 
+      flexDirection="column" 
+      alignItems="flex-start" 
+      justifyContent="flex-start"
+      minW="10rem"
+    >
+      <Flex 
+        flexDirection="row"
+        className='username' 
+        p="1" 
+        m="0" 
+        mt="1"
+        minW="100%" 
+        fontSize="sm"  
+        color="white" 
+        fontWeight="bold"
+        // textAlign="center"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+          <Text>{`${usernameCheck(username)}`}</Text>
+          <Text color="fsl-text">{`${finalScore ? "Score: " + finalScore : ""}`}</Text> 
       </Flex>
-    </Stack>
+      { fighters?.length > 0 && fighters.map( (fighter, i) => {
+        const isPredicted = predictionWinner === fighters[i];  
+        return (
+          <Flex 
+            className='fighterNames'
+            justifyContent='space-between'
+            fontSize="sm" 
+            p="1" 
+            m="0"
+            mb={i === 0 ? 1 : 0} 
+            minW="100%" 
+            background={i === 0 ? "fsl-red" : "fsl-scoring-blue"}
+            color="white"
+            fontWeight="normal"
+            border={isPredicted ? '1px solid white' : ''}
+          >
+            <Text>{`${capFirstLetters(fighter)}`}</Text> 
+            <Text>{`${isPredicted ? predictionHow : ''}`}</Text>
+          </Flex>
+        )
+      })}  
+    </Flex>
   )
 }

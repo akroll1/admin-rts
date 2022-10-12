@@ -1,9 +1,12 @@
 import React from 'react'
-import { Avatar, Flex } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { FighterInfoCard } from '../tables/shows-page-show-card/fighter-info-card'
 import { ShowsCountdownTimer } from '../timers'
 
-export const ShowsFighterFaceoff = ({ fighters, showTime }) => {
+export const ShowsFighterFaceoff = ({ 
+  fighters, 
+  showTime 
+}) => {
   return (
     <>
       <Flex
@@ -22,9 +25,9 @@ export const ShowsFighterFaceoff = ({ fighters, showTime }) => {
         shadow={{ md: 'base' }}
         maxW={["100%", "90%", "80%"]}
       >
-        { fighters?.length > 0 && fighters?.map( fighter => {
+        { fighters.length > 0 && fighters.map( fighter => {
           // console.log('fighter: ', fighter)
-          const { firstName, lastName, ringname } = fighter;
+          const { fighterId, firstName, lastName, ringname } = fighter;
           return (
             <Flex 
               key={lastName}
@@ -36,8 +39,8 @@ export const ShowsFighterFaceoff = ({ fighters, showTime }) => {
               alignItems="center" 
               justifyContent="center"
             >
-              <Avatar size="lg" />
               <FighterInfoCard 
+                fighterId={fighterId}
                 ringname={ringname ?? ''} 
                 lastName={lastName} 
                 firstName={firstName} 

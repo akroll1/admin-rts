@@ -4,23 +4,23 @@ import { Stat } from './stat'
 const stats = [
   {
     label: 'Total Scorecards',
-    value: '143,887',
+    value:  `${Math.ceil(Math.random()*100000).toLocaleString()}`,
     delta: {
       value: '4.3%',
       isUpwardsTrend: true,
     },
   },
   {
-    label: 'Winner Avg. Rounds Won',
-    value: '74.87%',
+    label: 'Winner Rounds Won %',
+    value:  `${Math.ceil(Math.random()*100)}%`,
     delta: {
       value: '2.3%',
       isUpwardsTrend: true,
     },
   },
   {
-    label: 'Correct Winner Predictions',
-    value: '63.87%',
+    label: 'Correct Winner Predictions %',
+    value: `${Math.ceil(Math.random()*100)}%`,
     delta: {
       value: '0.1%',
       isUpwardsTrend: false,
