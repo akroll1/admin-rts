@@ -601,7 +601,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 console.log('chatScorecard: ', chatScorecard)
                 const url = baseUrl + `/scorecards/${get().userScorecard.scorecardId}`
                 const res = await axios.put(url, chatScorecard, get().accessToken)
-                const data = res.data
+                // const data = res.data
                 ///////////////////////////////////////////////////////   
                 let [scorecard] = get().scorecards.filter( scorecard => scorecard.scorecardId === chatScorecard.scorecardId);
                 const otherScorecards = get().scorecards.filter( scorecard => scorecard.scorecardId !== chatScorecard.scorecardId) 
