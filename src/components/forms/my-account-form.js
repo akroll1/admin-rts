@@ -5,6 +5,7 @@ import {
   Button, 
   Checkbox, 
   FormControl, 
+  FormErrorMessage, 
   FormHelperText, 
   FormLabel, 
   Heading, 
@@ -42,8 +43,12 @@ export const MyAccountForm = () => {
   })
 
   useEffect(() => {
-    if(user.email_verified){
-      fetchUser(user)
+    const run = async () => {
+
+      if(user.email_verified){
+        await fetchUser(user)
+        setForm(user)
+      }
     }
   },[])
   
@@ -73,8 +78,8 @@ export const MyAccountForm = () => {
     updateUser(options)
   }
 
-  const { email, firstName, lastName, username, bio, isPublic, fightCoins } = form;
-
+  const { bio, email, fightCoins, firstName, isPublic, lastName, username } = form;
+  // console.log('form: ', form)
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={e => e.preventDefault()}>

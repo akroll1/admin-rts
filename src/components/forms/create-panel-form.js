@@ -57,7 +57,6 @@ export const CreatePanelForm = () => {
     const handleDeleteFromPanel = e => {
         // Does not delete from DB, only locally.
         const { id } = e.currentTarget;
-        console.log('id: ', id)
         const filtered = form.panelists.filter( panelist => panelist !== id);
         setForm({ ...form, panels: filtered})
         setNewPanelist('');

@@ -18,7 +18,7 @@ export const ShowsMain = ({
     fightReviewForm, 
 }) => {
     const { fightSummary } = useScorecardStore();
-    const { show: { showTime }} = fightSummary;
+    const showTime = fightSummary?.show?.showTime ? fightSummary?.show?.showTime : 0;
     const UPCOMING = showTime > Date.now() ? true : false; 
     
     return (

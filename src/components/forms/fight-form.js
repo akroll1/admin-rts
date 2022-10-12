@@ -8,6 +8,7 @@ import { useScorecardStore } from '../../stores'
 export const FightForm = () => {
     const { 
         createFight,
+        deleteFight,
         fetchFight,
         fight,
         updateFight,
@@ -30,7 +31,7 @@ export const FightForm = () => {
     });
 
     useEffect(() => {
-        if(fight.fighterIds.length === 2){
+        if(fight.fighterIds?.length === 2){
             setForm(fight)
             setFighterAId(fight.fighterIds[0])
             setFighterBId(fight.fighterIds[1])
@@ -72,6 +73,10 @@ export const FightForm = () => {
         if(fightId){
             fetchFight(fightId)
         }
+    }
+
+    const handleDeleteFight = e => {
+        deleteFight(fightId)
     }
 
     const handleAddGuestJudge = () => {
@@ -220,7 +225,7 @@ export const FightForm = () => {
                                 disabled={!fightId} 
                                 // isLoading={isSubmitting} 
                                 loadingText="Deleting" 
-                                // onClick={deleteFight} 
+                                onClick={handleDeleteFight} 
                                 variant="outline"
                             >
                                 Delete

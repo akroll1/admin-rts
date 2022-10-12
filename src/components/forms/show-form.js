@@ -8,8 +8,17 @@ import "react-datepicker/dist/react-datepicker.css"
 import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
 import parseISO from 'date-fns/parseISO'
 // import { addDays } from 'date-fns/addDays'
+import { useScorecardStore } from '../../stores'
 
-export const ShowForm = ({ user, tokenConfig }) => {
+export const ShowForm = () => {
+    const { 
+        createShow,
+        deleteShow,
+        fetchShow,
+        show,
+        updateShow,
+    } = useScorecardStore()
+
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     // showId is kept out of the form for put/post logic.
@@ -24,88 +33,39 @@ export const ShowForm = ({ user, tokenConfig }) => {
         showTime: parseISO(new Date().toISOString()),
     })    
 
-    const searchForShow = () => {
-        if(showId){
-            setIsSubmitting(true);
-            const url = process.env.REACT_APP_API + `/shows/${showId}`;
-            return axios.get(url, tokenConfig)
-                .then( res => {
-                    console.log('res: ', res)
-                    let { showTime } = res.data;
-                    const time = parseISO(new Date(showTime).toISOString());
-                    setForm({ ...res.data, showTime: time })
-                })
-                .catch( err => console.log(err))
-                .finally(() => setIsSubmitting(false));
+    useEffect(() => {
+        if(show.showId){
+            setForm(show)
         }
+    },[show])
+
+    const searchForShow = e => {
+        fetchShow(showId)
     };
 
     const handlePostShow = () => {
-        setIsSubmitting(true);
-        const url = process.env.REACT_APP_API + `/shows`;
-        const { showTime, fightIds } = form;
-        let postObj = Object.assign(form, {showTime: createTimestamp(showTime)}, {fightIds: [fightIds[0]]})
-        // console.log('postObj: ', postObj);
-        return axios.post(url, postObj, tokenConfig)
-        .then(res => {
-            if(res.status === 200){
-                toast({ title: 'Show updated!',
-                status: 'success',
-                duration: 5000,
-                isClosable: true,})   
-            }
-        })
-        .catch(err => console.log(err))
-        .finally(() => setIsSubmitting(false))
+        let postObj = Object.assign(form, 
+            { showTime: createTimestamp(showTime) }, 
+            {fightIds: [fightIds[0]]},
+            { showId: null }
+        )
+        console.log('postObj: ', postObj);
+        createShow(postObj)
     }
-    const handlePutShow = () => {
-        setIsSubmitting(true);
-        const url = process.env.REACT_APP_API + `/shows/${showId}`;
-        const { guestScorerIds, location, showName, network, promoter, showStoryline, showStatus } = form;
-        let { showTime } = form;
+    
+    const handleUpdateShow = () => {
+        updateShow(form)
+    }
+    const handleDeleteShow = e => {
+        deleteShow(showId)
+    }
 
-        const obj = {
-            showId,
-            guestScorerIds,
-            location, 
-            showName, 
-            network,
-            promoter, 
-            showStoryline,
-            showStatus,
-            showTime
-        };
-
-        const putObj = Object.assign({}, obj, {showTime: createTimestamp(showTime)});
-        console.log('putObj: ', putObj);
-
-        return axios.put(url, putObj, tokenConfig)
-            .then( res => console.log('res: ', res))
-            .catch( err => console.log(err))
-            .finally(() => setIsSubmitting(false));
-
-    };
     const handleFormChange = (e, type) => {
         const { name, id, value } = e.currentTarget;
         if(name) return setForm({ ...form, fightIds: [value]});
         return setForm({...form, [id]: value});
     };
 
-    const deleteShow = () => {
-        setIsSubmitting(true);
-        const url = process.env.REACT_APP_API + `/shows/${showId}`;
-
-        return axios.delete(url, tokenConfig)
-            .then( res => {
-                console.log('res: ', res);
-                if(res.status === 200){
-                    /// do toast and clean show form.
-                }
-            })
-            .catch( err => console.log(err))
-            .finally(() => setIsSubmitting(false));
-
-    }
     const { fightIds, location, network, promoter, showName, showStatus, showStoryline, showTime } = form;
     const fightId = fightIds[0];
     // console.log('form: ', form);
@@ -121,10 +81,21 @@ export const ShowForm = ({ user, tokenConfig }) => {
                         <VStack width="full" spacing="6">
                             <FormControl id="showId">
                                 <FormLabel htmlFor="showId">Show ID</FormLabel>
-                                <Input value={showId} onChange={ ({ currentTarget: {value} }) => setShowId(value.length == 36 ? value : '')} type="text" maxLength={36} />
+                                <Input 
+                                    value={showId} 
+                                    onChange={ ({ currentTarget: {value} }) => setShowId(value.length == 36 ? value : '')} 
+                                    type="text" 
+                                />
                             </FormControl>
                             <HStack justifyContent="center" width="full">
-                                <Button disabled={!showId}  minW="33%" isLoading={isSubmitting} loadingText="Searching..." onClick={searchForShow} type="button" colorScheme="blue">
+                                <Button 
+                                    disabled={!showId}  
+                                    minW="33%" 
+                                    isLoading={isSubmitting} 
+                                    loadingText="Searching..." 
+                                    onClick={searchForShow} 
+                                    type="button" 
+                                    colorScheme="solid">
                                     Search
                                 </Button>
                             </HStack>
@@ -163,7 +134,7 @@ export const ShowForm = ({ user, tokenConfig }) => {
                                 <FormControl id="showStatus">
                                     <FormLabel htmlFor="showStatus">Show Status</FormLabel>
                                     <Select onChange={handleFormChange}>
-                                        { FIGHT_STATUS_SELECT_CONSTANTS.map( ({value, label}) => <option placeholder='hey' key={value} value={value}>{label}</option>)}
+                                        { FIGHT_STATUS_SELECT_CONSTANTS.map( status => <option placeholder='hey' key={status.value} value={status.value}>{status.label}</option>)}
                                     </Select>                            
                                 </FormControl>
                             }
@@ -193,15 +164,24 @@ export const ShowForm = ({ user, tokenConfig }) => {
                     <ButtonGroup w="100%">
                         <Button 
                             minW="33%"
-                            onClick={ showId ? handlePutShow : handlePostShow } 
+                            onClick={ showId ? handleUpdateShow : handlePostShow } 
                             type="button" 
-                            colorScheme="blue"
+                            colorScheme="solid"
                             isLoading={isSubmitting}
                             loadingText="Submitting..."
-                            >
+                        >
                             Submit
                         </Button>
-                        <Button minW="33%" disabled={!showId} isLoading={isSubmitting} loadingText="Deleting" onClick={deleteShow} colorScheme="red" variant="outline">Delete</Button>
+                        <Button 
+                            minW="33%" 
+                            disabled={!showId} 
+                            isLoading={isSubmitting} 
+                            loadingText="Deleting" 
+                            onClick={handleDeleteShow} 
+                            variant="outline"
+                        >
+                            Delete
+                        </Button>
                     </ButtonGroup>
                 </FieldGroup>
             </form>
