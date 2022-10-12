@@ -80,6 +80,7 @@ export const ScoringMain = ({
             [notSelected]: notSelectedScore,
             [selectedFighter]: 10
         };
+        debugger
         submitRoundScores(update);
         setSelectedFighter('');
         setNotSelectedScore(9)

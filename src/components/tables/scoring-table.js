@@ -68,7 +68,9 @@ export const ScoringTable = ({
                 centered={tabs.all ? true : false}
             />
 
-            <FightStats tabs={tabs} />
+            <FightStats 
+                tabs={tabs} 
+            />
 
             <Flex 
                 overflow="scroll"
