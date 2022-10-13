@@ -18,10 +18,12 @@ export const ScoringSidebarLeft = ({
         transformedPrediction,
         userScorecard,
     } = useScorecardStore()
-    const { availableGuestJudges } = useStateStore()
+    
+    const { 
+        availableGuestJudges 
+    } = useStateStore()
     
     const toast = useToast()
-  
     const { odds, rounds, weightclass } = fight ? fight : '';
     const { finalScore } = userScorecard
     const { location, network, showTime } = show

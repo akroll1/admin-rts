@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
+import { Box, Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
 import { useScorecardStore } from '../../stores'
 
@@ -31,12 +31,10 @@ export const ProfileButton = () => {
     }
 
     return (
-        <Box 
-            w="full" 
-        >
-            <Menu>
+        <Flex m="auto">
+            <Menu m="auto">
                 <MenuButton 
-                    w='full'
+                    m="auto"
                     size='md'
                     color="#C8C8C8"
                     _hover={{color: 'white'}}
@@ -56,6 +54,6 @@ export const ProfileButton = () => {
                     </MenuList>
                 }
             </Menu>
-        </Box>
+        </Flex>
     )
 }

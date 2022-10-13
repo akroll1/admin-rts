@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
-import { FightReviews, ShowsCreateGroupScorecard, FightMetadata, FightStoryline } from '../shows-components'
+import { 
+    FightMetadata, 
+    FightReviews, 
+    FightStoryline, 
+    Odds, 
+    ShowsCreateGroupScorecard 
+} from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
@@ -56,8 +62,13 @@ export const ShowsMain = ({
                 text="Storyline" 
                 mt="2"
                 mb="0"
+                p="0" 
             />
-            <FightStoryline fightSummary={fightSummary} /> 
+            <FightStoryline 
+                fightSummary={fightSummary} 
+            /> 
+
+            <Odds />
             
             { UPCOMING 
                 ?

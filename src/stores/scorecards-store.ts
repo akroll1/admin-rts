@@ -89,6 +89,7 @@ interface ScorecardStore {
     requestChatToken(chatKey: string): void
     scorecards: Scorecard[]
     scoredRounds: number
+    scoringComplete: boolean
     selectedFight: Fight
     selectedFightReview: Review
     selectedFightReviews: Review[]
@@ -99,6 +100,7 @@ interface ScorecardStore {
     setIdToken(headers: TokenConfig): void
     setModals(modal: string, boolean: boolean): void
     setScoredRounds(scoredRounds: number): void
+    setScoringComplete(boolean: boolean): void
     setSelectedFight(selectedFightId: string): void
     setToast(toastOptions: ToastOptions): void
     setTokenExpired(state: boolean): void
@@ -112,6 +114,7 @@ interface ScorecardStore {
     submitRoundScores(chatScorecard: RoundScores): void
     tableData: any[]
     toast: ToastOptions
+    totalRounds: number
     tokenExpired: boolean
     transformedPrediction: string
     updateDiscussion(discussionObj: Partial<Discussion>): void
@@ -162,6 +165,7 @@ const initialState = {
     prediction: null,
     scorecards: [],
     scoredRounds: 0,
+    scoringComplete: false,
     selectedFight: {} as Fight,
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
@@ -169,6 +173,7 @@ const initialState = {
     stats: [],
     tableData: [],
     toast: {} as ToastOptions,
+    totalRounds: 12,
     tokenExpired: false,
     transformedPrediction: '',
     user: {} as User,
@@ -192,7 +197,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                 };
             },
             collateTableData: () => {
+                const totalRounds = get().fight.rounds;
+                let userScoringComplete;
                 const collated = get().scorecards.map( (scorecard: any) => {
+                    
                     const [fighter1, fighter2] = get().fighters
                     let { finalScore, prediction, scores, username } = scorecard
                     const sortRoundAscending = (a: any, b: any) => a.round - b.round
@@ -203,7 +211,6 @@ export const useScorecardStore = create<ScorecardStore>()(
                             ? `${fighter1.lastName}- ${prediction.slice(index+1)}` 
                             : `${fighter2.lastName}- ${prediction.slice(index+1)}`
                     }
-                    // console.log('prediction: ', prediction)
 
                     const totals = scores.reduce( (acc: any, curr: any) => {
                         
@@ -228,7 +235,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                         })
                     })
                     .sort(sortRoundAscending);
-                
+
                     return ({
                         fighters: [fighter1.lastName, fighter2.lastName],
                         finalScore,
@@ -238,9 +245,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                         username,
                     })
                 })
+
                 set({ 
-                    tableData: collated, 
-                    stats: collated 
+                    stats: collated,
+                    tableData: collated,
                 })
             },
             createDiscussion: async (discussionObj: Partial<Discussion>) => {
@@ -369,6 +377,9 @@ export const useScorecardStore = create<ScorecardStore>()(
                     }
                     const updateUser = await get().updateUser(update)
                 }
+                const totalRounds = data.fight.rounds;
+                const scoringComplete = userScorecard.scores.length >= totalRounds;
+                console.log('scoringComplete: ', scoringComplete)
                 await set({ 
                     activeGroupScorecard: data.groupScorecard, 
                     chatKey: data.groupScorecard.chatKey,
@@ -376,7 +387,9 @@ export const useScorecardStore = create<ScorecardStore>()(
                     fight: data.fight, 
                     fighters: data.fighters, 
                     scorecards: data.scorecards,
+                    scoringComplete,
                     show: data.show,
+                    totalRounds,
                     userScorecard,
                 });
                 /////// PREDICTION ///////
@@ -542,6 +555,9 @@ export const useScorecardStore = create<ScorecardStore>()(
                     set({ scoredRounds })
                 }
             },
+            setScoringComplete: (boolean: boolean) => {
+                set({ scoringComplete: boolean })
+            },
             setSelectedFight: ( selectedFightId: string) => {    
                 const [selectedFight] = get().fights.filter( fight => fight.fightId === selectedFightId);
                 set({ selectedFight });
@@ -560,12 +576,12 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ tokenExpired })
             },
             setTransformedPrediction: (rawPrediction: string | null) => {
-                if(!rawPrediction && (Date.now() > get().show.showTime)){
-                    set({ transformedPrediction: `Predictions Locked!`})
+                if(!rawPrediction && (Date.now() > get().show.showTime) ){
+                    set({ transformedPrediction: `Predictions Locked!` })
                     return
                 }
                 if(!rawPrediction){
-                    set({ transformedPrediction: `Make a Prediction`})
+                    set({ transformedPrediction: `Make a Prediction` })
                     return
                 }
                 if(rawPrediction){
@@ -599,6 +615,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             submitRoundScores: async (chatScorecard: RoundScores) => {
                 console.log('chatScorecard: ', chatScorecard)
+                
                 const url = baseUrl + `/scorecards/${get().userScorecard.scorecardId}`
                 const res = await axios.put(url, chatScorecard, get().accessToken)
                 // const data = res.data
@@ -614,10 +631,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 get().setUserScorecard(updatedScorecard)
                 const updatedScorecards = [...otherScorecards, scorecard]
                 const currentRound: number = +chatScorecard.round + 1
+
                 set({ 
                     chatScorecard, 
                     currentRound,
-                    scorecards: updatedScorecards 
+                    scorecards: updatedScorecards,
                 })       
             },
             updateDiscussion: async (updateObj: Partial<Discussion>) => {
