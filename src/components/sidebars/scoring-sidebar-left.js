@@ -1,10 +1,7 @@
 import { Button, Flex, Stack, useToast } from '@chakra-ui/react'
-import { BiChevronRightCircle, BiCog, BiBuoy, BiUserCircle, BiPlusCircle } from 'react-icons/bi'
 import { NavGroup } from './scoring-sidebar/nav-group'
 import { NavItem } from './scoring-sidebar/nav-item'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
-import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../utils'
-import { IoScaleOutline } from 'react-icons/io5'
 import { useScorecardStore, useStateStore } from '../../stores'
 import { SidebarsDividerWithText } from '../../chakra'
 
@@ -24,8 +21,8 @@ export const ScoringSidebarLeft = ({
     } = useStateStore()
     
     const toast = useToast()
-    const { odds, rounds, weightclass } = fight ? fight : '';
     const { finalScore } = userScorecard
+    const { odds, rounds, weightclass } = fight ? fight : '';
     const { location, network, showTime } = show
     const isLocked = Date.now() > showTime
 
@@ -71,15 +68,22 @@ export const ScoringSidebarLeft = ({
                 text="Show Info" 
                 centered={tabs.all ? true : false}
             />
-            <Stack 
+            <Flex 
+                flexDir="column"
                 h={"auto"}
                 w="full" 
-                spacing="2" 
                 flex="1" 
                 overflowY="scroll" 
-                pt="8" 
+                pt="2" 
                 p="2"
             >
+                {/* <NavGroup tabs={tabs} label="Show">
+                    <NavItem icon={<FaTv />} label={ network } />
+                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
+                    <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
+                    <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
+                    <NavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
+                </NavGroup> */}
                 <NavGroup tabs={tabs} label="Prediction">
                     <NavItem 
                         id="prediction"
@@ -94,10 +98,10 @@ export const ScoringSidebarLeft = ({
                             _focus={{bg:'transparent'}} 
                             _hover="transparent" 
                             variant="ghost" 
-                            pl="0" 
-                            m="0"
-                            my="-2" 
                             fontSize="sm"
+                            m="0"
+                            p="0"
+                            maxH="1.5rem"
                         >
                             { transformedPrediction ? transformedPrediction : 'Set Prediction' }
                         </Button>} 
@@ -114,22 +118,16 @@ export const ScoringSidebarLeft = ({
                             _hover="transparent" 
                             variant="ghost" 
                             size="sm" 
-                            pl="0"
+                            m="0"
+                            p="0"
+                            maxH="1.5rem"
                         >
                             Score&#58; {finalScore ? finalScore : `Not Official` }
                         </Button>} 
                     /> 
                 </NavGroup>
-               
-                <NavGroup tabs={tabs} label="Show">
-                    <NavItem icon={<FaTv />} label={ network } />
-                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
-                    <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
-                </NavGroup>
 
-                <NavGroup tabs={tabs} label="Fight">
-                    <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
-                    <NavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
+                <NavGroup tabs={tabs} label="Props">
                     <NavItem 
                         icon={<FaRegMoneyBillAlt />} 
                         label={<Button 
@@ -140,12 +138,9 @@ export const ScoringSidebarLeft = ({
                             textAlign="left" 
                             fontSize="md" 
                             w="100%" 
-                            my="-2" 
                             _hover={{background: 'transparent'}} 
                             variant="ghost" 
                             size="sm" 
-                            pl="0" 
-                            m="0"
                             _focus={{border: 'none'}}
                         >                    
                             { odds }
@@ -153,7 +148,7 @@ export const ScoringSidebarLeft = ({
                     />
                 </NavGroup>
                 
-                <NavGroup tabs={tabs} active={true} label="Official Judges">
+                {/* <NavGroup tabs={tabs} active={true} label="Official Judges">
                     { availableGuestJudges?.length > 0 && availableGuestJudges.map( (judge, i) => <NavItem color="fsl-text" id={judge.guestJudgeId} icon={<BiUserCircle />} label={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`}  key={judge.guestJudgeId} />) }
                     <NavItem 
                         icon={<FaPlusCircle />} 
@@ -176,16 +171,16 @@ export const ScoringSidebarLeft = ({
                             Add Guest Judge
                         </Button>} 
                     />
-                </NavGroup>
+                </NavGroup> */}
 
-                <NavGroup tabs={tabs} label="Group Members">
+                {/* <NavGroup tabs={tabs} label="Group Members"> */}
                     {/* { usernameAndUserId.length > 0 && usernameAndUserId.map( ({ username, ownerId }, i) => {
                         const isAdmin = adminUsername.toLowerCase() == username ? true : false;
 
                         return <NavItem href={`/scorecards/search/${ownerId}`} icon={isAdmin ? <FaUserCog /> : <BiUser />} label={username} key={i} />
                     })} */}
                 
-                <NavItem color="fsl-text" 
+                {/* <NavItem color="fsl-text" 
                     icon={<BiPlusCircle />} 
                     label={<Button 
                         color="fsl-text" 
@@ -206,12 +201,12 @@ export const ScoringSidebarLeft = ({
                         Add Group Member
                     </Button>} 
                 />
-                </NavGroup>
-                <NavGroup tabs={tabs} label="Support">
+                </NavGroup> */}
+                {/* <NavGroup tabs={tabs} label="Support">
                     <NavItem subtle icon={<BiCog />} label="Settings" />
                     <NavItem subtle icon={<BiBuoy />} label="Help & Support" />
-                </NavGroup>
-            </Stack>
+                </NavGroup> */}
+            </Flex>
         </Flex>
     )
 }

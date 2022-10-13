@@ -16,16 +16,15 @@ export const ShowsFighterFaceoff = ({
         mx="auto"
         my="1"
         justifyContent="space-between"
-        direction={["column", "row"]}
+        flexDirection={["row"]}
         alignItems="center"
         px="auto"
         py="1"
         position="relative"
         bg="transparent"
         shadow={{ md: 'base' }}
-        maxW={["100%", "90%", "80%"]}
       >
-        { fighters.length > 0 && fighters.map( fighter => {
+        { fighters?.length > 0 && fighters.map( fighter => {
           // console.log('fighter: ', fighter)
           const { fighterId, firstName, lastName, ringname } = fighter;
           return (
@@ -34,7 +33,7 @@ export const ShowsFighterFaceoff = ({
               flexDir="column"
               mx="auto"
               px="auto"
-              my="1"
+              // my="1"
               flex="1 0 45%" 
               alignItems="center" 
               justifyContent="center"

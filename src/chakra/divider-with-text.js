@@ -8,7 +8,7 @@ export const DividerWithText = props => {
       align="center" 
       color="gray.300" 
       w="100%"
-      pl={p ? p : "6"} 
+      // pl={p ? p : "6"} 
       m={my ? my : "auto"}
       my={my ? my : "2"} 
       mt={mt ? mt : "2"} 

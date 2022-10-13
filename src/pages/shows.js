@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import { Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react'
 
 import { ShowsSidebar } from '../components/sidebars'
@@ -62,9 +62,7 @@ const Shows = props => {
     },[])
 
     useEffect(() => {
-        // if(){
-            setActiveFightSummary(fightSummary)
-        // }
+        setActiveFightSummary(fightSummary)
     },[fightSummary])
 
     useEffect(() => {
@@ -165,15 +163,14 @@ const Shows = props => {
 
     return (
         <Flex 
-            w="100%" 
+            w={["100%"]} 
+            m="auto"
             flexWrap="wrap" 
             height="auto" 
             flexDirection={["column",'column','row']} 
             color="white" 
             alignItems="flex-start" 
             justifyContent="center" 
-            mb={6} 
-            pb={["8", "2"]}
             bg="inherit"
         >    
             <ExpiredTokenModal />
@@ -190,6 +187,7 @@ const Shows = props => {
             <ShowsSidebar 
                 fights={fights} 
             />  
+            
             <ShowsMain 
                 deleteMember={deleteMember}
                 emailValue={emailValue}

@@ -4,20 +4,6 @@ import { MyScorecardsTableContent, TableActions, ScorecardsTablePagination } fro
 
 export const MyScorecardsTable = ({ scorecards }) => {
 
-  const options = [
-    { 
-      value: 'upcoming',
-      label: 'Upcoming'
-    },
-    { 
-      value: 'active',
-      label: 'Active'
-    },
-    { 
-      value: 'completed',
-      label: 'Complete'
-    },
-  ];
   return (
     <Box 
       w="100%" 
@@ -26,7 +12,7 @@ export const MyScorecardsTable = ({ scorecards }) => {
       mx="auto" 
       px={{base: '6', md: '8'}}
     >
-      <TableActions options={options} />
+      <TableActions />
       <MyScorecardsTableContent scorecards={scorecards} />
       <ScorecardsTablePagination total={scorecards && scorecards.length ? scorecards.length : '0'} />
     </Box>

@@ -7,7 +7,7 @@ import { Scorecard } from './models'
 
 
 
-interface ScoringStore { 
+export interface ScoringStore { 
     currentRound: number
     fetchGuestJudgeScorecards(): void
     fetchPanelProps(): void
@@ -18,11 +18,15 @@ interface ScoringStore {
 const scorecardStore: any = useScorecardStore.getState();
 const store: any = useStateStore.getState();
 
-export const useScoringStore = create<ScoringStore>()((set,get) => ({
+export const initialScoringStoreState = {
     currentRound: 1,
     guestJudgeScorecards: [],
     panelProps: [],
     prediction: '',
+}
+
+export const useScoringStore = create<ScoringStore>()((set,get) => ({
+    ...initialScoringStoreState,
     fetchGuestJudgeScorecards: async () => {
         if(scorecardStore.fight?.guestJudgeIds){
             const getJudges = await scorecardStore.fight.guestJudgeIds.map( async (guestJudgeId: string) => {

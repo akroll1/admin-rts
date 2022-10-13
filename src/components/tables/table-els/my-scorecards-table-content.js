@@ -58,7 +58,7 @@ export const MyScorecardsTableContent = ({
                   cursor: 'pointer', 
                   bg: '#535353', 
                   color: '#fff', 
-                  borderBottom: '2px solid #795858',
+                  borderBottom: '2px solid #262626',
                   borderRadius: '5px'
                 }} 
               >

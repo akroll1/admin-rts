@@ -28,7 +28,7 @@ import {
 } from './models'
 import { IoConstructOutline } from "react-icons/io5"
 
-interface ScorecardStore {
+export interface ScorecardStore {
     accessToken: TokenConfig
     activeGroupScorecard: GroupScorecard
     chatKey: string
@@ -136,7 +136,7 @@ interface ToastOptions {
     isClosable: boolean
 }
 
-const initialState = {
+export const initialScorecardsStoreState = {
     isSubmitting: false,
     accessToken: {} as TokenConfig,
     activeGroupScorecard: {} as GroupScorecard,
@@ -187,7 +187,7 @@ const baseUrl = process.env.REACT_APP_API;
 export const useScorecardStore = create<ScorecardStore>()(
     persist(
         (set, get) => ({
-            ...initialState,
+            ...initialScorecardsStoreState,
             checkForUserFightReview: async (userId: string) => {
                 const url = baseUrl + `/reviews/${userId}/user`;
                 const res = await axios.get(url, get().accessToken);
@@ -531,7 +531,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                         [fighter.fighterId]: 10
                     })
                 })
-                const round = get().scoredRounds + 1;
+                const round = get().userScorecard.scores.length;
                 const scorecardId = get().userScorecard.scorecardId;
                 set({ fighterScores: { round, scorecardId, scores } });
 
@@ -663,7 +663,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.put(url, updateOptions , get().accessToken)
                 // console.log('USER res: ', res)
             },  
-            reset: () => set( state => initialState)
+            reset: () => set( state => initialScorecardsStoreState)
         }),
         {
             partialize: (state) => {
