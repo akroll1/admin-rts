@@ -18,7 +18,6 @@ const scoringStore = create(
 export const useBoundStore = create(
         persist(
             (set, get) => ({
-
             ...initialScorecardsStoreState,
             ...initialScoringStoreState, 
         })

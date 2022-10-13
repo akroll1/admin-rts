@@ -8,7 +8,7 @@ import TagManager from 'react-gtm-module'
 // import { reportWebVitals} from 'web-vitals'
 import { ColorModeScript } from '@chakra-ui/react'
 const tagManagerArgs = {
-    gtmId: 'GTM-T38SJF8'
+    gtmId: 'GTM-T8WQNJH'
 }
 TagManager.initialize(tagManagerArgs)
 const root = createRoot(document.getElementById('root')!);
