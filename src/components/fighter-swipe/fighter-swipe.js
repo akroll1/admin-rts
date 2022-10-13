@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react'
-import { Avatar, Center, Flex, Heading } from '@chakra-ui/react'
+import { Avatar, Center, Flex, Heading, useToast } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 
 export const FighterSwipe = ({ 
@@ -8,9 +7,10 @@ export const FighterSwipe = ({
     handleFighterSelect,
     notSelectedScore,
     redCorner,
+    scoringComplete,
     selectedFighter,
 }) => {
-
+    const toast = useToast();
     const { fighterId, firstName, lastName, ringname } = fighter; 
     
     const handleSelect = e => {
@@ -37,12 +37,23 @@ export const FighterSwipe = ({
         if(selectedFighter === fighterId) return selectedStyles
         if(selectedFighter && selectedFighter !== fighterId) return notSelectedStyles
     }
+
+    const handleScoringComplete = () => {
+        toast({
+            title: 'Scoring Complete',
+            // description: "",
+            position: 'top',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
     const styles = setStyles();
     return (
         <Flex         
             borderBottom={`2px solid white`}     
             m="2"
-            onClick={handleSelect} 
+            onClick={scoringComplete ? handleScoringComplete : handleSelect} 
             id={fighterId}
             style={styles} 
             boxSizing="border-box" 

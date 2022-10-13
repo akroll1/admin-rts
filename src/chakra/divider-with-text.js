@@ -2,13 +2,13 @@ import * as React from 'react'
 import { Box, Divider, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 
 export const DividerWithText = props => {
-  const { centered, fontSize, text, m, mb, mt, my } = props;
+  const { centered, fontSize, text, m, mb, mt, my, p } = props;
   return (
     <Flex 
       align="center" 
       color="gray.300" 
       w="100%"
-      pl="6" 
+      pl={p ? p : "6"} 
       m={my ? my : "auto"}
       my={my ? my : "2"} 
       mt={mt ? mt : "2"} 

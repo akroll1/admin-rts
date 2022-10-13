@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Flex, Heading, useControllableState } from '@chakra-ui/react'
+import { Button, Flex, Heading } from '@chakra-ui/react'
 import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 import { FighterSwipe } from '../fighter-swipe'
-import { ScoringMainFightStats } from './scoring-main-fight-stats'
 import { useScorecardStore } from '../../stores'
 
 export const ScoringMain = ({ 
     isSubmitting,
     tabs,
 }) => {
+    const [userScoringComplete, setUserScoringComplete] = useState(false);
     const [evenRound, setEvenRound] = useState(false)
     const [round, setRound] = useState(null)
     const [isDisabled, setIsDisabled] = useState(false);
@@ -17,18 +17,20 @@ export const ScoringMain = ({
     
     const {
         currentRound,
-        fight,
         fighters,
         fighterScores,
+        scoringComplete,
+        setScoringComplete,
         submitRoundScores,
+        totalRounds,
     } = useScorecardStore();
-
-    const totalRounds = fight ? fight.rounds : 12;
-    const fightComplete = round === totalRounds;
     
     useEffect(() => {
-        console.log('fighterScores.round === currentRound: ', fighterScores.round === currentRound)
-        if(fightComplete || fighterScores.round === currentRound){
+        setUserScoringComplete(scoringComplete)
+    },[scoringComplete])
+
+    useEffect(() => {
+        if(userScoringComplete || fighterScores.round === currentRound){
             setIsDisabled(true)
             return setRound(totalRounds);
         }
@@ -46,6 +48,13 @@ export const ScoringMain = ({
         
     },[isSubmitting, selectedFighter]);
 
+    useEffect(() => {
+        setEvenRound(false)
+        if(notSelectedScore === 10){
+            setEvenRound(true)
+        } 
+    },[notSelectedScore])
+
     const handleAdjustScore = e => {
         const { id } = e.currentTarget;
         if(id === 'increment'){
@@ -58,16 +67,9 @@ export const ScoringMain = ({
         }
     }
 
-    useEffect(() => {
-        setEvenRound(false)
-        if(notSelectedScore === 10){
-            setEvenRound(true)
-        } 
-    },[notSelectedScore])
     const handleFighterSelect = id => {
         setSelectedFighter(id)
         setNotSelectedScore(9)
-
     }
 
     const submitScores = () => {
@@ -80,10 +82,11 @@ export const ScoringMain = ({
             [notSelected]: notSelectedScore,
             [selectedFighter]: 10
         };
-        debugger
+        const scoringIsComplete = (round+1)  > totalRounds;
         submitRoundScores(update);
         setSelectedFighter('');
         setNotSelectedScore(9)
+        setScoringComplete(scoringIsComplete)
     }
     // console.log('fighters: ', fighters)
     // console.log('selectedFighter: ', selectedFighter)
@@ -107,19 +110,20 @@ export const ScoringMain = ({
                 minH="2rem"
                 verticalAlign="middle"
             >
-                {`Round ${ currentRound }`}
+                {`Round ${ currentRound >= totalRounds ? totalRounds : currentRound }`}
             </Heading> 
             <Flex flexDir={["row"]} w={["100%", "80%"]} m="auto">
             {
                 fighters.length > 0 && fighters.map( (fighter, i) => (
                     <FighterSwipe
+                        evenRound={evenRound}
                         fighter={fighter}
                         handleFighterSelect={handleFighterSelect}
-                        selectedFighter={selectedFighter}
-                        notSelectedScore={notSelectedScore}
-                        evenRound={evenRound}
-                        redCorner={fighters[0].fighterId === selectedFighter}
                         key={i}
+                        notSelectedScore={notSelectedScore}
+                        redCorner={fighters[0].fighterId === selectedFighter}
+                        scoringComplete={userScoringComplete}
+                        selectedFighter={selectedFighter}
                     />
                 ))
             }

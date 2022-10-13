@@ -99,7 +99,7 @@ export const fslTheme = {
         _dark: '#C8C8C8'
       },
       'fsl-sidebar-bg': {
-        _dark: '#111111'
+        _dark: '#252525'
       },
       'fsl-nav-footer-bg': {
         _dark: '#171717'

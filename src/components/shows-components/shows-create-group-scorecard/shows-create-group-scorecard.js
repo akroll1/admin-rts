@@ -14,7 +14,11 @@ export const ShowsCreateGroupScorecard = ({
 }) => {
     return ( 
         <>
-            <DividerWithText text={'Create a Group Scorecard'} />
+            <DividerWithText 
+                p="0" 
+                text={'Create a Group Scorecard'} 
+                fontSize="2xl"
+            />
             <Stack w={["100%", "80%"]} m="auto" spacing="2">
                 <FieldGroup title="Score with Friends">
                     <Stack m="auto" w="100%" spacing="2">
