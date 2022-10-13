@@ -27,16 +27,17 @@ export const ReviewItem = ({
   }
 
   return (
-    <Stack 
+    <Flex 
       my="2" 
       p={["2", "4"]} 
       boxSizing="border-box" 
-      flex="0 0 45%" 
-      spacing="2.5" 
+      flexDir="column"
+      flex="0 0 60%" 
+      // spacing="2.5" 
       textAlign="left"
       justifyContent="flex-start"
       w="100%"
-      maxW={["100%", "50%"]}
+      maxW={["100%", "75%", "60%"]}
     >
       <Box 
         spacing="3" 
@@ -45,7 +46,11 @@ export const ReviewItem = ({
         alignItems={["flex-start", "center"]} 
         justifyContent="flex-start"
       >
-        <Flex minW="100%" display="inline-flex" flexWrap="wrap">
+        <Flex 
+          maxW="100%" 
+          // display="inline-flex" 
+          // flexWrap="wrap"
+        >
           <ReviewPostStars 
             rating={rating} 
             minW="100%" 
@@ -113,6 +118,6 @@ export const ReviewItem = ({
           </MenuList>
         </Menu>
       </Flex>
-    </Stack>
+    </Flex>
   )
 }

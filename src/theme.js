@@ -267,12 +267,16 @@ const Input = {
       field: {
         boxShadow: '0 0 0 1px #676767',
         border: '1px solid',
-        borderColor: '#393838',
+        borderColor: '#2f2f2f',
         _focus: {
-          boxShadow: 'none',
-          borderColor: '#674545',
-          
+          boxShadow: '0 0 0 1px #aaaaaa',
+          borderColor: '#2f2f2f',
         },
+        _active: {
+          boxShadow: '0 0 0 1px #aaaaaa',
+          borderColor: '#7a7a7a',
+        },
+
         
       },
     }

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Flex, useColorModeValue as mode } from '@chakra-ui/react'
+import { Flex, Heading, useColorModeValue as mode } from '@chakra-ui/react'
 import { 
     FightMetadata, 
     FightReviews, 
     FightStoryline, 
-    Odds, 
-    ShowsCreateGroupScorecard 
+    Props, 
+    ShowsCreateGroupScorecard,
+    ShowsParticulars,
 } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
@@ -35,12 +36,12 @@ export const ShowsMain = ({
     },[fightSummary?.show?.showTime])
 
     const UPCOMING = time > Date.now() ? true : false; 
-
+    
     return (
         <Flex 
             as="section"
             id="shows_main"
-            p="4"
+            px={["4", "8"]}
             pb="1"
             flex="1 0 65%" 
             bg="inherit"
@@ -49,26 +50,47 @@ export const ShowsMain = ({
             alignItems="center"
             boxSizing="border-box" 
         >
+            <Heading 
+                textAlign="left" 
+                as="h1" 
+                size="xl"
+                w="100%"
+                color="gray"
+            >
+                Season 2
+            </Heading>
+            
             <FightMetadata
                 fightSummary={fightSummary}
             /> 
-            
+
             <ShowsFighterFaceoff 
                 fighters={fightSummary.fighters} 
                 showTime={showTime}
             />
+
+            
             <DividerWithText 
                 fontSize="2xl" 
                 text="Storyline" 
-                mt="2"
                 mb="0"
                 p="0" 
             />
+
             <FightStoryline 
                 fightSummary={fightSummary} 
             /> 
+           
+            <DividerWithText 
+                fontSize="2xl" 
+                text="Particulars" 
+                mb="0"
+                p="0" 
+            />
 
-            <Odds />
+            <ShowsParticulars />
+
+            {/* <Props /> */}
             
             { UPCOMING 
                 ?

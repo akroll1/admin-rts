@@ -64,6 +64,7 @@ export const ShowsSidebar = () => {
         'Floyd Mayweather vs Willie Pep', 'Mike Tyson vs Muhammad Ali'
     ];
     return (
+
         <Flex 
             id="shows_sidebar" 
             as="aside"
@@ -82,6 +83,7 @@ export const ShowsSidebar = () => {
             bg="fsl-sidebar-bg" 
             color="white" 
             fontSize="sm"
+            display={["none", "flex"]}
         >
             <SidebarsDividerWithText 
                 fontSize={'1.5rem'} 

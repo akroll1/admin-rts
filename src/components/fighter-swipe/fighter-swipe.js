@@ -60,8 +60,8 @@ export const FighterSwipe = ({
             flexDirection="column"
             borderRadius="1px"
             w="90%"
-            minH="10rem"
-            mb="8"
+            // minH="10rem"
+            mb="4"
         >
             <Center m="2">
                 <Avatar 

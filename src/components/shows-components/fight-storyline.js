@@ -4,7 +4,7 @@ import { Flex, Text } from '@chakra-ui/react'
 export const FightStoryline = ({ 
     fightSummary 
 }) => {
-    const [lines, setLines] = useState([4, 3, 3])
+    const [lines, setLines] = useState([6])
     const fightStoryline = fightSummary?.fight?.fightStoryline;
     const showStoryline = fightSummary?.show?.showStoryline;
 
@@ -13,18 +13,21 @@ export const FightStoryline = ({
             setLines([])
             return
         }
-        setLines([4, 3, 3])
+        setLines([4])
     }
 
     return (
         <Flex 
             as="section"
-            maxW={["100%", "80%"]}
             alignItems="flex-start"
             flexDir="column" 
-            p={['2', '4']} 
+            px={['2', '4', '8']} 
+            mb="2"
+            color="fsl-text"
+            // transition="all 0.2s"  
         >
             <Text 
+                p="2"
                 whiteSpace="pre-wrap"
                 onClick={handleShowFullText}
                 noOfLines={lines} 

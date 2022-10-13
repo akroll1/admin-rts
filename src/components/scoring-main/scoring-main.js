@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Flex, Heading } from '@chakra-ui/react'
 import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 import { FighterSwipe } from '../fighter-swipe'
@@ -26,17 +26,21 @@ export const ScoringMain = ({
     } = useScorecardStore();
     
     useEffect(() => {
+        setRound(parseInt(currentRound))
+    },[currentRound])
+
+    useEffect(() => {
         setUserScoringComplete(scoringComplete)
     },[scoringComplete])
 
-    useEffect(() => {
-        if(userScoringComplete || fighterScores.round === currentRound){
-            setIsDisabled(true)
-            return setRound(totalRounds);
-        }
-        return fighterScores.round === totalRounds ? setRound(parseInt(totalRounds)) : setRound(parseInt(fighterScores.round));
+    // useEffect(() => {
+    //     if(userScoringComplete || fighterScores.round === currentRound){
+    //         setIsDisabled(true)
+    //         return setRound(totalRounds);
+    //     }
+    //     return round >= totalRounds ? setRound(parseInt(totalRounds)) : setRound(parseInt(fighterScores.round));
 
-    }, [fighterScores, currentRound])
+    // }, [fighterScores])
 
     useEffect(() => {
         if(isSubmitting){ 
@@ -75,7 +79,7 @@ export const ScoringMain = ({
     const submitScores = () => {
         const [fighter1, fighter2] = fighters;
         const notSelected = selectedFighter === fighter1.fighterId ? fighter2.fighterId : fighter1.fighterId;
-        const { round, scorecardId } = fighterScores
+        const { scorecardId } = fighterScores
         const update = {
             round,
             scorecardId,
@@ -90,6 +94,7 @@ export const ScoringMain = ({
     }
     // console.log('fighters: ', fighters)
     // console.log('selectedFighter: ', selectedFighter)
+    console.log('currentRound: ', currentRound)
     return (
         <Flex 
             id="scoring-main"
@@ -98,7 +103,6 @@ export const ScoringMain = ({
             m="auto"
             flexDir="column" 
             justifyContent="flex-end"
-            my="8"
             w="100%"
         >
             <Heading 
@@ -110,7 +114,7 @@ export const ScoringMain = ({
                 minH="2rem"
                 verticalAlign="middle"
             >
-                {`Round ${ currentRound >= totalRounds ? totalRounds : currentRound }`}
+                {`Round ${ round >= totalRounds ? totalRounds : round }`}
             </Heading> 
             <Flex flexDir={["row"]} w={["100%", "80%"]} m="auto">
             {
@@ -137,8 +141,14 @@ export const ScoringMain = ({
                 alignItems="center" 
                 justifyContent="center"
             >
-
-                <Flex mt="8" minH="5rem" visibility={selectedFighter ? `visible` : `hidden`} w="100%" alignItems="center" justifyContent="center">
+                <Flex 
+                    // mt="8" 
+                    minH="2rem" 
+                    visibility={selectedFighter ? `visible` : `hidden`} 
+                    w="100%" 
+                    alignItems="center" 
+                    justifyContent="center"
+                >
                     <AddIcon 
                         onClick={handleAdjustScore}
                         mr="2"
@@ -147,7 +157,7 @@ export const ScoringMain = ({
                         h="1.7rem" 
                         p="1" 
                         border="1px solid gray" 
-                    />
+                        />
                     <MinusIcon 
                         onClick={handleAdjustScore}
                         ml="2"
@@ -166,10 +176,10 @@ export const ScoringMain = ({
                     variant={isDisabled ? "outline" : "solid"} 
                     colorScheme="solid" 
                     mx="auto" 
-                    mt="2"
+                    mt="4"
                     w={["90%","50%"]}
                 >
-                    { isDisabled ? `Select Fighter` : `Submit Score` }
+                    { isDisabled && round >= totalRounds ? `Scoring Complete` : isDisabled ? `Select Fighter` : `Submit Score` }
                 </Button>
             </Flex>
         </Flex>  
