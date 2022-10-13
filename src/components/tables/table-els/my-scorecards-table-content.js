@@ -18,7 +18,7 @@ export const MyScorecardsTableContent = ({
     <Flex overflow="scroll" w="100%">
       <Table 
         variant="simple" 
-        my="8" 
+        my="4" 
         border="1px solid rgba(255, 255, 255, 0.16)" 
         fontSize="sm" 
         size={['sm', 'md']}

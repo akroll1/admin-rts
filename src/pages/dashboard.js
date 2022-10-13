@@ -17,6 +17,7 @@ import {
   PanelistForm,
   MyPanelsForm,
   PoundForm, 
+  SeasonsForm,
   ShowForm 
 } from '../components/forms'
 import { MyPoundList } from '../components/lists'
@@ -24,7 +25,7 @@ import { useParams } from 'react-router-dom'
 import { ExpiredTokenModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
 
-const Dashboard = props => {
+const Dashboard = () => {
   const { type, showId } = useParams();
   const { 
     setUser, 
@@ -74,6 +75,7 @@ const Dashboard = props => {
     { value: "GUEST-JUDGES", label:"Guest Judges Form", type: 'Guest Judges', icon: FaEdit, link: '/dashboard/guest-judges' },
     { value: "PANELIST", label:"Panelist Form", type: 'User', icon: FaUser, link: '/dashboard/panelist' },
     { value: "POUNDFORM", label:"P4P Form", type: 'P4P Form', icon: FaEdit, link: '/dashboard/pound-form' },
+    { value: "SEASON-FORM", label:"Season Form", type: 'Season Form', icon: FaEdit, link: '/dashboard/season' },
     { value: "SHOW-FORM", label:"Show Form", type: 'Show Form', icon: FaEdit, link: '/dashboard/show-form' },
   ];
 
@@ -156,20 +158,21 @@ const Dashboard = props => {
         borderRadius="md" 
         mt={0}
       >
-        { form === 'POUND' && <MyPoundList /> }
         { form === 'ACCOUNT' && <MyAccountForm /> }
-        { form === 'PANELS_MEMBER' && <MyPanelsForm /> }
-        { form === 'PANELIST' && <PanelistForm /> }
+        { form === 'BROADCAST' && <BroadcastForm /> }
         { form === 'CREATE_PANEL' && <CreatePanelForm /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard /> }
-        { form === 'POUNDFORM' && <PoundForm /> }
-        { form === 'SHOW-FORM' && <ShowForm /> }
-        { form === 'FIGHTERS' && <FightersForm /> }
-        { form === 'FIGHT-RESOLUTION' && <FightResolutionForm /> }
         { form === 'DISCUSSIONS' && <DiscussionsForm /> }
-        { form === 'GUEST-JUDGES' && <GuestJudgeForm /> }
-        { form === 'BROADCAST' && <BroadcastForm /> }
+        { form === 'FIGHTERS' && <FightersForm /> }
         { form === 'FIGHT-FORM' && <FightForm /> }
+        { form === 'FIGHT-RESOLUTION' && <FightResolutionForm /> }
+        { form === 'GUEST-JUDGES' && <GuestJudgeForm /> }
+        { form === 'PANELS_MEMBER' && <MyPanelsForm /> }
+        { form === 'PANELIST' && <PanelistForm /> }
+        { form === 'POUND' && <MyPoundList /> }
+        { form === 'POUNDFORM' && <PoundForm /> }
+        { form === 'SEASON-FORM' && <SeasonsForm /> }
+        { form === 'SHOW-FORM' && <ShowForm /> }
       </Box>
     </Flex>
   )
