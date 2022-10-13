@@ -1,34 +1,41 @@
-import React from 'react'
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { Flex, Text } from '@chakra-ui/react'
 
-export const FightStoryline = ({ fightSummary }) => {
-    const { fight: { fightStoryline, odds }} = fightSummary;
+export const FightStoryline = ({ 
+    fightSummary 
+}) => {
+    const [lines, setLines] = useState([6])
+    const fightStoryline = fightSummary?.fight?.fightStoryline;
+    const showStoryline = fightSummary?.show?.showStoryline;
+
+    const handleShowFullText = e => {
+        if(lines.length > 0){
+            setLines([])
+            return
+        }
+        setLines([4])
+    }
+
     return (
         <Flex 
             as="section"
-            maxW={["100%", "80%"]}
             alignItems="flex-start"
             flexDir="column" 
-            p={['2', '4']} 
+            px={['2', '4', '8']} 
+            mb="2"
+            color="fsl-text"
+            // transition="all 0.2s"  
         >
-
-            <Text noOfLines={[4, 3, 3]} fontSize="sm">{ fightStoryline }</Text>
-            { odds && 
-                <Flex p="0" mt="4" display="inline-flex">
-                    <Text 
-                        fontWeight="bold"
-                        letterSpacing="1px"
-                    >
-                        Moneyline
-                    </Text>
-                    <Text 
-                        textDecoration="none" 
-                        style={{fontWeight: 'normal'}}
-                        >
-                            &#58;&nbsp;{ odds }
-                    </Text>
-                </Flex>
-            }
+            <Text 
+                p="2"
+                whiteSpace="pre-wrap"
+                onClick={handleShowFullText}
+                noOfLines={lines} 
+                _hover={{cursor: 'pointer'}} 
+                fontSize="sm"
+            >
+                { showStoryline || fightStoryline }
+            </Text>
         </Flex>
     )
 }

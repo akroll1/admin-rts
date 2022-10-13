@@ -10,7 +10,7 @@ import {
     IoFlashOutline, 
     IoBookmarkOutline 
 } from "react-icons/io5";
-import { DividerWithText } from '../../chakra'
+import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 
 export const ShowsSidebar = () => { 
@@ -64,10 +64,11 @@ export const ShowsSidebar = () => {
         'Floyd Mayweather vs Willie Pep', 'Mike Tyson vs Muhammad Ali'
     ];
     return (
+
         <Flex 
             id="shows_sidebar" 
             as="aside"
-            flex="1 0 25%" 
+            flex="1 0 20%" 
             w="100%" 
             minH={["40vh", "50vh", "80vh"]} 
             maxH={["40vh","40vh","100%"]}
@@ -82,10 +83,19 @@ export const ShowsSidebar = () => {
             bg="fsl-sidebar-bg" 
             color="white" 
             fontSize="sm"
+            display={["none", "flex"]}
         >
-            <SearchField style={{width: '100%'}} handleSearch={handleSearch} />
-            <DividerWithText text="Shows" />
-            <Stack w="100%" spacing="4" flex="1" overflow="auto" pt="0">
+            <SidebarsDividerWithText 
+                fontSize={'1.5rem'} 
+                text="Shows" 
+                // centered={tabs.all ? true : false}
+                centered={[true, false]}
+            />
+            <SearchField 
+                style={{width: '100%', margin: '0rem 1rem'}} 
+                handleSearch={handleSearch} 
+            />
+            <Stack w="100%" spacing="4" flex="1" overflow="auto" mt="4">
                 <NavGroup label="Upcoming">
                     { upcoming.length > 0 && upcoming.map( fight => {
                         const { fightId, fightQuickTitle, isTitleFight } = fight;

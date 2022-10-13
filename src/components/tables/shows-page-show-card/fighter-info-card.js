@@ -1,10 +1,8 @@
 import React from 'react'
 import { Avatar, Flex, HStack, Icon, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils';
-import { useNavigate } from 'react-router';
 
 export const FighterInfoCard = props => {
-  const navigate = useNavigate();
   const { fighterId, firstName, lastName, ringname, bio, isVerified, ...stackProps } = props;
 
   return (
@@ -14,14 +12,12 @@ export const FighterInfoCard = props => {
       alignItems="center" 
       // onClick={() => navigate(`/fighters/${fighterId}`)}
     >
-      <Avatar size="lg" />
-      <VStack spacing="1" flex="1">
+      <Avatar size={["md", "lg"]} />
+      <VStack spacing="0" flex="1">
         <HStack>
           <Text 
-            fontSize="lg" 
-            m="2" 
-            p="2" 
-            mb="0" 
+            fontSize={["md", "xl", "2xl"]} 
+            mt="2"  
             textAlign="center" 
             fontWeight="bold"
           >
@@ -29,9 +25,10 @@ export const FighterInfoCard = props => {
           </Text>
         </HStack>
         <Text
-          fontSize="sm"
+          px="2"
+          fontSize={["sm", "md", ]}
           textAlign="center"
-          noOfLines={2}
+          noOfLines={1}
           color={useColorModeValue('gray.600', 'gray.400')}
         >
           {`${capFirstLetters(ringname)}`}
