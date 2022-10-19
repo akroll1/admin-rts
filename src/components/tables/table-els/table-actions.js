@@ -21,22 +21,11 @@ export const TableActions = () => {
       direction={{base: 'column', md: 'row'}} 
       justify="space-between"
     >
-      <Select  
-        maxW="35%"
-        rounded="base" 
-        size="sm" 
-        placeholder="Season"
-        _hover={ {cursor: 'pointer' }}
-        _focus={{ boxShadow: '0 0 0 1px #aaaaaaa', border: '1px solid #aaaaaaa' }}
-        _active={{ boxShadow: '0 0 0 1px #aaaaaaa', border: '1px solid #aaaaaaa' }}
-      >
-        {
-          options && options.length > 0 && options.map( option => <option key={option.value} value={option.value} label={option.label} />)
-        }
-      </Select>
       <FormControl
         id="search"
-        maxW="35%"
+        m={["2"]}
+        maxW={["80%", "35%"]}
+        display={["none", "flex"]}
       >
         <InputGroup size="sm">
           <FormLabel srOnly>Search Scorecards</FormLabel>
@@ -50,6 +39,20 @@ export const TableActions = () => {
           />
         </InputGroup>
       </FormControl>
+      <Select  
+        m={["2"]}
+        maxW={["80%", "35%"]}
+        rounded="base" 
+        size="sm" 
+        placeholder="Season"
+        _hover={ {cursor: 'pointer' }}
+        _focus={{ boxShadow: '0 0 0 1px #aaaaaaa', border: '1px solid #aaaaaaa' }}
+        _active={{ boxShadow: '0 0 0 1px #aaaaaaa', border: '1px solid #aaaaaaa' }}
+      >
+        {
+          options && options.length > 0 && options.map( option => <option key={option.value} value={option.value} label={option.label} />)
+        }
+      </Select>
     </Flex>
   )
 }

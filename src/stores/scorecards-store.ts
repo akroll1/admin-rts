@@ -21,6 +21,7 @@ import {
     Review, 
     ReviewPut, 
     RoundScores, 
+    Season,
     Show, 
     TokenConfig, 
     User,
@@ -42,6 +43,7 @@ export interface ScorecardStore {
     createGroupScorecard(scorecardObj: CreateGroupScorecard): Promise<boolean | undefined>
     createPanel(panelId: string): void
     createPanelist(panelistObj: Partial<Panelist>): void
+    createSeason(createObj: Partial<Season>): void
     createShow(createShowObj: Partial<Show>): void
     createUser(user: User): void
     currentRound: number
@@ -49,11 +51,13 @@ export interface ScorecardStore {
     deleteFight(fightId: string): void
     deleteFighter(fighterId: string): void
     deletePanelist(panelistId: string): void
+    deleteSeason(seasonId: string): void
     deleteShow(showId: string): void
     discussion: Discussion
     discussions: Discussion[]
     fetchAllDiscussions(): void
     fetchAllPanelists(): void
+    fetchAllSeasons(): void
     fetchDiscussion(discussionId: string): void
     fetchFight(fightId: string): void
     fetchFighter(fighterId: string): void
@@ -64,6 +68,7 @@ export interface ScorecardStore {
     fetchPanel(panelId: string): void
     fetchPanelist(panelistId: string): void
     fetchPanelSummaries(): void
+    fetchSeason(seasonId: string): void
     fetchSelectedFightReviews(fightId: string): void;
     fetchShow(showId: string): void
     fetchUser(): void
@@ -90,6 +95,8 @@ export interface ScorecardStore {
     scorecards: Scorecard[]
     scoredRounds: number
     scoringComplete: boolean
+    season: Season
+    seasons: Season[]
     selectedFight: Fight
     selectedFightReview: Review
     selectedFightReviews: Review[]
@@ -121,6 +128,7 @@ export interface ScorecardStore {
     updateFight(fightUpdateOptions: FightUpdateOptions): void
     updateFighter(updateFighterObj: Partial<Fighter>): void
     updatePanelist(updateObj: Partial<Panelist>): void
+    updateSeason(updateObj: Partial<Season>): void
     updateShow(update: any): void
     updateUser(updateOptions: Partial<User>): void
     user: User
@@ -169,6 +177,8 @@ export const initialScorecardsStoreState = {
     selectedFight: {} as Fight,
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
+    season: {} as Season,
+    seasons: [],
     show: {} as Show,
     stats: [],
     tableData: [],
@@ -182,15 +192,14 @@ export const initialScorecardsStoreState = {
     userScorecards: [],
 }
 
-const baseUrl = process.env.REACT_APP_API;
+const url = process.env.REACT_APP_API;
 
 export const useScorecardStore = create<ScorecardStore>()(
     persist(
         (set, get) => ({
             ...initialScorecardsStoreState,
             checkForUserFightReview: async (userId: string) => {
-                const url = baseUrl + `/reviews/${userId}/user`;
-                const res = await axios.get(url, get().accessToken);
+                const res = await axios.get(`${url}/reviews/${userId}/user`, get().accessToken);
                 const data = res.data;
                 if(data?.reviewId){
                     set({ userFightReview: data })
@@ -252,87 +261,96 @@ export const useScorecardStore = create<ScorecardStore>()(
                 })
             },
             createDiscussion: async (discussionObj: Partial<Discussion>) => {
-                const res = await axios.post(`${baseUrl}/discussions`, discussionObj, get().accessToken)
+                const res = await axios.post(`${url}/discussions`, discussionObj, get().accessToken)
                 console.log('DISCUSSION- create res.data: ', discussionObj)
             },
             createFight: async (createObj: FightPostObj) => {
-                const res = await axios.post(`${baseUrl}/fights`, createObj, get().accessToken)
+                const res = await axios.post(`${url}/fights`, createObj, get().accessToken)
                 console.log('res.data: ', res.data)
             },
             createFighter: async (createFighterObj: Fighter) => {
-                const res = await axios.post(`${baseUrl}/fighters`, createFighterObj, get().accessToken)
+                const res = await axios.post(`${url}/fighters`, createFighterObj, get().accessToken)
                 console.log('FIGHTER- create res.data: ', res.data);
             },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
-                const url = baseUrl + `/group-scorecards`;
-                const res = await axios.post(url, scorecardObj, get().accessToken);
+                const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().accessToken);
                 const data = res.data as GroupScorecard;
                 if(res.status === 200) return true;
             },  
             createPanel: async (panelId: string) => {
-                const res = await axios.post(`${baseUrl}/panels`, { panelId }, get().accessToken)
+                const res = await axios.post(`${url}/panels`, { panelId }, get().accessToken)
                 console.log('res.data: ', res.data)
             },
             createPanelist: async (panelistObj: Partial<Panelist>) => {
-                const res = await axios.post(`${baseUrl}/panelists/`, panelistObj, get().accessToken)
+                const res = await axios.post(`${url}/panelists/`, panelistObj, get().accessToken)
                 console.log('PANELIST- create res.data: ', res.data)
             },
+            createSeason: async (createObj: Partial<Season>) => {
+                const res = await axios.post(`${url}/seasons`, createObj, get().accessToken)
+            },
             createShow: async (createShowObj: Partial<Show>) => {
-                const res = await axios.post(`${baseUrl}/shows`, createShowObj, get().accessToken)
+                const res = await axios.post(`${url}/shows`, createShowObj, get().accessToken)
                 const show = res.data as Show
             },
             createUser: async (user: User) => {
-                const url = baseUrl + `/users`
-                const res = await axios.post(url, get().user, get().accessToken)
+                const res = await axios.post(`${url}/users`, get().user, get().accessToken)
             },
             deleteDiscussion: async (discussionId: string) => {
-                const res = await axios.delete(`${baseUrl}/discussions/${discussionId}`)
+                const res = await axios.delete(`${url}/discussions/${discussionId}`)
                 console.log('DISCUSSION- delete res.data: ', res.data)
             },
             deleteFight: async (fightId: string) => {
-                const res = await axios.delete(`${baseUrl}/fights/${fightId}`, get().accessToken)
+                const res = await axios.delete(`${url}/fights/${fightId}`, get().accessToken)
                 console.log('FIGHT- deleted res.data: ', res.data)
             },
             deleteFighter: async (fighterId: string) => {
-                const res = await axios.delete(`${baseUrl}/fighters/${fighterId}`, get().accessToken)
+                const res = await axios.delete(`${url}/fighters/${fighterId}`, get().accessToken)
                 console.log('FIGHTER- delete res.data: ', res.data)
             },
             deletePanelist: async (panelistId: string) => {
-                const res = await axios.delete(`${baseUrl}/panelists/${panelistId}`)
+                const res = await axios.delete(`${url}/panelists/${panelistId}`)
                 console.log('PANELIST- delete res.data: ', res.data)
             },
+            deleteSeason: async (seasonId: string) => {
+                const res = await axios.post(`${url}/seasons/${seasonId}`, get().accessToken)
+                console.log('DELETE- season: ' , res.data)
+            },
             deleteShow: async (showId: string) => {
-                const res = await axios.delete(`${baseUrl}/shows/${showId}`, get().accessToken)
+                const res = await axios.delete(`${url}/shows/${showId}`, get().accessToken)
                 console.log('res.data: ', res.data)
             },
             fetchAllDiscussions: async () => {
-                const res = await axios.get(`${baseUrl}/discussions`, get().accessToken)
+                const res = await axios.get(`${url}/discussions`, get().accessToken)
                 const discussions = res.data as Discussion[]
                 set({ discussions })
             },
             fetchAllPanelists: async () => {
-                const res = await axios.get(`${baseUrl}/panelists`, get().accessToken)
+                const res = await axios.get(`${url}/panelists`, get().accessToken)
                 const panelists = res.data as Panelist[]
                 set({ panelists })
             },
+            fetchAllSeasons: async () => {
+                const res = await axios.get(`${url}/seasons`, get().accessToken)
+                const seasons = res.data as Season[]
+                set({ seasons })
+            },
             fetchDiscussion: async (discussionId: string) => {
-                const res = await axios.get(`${baseUrl}/discussions/${discussionId}`, get().accessToken)
+                const res = await axios.get(`${url}/discussions/${discussionId}`, get().accessToken)
                 const discussion = res.data as Discussion
                 set({ discussion })
             },
             fetchFight: async (fightId: string) => {
-                const res = await axios.get(`${baseUrl}/fights/${fightId}`, get().accessToken)
+                const res = await axios.get(`${url}/fights/${fightId}`, get().accessToken)
                 const fight = res.data as Fight
                 set({ fight })
             },
             fetchFighter: async (fighterId: string) => {
-                const res = await axios.get(`${baseUrl}/fighters/${fighterId}`, get().accessToken)
+                const res = await axios.get(`${url}/fighters/${fighterId}`, get().accessToken)
                 const fighter = res.data as Fighter
                 set({ fighter })
             },
             fetchFights: async () => {
-                const url = baseUrl + `/fights`
-                const res = await axios.get(url, get().accessToken)
+                const res = await axios.get(`${url}/fights`, get().accessToken)
                 const data = res.data as Fight[]
                 if(res.data === 'Token expired!'){
                     return set({ tokenExpired: true })
@@ -340,15 +358,14 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set( state => ({ fights: data }))
             },
             fetchFightSummary: async (selectedFightId: string) => {
-                const url = baseUrl + `/fights/${selectedFightId}/summary`
-                const res = await axios.get(url, get().accessToken)
+                const res = await axios.get(`${url}/fights/${selectedFightId}/summary`, get().accessToken)
                 const data = res.data as FightSummary
                 set({ fightSummary: data, toast: { title: 'Fight updated!', status: 'success', duration: 5000, isClosable: true,} })
 
             },
             fetchGroupScorecard: async (groupScorecardId: string) => {
                 const user = get().user;
-                const res = await axios.get(`${baseUrl}/group-scorecards/${groupScorecardId}/summary`, get().idToken);
+                const res = await axios.get(`${url}/group-scorecards/${groupScorecardId}/summary`, get().idToken);
                 if(res.data === `Token expired!`){
                     get().setTokenExpired(true)
                     return
@@ -368,7 +385,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 // console.log('userScorecard: ', userScorecard)
                 const currentRound = userScorecard.scores.length + 1
                 if(userScorecard.ownerId.includes('@')){
-                    const patchUrl = baseUrl + `/scorecards/${userScorecard.scorecardId}`
+                    const patchUrl = url + `/scorecards/${userScorecard.scorecardId}`
                     const updatedScorecard = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, get().accessToken)
                     const update = {
                         sub: get().user.sub,
@@ -402,41 +419,43 @@ export const useScorecardStore = create<ScorecardStore>()(
                 get().collateTableData()
             },
             fetchList: async (listType: string) => {
-                const url = baseUrl + `/lists/${get().user.sub}/${listType}`
-                const res = await axios.get(url, get().accessToken);
+                const res = await axios.get(`${url}/lists/${get().user.sub}/${listType}`, get().accessToken);
                 const data = res.data as any;
                 if(listType === "pound"){
                     set({ poundListUser: data.userPoundList, poundListOfficial: data.officialPoundList })
                 }
             },
             fetchPanel: async (panelId: string) => {
-                const res = await axios.get(`${baseUrl}/${panelId}`, get().accessToken)
+                const res = await axios.get(`${url}/${panelId}`, get().accessToken)
                 console.log('res: ', res)
             },
             fetchPanelist: async (panelistId: string) => {
-                const res = await axios.get(`${baseUrl}/panelists/${panelistId}`, get().accessToken)
+                const res = await axios.get(`${url}/panelists/${panelistId}`, get().accessToken)
                 const panelist = res.data as Panelist
                 set({ panelist })
             },
             fetchPanelSummaries: async () => {
-                const res = await axios.get(`${baseUrl}/panels`, get().accessToken)
+                const res = await axios.get(`${url}/panels`, get().accessToken)
                 const panelSummaries = res.data as PanelSummary[]
                 set({ panelSummaries })
             },
+            fetchSeason: async (seasonId: string) => {
+                const res = await axios.get(`${url}/seasons/${seasonId}`, get().accessToken)
+                const season = res.data as Season
+                set({ season })
+            },
             fetchSelectedFightReviews: async (fightId: string) => {
-                const url = baseUrl + `/reviews/${fightId}/fight`;
-                const res = await axios.get(url, get().accessToken);
+                const res = await axios.get(`${url}/reviews/${fightId}/fight`, get().accessToken);
                 const selectedFightReviews = res.data as Review[];
                 set({ selectedFightReviews })
             }, 
             fetchShow: async (showId: string) => {
-                const res = await axios.get(`${baseUrl}/shows/${showId}`, get().accessToken)
+                const res = await axios.get(`${url}/shows/${showId}`, get().accessToken)
                 const show = res.data as Show
                 set({ show })
             },
             fetchUser: async () => {
-                const url = baseUrl + `/users/${get().user.sub}`
-                const res = await axios.get(url, get().accessToken)
+                const res = await axios.get(`${url}/users/${get().user.sub}`, get().accessToken)
                 if(res.data === 'No user found.'){
                     const user = get().user
                     get().createUser({ sub: user.sub, email: user.email, username: user.username })
@@ -447,8 +466,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ user })
             },
             fetchUserScorecards: async () => {
-                const url = baseUrl + `/scorecards/${encodeURIComponent(get().user.sub!)}-${encodeURIComponent(get().user.email!)}/all`;
-                const res = await axios.get(url, get().accessToken)
+                const res = await axios.get(`${url}/scorecards/${encodeURIComponent(get().user.sub!)}-${encodeURIComponent(get().user.email!)}/all`, get().accessToken)
                 const data = res.data as any[]
 
                 const userScorecards = await Promise.all( data.map( async x => {
@@ -482,8 +500,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ userScorecards })
             },
             patchPrediction: async (prediction: string) => {
-                const url = baseUrl + `/scorecards/${get().userScorecard.scorecardId}`;
-                const res = await axios.patch(url, { prediction }, get().accessToken)
+                const res = await axios.patch(`${url}/scorecards/${get().userScorecard.scorecardId}`, { prediction }, get().accessToken)
                 if(res.status === 200){
                     get().setTransformedPrediction(prediction)
                     get().fetchGroupScorecard(get().activeGroupScorecard.groupScorecardId)
@@ -491,8 +508,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
             },
             putUserFightReview: async (reviewObj: ReviewPut) => {
-                const url = baseUrl + `/reviews`;
-                const res = await axios.put(url, reviewObj, get().accessToken);
+                const res = await axios.put(`${url}/reviews`, reviewObj, get().accessToken);
                 if(res.status === 200) {
                     get().fetchSelectedFightReviews(reviewObj.fightId);
                     return true;
@@ -598,26 +614,23 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ userScorecard })
             },
             submitFightResolution: async (resolution: FightResolutionOptions, fightId: string) => {
-                const url = baseUrl + `/resolutions/${fightId}`
-                const res = await axios.put(url, resolution, get().accessToken)
+                const res = await axios.put(`${url}/resolutions/${fightId}`, resolution, get().accessToken)
                 const data = res.data
-                console.log('data: ', data)
+                console.log('RESOLUTION put res: ', data)
             },
             submitList: async (list: List) => {
-                const res = await axios.put(`${baseUrl}/lists/${get().user.sub}/${list.listType}`, list, get().accessToken)
+                const res = await axios.put(`${url}/lists/${get().user.sub}/${list.listType}`, list, get().accessToken)
                 console.log('res.data: ', res.data)
             },
             submitPanelPredictions: async (predictionObj: Record<string, string[]>) => {
                 Object.assign(predictionObj, { panelistId: get().user.sub })
-                const res = await axios.put(`${baseUrl}/panels`, predictionObj, get().accessToken)
+                const res = await axios.put(`${url}/panels`, predictionObj, get().accessToken)
                 const data = res.data
                 console.log('DATA: ', data)
             },
             submitRoundScores: async (chatScorecard: RoundScores) => {
-                console.log('chatScorecard: ', chatScorecard)
-                
-                const url = baseUrl + `/scorecards/${get().userScorecard.scorecardId}`
-                const res = await axios.put(url, chatScorecard, get().accessToken)
+                console.log('chatScorecard: ', chatScorecard) 
+                const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, chatScorecard, get().accessToken)
                 // const data = res.data
                 ///////////////////////////////////////////////////////   
                 let [scorecard] = get().scorecards.filter( scorecard => scorecard.scorecardId === chatScorecard.scorecardId);
@@ -639,29 +652,31 @@ export const useScorecardStore = create<ScorecardStore>()(
                 })       
             },
             updateDiscussion: async (updateObj: Partial<Discussion>) => {
-                const res = await axios.put(`${baseUrl}/discussions/${updateObj.discussionId}`, updateObj, get().accessToken)
+                const res = await axios.put(`${url}/discussions/${updateObj.discussionId}`, updateObj, get().accessToken)
                 console.log('DISCUSSION- update res.data: ', res.data)
             },
             updateFight: async (fightUpdateOptions: FightUpdateOptions) => {
-                const res = await axios.put(`${baseUrl}/fights/${fightUpdateOptions.fightId}`, fightUpdateOptions, get().accessToken)
+                const res = await axios.put(`${url}/fights/${fightUpdateOptions.fightId}`, fightUpdateOptions, get().accessToken)
                 console.log('res.data: ', res.data)
             },
             updateFighter: async (updateFighterObj: Partial<Fighter>) => {
-                const res = await axios.put(`${baseUrl}/fighters/${updateFighterObj.fighterId}`, updateFighterObj, get().accessToken)
+                const res = await axios.put(`${url}/fighters/${updateFighterObj.fighterId}`, updateFighterObj, get().accessToken)
                 console.log('FIGHTER- update res.data: ', res.data)
             },
             updatePanelist: async (updateObj: Partial<Panelist>) => {
-                const res = await axios.put(`${baseUrl}/panelists/${updateObj.panelistId}`, updateObj, get().accessToken)
+                const res = await axios.put(`${url}/panelists/${updateObj.panelistId}`, updateObj, get().accessToken)
                 console.log('PANELIST- update, res.data: ', res.data)
             },
+            updateSeason: async (updateObj: Partial<Season>) => {
+                const res = await axios.put(`${url}/seasons/${updateObj.seasonId}`, updateObj, get().accessToken)
+            },
             updateShow: async (update: any) => {
-                const res = await axios.put(`${baseUrl}/shows/${update.showId}`, update, get().accessToken)
+                const res = await axios.put(`${url}/shows/${update.showId}`, update, get().accessToken)
                 console.log('res.data: ', res.data)
             },
             updateUser: async (updateOptions: Partial<User>) => {
-                const url = baseUrl + `/users/${get().user.sub}`;
-                const res = await axios.put(url, updateOptions , get().accessToken)
-                // console.log('USER res: ', res)
+                const res = await axios.put(`${url}/users/${get().user.sub}`, updateOptions , get().accessToken)
+                console.log('UPDATE USER res: ', res)
             },  
             reset: () => set( state => initialScorecardsStoreState)
         }),
