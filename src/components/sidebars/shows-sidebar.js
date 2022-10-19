@@ -83,7 +83,7 @@ export const ShowsSidebar = () => {
             bg="fsl-sidebar-bg" 
             color="white" 
             fontSize="sm"
-            display={["none", "flex"]}
+            display={["none", "none", "flex"]}
         >
             <SidebarsDividerWithText 
                 fontSize={'1.5rem'} 
