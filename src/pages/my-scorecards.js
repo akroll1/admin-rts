@@ -17,7 +17,7 @@ export const MyScorecards = () => {
     // console.log('userScorecards: ', userScorecards)
     return (
         <Flex 
-          w={["100%", "80%", "60%"]}
+          w={["100%", "100%", "60%"]}
           m="auto"
           flexDir="column" 
           p="4"

@@ -19,7 +19,7 @@ const Discussion = () => {
         discussionBody: '',
         discussionPics: []
     });
-    const discussionsUrl = process.env.REACT_APP_DISCUSSIONS;
+    const discussionsUrl = `${process.env.REACT_APP_API}/discussions`;
 
     useEffect(() => {
         const getAllDiscussions = async () => {

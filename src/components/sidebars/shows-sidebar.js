@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { SearchField } from './fighters-sidebar-components/search-field'
 import { Flex, Stack } from '@chakra-ui/react'
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
+import { filterFights } from '../../stores/store-utils'
+
 import { 
     IoStarOutline, 
     IoGameControllerOutline, 
@@ -28,17 +30,9 @@ export const ShowsSidebar = () => {
 
     useEffect(() => {
         if(fights.length > 0){
-            const upcoming = fights.filter( fight => fight.fightStatus === 'PENDING').reverse();
-            setUpcoming(upcoming);
-            const recent = fights.filter( fight => fight.fightStatus === 'COMPLETE');
-            setRecent(recent);
-            if(upcoming.length > 0) {
-                setSelectedFight(upcoming[0].fightId);
-                Promise.all([
-                    fetchSelectedFightReviews(upcoming[0].fightId),
-                    fetchFightSummary(upcoming[0].fightId)
-                ])
-            }
+            const { upcoming, recent } = filterFights(fights)
+            setUpcoming(upcoming)
+            setRecent(recent)
         }
     }, [fights])
 
@@ -54,8 +48,6 @@ export const ShowsSidebar = () => {
         const { name, id } = e.currentTarget;
         const [selected] = fights.filter( fight => fight.fightId === id);
         setSelectedFight(selected.fightId);
-        fetchSelectedFightReviews(selected.fightId)
-        fetchFightSummary(selected.fightId)
     }
     const historicalShows = [
         'Ali vs Frazier I', 'Hagler vs Hearns'
@@ -100,15 +92,15 @@ export const ShowsSidebar = () => {
                     { upcoming.length > 0 && upcoming.map( fight => {
                         const { fightId, fightQuickTitle, isTitleFight } = fight;
                         return <UpcomingNavItem 
-                            active={fightId === selectedFight?.fightId}
-                            name={REVIEW_TYPE.PREDICTION} 
-                            fightId={fight.fightId} 
-                            selectFight={selectFight} 
-                            icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
-                            label={fightQuickTitle} 
-                            key={fight.fightId} 
-                            isPlaying
-                        />
+                                    active={fightId === selectedFight?.fightId}
+                                    name={REVIEW_TYPE.PREDICTION} 
+                                    fightId={fight.fightId} 
+                                    selectFight={selectFight} 
+                                    icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
+                                    label={fightQuickTitle} 
+                                    key={fight.fightId} 
+                                    isPlaying
+                                />
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">

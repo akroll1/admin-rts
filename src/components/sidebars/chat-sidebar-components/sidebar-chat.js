@@ -170,16 +170,16 @@ export const ChatSidebar = ({
             p="1"
             display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
             id="chat-sidebar"
-            flexDir="column" 
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
             maxW="100%" 
             bg={tabs.all ? "fsl-sidebar-bg" : "inherit"}
             borderRadius="md" 
-            justifyContent="space-between"
             ref={chatRef}
             overflow="hidden"
             overscrollBehavior="none"
             position="relative"
+            justifyContent="space-between"
+            flexDir="column" 
         >
             <SidebarsDividerWithText 
                 fontSize={'1.5rem'} 

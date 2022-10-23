@@ -351,11 +351,14 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchFights: async () => {
                 const res = await axios.get(`${url}/fights`, get().accessToken)
-                const data = res.data as Fight[]
+                const fights = res.data as Fight[]
                 if(res.data === 'Token expired!'){
                     return set({ tokenExpired: true })
                 }
-                set( state => ({ fights: data }))
+                get().fetchFightSummary(fights[0].fightId)
+                get().fetchSelectedFightReviews(fights[0].fightId)
+                get().setSelectedFight(fights[0].fightId)
+                set( ({ fights }))
             },
             fetchFightSummary: async (selectedFightId: string) => {
                 const res = await axios.get(`${url}/fights/${selectedFightId}/summary`, get().accessToken)
@@ -574,8 +577,10 @@ export const useScorecardStore = create<ScorecardStore>()(
             setScoringComplete: (boolean: boolean) => {
                 set({ scoringComplete: boolean })
             },
-            setSelectedFight: ( selectedFightId: string) => {    
-                const [selectedFight] = get().fights.filter( fight => fight.fightId === selectedFightId);
+            setSelectedFight: ( fightId: string) => {    
+                const [selectedFight] = get().fights.filter( fight => fight.fightId === fightId);
+                get().fetchSelectedFightReviews(selectedFight.fightId)
+                get().fetchFightSummary(selectedFight.fightId)
                 set({ selectedFight });
             },
             setSelectedFightReview: (reviewId: string) => {

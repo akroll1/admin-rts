@@ -19,7 +19,7 @@ export const PoundPage = () => {
   const [combinedList, setCombinedList] = useState([]);
   const [selectedFighter, setSelectedFighter] = useState({});
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
-  const baseUrl = process.env.REACT_APP_POUND_LIST;
+  const baseUrl = `${process.env.REACT_APP_API}/pound`;
   
   const { user, tokenConfig } = useStateStore.getState();
   ////////////////////////////////////////////////////////

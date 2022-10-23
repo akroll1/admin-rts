@@ -1,8 +1,9 @@
-import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { MyScorecardsTableContent, TableActions, ScorecardsTablePagination } from './table-els'
 
-export const MyScorecardsTable = ({ scorecards }) => {
+export const MyScorecardsTable = ({ 
+  scorecards 
+}) => {
 
   return (
     <Box 
