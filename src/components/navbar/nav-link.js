@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Link, useColorModeValue as mode } from '@chakra-ui/react'
 import { NavLink as RRLink } from 'react-router-dom'
-// import { NavLink } from 'react-router';
 
 const DesktopNavLink = React.forwardRef((props, ref) => {
   const { active, href, ...rest } = props;
+
   return (
     <Link
       as={RRLink}
@@ -13,6 +13,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
       display="inline-block"
       px="4"
       py="6"
+      isExternal={false}
       fontWeight="semibold"
       aria-current={active ? 'page' : undefined}
       color={mode('gray.400', 'gray.400')}
@@ -30,6 +31,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
         color: 'white',
         fontWeight: 'bold',
       }}
+      {...rest}
     />
     )
   })

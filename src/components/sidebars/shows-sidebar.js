@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { SearchField } from './fighters-sidebar-components/search-field'
 import { Flex, Stack } from '@chakra-ui/react'
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
+import { filterFights } from '../../stores/store-utils'
+
 import { 
     IoStarOutline, 
     IoGameControllerOutline, 
@@ -15,29 +17,26 @@ import { useScorecardStore } from '../../stores'
 
 export const ShowsSidebar = () => { 
     const { 
-        fetchFightSummary,
-        fetchSelectedFightReviews,
         fights, 
         selectedFight, 
         setSelectedFight,
     } = useScorecardStore()
 
     const [searchedFights, setSearchedFights] = useState(fights)
-    const [upcoming, setUpcoming] = useState([])
+    const [canceled, setCanceled] = useState([])
     const [recent, setRecent] = useState([])
+    const [upcoming, setUpcoming] = useState([])
 
     useEffect(() => {
         if(fights.length > 0){
-            const upcoming = fights.filter( fight => fight.fightStatus === 'PENDING').reverse();
-            setUpcoming(upcoming);
-            const recent = fights.filter( fight => fight.fightStatus === 'COMPLETE');
-            setRecent(recent);
-            if(upcoming.length > 0) {
-                setSelectedFight(upcoming[0].fightId);
-                Promise.all([
-                    fetchSelectedFightReviews(upcoming[0].fightId),
-                    fetchFightSummary(upcoming[0].fightId)
-                ])
+            const { canceled, recent, upcoming } = filterFights(fights)
+            setCanceled(canceled)
+            setRecent(recent)
+            setUpcoming(upcoming)
+            if(upcoming.length > 0){
+                setSelectedFight(upcoming[0].fightId)
+            } else {
+                setSelectedFight(recent[0].fightId)
             }
         }
     }, [fights])
@@ -54,8 +53,6 @@ export const ShowsSidebar = () => {
         const { name, id } = e.currentTarget;
         const [selected] = fights.filter( fight => fight.fightId === id);
         setSelectedFight(selected.fightId);
-        fetchSelectedFightReviews(selected.fightId)
-        fetchFightSummary(selected.fightId)
     }
     const historicalShows = [
         'Ali vs Frazier I', 'Hagler vs Hearns'
@@ -99,16 +96,18 @@ export const ShowsSidebar = () => {
                 <NavGroup label="Upcoming">
                     { upcoming.length > 0 && upcoming.map( fight => {
                         const { fightId, fightQuickTitle, isTitleFight } = fight;
-                        return <UpcomingNavItem 
-                            active={fightId === selectedFight?.fightId}
-                            name={REVIEW_TYPE.PREDICTION} 
-                            fightId={fight.fightId} 
-                            selectFight={selectFight} 
-                            icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
-                            label={fightQuickTitle} 
-                            key={fight.fightId} 
-                            isPlaying
-                        />
+                        return (
+                            <UpcomingNavItem 
+                                active={fightId === selectedFight?.fightId}
+                                name={REVIEW_TYPE.PREDICTION} 
+                                fightId={fight.fightId} 
+                                selectFight={selectFight} 
+                                icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
+                                label={fightQuickTitle} 
+                                key={fight.fightId} 
+                                isPlaying
+                            />
+                        )
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">
@@ -125,6 +124,24 @@ export const ShowsSidebar = () => {
                         />
                     })}
                 </NavGroup>
+                { canceled.length > 0 && 
+                    <NavGroup label="Canceled">
+                        { canceled.length > 0 && canceled.map( fight => {
+                            const active = fight.fightId === selectedFight?.fightId
+                            return (
+                                <UpcomingNavItem 
+                                    active={active}
+                                    name={REVIEW_TYPE.CANCELED} 
+                                    icon={<IoStarOutline mt="-5px" /> } 
+                                    selectFight={selectFight} 
+                                    fightId={fight.fightId} 
+                                    label={fight.fightQuickTitle} 
+                                    key={fight.fightId} 
+                                />
+                            )
+                        })}
+                    </NavGroup>
+                }
                 <NavGroup label="Historical">
                     {historicalShows && historicalShows.length > 0 && historicalShows.map( (fight,i) => {
                         return <UpcomingNavItem 

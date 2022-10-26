@@ -1,12 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Button, ButtonGroup, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Select, Stack, StackDivider, Textarea, useToast, VStack } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { 
+    Box, 
+    Button, 
+    ButtonGroup, 
+    FormControl, 
+    FormHelperText, 
+    FormLabel, 
+    Heading, 
+    HStack, 
+    Input, 
+    Select, 
+    Stack, 
+    StackDivider, 
+    Textarea, 
+    useToast, 
+    VStack 
+} from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import axios from 'axios'
-import { ShowFormFightersTable, ShowFormShowsTable } from '../tables'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
 import parseISO from 'date-fns/parseISO'
+import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
 // import { addDays } from 'date-fns/addDays'
 import { useScorecardStore } from '../../stores'
 
@@ -68,7 +82,7 @@ export const ShowForm = () => {
 
     const { fightIds, location, network, promoter, showName, showStatus, showStoryline, showTime } = form;
     const fightId = fightIds[0];
-    // console.log('form: ', form);
+    console.log('form: ', form);
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">

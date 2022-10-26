@@ -28,7 +28,7 @@ const Analytics = () => {
     });
     useEffect(() => {
         const fetchAllFights = async () => {
-            const url = process.env.REACT_APP_ANALYTICS;
+            const url = `${process.env.REACT_APP_ANALYTICS}/analytics`;
             return await axios.get(url, tokenConfig)
                 .then( res => {
                     console.log('res: ', res)

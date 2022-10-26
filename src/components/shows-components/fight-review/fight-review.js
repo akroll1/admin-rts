@@ -53,9 +53,9 @@ export const FightReviews = ({
               >
                 4.3
               </Text>
-              <Text>
+              <Text as="h4">
                 <Rating defaultValue={4} size="sm" />
-                <Text lineHeight="1" color={'gray.600'}>
+                <Text my="1" lineHeight="1" color={'gray.600'}>
                   {`Based on ${Math.floor(Math.random()* 1000)} Reviews`}
                 </Text>
               </Text>

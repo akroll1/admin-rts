@@ -1,78 +1,103 @@
-import React from 'react'
-import { Flex, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
-import { capFirstLetters } from '../../utils'
-
-export const SeasonsTable = ({ 
-    handleSelectedSeason,
-    seasons, 
-}) => {
-  return (
-    <Flex 
-      flexDir="column" 
-      maxH="20rem" 
-      mx="auto" 
-      mt="1rem" 
-      px={{ base: '6', md: '8' }}
-    >
-      <SeasonsTableContent 
-        seasons={seasons} 
-        handleSelectedSeason={handleSelectedSeason} 
-      />
-    </Flex>
-  )
-}
- 
-const badgeEnum = {
-  completed: 'green',
-  active: 'orange',
-  // declined: 'red',
-}
-const columns = [
-  {
-      Header: 'Season',
-      accessor: 'seasonTitle',
-  },
-  {
-      Header: 'Start Date',
-      accessor: 'start'
-  },
-  {
-    Header: 'End Date',
-    accessor: 'end'
+import { 
+    Flex, 
+    Heading,
+    Table, 
+    TableCaption, 
+    Tbody, 
+    Td, 
+    Th, 
+    Thead, 
+    Tr, 
+    useColorModeValue as mode 
+  } from '@chakra-ui/react'
+  import { capFirstLetters, parseEpoch } from '../../utils'
+  import { DeleteIcon } from '@chakra-ui/icons'
+  
+  export const SeasonsTable = ({ 
+    allSeasons,
+    handleSeasonSelect,
+  }) => {
+    return (
+      <Flex 
+        flexDir="column" 
+        maxH="20rem" 
+        mx="auto" 
+        mb="4"
+        w="100%"
+      >
+        <SeasonsTableContent 
+            handleSeasonSelect={handleSeasonSelect}
+            allSeasons={allSeasons}
+        />
+      </Flex>
+    )
   }
-];
-const SeasonsTableContent = ({ 
-  handleSelectedSeason,
-  seasons, 
-}) => {
    
-  return (
-    <Table my="8" borderWidth="1px" fontSize="sm" overflowY="scroll">
-      <TableCaption placement="top">Seasons Table</TableCaption> 
-      <Thead bg={mode('gray.50', 'gray.800')}>
-        <Tr>
-          {columns.map((column, index) => (
-            <Th 
-                whiteSpace="nowrap" 
-                scope="col" 
-                key={index}
-            >
-              {column.Header}
-            </Th>
-          ))}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {seasons?.length > 0 && seasons.map( (season, i) => {
-            return (
-                <Tr _hover={{cursor: 'pointer'}} onClick={handleSelectedSeason} id={season.seasonId} key={season.seasonId}>
-                    <Td>{capFirstLetters(season.seasonTitle)}</Td>
-                    <Td>{capFirstLetters(season.start)}</Td>
-                    <Td>{capFirstLetters(season.end)}</Td>
-                </Tr>
-            )
-        })}
-      </Tbody>
-    </Table>
-  )
-}
+  const columns = [
+    {
+        Header: 'Season Name',
+        accessor: 'seasonName',
+    },
+    {
+        Header: 'Starts',
+        accessor: 'starts'
+    },
+    {
+        Header: 'Ends',
+        accessor: 'ends'
+    },
+    {
+        Header: 'Total Fights',
+        accessor: 'ends'
+    },
+
+  ];
+  
+  const SeasonsTableContent = ({ 
+    allSeasons, 
+    handleSeasonSelect,
+  }) => {
+    // console.log('allSeasons: ', allSeasons)
+
+    return (
+      <>
+        <Table borderWidth="1px" fontSize="sm" overflowY="scroll">
+          <TableCaption placement="top">Seasons "2"</TableCaption> 
+          <Thead bg={mode('gray.50', 'gray.800')}>
+            <Tr>
+              {columns.map((column, _i) => (
+                <Th 
+                    whiteSpace="nowrap" 
+                    scope="col" 
+                    key={_i}
+                    textAlign="left"
+                >
+                  {column.Header}
+                </Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {allSeasons.length > 0 && allSeasons.map( (row, _i) => {
+                const { season } = row;
+                const { fightIds, seasonId, ends, seasonName, starts } = season;
+                const totalFights = fightIds.length;
+                return (
+                    <Tr 
+                        key={seasonId}
+                        onClick={handleSeasonSelect}
+                        _hover={{cursor: 'pointer'}}  
+                        id={seasonId} 
+                    >
+                        <Td>{seasonName}</Td>
+                        <Td>{new Date(starts).toString().slice(4,15)}</Td>
+                        <Td>{new Date(ends).toString().slice(4,15)}</Td>
+                        <Td>{totalFights}</Td>
+                    </Tr>
+                )
+            })}
+          </Tbody>
+        </Table>
+      </>  
+    )
+  }

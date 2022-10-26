@@ -31,7 +31,10 @@ export const ProfileButton = () => {
     }
 
     return (
-        <Flex m="auto">
+        <Flex 
+            m="auto"
+            minW="20%"
+        >
             <Menu m="auto">
                 <MenuButton 
                     m="auto"
@@ -41,7 +44,6 @@ export const ProfileButton = () => {
                     fontSize="20px"
                     fontWeight="600"
                     onClick={openProfile}
-
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>

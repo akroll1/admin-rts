@@ -41,8 +41,10 @@ const DesktopNavContent = props => {
   const navigate = useNavigate();
 
   return (
-    <Flex className="nav-content__desktop" align="center" justify="space-between" {...props}>
+    <Flex 
+      className="nav-content__desktop" align="center" justify="space-between" {...props}>
       <Button
+        minW="20%"
         colorScheme="solid"
         _hover={{ 
           background: 'transparent',
@@ -59,7 +61,12 @@ const DesktopNavContent = props => {
       >
         FightSync
       </Button>
-      <HStack as="ul" id="nav__primary-menu" aria-label="Main Menu" listStyleType="none">
+      <HStack 
+        as="ul" 
+        id="nav__primary-menu" 
+        aria-label="Main Menu" 
+        listStyleType="none"
+      >
         {links.map((link, idx) => (
           <Box as="li" key={idx} id={`nav__menuitem-${idx}`}>
             {link.children ? (

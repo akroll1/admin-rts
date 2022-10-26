@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useNavMenu } from './use-nav-menu'
 import { Box, Collapse, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
@@ -29,11 +28,23 @@ const DesktopSubmenu = (props) => {
         <Box marginStart="2" as={FaChevronDown} fontSize="xs" />
       </NavLink.Desktop>
 
-      <NavMenu {...getMenuProps()} animate={isOpen ? 'open' : 'closed'}>
-        <Box maxW="7xl" mx="auto" px="8">
+      <NavMenu 
+        animate={isOpen ? 'open' : 'closed'}
+        {...getMenuProps()} 
+      >
+        <Box 
+          maxW="7xl" 
+          mx="auto" 
+          px="8"
+        >
           <SimpleGrid spacing="10" columns={2}>
             {link.children?.map((item, idx) => (
-              <DesktopMenuItem key={idx} title={item.label} href={item.href} icon={item.icon}>
+              <DesktopMenuItem 
+                key={idx} 
+                title={item.label} 
+                href={item.href} 
+                icon={item.icon}
+              >
                 {item.description}
               </DesktopMenuItem>
             ))}
@@ -57,7 +68,7 @@ const MobileSubMenu = (props) => {
         onClick={onToggle}
         paddingEnd="4"
         _active={{ border: '1px solid red'}}
-        _hover={{ background: 'white' }}
+        _hover={{ background: 'inherit' }}
       >
         <Box flex="1">{link.label}</Box>
         <Box as={FaChevronDown} transform={`rotate(${isOpen ? '180deg' : '0deg'})`} />
@@ -65,7 +76,10 @@ const MobileSubMenu = (props) => {
       <Collapse in={isOpen}>
         <Box pl="5">
           {link.children?.map((item, idx) => (
-            <NavLink.Mobile key={idx} href={item.href}>
+            <NavLink.Mobile 
+              key={idx} 
+              href={item.href}
+            >
               {item.label}
             </NavLink.Mobile>
           ))}

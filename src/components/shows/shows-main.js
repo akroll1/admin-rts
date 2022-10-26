@@ -4,13 +4,13 @@ import {
     FightMetadata, 
     FightReviews, 
     FightStoryline, 
-    Props, 
     ShowsCreateGroupScorecard,
     ShowsParticulars,
 } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { DividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
+import { SeasonsDropdown } from './shows-els'
 
 export const ShowsMain = ({
     deleteMember,
@@ -50,15 +50,7 @@ export const ShowsMain = ({
             alignItems="center"
             boxSizing="border-box" 
         >
-            <Heading 
-                textAlign="left" 
-                as="h1" 
-                size="xl"
-                w="100%"
-                color="gray"
-            >
-                Season 2
-            </Heading>
+            <SeasonsDropdown />
             
             <FightMetadata
                 fightSummary={fightSummary}

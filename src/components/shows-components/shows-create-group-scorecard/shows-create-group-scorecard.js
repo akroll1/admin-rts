@@ -81,8 +81,18 @@ export const ShowsCreateGroupScorecard = ({
                             mt={["4"]}
                             type="button"
                             colorScheme="solid" 
+                            variant="outline"
+                            color="#CACACA"
+                            // borderColor="#e62b2b"
+                            // border="2px solid #e62b2b"
                             size={["lg", "md"]}
-                            >
+                            _hover={{
+                                color: 'white',
+                                border: '1px solid #DADADA',
+                                bg: "#353535"
+                            }}
+                            bg="#252525"
+                        >
                             Add Members
                         </Button>
                         <Button 

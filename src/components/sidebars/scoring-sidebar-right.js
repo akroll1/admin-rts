@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Flex } from '@chakra-ui/react'
-import { ChatSidebar, FightStats } from './chat-sidebar-components'
+import { ChatSidebar } from './chat-sidebar-components'
 import { useScorecardStore } from '../../stores'
 import { Notification } from '../notifications'
 

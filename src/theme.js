@@ -242,9 +242,9 @@ const Button = {
       _hover: {
         background: 'inherit',
         boxShadow: '0 0 0 1px gray',
-        color: '#C8C8C8',
-        borderColor: 'white',
-        border: '1px solid lightgray'
+        color: '#C01616',
+        borderColor: '#C01616',
+        border: '1px solid #C01616'
       },
     }
   },

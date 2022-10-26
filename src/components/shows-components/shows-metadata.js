@@ -18,9 +18,24 @@ export const FightMetadata = ({ fightSummary }) => {
             textAlign="center"
         >
             <Heading letterSpacing="1px" as="h2" size="xl">{ fightQuickTitle ? fightQuickTitle : ''}</Heading>
-            <Heading fontWeight="normal" as="h3" size="sm">{ showTime ? parseEpoch(showTime) : ''}</Heading>
-            <Heading mt="1" fontWeight="normal" letterSpacing="1px" as="h3" size="xs">{ location ? location : ''}</Heading>
-            <Heading p="1" letterSpacing="1px" as="h3" size="md">{ promoter ? promoter  : ''}</Heading>
+            <Flex
+                w={["100%", "100%"]}
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Heading color="#bababa" fontWeight="normal" as="h3" size="md">{ showTime ? parseEpoch(showTime) : ''}</Heading>
+                <Heading color="#dadada" minW="5%" fontWeight="normal" as="h3" size="sm">&#64;</Heading>
+                <Heading color="#bababa" fontWeight="normal" as="h3" size="md">{ location ? location : ''}</Heading>
+            </Flex>
+            <Heading 
+                p="1" 
+                letterSpacing="1px" 
+                as="h3" 
+                size="lg"
+                color="#fafafa"
+            >
+                { promoter ? promoter  : ''}
+            </Heading>
         </Flex>
     )
 }

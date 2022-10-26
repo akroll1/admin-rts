@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, useColorModeValue as mode } from '@chakra-ui/react'
 import { NavContent } from '../../components/navbar'
 

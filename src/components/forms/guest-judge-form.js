@@ -26,7 +26,7 @@ export const GuestJudgeForm = ({ user, tokenConfig }) => {
     const searchForJudge = () => {
         if(search){
             setIsSubmitting(true);
-            const url = process.env.REACT_APP_GUEST_JUDGES + `/${search}`;
+            const url = `${process.env.REACT_APP_API}/guest-judges/${search}`;
             return axios.get(url, tokenConfig)
                 .then( res => setForm({ ...res.data }))
                 .catch( err => console.log(err))
@@ -34,7 +34,7 @@ export const GuestJudgeForm = ({ user, tokenConfig }) => {
         }
     };
     const putGuestJudge = () => {
-        const url = process.env.REACT_APP_GUEST_JUDGES;
+        const url = `${process.env.REACT_APP_API}/guest-judges`;
         return axios.put(url, form, tokenConfig)
             .then(res => {
                 if(res.status === 200){
