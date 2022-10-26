@@ -47,8 +47,9 @@ const Home = () => {
               onClick={() => navigate('/learn-more')}
               className="group"
               mt={["4", "8"]}
-              size={["lg", "xl"]}
+              size={["lg", "lg"]}
               px="8"
+              fontSize="1.2rem"
               fontWeight="bold"
               h="14"
               // bg="brand.100"
@@ -57,7 +58,7 @@ const Home = () => {
               rightIcon={
                 <Box
                   as={FaArrowRight}
-                  fontSize="sm"
+                  fontSize="1.2rem"
                   transition="transform 0.2s"
                   _groupHover={{ transform: 'translateX(2px)' }}
                 />

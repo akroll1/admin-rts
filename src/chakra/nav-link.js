@@ -1,12 +1,19 @@
-import React from 'react'
-import { HStack, Icon, Text, Link } from "@chakra-ui/react"
-export const NavLink = (props) => {
+import { 
+  HStack, 
+  Icon, 
+  Text, 
+  Link 
+} from "@chakra-ui/react"
+
+
+export const NavLink = props => {
     const { icon, isActive, label, ...rest } = props
     return (
       <Link
         display="block"
         py={2}
         px={3}
+        className={isActive}
         borderRadius="md"
         transition="all 0.3s"
         fontWeight="medium"

@@ -17,22 +17,27 @@ import { useScorecardStore } from '../../stores'
 
 export const ShowsSidebar = () => { 
     const { 
-        fetchFightSummary,
-        fetchSelectedFightReviews,
         fights, 
         selectedFight, 
         setSelectedFight,
     } = useScorecardStore()
 
     const [searchedFights, setSearchedFights] = useState(fights)
-    const [upcoming, setUpcoming] = useState([])
+    const [canceled, setCanceled] = useState([])
     const [recent, setRecent] = useState([])
+    const [upcoming, setUpcoming] = useState([])
 
     useEffect(() => {
         if(fights.length > 0){
-            const { upcoming, recent } = filterFights(fights)
-            setUpcoming(upcoming)
+            const { canceled, recent, upcoming } = filterFights(fights)
+            setCanceled(canceled)
             setRecent(recent)
+            setUpcoming(upcoming)
+            if(upcoming.length > 0){
+                setSelectedFight(upcoming[0].fightId)
+            } else {
+                setSelectedFight(recent[0].fightId)
+            }
         }
     }, [fights])
 
@@ -91,16 +96,18 @@ export const ShowsSidebar = () => {
                 <NavGroup label="Upcoming">
                     { upcoming.length > 0 && upcoming.map( fight => {
                         const { fightId, fightQuickTitle, isTitleFight } = fight;
-                        return <UpcomingNavItem 
-                                    active={fightId === selectedFight?.fightId}
-                                    name={REVIEW_TYPE.PREDICTION} 
-                                    fightId={fight.fightId} 
-                                    selectFight={selectFight} 
-                                    icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
-                                    label={fightQuickTitle} 
-                                    key={fight.fightId} 
-                                    isPlaying
-                                />
+                        return (
+                            <UpcomingNavItem 
+                                active={fightId === selectedFight?.fightId}
+                                name={REVIEW_TYPE.PREDICTION} 
+                                fightId={fight.fightId} 
+                                selectFight={selectFight} 
+                                icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
+                                label={fightQuickTitle} 
+                                key={fight.fightId} 
+                                isPlaying
+                            />
+                        )
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">
@@ -117,6 +124,24 @@ export const ShowsSidebar = () => {
                         />
                     })}
                 </NavGroup>
+                { canceled.length > 0 && 
+                    <NavGroup label="Canceled">
+                        { canceled.length > 0 && canceled.map( fight => {
+                            const active = fight.fightId === selectedFight?.fightId
+                            return (
+                                <UpcomingNavItem 
+                                    active={active}
+                                    name={REVIEW_TYPE.CANCELED} 
+                                    icon={<IoStarOutline mt="-5px" /> } 
+                                    selectFight={selectFight} 
+                                    fightId={fight.fightId} 
+                                    label={fight.fightQuickTitle} 
+                                    key={fight.fightId} 
+                                />
+                            )
+                        })}
+                    </NavGroup>
+                }
                 <NavGroup label="Historical">
                     {historicalShows && historicalShows.length > 0 && historicalShows.map( (fight,i) => {
                         return <UpcomingNavItem 

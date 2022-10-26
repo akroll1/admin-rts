@@ -38,7 +38,7 @@ export const SeasonsDropdown = () => {
         document.querySelector('#season_selector').click()
     }
 
-    console.log('season: ', season)
+    // console.log('season: ', season)
 
     return (
         <Flex

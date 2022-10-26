@@ -1,5 +1,4 @@
 import { Box, Center, chakra, HStack, Text, useColorModeValue as mode } from '@chakra-ui/react'
-import * as React from 'react'
 import { FaChevronRight } from 'react-icons/fa'
 
 export const SubmenuItem = (props) => {
@@ -55,7 +54,7 @@ export const SubmenuItem = (props) => {
           />
         </HStack>
         <Text 
-          as="dd" 
+          // as="" 
           color={mode('gray.500', 'gray.400')}
         >
           {children}

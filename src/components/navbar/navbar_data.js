@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { IoCalendar, IoGrid, IoHelpBuoy } from 'react-icons/io5'
 import { MdWeb } from 'react-icons/md'
 
@@ -7,7 +6,7 @@ export const links = [
   // { label: 'Analytics', href: '/analytics' },
   { label: 'Scorecards', href: '/scorecards' },
   {
-    label: 'FightCloud',
+    label: 'FightSync',
     children: [
       // {
       //   label: 'Fighter Talk',

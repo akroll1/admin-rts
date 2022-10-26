@@ -353,11 +353,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.get(`${url}/fights`, get().accessToken)
                 const fights = res.data as Fight[]
                 if(res.data === 'Token expired!'){
-                    return set({ tokenExpired: true })
+                    set({ tokenExpired: true })
+                    return 
                 }
                 get().fetchFightSummary(fights[0].fightId)
                 get().fetchSelectedFightReviews(fights[0].fightId)
-                get().setSelectedFight(fights[0].fightId)
                 set( ({ fights }))
             },
             fetchFightSummary: async (selectedFightId: string) => {
@@ -577,8 +577,10 @@ export const useScorecardStore = create<ScorecardStore>()(
             setScoringComplete: (boolean: boolean) => {
                 set({ scoringComplete: boolean })
             },
-            setSelectedFight: ( fightId: string) => {    
-                const [selectedFight] = get().fights.filter( fight => fight.fightId === fightId);
+            setSelectedFight: (fightId: string) => {    
+                const [selectedFight] = get().fights.filter( fight => {
+                    return fight.fightId === fightId
+                })
                 get().fetchSelectedFightReviews(selectedFight.fightId)
                 get().fetchFightSummary(selectedFight.fightId)
                 set({ selectedFight });
