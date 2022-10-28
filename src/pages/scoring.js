@@ -144,13 +144,13 @@ const Scoring = () => {
             justifyContent="center" 
             margin="auto" 
             p="4"
-            bg="inherit"
+            bg="transparent"
         >         
             <Flex>
                 
                 <AddGuestJudgeModal 
                     fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
-                />
+                    />
                 <AddMemberModal />
                 <ExpiredTokenModal />
                 <MoneylineModal

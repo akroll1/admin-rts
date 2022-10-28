@@ -14,20 +14,19 @@ import { capFirstLetters, parseEpoch } from '../../utils'
 import { DeleteIcon } from '@chakra-ui/icons'
 
 export const SelectedSeasonTable = ({ 
-  handleFightSelect,
-  removeFight,
+  deleteFightFromSeason,
   selectedSeason
 }) => {
   return (
     <Flex 
+      minW="100%"
       flexDir="column" 
       maxH="20rem" 
       mx="auto" 
       mb="4"
     >
       <SelectedSeasonTableContent 
-        handleFightSelect={handleFightSelect}
-        removeFight={removeFight}
+        deleteFightFromSeason={deleteFightFromSeason}
         selectedSeason={selectedSeason} 
       />
     </Flex>
@@ -58,25 +57,23 @@ const columns = [
   }
 ];
 const SelectedSeasonTableContent = ({ 
-  handleFightSelect,
-  removeFight,
+  deleteFightFromSeason,
   selectedSeason, 
 }) => {
 
   const handleDelete = e => {
     const { id } = e.currentTarget;
-    console.log('id: ', id)
-    removeFight(id)
+    deleteFightFromSeason(id)
   }
 
   return (
     <Flex
-        m="4"
-        alignItems="center"
-        justifyContent="center"
+      m="4"
+      alignItems="center"
+      justifyContent="center"
     >
-      <Table mb="6" borderWidth="1px" fontSize="sm" overflowY="scroll">
-        {/* <TableCaption placement="top">{selectedSeason?.seasonInfo.seasonName ? selectedSeason.seasonInfo.seasonName : ''}</TableCaption>  */}
+      <Table minW="100%" mb="6" borderWidth="1px" fontSize="sm" overflowY="scroll">
+        <TableCaption fontSize="1.5rem" placement="top">{selectedSeason.season.seasonName} Fights</TableCaption> 
         <Thead bg={mode('gray.50', 'gray.800')}>
           <Tr>
             {columns.map((column, index) => (
@@ -92,21 +89,19 @@ const SelectedSeasonTableContent = ({
           </Tr>
         </Thead>
         <Tbody>
-          { selectedSeason?.fightSummaries?.length > 0 && selectedSeason.fightSummaries.map( (row, _i) => {
-            console.log('row: ', row)
+          { selectedSeason?.fightSummaries && selectedSeason.fightSummaries.map( (row, _i) => {
+            // console.log('row: ', row)
 
             const { fight, fighters, show } = row
             return (
-              <Tr 
-                _hover={{cursor: 'pointer'}}  
+              <Tr   
                 id={fight.fightId} 
                 key={fight.fightId}
-                
               >
-                <Td id={fight.fightId} textAlign="center" onClick={handleFightSelect}>{parseEpoch(show.showTime)}</Td>
-                <Td id={fight.fightId} textAlign="center" onClick={handleFightSelect}>{capFirstLetters(`${fighters[0].firstName} ${fighters[0].lastName}`)}</Td>
-                <Td id={fight.fightId} textAlign="center" onClick={handleFightSelect}>{capFirstLetters(`${fighters[1].firstName} ${fighters[1].lastName}`)}</Td>
-                <Td textAlign="center" onClick={handleDelete} id={fight.fightId} zIndex={10000}>{<DeleteIcon />}</Td>
+                <Td id={fight.fightId} textAlign="center">{parseEpoch(show.showTime)}</Td>
+                <Td id={fight.fightId} textAlign="center">{capFirstLetters(`${fighters[0].firstName} ${fighters[0].lastName}`)}</Td>
+                <Td id={fight.fightId} textAlign="center">{capFirstLetters(`${fighters[1].firstName} ${fighters[1].lastName}`)}</Td>
+                <Td _hover={{cursor: 'pointer'}} textAlign="center" onClick={handleDelete} id={fight.fightId} zIndex={10000}>{<DeleteIcon />}</Td>
               </Tr>
             )
           })}

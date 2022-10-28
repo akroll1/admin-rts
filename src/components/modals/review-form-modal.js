@@ -1,5 +1,10 @@
-import React from 'react'
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack, useColorModeValue } from '@chakra-ui/react'
+import { 
+    Modal, 
+    ModalBody, 
+    ModalCloseButton, 
+    ModalContent, 
+    Stack 
+} from '@chakra-ui/react'
 import { ReviewForm } from '../forms'
 
 export const ReviewFormModal = ({ 
@@ -11,17 +16,17 @@ export const ReviewFormModal = ({
     
     return (
         <Modal
+            closeOnOverlayClick={true}
             isOpen={true}
-            onClose={console.log}
+            onClose={() => console.log('closed')}
             size="md"
             isCentered
             blockScrollOnMount={false}
             trapFocus={false}
+            motionPreset="slideInBottom"
         >
-        <ModalOverlay />
-        <ModalContent borderRadius="xl" mx={{ base: '2.5', lg: '16' }} overflow="hidden">
+        <ModalContent borderRadius="xl" mx={{ base: '2.5', lg: '16' }} overflow="scroll">
             <ModalCloseButton
-            // can handle sanitizing the review form by moving the form state up here and sending down a clean form state.
                 onClick={handleReviewFormClose}
                 top="0"
                 right="0"

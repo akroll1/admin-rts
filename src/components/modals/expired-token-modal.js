@@ -1,6 +1,16 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Heading, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
+import { 
+  Button, 
+  Heading, 
+  Modal, 
+  ModalBody, 
+  ModalContent, 
+  ModalFooter, 
+  ModalHeader, 
+  ModalOverlay, 
+  Text, 
+  useDisclosure 
+} from '@chakra-ui/react'
 import { useScorecardStore } from '../../stores'
 
 export const ExpiredTokenModal = () => {

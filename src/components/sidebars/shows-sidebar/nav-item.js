@@ -27,14 +27,26 @@ export const UpcomingNavItem = (props) => {
         bg: 'gray.600',
       }}
     >
-      <Box fontSize={active ? '1rem' : 'inherit'} color={active ? 'white' : 'gray.300'}>
+      <Box 
+        fontSize={active ? '1rem' : 'inherit'} 
+        color={active ? 'white' : 'gray.300'}
+      >
         {icon}
       </Box>
-      <Box fontSize="1rem" flex="1" fontWeight="inherit" color={active ? 'gray.300' : undefined}>
+      <Box 
+        fontSize="1rem" 
+        flex="1" 
+        fontWeight="inherit" 
+        color={active ? 'gray.300' : undefined}
+      >
         {label}
       </Box>
       { isPlaying && <Box>
-          <Icon as={HiBadgeCheck} color="green.300" verticalAlign="text-bottom" />
+          <Icon 
+            as={HiBadgeCheck} 
+            color="whiteAlpha.600" 
+            verticalAlign="text-bottom" 
+          />
         </Box>
       }
       {endElement && !children && <Box>{endElement}</Box>}

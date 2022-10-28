@@ -37,9 +37,9 @@ export const SignIn = () => {
   })
 
   const { 
-    setUser, 
     setAccessToken, 
-    setIdToken 
+    setIdToken, 
+    setUser, 
   } = useScorecardStore();
 
   Amplify.configure({

@@ -1,16 +1,23 @@
-import * as React from 'react'
 import { Rating } from './rating'
-import { Button, ButtonGroup, Flex, Heading, HStack, IconButton, Stack, Text, useToast } from '@chakra-ui/react'
+import { 
+  Button, 
+  ButtonGroup, 
+  Flex, 
+  Heading, 
+  Text, 
+  useToast 
+} from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
 import { useScorecardStore } from '../../../stores'
 import { HiOutlinePencil } from 'react-icons/hi'
 
 export const FightReviews = ({ 
+  fightReviewForm, 
   setFightReviewForm, 
-  fightReviewForm 
 }) => {
   const toast = useToast()
   const { 
+    checkForUserFightReview,
     selectedFightReviews, 
     user 
   } = useScorecardStore()
@@ -21,6 +28,7 @@ export const FightReviews = ({
       return alert('You must be registered to leave a Review.');
     }
     setFightReviewForm(fightReviewForm => !fightReviewForm)
+    checkForUserFightReview();
   }
   
   return (

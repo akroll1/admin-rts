@@ -1,5 +1,4 @@
 
-import { useEffect, useState } from 'react'
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { FaMapMarkerAlt, FaRegClock, FaTrophy, FaTv } from 'react-icons/fa'
 import { BiChevronRightCircle } from 'react-icons/bi'
@@ -9,18 +8,11 @@ import { ShowsNavItem } from './shows-nav-item'
 import { useScorecardStore } from '../../stores'
 import { useBoundStore } from '../../stores/useBoundStore'
 
-export const ShowsParticulars = () => {
-    const { 
-        fightSummary
-    } = useScorecardStore()
-
-    const {
-        guestJudgeScorecards
-    } = useBoundStore()
-    // console.log('guestJudgeScorecards: ', guestJudgeScorecards)
-    // console.log('fightSummary: ', fightSummary)
-    const { isTitleFight, rounds, weightclass } = fightSummary?.fight ? fightSummary.fight : '';
-    const { location, network, showTime } = fightSummary?.show ? fightSummary.show : '';
+export const ShowsParticulars = ({
+    selectedFightSummary
+}) => {
+    const { isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
+    const { location, network, showTime } = selectedFightSummary?.show ? selectedFightSummary.show : '';
     return (
         <Flex 
             as="section"

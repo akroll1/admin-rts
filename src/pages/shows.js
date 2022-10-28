@@ -12,14 +12,10 @@ const Shows = props => {
 
     const toast = useToast();
     const { 
-        checkForUserFightReview,
         createGroupScorecard,
-        fetchFights, 
-        fights, 
-        fightSummary, 
-        modals,
+        fetchAllSeasons,
         putUserFightReview,
-        selectedFight,
+        selectedFightSummary, 
         setModals,
         setTokenExpired,
         tokenExpired,
@@ -27,9 +23,8 @@ const Shows = props => {
         userFightReview,
      } = useScorecardStore();
     const { email, sub, username } = user;
-
+    const [seasonName, setSeasonName] = useState('FightSync')
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [activeFightSummary, setActiveFightSummary] = useState({})
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
@@ -58,18 +53,8 @@ const Shows = props => {
     },[tokenExpired])
 
     useEffect(() => {
-        fetchFights();    
+        fetchAllSeasons()
     },[])
-
-    useEffect(() => {
-        setActiveFightSummary(fightSummary)
-    },[fightSummary])
-
-    useEffect(() => {
-        if(fightReviewForm){
-            checkForUserFightReview(selectedFight.fightId);
-        }
-    },[fightReviewForm])
 
     useEffect(() => {
         if(userFightReview){
@@ -80,8 +65,8 @@ const Shows = props => {
     const handleReviewFormSubmit = async () => {
         const putObj = Object.assign(reviewForm, {
             ownerId: sub,
-            showId: fightSummary.show.showId,
-            fightId: fightSummary.fight.fightId,
+            showId: selectedFightSummary.show.showId,
+            fightId: selectedFightSummary.fight.fightId,
             username
         });
 
@@ -140,13 +125,13 @@ const Shows = props => {
 
         const scorecardObj = {
             admin: email, // necessary to create a groupScorecard, membersArr.
-            fighterIds: [fightSummary.fighters[0].fighterId, fightSummary.fighters[1].fighterId],
-            fightId: fightSummary.fight.fightId,
-            groupScorecardName: fightSummary.fight.fightQuickTitle,
+            fighterIds: [selectedFightSummary.fighters[0].fighterId, selectedFightSummary.fighters[1].fighterId],
+            fightId: selectedFightSummary.fight.fightId,
+            groupScorecardName: selectedFightSummary.fight.fightQuickTitle,
             members: dedupedEmails,
             ownerId: sub,
-            rounds: fightSummary.fight.rounds,
-            showId: fightSummary.show.showId,
+            rounds: selectedFightSummary.fight.rounds,
+            showId: selectedFightSummary.show.showId,
         };
         const created = await createGroupScorecard(scorecardObj);
         if(created){
@@ -171,7 +156,6 @@ const Shows = props => {
             color="white" 
             alignItems="flex-start" 
             justifyContent="center" 
-            bg="inherit"
         >    
             <ExpiredTokenModal />
             
@@ -185,19 +169,20 @@ const Shows = props => {
             }
 
             <ShowsSidebar 
-                fights={fights} 
+                setSeasonName={setSeasonName}
             />  
             
             <ShowsMain 
                 deleteMember={deleteMember}
                 emailValue={emailValue}
+                fightReviewForm={fightReviewForm}
                 handleCreateGroupScorecard={handleCreateGroupScorecard}
                 handleEmailSubmit={handleEmailSubmit}
                 handleFormChange={handleFormChange}
                 isSubmitting={isSubmitting}
                 members={members}
+                seasonName={seasonName}
                 setFightReviewForm={setFightReviewForm}
-                fightReviewForm={fightReviewForm}
             />
            
         </Flex>

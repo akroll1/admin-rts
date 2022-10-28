@@ -26,7 +26,7 @@ export const NavItem = ({
       onClick={id === 'prediction' ? handlePredictionModalToggle : handleClick}
       as="a"
       href={href}
-      w="full"
+      w="100%"
       px="1"
       // py={button ? "0" : "1"}
       cursor="pointer"
@@ -34,9 +34,7 @@ export const NavItem = ({
       rounded="md"
       transition="all 0.2s"
       bg={active ? 'gray.700' : undefined}
-      _hover={{
-        bg: 'gray.700',
-      }}
+     
       _active={{
         bg: 'gray.600',
       }}
@@ -44,10 +42,11 @@ export const NavItem = ({
       <Box 
         fontSize="lg" 
         color={active ? 'fsl-text' : 'gray.400'}
-      >
+        >
         {icon}
       </Box>
       <Flex 
+        _hover={{color:'white'}}
         my="1"
         pl="2" 
         fontSize="md" 

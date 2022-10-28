@@ -8,108 +8,128 @@ import {
     ShowsParticulars,
 } from '../shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
+import { ShowsCountdownTimer } from '../timers'
 import { DividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
-import { SeasonsDropdown } from './shows-els'
 
 export const ShowsMain = ({
     deleteMember,
     emailValue,
+    fightReviewForm, 
     handleCreateGroupScorecard,
     handleEmailSubmit, 
     handleFormChange,
     isSubmitting,
     members,
+    seasonName,
     setFightReviewForm, 
-    fightReviewForm, 
 }) => {
     const {
-        fightSummary,
+        selectedFightSummary,
     } = useScorecardStore()
     const [time, setTime] = useState(0)
-    const showTime = fightSummary?.show?.showTime ? fightSummary?.show?.showTime : 0;
+
+    const showTime = selectedFightSummary?.show?.showTime ? selectedFightSummary?.show?.showTime : 0;
     
     useEffect(() => {
-        if(fightSummary?.show?.showTime){
-            setTime(fightSummary.show.showTime)
+        if(selectedFightSummary?.show?.showTime){
+            setTime(selectedFightSummary.show.showTime)
         }
-    },[fightSummary?.show?.showTime])
-
+    },[selectedFightSummary?.show?.showTime])
+    
     const UPCOMING = time > Date.now() ? true : false; 
     
     return (
         <Flex 
             as="section"
             id="shows_main"
-            px={["4", "8"]}
-            pb="1"
             flex="1 0 65%" 
             bg="inherit"
             flexDirection="column" 
             justifyContent="center"
             alignItems="center"
             boxSizing="border-box" 
+            position="relative"
         >
-            <SeasonsDropdown />
+            <Heading 
+                textAlign="left" 
+                as="h1" 
+                size="lg"
+                color="gray"
+                position="absolute"
+                top="0"
+                left="1.5rem"
+            >
+                {seasonName}
+            </Heading>
             
             <FightMetadata
-                fightSummary={fightSummary}
+                selectedFightSummary={selectedFightSummary}
             /> 
 
             <ShowsFighterFaceoff 
-                fighters={fightSummary.fighters} 
+                fighters={selectedFightSummary.fighters} 
                 showTime={showTime}
             />
 
+            { showTime > Date.now() && 
+                <ShowsCountdownTimer showTime={showTime} /> 
+            }
+
+            <Flex
+                flexDir="column"
+                p="4"
+            >
+                <DividerWithText 
+                    fontSize="2xl" 
+                    text="Storyline" 
+                    mb="0"
+                    p="0" 
+                />
+                <FightStoryline 
+                    selectedFightSummary={selectedFightSummary} 
+                /> 
             
-            <DividerWithText 
-                fontSize="2xl" 
-                text="Storyline" 
-                mb="0"
-                p="0" 
-            />
+                <DividerWithText 
+                    fontSize="2xl" 
+                    text="Particulars" 
+                    mb="0"
+                    p="0" 
+                />
 
-            <FightStoryline 
-                fightSummary={fightSummary} 
-            /> 
-           
-            <DividerWithText 
-                fontSize="2xl" 
-                text="Particulars" 
-                mb="0"
-                p="0" 
-            />
+                <ShowsParticulars 
+                    selectedFightSummary={selectedFightSummary}
+                />
 
-            <ShowsParticulars />
-
-            {/* <Props /> */}
-            
-            { UPCOMING 
-                ?
-                    <ShowsCreateGroupScorecard 
-                        deleteMember={deleteMember} 
-                        emailValue={emailValue} 
-                        handleEmailSubmit={handleEmailSubmit} 
-                        handleFormChange={handleFormChange} 
-                        handleCreateGroupScorecard={handleCreateGroupScorecard} 
-                        isSubmitting={isSubmitting}
-                        members={members} 
-                    />
-                :
-                    <>
-                        <DividerWithText 
-                            text={`Reviews`} 
-                            fontSize={"2xl"}
-                            mb="2"
-                            mt="4"
-
+                {/* <Props /> */}
+                
+                { UPCOMING 
+                    ?
+                        <ShowsCreateGroupScorecard 
+                            deleteMember={deleteMember} 
+                            emailValue={emailValue} 
+                            handleEmailSubmit={handleEmailSubmit} 
+                            handleFormChange={handleFormChange} 
+                            handleCreateGroupScorecard={handleCreateGroupScorecard} 
+                            isSubmitting={isSubmitting}
+                            members={members} 
                         />
-                        <FightReviews 
-                            fightReviewForm={fightReviewForm} 
-                            setFightReviewForm={setFightReviewForm} 
-                        />
-                    </>
-            } 
+                    :
+                        <>
+                            <DividerWithText 
+                                text={`Reviews`} 
+                                fontSize={"2xl"}
+                                mb="2"
+                                mt="4"
+
+                            />
+                            <FightReviews 
+                                fightReviewForm={fightReviewForm} 
+                                setFightReviewForm={setFightReviewForm} 
+                            />
+                        </>
+                } 
+            </Flex>
         </Flex>    
     )
 }

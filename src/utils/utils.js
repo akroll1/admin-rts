@@ -52,7 +52,7 @@ export const parseEpoch = (epoch, form) => {
         if(form){
             return `${month} ${dayOfMonth}, ${year}`;
         }
-        return `${day} ${month} ${dayOfMonth} - ${hour}${ampm}`;
+        return `${day} ${month} ${dayOfMonth} - ${hour} ${ampm}`;
     }
 };
 

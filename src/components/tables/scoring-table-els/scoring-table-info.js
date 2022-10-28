@@ -49,18 +49,19 @@ export const ScoringTableInfo = ({
           <Text>{`${usernameCheck(username)}`}</Text>
           <Text color="fsl-text">{`${finalScore ? "Score: " + finalScore : ""}`}</Text> 
       </Flex>
-      { fighters?.length > 0 && fighters.map( (fighter, i) => {
-        const isPredicted = predictionWinner === fighters[i];  
+      { fighters?.length > 0 && fighters.map( (fighter, _i) => {
+        const isPredicted = predictionWinner === fighters[_i];  
         return (
           <Flex 
+            key={_i}
             className='fighterNames'
             justifyContent='space-between'
             fontSize="sm" 
             p="1" 
             m="0"
-            mb={i === 0 ? 1 : 0} 
+            mb={_i === 0 ? 1 : 0} 
             minW="100%" 
-            background={i === 0 ? "fsl-red" : "fsl-scoring-blue"}
+            background={_i === 0 ? "fsl-red" : "fsl-scoring-blue"}
             color="white"
             fontWeight="normal"
             border={isPredicted ? '1px solid white' : ''}

@@ -1,12 +1,19 @@
-import { Fight } from './models'
+import { Fight, FightSummary } from './models'
 
-export const filterFights = (fights: Fight[]): any => {
-    const upcoming: Fight[] = fights.filter( fight => fight.fightStatus === 'PENDING').reverse();
-    const recent: Fight[] = fights.filter( fight => fight.fightStatus === 'COMPLETE');
-    const canceled: Fight[] = fights.filter( fight => fight.fightStatus === 'CANCELED');
-    return ({
-        canceled,
-        recent,
-        upcoming, 
+export const filterFights = (fightSummaries: FightSummary[]): any => {
+    const obj: any = {
+        ACTIVE: [],
+        CANCELED: [],
+        COMPLETE: [],
+        FANTASY: [],
+        PENDING: [],
+    }
+
+    const mapped = fightSummaries.map( (summary: FightSummary) => {
+        const { fight }: { fight: Fight } = summary;
+        if(obj[fight.fightStatus]){
+            obj[fight.fightStatus].push(summary)
+        }
     })
+    return obj
 }

@@ -1,11 +1,13 @@
 import {useEffect, useState} from 'react'
-import { SearchField } from './fighters-sidebar-components/search-field'
-import { Flex, Stack } from '@chakra-ui/react'
+import { 
+    Flex,
+    Select,
+    Stack 
+} from '@chakra-ui/react'
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
 import { filterFights } from '../../stores/store-utils'
-
 import { 
     IoStarOutline, 
     IoGameControllerOutline, 
@@ -15,51 +17,57 @@ import {
 import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 
-export const ShowsSidebar = () => { 
+export const ShowsSidebar = ({
+    setSeasonName
+}) => { 
     const { 
-        fights, 
-        selectedFight, 
-        setSelectedFight,
+        seasons,
+        seasonsOptions,
+        selectedFightSummary, 
+        selectedSeason,
+        setSelectedFightSummary,
+        setSelectedSeason,
     } = useScorecardStore()
-
-    const [searchedFights, setSearchedFights] = useState(fights)
+    
     const [canceled, setCanceled] = useState([])
     const [recent, setRecent] = useState([])
     const [upcoming, setUpcoming] = useState([])
 
     useEffect(() => {
-        if(fights.length > 0){
-            const { canceled, recent, upcoming } = filterFights(fights)
-            setCanceled(canceled)
-            setRecent(recent)
-            setUpcoming(upcoming)
-            if(upcoming.length > 0){
-                setSelectedFight(upcoming[0].fightId)
-            } else {
-                setSelectedFight(recent[0].fightId)
+        if(selectedSeason?.season?.seasonId){
+            const { CANCELED, COMPLETE, PENDING } = filterFights(selectedSeason.fightSummaries)
+            setCanceled(CANCELED)
+            setRecent(COMPLETE)
+            setUpcoming(PENDING)
+            if(!PENDING.length && COMPLETE.length){
+                setSelectedFightSummary(COMPLETE[0])
+            }
+            if(PENDING.length){
+                setSelectedFightSummary(PENDING[0])
             }
         }
-    }, [fights])
-
-    const handleSearch = e => {
-        const { value } = e.currentTarget;
-        const regex = /^[a-z]+$/i;
-        if(regex.test(value)){
-            const searchedFights = fights.filter( fight => fight.fightQuickTitle)
-            setSearchedFights(searchedFights)
-        }
-    }
+    }, [selectedSeason?.season?.seasonId])
+    
     const selectFight = e => {
-        const { name, id } = e.currentTarget;
-        const [selected] = fights.filter( fight => fight.fightId === id);
-        setSelectedFight(selected.fightId);
+        const { id } = e.currentTarget;
+        const [selected] = selectedSeason.fightSummaries.filter( summary => summary.fight.fightId === id);
+        setSelectedFightSummary(selected)
     }
+
     const historicalShows = [
         'Ali vs Frazier I', 'Hagler vs Hearns'
     ];
     const fantasyFights = [
         'Floyd Mayweather vs Willie Pep', 'Mike Tyson vs Muhammad Ali'
     ];
+
+    const handleSeasonSelect = e => {
+        const { value } = e.currentTarget;
+        const [selected] = seasonsOptions.filter( option => option.value === value)
+        setSeasonName(selected.label)
+        setSelectedSeason(value)
+    }
+
     return (
 
         <Flex 
@@ -88,55 +96,66 @@ export const ShowsSidebar = () => {
                 // centered={tabs.all ? true : false}
                 centered={[true, false]}
             />
-            <SearchField 
-                style={{width: '100%', margin: '0rem 1rem'}} 
-                handleSearch={handleSearch} 
-            />
-            <Stack w="100%" spacing="4" flex="1" overflow="auto" mt="4">
+            <Select 
+                onChange={handleSeasonSelect}
+                placeholder="Select a Season"
+            >
+                { seasonsOptions.map( option => <option key={option.value} id={option.value} value={option.value}>{option.label}</option>)}
+            </Select>
+            <Stack 
+                w="100%" 
+                spacing="4" 
+                flex="1" 
+                overflow="auto" 
+                mt="4"
+            >
                 <NavGroup label="Upcoming">
-                    { upcoming.length > 0 && upcoming.map( fight => {
-                        const { fightId, fightQuickTitle, isTitleFight } = fight;
+                    { upcoming.length && upcoming.map( summary => {
+                        const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
+                        const active = fightId === selectedFightSummary?.fight?.fightId;
                         return (
                             <UpcomingNavItem 
-                                active={fightId === selectedFight?.fightId}
+                                active={active}
                                 name={REVIEW_TYPE.PREDICTION} 
-                                fightId={fight.fightId} 
+                                fightId={fightId} 
                                 selectFight={selectFight} 
-                                icon={isTitleFight && <IoFlashOutline mt="-5px" />} 
+                                icon={isTitleFight && <IoFlashOutline background="gray" mt="-5px" />} 
                                 label={fightQuickTitle} 
-                                key={fight.fightId} 
+                                key={fightId} 
                                 isPlaying
                             />
                         )
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">
-                    {recent.length > 0 && recent.map( fight => {
-                        const active = fight.fightId === selectedFight?.fightId
+                    {recent.length > 0 && recent.map( summary => {
+                        const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
+                        const active = fightId === selectedFightSummary?.fight?.fightId;
                         return <UpcomingNavItem 
                             active={active}
                             name={REVIEW_TYPE.REVIEW} 
                             icon={<IoStarOutline mt="-5px" /> } 
                             selectFight={selectFight} 
-                            fightId={fight.fightId} 
-                            label={fight.fightQuickTitle} 
-                            key={fight.fightId} 
+                            fightId={fightId} 
+                            label={fightQuickTitle} 
+                            key={fightId} 
                         />
                     })}
                 </NavGroup>
                 { canceled.length > 0 && 
                     <NavGroup label="Canceled">
-                        { canceled.length > 0 && canceled.map( fight => {
-                            const active = fight.fightId === selectedFight?.fightId
+                        { canceled.length > 0 && canceled.map( summary => {
+                            const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
+                            const active = fightId === selectedFightSummary?.fight?.fightId;                            
                             return (
                                 <UpcomingNavItem 
                                     active={active}
                                     name={REVIEW_TYPE.CANCELED} 
                                     icon={<IoStarOutline mt="-5px" /> } 
                                     selectFight={selectFight} 
-                                    fightId={fight.fightId} 
-                                    label={fight.fightQuickTitle} 
-                                    key={fight.fightId} 
+                                    fightId={fightId} 
+                                    label={fightQuickTitle} 
+                                    key={fightId} 
                                 />
                             )
                         })}

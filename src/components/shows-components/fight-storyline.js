@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 
 export const FightStoryline = ({ 
-    fightSummary 
+    selectedFightSummary 
 }) => {
-    const [lines, setLines] = useState([6])
-    const fightStoryline = fightSummary?.fight?.fightStoryline;
-    const showStoryline = fightSummary?.show?.showStoryline;
+    const [lines, setLines] = useState([4])
+    const fightStoryline = selectedFightSummary?.fight?.fightStoryline;
+    const showStoryline = selectedFightSummary?.show?.showStoryline;
 
     const handleShowFullText = e => {
-        if(lines.length > 0){
+        if(lines.length){
             setLines([])
             return
         }

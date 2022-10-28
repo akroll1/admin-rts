@@ -1,23 +1,27 @@
-import React from 'react'
 import { Avatar, Flex, HStack, Icon, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils';
 
 export const FighterInfoCard = props => {
-  const { fighterId, firstName, lastName, ringname, bio, isVerified, ...stackProps } = props;
+  const { ...stackProps } = props;
+  const { draws, fighterId, firstName, kos, lastName, losses, ringname, wins } = props.fighter;
 
   return (
     <Flex 
+      maxW={["50%", "45%", "40%"]}
+      p="2"
       _hover={{cursor: 'pointer'}} 
       flexDir="column" 
       alignItems="center" 
+      my="0"
       // onClick={() => navigate(`/fighters/${fighterId}`)}
     >
       <Avatar size={["md", "lg"]} />
       <VStack spacing="0" flex="1">
         <HStack>
           <Text 
+            // noOfLines={1}
             fontSize={["md", "xl", "2xl"]} 
-            mt="2"  
+            mt="1"  
             textAlign="center" 
             fontWeight="bold"
           >
@@ -25,13 +29,21 @@ export const FighterInfoCard = props => {
           </Text>
         </HStack>
         <Text
+          my="0"
           px="2"
-          fontSize={["sm", "md", ]}
+          py="0"
+          fontSize={["sm", "md", "lg"]}
           textAlign="center"
           noOfLines={1}
-          color={useColorModeValue('gray.600', 'gray.400')}
+          color={useColorModeValue('gray.600', 'gray.300')}
         >
           {`${capFirstLetters(ringname)}`}
+        </Text>
+        <Text 
+          as="h6" 
+          fontSize="xs"
+          >
+          {`${wins}-${losses}-${draws}, ${kos} KO's`}
         </Text>
       </VStack>
     </Flex>

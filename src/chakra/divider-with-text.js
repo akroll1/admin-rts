@@ -55,7 +55,7 @@ export const SidebarsDividerWithText = props => {
         as="span" 
         pl={centered ? "3" : "0"}
         pr="3"
-        color={useColorModeValue('gray.600', 'whiteAlpha.900')} 
+        color={useColorModeValue('gray.600', 'whiteAlpha.800')} 
         fontWeight="medium"
       >
         {text}

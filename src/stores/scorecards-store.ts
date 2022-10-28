@@ -22,6 +22,8 @@ import {
     ReviewPut, 
     RoundScores, 
     Season,
+    seasonStub,
+    SeasonSummary,
     Show, 
     TokenConfig, 
     User,
@@ -35,7 +37,7 @@ export interface ScorecardStore {
     chatKey: string
     chatScorecard: RoundScores
     chatToken: string
-    checkForUserFightReview(userId: string): void
+    checkForUserFightReview(): void
     collateTableData(): void
     createDiscussion(discussionObj: Partial<Discussion>): void
     createFight(createFightObj: FightPostObj): void
@@ -59,10 +61,7 @@ export interface ScorecardStore {
     fetchAllPanelists(): void
     fetchAllSeasons(): void
     fetchDiscussion(discussionId: string): void
-    fetchFight(fightId: string): void
     fetchFighter(fighterId: string): void
-    fetchFights(): void
-    fetchFightSummary(selectedFightId: string): void
     fetchGroupScorecard(groupScorecardId: string): void
     fetchList(listType: string): void
     fetchPanel(panelId: string): void
@@ -75,11 +74,9 @@ export interface ScorecardStore {
     fetchUserScorecards(): void
     fight: Fight
     fighter: Fighter
-    fights: Fight[]
     fightComplete: boolean
     fighters: Fighter[]
     fighterScores: FighterScores
-    fightSummary: FightSummary
     groupScorecards: GroupScorecard[]
     idToken: TokenConfig
     isSubmitting: boolean
@@ -92,14 +89,16 @@ export interface ScorecardStore {
     poundListUser: List
     putUserFightReview(reviewObj: ReviewPut): void
     requestChatToken(chatKey: string): void
+    season: Season
+    seasons: SeasonSummary[]
+    seasonsOptions: Record<string, string>[]
     scorecards: Scorecard[]
     scoredRounds: number
     scoringComplete: boolean
-    season: Season
-    seasons: Season[]
-    selectedFight: Fight
     selectedFightReview: Review
     selectedFightReviews: Review[]
+    selectedFightSummary: FightSummary
+    selectedSeason: SeasonSummary
     setAccessToken(headers: TokenConfig): void
     setChatScorecard(update: RoundScores): void
     setCurrentRound(currentRound: number): void
@@ -108,7 +107,9 @@ export interface ScorecardStore {
     setModals(modal: string, boolean: boolean): void
     setScoredRounds(scoredRounds: number): void
     setScoringComplete(boolean: boolean): void
-    setSelectedFight(selectedFightId: string): void
+    setSeasonsOptions(): void
+    setSelectedFightSummary(summary: FightSummary): void
+    setSelectedSeason(seasonId: string): void
     setToast(toastOptions: ToastOptions): void
     setTokenExpired(state: boolean): void
     setTransformedPrediction(rawPrediction: string | null): void
@@ -157,10 +158,8 @@ export const initialScorecardsStoreState = {
     fight: {} as Fight,
     fighter: {} as Fighter,
     fightComplete: false,
-    fights: [],
     fighters: [],
     fighterScores: {} as FighterScores,
-    fightSummary: fightSummaryStub,
     groupScorecard: undefined,
     groupScorecards: [],
     idToken: {} as TokenConfig,
@@ -171,14 +170,19 @@ export const initialScorecardsStoreState = {
     poundListOfficial: {} as List,
     poundListUser: {} as List,
     prediction: null,
+    season: {} as Season,
+    seasons: [],
+    seasonsOptions: [{
+        value: '1',
+        label: 'All Shows'
+    }],
     scorecards: [],
     scoredRounds: 0,
     scoringComplete: false,
-    selectedFight: {} as Fight,
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
-    season: {} as Season,
-    seasons: [],
+    selectedFightSummary: {} as FightSummary,
+    selectedSeason: {} as SeasonSummary,
     show: {} as Show,
     stats: [],
     tableData: [],
@@ -198,16 +202,14 @@ export const useScorecardStore = create<ScorecardStore>()(
     persist(
         (set, get) => ({
             ...initialScorecardsStoreState,
-            checkForUserFightReview: async (userId: string) => {
-                const res = await axios.get(`${url}/reviews/${userId}/user`, get().accessToken);
-                const data = res.data;
+            checkForUserFightReview: async () => {
+                const res = await axios.get(`${url}/reviews/${get().selectedFightSummary.fight.fightId}/user`, get().accessToken);
+                const data = res.data as Review;
                 if(data?.reviewId){
                     set({ userFightReview: data })
                 };
             },
             collateTableData: () => {
-                const totalRounds = get().fight.rounds;
-                let userScoringComplete;
                 const collated = get().scorecards.map( (scorecard: any) => {
                     
                     const [fighter1, fighter2] = get().fighters
@@ -287,6 +289,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             createSeason: async (createObj: Partial<Season>) => {
                 const res = await axios.post(`${url}/seasons`, createObj, get().accessToken)
+                get().fetchAllSeasons()
             },
             createShow: async (createShowObj: Partial<Show>) => {
                 const res = await axios.post(`${url}/shows`, createShowObj, get().accessToken)
@@ -312,8 +315,9 @@ export const useScorecardStore = create<ScorecardStore>()(
                 console.log('PANELIST- delete res.data: ', res.data)
             },
             deleteSeason: async (seasonId: string) => {
-                const res = await axios.post(`${url}/seasons/${seasonId}`, get().accessToken)
+                const res = await axios.delete(`${url}/seasons/${seasonId}`, get().accessToken)
                 console.log('DELETE- season: ' , res.data)
+                get().fetchAllSeasons()
             },
             deleteShow: async (showId: string) => {
                 const res = await axios.delete(`${url}/shows/${showId}`, get().accessToken)
@@ -331,40 +335,21 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchAllSeasons: async () => {
                 const res = await axios.get(`${url}/seasons`, get().accessToken)
-                const seasons = res.data as Season[]
-                set({ seasons })
+                const seasons = res.data as SeasonSummary[]
+                const [selectedSeason] = seasons.filter( season => season.season.seasonId == '1')
+                
+                set({ seasons, selectedSeason })
+                get().setSeasonsOptions()
             },
             fetchDiscussion: async (discussionId: string) => {
                 const res = await axios.get(`${url}/discussions/${discussionId}`, get().accessToken)
                 const discussion = res.data as Discussion
                 set({ discussion })
             },
-            fetchFight: async (fightId: string) => {
-                const res = await axios.get(`${url}/fights/${fightId}`, get().accessToken)
-                const fight = res.data as Fight
-                set({ fight })
-            },
             fetchFighter: async (fighterId: string) => {
                 const res = await axios.get(`${url}/fighters/${fighterId}`, get().accessToken)
                 const fighter = res.data as Fighter
                 set({ fighter })
-            },
-            fetchFights: async () => {
-                const res = await axios.get(`${url}/fights`, get().accessToken)
-                const fights = res.data as Fight[]
-                if(res.data === 'Token expired!'){
-                    set({ tokenExpired: true })
-                    return 
-                }
-                get().fetchFightSummary(fights[0].fightId)
-                get().fetchSelectedFightReviews(fights[0].fightId)
-                set( ({ fights }))
-            },
-            fetchFightSummary: async (selectedFightId: string) => {
-                const res = await axios.get(`${url}/fights/${selectedFightId}/summary`, get().accessToken)
-                const data = res.data as FightSummary
-                set({ fightSummary: data, toast: { title: 'Fight updated!', status: 'success', duration: 5000, isClosable: true,} })
-
             },
             fetchGroupScorecard: async (groupScorecardId: string) => {
                 const user = get().user;
@@ -577,18 +562,33 @@ export const useScorecardStore = create<ScorecardStore>()(
             setScoringComplete: (boolean: boolean) => {
                 set({ scoringComplete: boolean })
             },
-            setSelectedFight: (fightId: string) => {    
-                const [selectedFight] = get().fights.filter( fight => {
-                    return fight.fightId === fightId
-                })
-                get().fetchSelectedFightReviews(selectedFight.fightId)
-                get().fetchFightSummary(selectedFight.fightId)
-                set({ selectedFight });
+            setSeasonsOptions: () => {
+                const seasons = get().seasons;
+                if(seasons.length){
+                    const seasonsOptions = seasons.map( season => {
+                        return ({
+                            value: season.season.seasonId,
+                            label: season.season.seasonName
+                        })
+                    })
+                    set({ seasonsOptions })
+                }
             },
             setSelectedFightReview: (reviewId: string) => {
                 const [selected] = get().selectedFightReviews.filter( review => review.reviewId === reviewId);
                 set({ selectedFightReview: selected });
             },
+            setSelectedFightSummary: (summary: FightSummary) => {
+                set({ selectedFightSummary: summary })
+            },
+            setSelectedSeason: (seasonId: string) => {
+                const [selected] = get().seasons.filter( season => season.season.seasonId === seasonId);
+                set({ selectedSeason: selected })
+            },
+            // setSelectedSeasonFightSummary: (selectedSeasonFightId: string) => {
+            //     const [selectedSeasonFight] = get().seasons.map( season => season)
+            //     .filter( fightSummary => fightSummary.filter( fightSummary.fightSummarie)
+            // },
             setToast: (options: ToastOptions) => {
                 set({ toast: options })
                 setTimeout(() => {
@@ -615,7 +615,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
             },
             setUser: (user: User) => {
-                set({ user })
+                set({ user, modals: {...resetModals} })
             },
             setUserScorecard: (userScorecard: Scorecard) => {
                 set({ userScorecard })
@@ -676,6 +676,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             updateSeason: async (updateObj: Partial<Season>) => {
                 const res = await axios.put(`${url}/seasons/${updateObj.seasonId}`, updateObj, get().accessToken)
+                get().fetchAllSeasons()
             },
             updateShow: async (update: any) => {
                 const res = await axios.put(`${url}/shows/${update.showId}`, update, get().accessToken)
@@ -688,8 +689,26 @@ export const useScorecardStore = create<ScorecardStore>()(
             reset: () => set( state => initialScorecardsStoreState)
         }),
         {
-            partialize: (state) => {
-                return ({ ...state })
+            partialize: state => {
+                const { 
+                    accessToken, 
+                    idToken,
+                    seasons,
+                    selectedFightSummary, 
+                    user, 
+                    userScorecard, 
+                    userScorecards 
+                } = state;
+
+                return ({ 
+                    accessToken,
+                    idToken,
+                    seasons,
+                    selectedFightSummary,
+                    user,
+                    userScorecard,
+                    userScorecards,
+                })
             },
             getStorage: () => sessionStorage,
             name: 'fsl',

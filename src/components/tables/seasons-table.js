@@ -1,6 +1,12 @@
 import { 
     Flex, 
+    FormControl,
+    FormLabel,
     Heading,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    Select,
     Table, 
     TableCaption, 
     Tbody, 
@@ -10,11 +16,14 @@ import {
     Tr, 
     useColorModeValue as mode 
   } from '@chakra-ui/react'
+  import { BsSearch } from 'react-icons/bs'
   import { capFirstLetters, parseEpoch } from '../../utils'
   import { DeleteIcon } from '@chakra-ui/icons'
+import { SeasonStatus } from '../../stores'
   
   export const SeasonsTable = ({ 
     allSeasons,
+    handleDeleteSeason,
     handleSeasonSelect,
   }) => {
     return (
@@ -25,10 +34,51 @@ import {
         mb="4"
         w="100%"
       >
+        <TableActions />
         <SeasonsTableContent 
-            handleSeasonSelect={handleSeasonSelect}
             allSeasons={allSeasons}
+            handleDeleteSeason={handleDeleteSeason}
+            handleSeasonSelect={handleSeasonSelect}
         />
+      </Flex>
+    )
+  }
+
+
+export const TableActions = () => {
+    const options = [
+      { 
+          label: 'Active',
+          value: SeasonStatus.ACTIVE,
+      },
+      { 
+          label: 'Pending',
+          value: SeasonStatus.PENDING,
+      },
+      { 
+          label: 'Complete',
+          value: SeasonStatus.COMPLETE,
+      },
+    ];
+    return (
+      <Flex 
+        direction={{base: 'column', md: 'row'}} 
+        justify="space-between"
+      >
+          <Select  
+              m={["2"]}
+              maxW={["80%", "35%"]}
+              rounded="base" 
+              size="sm" 
+              placeholder="Season"
+              _hover={ {cursor: 'pointer' }}
+              _focus={{ boxShadow: '0 0 0 1px #aaaaaaa', border: '1px solid #aaaaaaa' }}
+              _active={{ boxShadow: '0 0 0 1px #aaaaaaa', border: '1px solid #aaaaaaa' }}
+          >
+              {
+              options && options.length > 0 && options.map( option => <option key={option.value} value={option.value} label={option.label} />)
+              }
+          </Select>
       </Flex>
     )
   }
@@ -50,19 +100,28 @@ import {
         Header: 'Total Fights',
         accessor: 'ends'
     },
+    {
+        Header: 'Delete Season',
+        accessor: ''
+    },
 
   ];
   
   const SeasonsTableContent = ({ 
     allSeasons, 
+    handleDeleteSeason,
     handleSeasonSelect,
   }) => {
-    // console.log('allSeasons: ', allSeasons)
+    
+    const deleteSeason = e => {
+        const { id } = e.currentTarget
+        handleDeleteSeason(id);
+    }
 
     return (
       <>
         <Table borderWidth="1px" fontSize="sm" overflowY="scroll">
-          <TableCaption placement="top">Seasons "2"</TableCaption> 
+          <TableCaption mt="0" placement="top">All Seasons</TableCaption> 
           <Thead bg={mode('gray.50', 'gray.800')}>
             <Tr>
               {columns.map((column, _i) => (
@@ -78,21 +137,29 @@ import {
             </Tr>
           </Thead>
           <Tbody>
-            {allSeasons.length > 0 && allSeasons.map( (row, _i) => {
+            {allSeasons.length && allSeasons.map( (row, _i) => {
                 const { season } = row;
                 const { fightIds, seasonId, ends, seasonName, starts } = season;
                 const totalFights = fightIds.length;
                 return (
                     <Tr 
                         key={seasonId}
-                        onClick={handleSeasonSelect}
                         _hover={{cursor: 'pointer'}}  
                         id={seasonId} 
                     >
-                        <Td>{seasonName}</Td>
-                        <Td>{new Date(starts).toString().slice(4,15)}</Td>
-                        <Td>{new Date(ends).toString().slice(4,15)}</Td>
-                        <Td>{totalFights}</Td>
+                        <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{seasonName}</Td>
+                        <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{new Date(starts).toString().slice(4,15)}</Td>
+                        <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{new Date(ends).toString().slice(4,15)}</Td>
+                        <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{totalFights}</Td>
+                        <Td 
+                            _hover={{cursor: 'pointer'}} 
+                            textAlign="center" 
+                            onClick={deleteSeason} 
+                            id={seasonId} 
+                            zIndex={10000}
+                        >
+                            {<DeleteIcon />}
+                        </Td>
                     </Tr>
                 )
             })}

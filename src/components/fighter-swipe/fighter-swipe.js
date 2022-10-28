@@ -22,7 +22,7 @@ export const FighterSwipe = ({
         const evenRoundStyles = {
             border: '1px solid #DADADA',
             borderBottom: '3px solid white',
-            background: '#2D3748'
+            background: '#2D3748',
         }
         const selectedStyles = {
             borderBottom: redCorner ? '5px solid red' : '5px solid #1d5d90',
@@ -60,8 +60,7 @@ export const FighterSwipe = ({
             flexDirection="column"
             borderRadius="1px"
             w="90%"
-            // minH="10rem"
-            mb="4"
+            mb="4"  
         >
             <Center m="2">
                 <Avatar 

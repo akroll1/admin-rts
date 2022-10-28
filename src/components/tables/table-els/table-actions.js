@@ -1,21 +1,12 @@
 import { Flex, FormControl, FormLabel, Input, InputGroup, InputLeftElement, Select, } from '@chakra-ui/react'
 import { BsSearch } from 'react-icons/bs'
+import { useScorecardStore } from '../../../stores';
 
 export const TableActions = () => {
-  const options = [
-    { 
-      value: 'season1',
-      label: 'Season 1'
-    },
-    { 
-      value: 'season2',
-      label: 'Season 2'
-    },
-    { 
-      value: 'season3',
-      label: 'Season 3'
-    },
-  ];
+  const { 
+    seasonsOptions,
+  } = useScorecardStore()
+
   return (
     <Flex 
       direction={{base: 'column', md: 'row'}} 
@@ -50,7 +41,7 @@ export const TableActions = () => {
         _active={{ boxShadow: '0 0 0 1px #aaaaaaa', border: '1px solid #aaaaaaa' }}
       >
         {
-          options && options.length > 0 && options.map( option => <option key={option.value} value={option.value} label={option.label} />)
+          seasonsOptions?.length && seasonsOptions.map( option => <option key={option.value} value={option.value} label={option.label} />)
         }
       </Select>
     </Flex>

@@ -4,6 +4,9 @@ import { NavItem } from './scoring-sidebar/nav-item'
 import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
 import { useScorecardStore, useStateStore } from '../../stores'
 import { SidebarsDividerWithText } from '../../chakra'
+import { IoScaleOutline } from 'react-icons/io5'
+import { BiBuoy, BiChevronRightCircle, BiCog } from 'react-icons/bi'
+import { parseEpoch, transformedWeightclass } from '../../utils'
 
 export const ScoringSidebarLeft = ({ 
     tabs,
@@ -71,19 +74,12 @@ export const ScoringSidebarLeft = ({
             <Flex 
                 flexDir="column"
                 h={"auto"}
-                w="full" 
                 flex="1" 
                 overflowY="scroll" 
                 pt="2" 
                 p="2"
+                w="100%"
             >
-                {/* <NavGroup tabs={tabs} label="Show">
-                    <NavItem icon={<FaTv />} label={ network } />
-                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
-                    <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
-                    <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
-                    <NavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
-                </NavGroup> */}
                 <NavGroup tabs={tabs} label="Prediction">
                     <NavItem 
                         id="prediction"
@@ -96,9 +92,11 @@ export const ScoringSidebarLeft = ({
                             textAlign="left" 
                             w="100%" 
                             _focus={{bg:'transparent'}} 
-                            _hover="transparent" 
+                            _hover={{
+                                color: 'white',
+                            }}
                             variant="ghost" 
-                            fontSize="sm"
+                            fontSize="md"
                             m="0"
                             p="0"
                             maxH="1.5rem"
@@ -115,7 +113,9 @@ export const ScoringSidebarLeft = ({
                             textAlign="left" 
                             fontSize="md" 
                             _focus={{bg:'transparent', border: 'none'}} 
-                            _hover="transparent" 
+                            _hover={{
+                                color: 'white',
+                            }} 
                             variant="ghost" 
                             size="sm" 
                             m="0"
@@ -126,6 +126,14 @@ export const ScoringSidebarLeft = ({
                         </Button>} 
                     /> 
                 </NavGroup>
+                <NavGroup tabs={tabs} label="Show">
+                    <NavItem icon={<FaTv />} label={ network } />
+                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
+                    <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
+                    <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
+                    <NavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
+                </NavGroup>
+                
 
                 <NavGroup tabs={tabs} label="Props">
                     <NavItem 
@@ -202,10 +210,10 @@ export const ScoringSidebarLeft = ({
                     </Button>} 
                 />
                 </NavGroup> */}
-                {/* <NavGroup tabs={tabs} label="Support">
+                <NavGroup fontSize="0.2rem" tabs={tabs} label="Support">
                     <NavItem subtle icon={<BiCog />} label="Settings" />
                     <NavItem subtle icon={<BiBuoy />} label="Help & Support" />
-                </NavGroup> */}
+                </NavGroup>
             </Flex>
         </Flex>
     )

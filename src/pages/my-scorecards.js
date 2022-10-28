@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import { MyScorecardsTable } from '../components/tables'
 import { ExpiredTokenModal } from '../components/modals'
@@ -7,14 +7,15 @@ import { useScorecardStore } from '../stores'
 export const MyScorecards = () => {
 
   const {
+    fetchAllSeasons,
     fetchUserScorecards,
     userScorecards,
   } = useScorecardStore();
 
     useEffect(() => {
       fetchUserScorecards()
+      fetchAllSeasons()
     },[])
-    // console.log('userScorecards: ', userScorecards)
     return (
         <Flex 
           w={["100%", "100%", "60%"]}

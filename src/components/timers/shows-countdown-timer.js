@@ -10,14 +10,12 @@ export const ShowsCountdownTimer = ({ showTime }) => {
   return (
     <Flex 
       id="countdown-timer" 
-      my="4"
       border="1px solid #795858"
       flexDirection="row" 
       color="white" 
       maxW="100%" 
-      w="100%"
-      p="2"
-      pb="1"
+      w="90%"
+      p={["0", "0", "1"]}
       justifyContent="space-evenly"
       borderRadius="5px"
     >

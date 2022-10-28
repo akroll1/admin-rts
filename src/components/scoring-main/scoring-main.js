@@ -3,6 +3,7 @@ import { Button, Flex, Heading } from '@chakra-ui/react'
 import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 import { FighterSwipe } from '../fighter-swipe'
 import { useScorecardStore } from '../../stores'
+import image from '../../image/boxing-background.png'
 
 export const ScoringMain = ({ 
     isSubmitting,
@@ -94,8 +95,12 @@ export const ScoringMain = ({
     }
     // console.log('fighters: ', fighters)
     // console.log('selectedFighter: ', selectedFighter)
-    console.log('currentRound: ', currentRound)
+    // console.log('currentRound: ', currentRound)
     return (
+        <Flex
+        w="100%"
+        h="100%"
+        >
         <Flex 
             id="scoring-main"
             display={tabs.scoring || tabs.all ? 'flex' : 'none'}
@@ -104,7 +109,8 @@ export const ScoringMain = ({
             flexDir="column" 
             justifyContent="flex-end"
             w="100%"
-        >
+            backgroundImage={`url(${image})`}  
+            >
             <Heading 
                 mt="4"
                 mb="2"
@@ -113,10 +119,14 @@ export const ScoringMain = ({
                 textAlign="center"
                 minH="2rem"
                 verticalAlign="middle"
-            >
+                >
                 {`Round ${ round >= totalRounds ? totalRounds : round }`}
             </Heading> 
-            <Flex flexDir={["row"]} w={["100%", "80%"]} m="auto">
+            <Flex            
+                flexDir={["row"]} 
+                w={["100%"]} 
+                m="auto"
+            >
             {
                 fighters.length > 0 && fighters.map( (fighter, i) => (
                     <FighterSwipe
@@ -182,6 +192,7 @@ export const ScoringMain = ({
                     { isDisabled && round >= totalRounds ? `Scoring Complete` : isDisabled ? `Select Fighter` : `Submit Score` }
                 </Button>
             </Flex>
-        </Flex>  
+        </Flex> 
+        </Flex> 
     )
 }
