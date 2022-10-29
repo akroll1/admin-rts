@@ -40,7 +40,7 @@ export const ScoringSidebarRight = ({
             flex={["1 0 25%"]} 
             w="100%" 
             p="2" 
-            bg={tabs.all ? "fsl-sidebar-bg" : "inherit"}
+            bg={tabs.all ? "'fsl-scoring-sidebar-bg'" : "inherit"}
             borderRadius="md" 
             minH={tabs.chat ? "75vh" : "100%"}
         > 

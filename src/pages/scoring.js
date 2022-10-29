@@ -1,9 +1,22 @@
-import React, {useEffect, useState} from 'react'
-import { Flex, Heading, useToast } from '@chakra-ui/react'
+import {useEffect, useState} from 'react'
+import { 
+    Flex, 
+    Heading, 
+    useToast 
+} from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, MoneylineModal, PredictionModal } from '../components/modals'
-import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
+import { 
+    AddGuestJudgeModal, 
+    AddMemberModal, 
+    ExpiredTokenModal, 
+    MoneylineModal, 
+    PredictionModal 
+} from '../components/modals'
+import { 
+    ScoringSidebarLeft, 
+    ScoringSidebarRight 
+} from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { useScorecardStore, useScoringStore } from '../stores'
 import { useWindowResize } from '../hooks'
@@ -180,18 +193,6 @@ const Scoring = () => {
                     w="100%"
                     flexDir="column"
                 >
-                    <Heading 
-                        zIndex={99}
-                        mt="4"
-                        mb="2"
-                        as="h2"
-                        size="xl"
-                        textAlign="center"
-                        minH="2rem"
-                        verticalAlign="middle"
-                    >
-                        {`Round ${ round >= totalRounds ? totalRounds : round }`}
-                    </Heading>
                     <ScoringMain
                         fightComplete={fightComplete}
                         fighters={fighters}

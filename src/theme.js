@@ -101,6 +101,9 @@ export const fslTheme = {
       'fsl-sidebar-bg': {
         _dark: '#252525'
       },
+      'fsl-scoring-sidebar-bg': {
+        _dark: '#252525'
+      },
       'fsl-nav-footer-bg': {
         _dark: '#171717'
       },
