@@ -11,6 +11,7 @@ export interface Season {
 	createdAt?: number
 	updatedAt?: number
 }
+
 export interface SeasonSummary {
 	fightSummaries: FightSummary[]
 	season: Season

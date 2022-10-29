@@ -79,6 +79,7 @@ export const ShowsMain = ({
             <Flex
                 flexDir="column"
                 p="4"
+                w="100%"
             >
                 <DividerWithText 
                     fontSize="2xl" 

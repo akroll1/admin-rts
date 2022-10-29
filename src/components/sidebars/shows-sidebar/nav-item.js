@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Box, HStack, Icon } from '@chakra-ui/react'
 import { BsCaretRightFill } from 'react-icons/bs'
 import { HiBadgeCheck } from 'react-icons/hi';
+
 export const UpcomingNavItem = (props) => {
   const { active, isPlaying, name, fightId, selectFight, subtle, icon, children, label, endElement, href } = props; 
   return (

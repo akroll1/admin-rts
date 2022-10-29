@@ -21,7 +21,6 @@ export const ShowsSidebar = ({
     setSeasonName
 }) => { 
     const { 
-        seasons,
         seasonsOptions,
         selectedFightSummary, 
         selectedSeason,
@@ -69,7 +68,6 @@ export const ShowsSidebar = ({
     }
 
     return (
-
         <Flex 
             id="shows_sidebar" 
             as="aside"
@@ -119,7 +117,12 @@ export const ShowsSidebar = ({
                                 name={REVIEW_TYPE.PREDICTION} 
                                 fightId={fightId} 
                                 selectFight={selectFight} 
-                                icon={isTitleFight && <IoFlashOutline background="gray" mt="-5px" />} 
+                                icon={isTitleFight && 
+                                    <IoFlashOutline 
+                                        background="gray" 
+                                        mt="-5px" 
+                                    />
+                                } 
                                 label={fightQuickTitle} 
                                 key={fightId} 
                                 isPlaying

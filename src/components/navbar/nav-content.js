@@ -18,10 +18,11 @@ const MobileNavContext = props => {
         {...props}
       >
         <Box flexBasis="6rem">
-          <ToggleButton isOpen={isOpen} onClick={onToggle} />
+          <ToggleButton 
+            isOpen={isOpen} onClick={onToggle} />
         </Box>
       </Flex>
-      <NavMenu animate={isOpen ? 'open' : 'closed'}>
+      <NavMenu animate={isOpen ? 'open' : 'closed'} onClick={onToggle}>
         {links.map((link, i) => 
           link.children ? (
             <Submenu.Mobile key={i} link={link} />

@@ -256,10 +256,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                         username,
                     })
                 })
-
+                const stats = new Set(collated)
                 set({ 
-                    stats: collated,
-                    tableData: collated,
+                    stats: [...stats],
+                    tableData: [...stats],
                 })
             },
             createDiscussion: async (discussionObj: Partial<Discussion>) => {
@@ -336,10 +336,15 @@ export const useScorecardStore = create<ScorecardStore>()(
             fetchAllSeasons: async () => {
                 const res = await axios.get(`${url}/seasons`, get().accessToken)
                 const seasons = res.data as SeasonSummary[]
-                const [selectedSeason] = seasons.filter( season => season.season.seasonId == '1')
+                // put season 1 first in list.
                 
-                set({ seasons, selectedSeason })
-                get().setSeasonsOptions()
+                if(seasons.length){
+                    const season1 = seasons.filter( season => season.season.seasonId === '1')
+                    const rest = seasons.filter( season => season.season.seasonId !== '1')
+                    const sett = new Set(season1.concat(rest))
+                    set({ seasons: [...sett], selectedSeason: [...sett][0] })
+                    get().setSeasonsOptions()
+                }
             },
             fetchDiscussion: async (discussionId: string) => {
                 const res = await axios.get(`${url}/discussions/${discussionId}`, get().accessToken)

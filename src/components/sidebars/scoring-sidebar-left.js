@@ -1,11 +1,20 @@
-import { Button, Flex, Stack, useToast } from '@chakra-ui/react'
-import { NavGroup } from './scoring-sidebar/nav-group'
-import { NavItem } from './scoring-sidebar/nav-item'
-import { FaLock, FaLockOpen, FaMapMarkerAlt, FaPlusCircle, FaRegClock, FaRegMoneyBillAlt, FaTrophy, FaTv, FaUserCog } from 'react-icons/fa'
+import { Collapse, Flex, Heading, useToast } from '@chakra-ui/react'
+import { useState } from 'react'
+import { ScorecardsNavGroup } from './scorecards-sidebar-components'
+import { ScoringSidebarNavItem } from './scoring-sidebar/scoring-sidebar-nav-item'
+import { 
+    FaGavel,
+    FaLock, 
+    FaLockOpen, 
+    FaMapMarkerAlt, 
+    FaRegClock, 
+    FaRegMoneyBillAlt, 
+    FaTrophy, 
+    FaTv 
+} from 'react-icons/fa'
 import { useScorecardStore, useStateStore } from '../../stores'
 import { SidebarsDividerWithText } from '../../chakra'
 import { IoScaleOutline } from 'react-icons/io5'
-import { BiBuoy, BiChevronRightCircle, BiCog } from 'react-icons/bi'
 import { parseEpoch, transformedWeightclass } from '../../utils'
 
 export const ScoringSidebarLeft = ({ 
@@ -23,12 +32,12 @@ export const ScoringSidebarLeft = ({
         availableGuestJudges 
     } = useStateStore()
     
+    const [activeNavItem, setActiveNavItem] = useState('')
     const toast = useToast()
-    const { finalScore } = userScorecard
+    const { finalScore = null } = userScorecard
     const { odds, rounds, weightclass } = fight ? fight : '';
     const { location, network, showTime } = show
     const isLocked = Date.now() > showTime
-
     const handlePredictionModalToggle = () => {
         if(isLocked){
             return alert('Predictions are locked.')
@@ -47,6 +56,14 @@ export const ScoringSidebarLeft = ({
             status: 'info',
             isClosable: true
         })
+    }
+
+    const handleHideShow = id => {
+        if(id === activeNavItem){
+            setActiveNavItem('')
+            return
+        }
+        setActiveNavItem(id)
     }
 
     return (
@@ -68,7 +85,7 @@ export const ScoringSidebarLeft = ({
         >
             <SidebarsDividerWithText 
                 fontSize={'1.5rem'} 
-                text="Show Info" 
+                text="Fight Info" 
                 centered={tabs.all ? true : false}
             />
             <Flex 
@@ -76,144 +93,99 @@ export const ScoringSidebarLeft = ({
                 h={"auto"}
                 flex="1" 
                 overflowY="scroll" 
-                pt="2" 
-                p="2"
                 w="100%"
             >
-                <NavGroup tabs={tabs} label="Prediction">
-                    <NavItem 
-                        id="prediction"
-                        icon={isLocked ? <FaLock /> : <FaLockOpen />} 
-                        handlePredictionModalToggle={handlePredictionModalToggle}
-                        label={<Button 
-                            color="fsl-text"
-                            button={'button'}
-                            justifyContent="flex-start" 
-                            textAlign="left" 
-                            w="100%" 
-                            _focus={{bg:'transparent'}} 
-                            _hover={{
-                                color: 'white',
-                            }}
-                            variant="ghost" 
-                            fontSize="md"
-                            m="0"
-                            p="0"
-                            maxH="1.5rem"
-                        >
-                            { transformedPrediction ? transformedPrediction : 'Set Prediction' }
-                        </Button>} 
-                    /> 
-                    <NavItem 
-                        button="button" 
-                        icon={<FaTrophy />} 
-                        label={<Button 
-                            color="fsl-text"
-                            justifyContent="flex-start" 
-                            textAlign="left" 
-                            fontSize="md" 
-                            _focus={{bg:'transparent', border: 'none'}} 
-                            _hover={{
-                                color: 'white',
-                            }} 
-                            variant="ghost" 
-                            size="sm" 
-                            m="0"
-                            p="0"
-                            maxH="1.5rem"
-                        >
-                            Score&#58; {finalScore ? finalScore : `Not Official` }
-                        </Button>} 
-                    /> 
-                </NavGroup>
-                <NavGroup tabs={tabs} label="Show">
-                    <NavItem icon={<FaTv />} label={ network } />
-                    <NavItem icon={<FaMapMarkerAlt />} label={ location } />
-                    <NavItem icon={<FaRegClock />} label={ parseEpoch(showTime) } />
-                    <NavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
-                    <NavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
-                </NavGroup>
-                
+                <Heading
+                    mb="2"
+                    pl="2"
+                    _hover={{ color:'#fcfcfc'}}
+                    fontSize="2xl"
+                    color="#f0f0f0"
+                    as="h3" 
+                    size="md"
+                >
+                    {fight.fightQuickTitle}
+                </Heading>
 
-                <NavGroup tabs={tabs} label="Props">
-                    <NavItem 
-                        icon={<FaRegMoneyBillAlt />} 
-                        label={<Button 
-                            color="fsl-text"                             
-                            onClick={() => setModals('moneylineModal', true)}
-                            button={'button'}
-                            justifyContent="flex-start" 
-                            textAlign="left" 
-                            fontSize="md" 
-                            w="100%" 
-                            _hover={{background: 'transparent'}} 
-                            variant="ghost" 
-                            size="sm" 
-                            _focus={{border: 'none'}}
-                        >                    
-                            { odds }
-                        </Button>} 
-                    />
-                </NavGroup>
-                
-                {/* <NavGroup tabs={tabs} active={true} label="Official Judges">
-                    { availableGuestJudges?.length > 0 && availableGuestJudges.map( (judge, i) => <NavItem color="fsl-text" id={judge.guestJudgeId} icon={<BiUserCircle />} label={`${capFirstLetters(judge.firstName)} ${capFirstLetters(judge.lastName)}`}  key={judge.guestJudgeId} />) }
-                    <NavItem 
-                        icon={<FaPlusCircle />} 
-                        label={<Button 
-                            color="fsl-text" 
-                            onClick={() => setModals('addGuestJudgeModal', true)}
-                            button={'button'}
-                            justifyContent="flex-start" 
-                            textAlign="left" 
-                            fontSize="md" 
-                            w="100%" 
-                            my="-2" 
-                            _hover="transparent" 
-                            variant="ghost" 
-                            size="sm" 
-                            pl="0" 
-                            m="0"
-                            _focus={{border: 'none'}}
-                        >                    
-                            Add Guest Judge
-                        </Button>} 
-                    />
-                </NavGroup> */}
-
-                {/* <NavGroup tabs={tabs} label="Group Members"> */}
-                    {/* { usernameAndUserId.length > 0 && usernameAndUserId.map( ({ username, ownerId }, i) => {
-                        const isAdmin = adminUsername.toLowerCase() == username ? true : false;
-
-                        return <NavItem href={`/scorecards/search/${ownerId}`} icon={isAdmin ? <FaUserCog /> : <BiUser />} label={username} key={i} />
-                    })} */}
-                
-                {/* <NavItem color="fsl-text" 
-                    icon={<BiPlusCircle />} 
-                    label={<Button 
-                        color="fsl-text" 
-                        onClick={openMemberModal}
-                        _focus={{bg:'transparent', border: 'none'}} 
-                        _hover="transparent" 
-                        variant="ghost" 
-                        size="sm" 
-                        button={'button'}
-                        justifyContent="flex-start" 
-                        textAlign="left" 
-                        fontSize="md" 
-                        w="100%" 
-                        my="-2"  
-                        pl="0" 
-                        m="0"
+                <ScorecardsNavGroup
+                    handleHideShow={handleHideShow} 
+                    tabs={tabs} 
+                    id="prediction"
+                    label="Prediction"
+                    active={activeNavItem === 'prediction'}
+                >
+                    <Collapse 
+                        in={activeNavItem === 'prediction'} 
+                        animateOpacity
                     >
-                        Add Group Member
-                    </Button>} 
-                />
-                </NavGroup> */}
-                <NavGroup fontSize="0.2rem" tabs={tabs} label="Support">
-                    <NavItem subtle icon={<BiCog />} label="Settings" />
-                    <NavItem subtle icon={<BiBuoy />} label="Help & Support" />
-                </NavGroup>
+                        <Flex
+                            flexDir="column"
+                            w="100%"
+                            p="2"
+                        >
+                            <ScoringSidebarNavItem 
+                                id="prediction"
+                                icon={isLocked ? <FaLock /> : <FaLockOpen />} 
+                                handlePredictionModalToggle={handlePredictionModalToggle}
+                                label={ transformedPrediction ? transformedPrediction : 'Set Prediction' }
+                            /> 
+                            <ScoringSidebarNavItem 
+                                id="moneyline"
+                                button="button" 
+                                icon={<FaTrophy />} 
+                                label="FightSync"
+                   
+                            /> 
+                        </Flex>
+                    </Collapse>
+                </ScorecardsNavGroup>
+                
+                <ScorecardsNavGroup 
+                    handleHideShow={handleHideShow} 
+                    tabs={tabs} 
+                    id="judges"
+                    label="Official Judges"
+                    active={activeNavItem === 'judges'}
+                >
+                    <Collapse 
+                        in={activeNavItem === 'judges'} 
+                        animateOpacity
+                    >
+                        <Flex
+                            flexDir="column"
+                            w="100%"
+                            p="2"
+                        >
+                        <ScoringSidebarNavItem 
+                            icon={<FaGavel />} 
+                            label="Official Judges"
+                        />
+                        </Flex>
+                    </Collapse>
+                </ScorecardsNavGroup>
+                <ScorecardsNavGroup 
+                    handleHideShow={handleHideShow} 
+                    tabs={tabs} 
+                    id="props"
+                    label="Props"
+                    active={activeNavItem === 'props'}
+                >
+                    <Collapse 
+                        in={activeNavItem === 'props'} 
+                        animateOpacity
+                    >
+                        <Flex
+                            flexDir="column"
+                            w="100%"
+                            p="2"
+                        >
+                        <ScoringSidebarNavItem 
+                            icon={<FaRegMoneyBillAlt />} 
+                            label="Moneyline"
+                        />
+                        </Flex>
+                    </Collapse>
+                </ScorecardsNavGroup>
             </Flex>
         </Flex>
     )

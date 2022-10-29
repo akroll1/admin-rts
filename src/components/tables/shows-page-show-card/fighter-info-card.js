@@ -13,13 +13,12 @@ export const FighterInfoCard = props => {
       flexDir="column" 
       alignItems="center" 
       my="0"
-      // onClick={() => navigate(`/fighters/${fighterId}`)}
+      minW={["45%"]}
     >
       <Avatar size={["md", "lg"]} />
       <VStack spacing="0" flex="1">
         <HStack>
           <Text 
-            // noOfLines={1}
             fontSize={["md", "xl", "2xl"]} 
             mt="1"  
             textAlign="center" 

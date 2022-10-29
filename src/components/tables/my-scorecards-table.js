@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { MyScorecardsTableContent, TableActions, ScorecardsTablePagination } from './table-els'
 
 export const MyScorecardsTable = ({ 
@@ -6,7 +6,8 @@ export const MyScorecardsTable = ({
 }) => {
 
   return (
-    <Box 
+    <Flex 
+      flexDir="column"
       w="100%" 
       as="section" 
       py="4" 
@@ -16,6 +17,6 @@ export const MyScorecardsTable = ({
       <TableActions />
       <MyScorecardsTableContent scorecards={scorecards} />
       <ScorecardsTablePagination total={scorecards && scorecards.length ? scorecards.length : '0'} />
-    </Box>
+    </Flex>
   )
 }

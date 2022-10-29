@@ -17,7 +17,9 @@ export const ScoringTable = ({
 
     const sortData = (a, b) => a.username - b.username
 
-    const sortedTable = tableData?.sort(sortData)
+    const data = new Set(tableData?.sort(sortData))
+    const sortedTable = [...data]
+
     const columns = [
         {
             Header: 'Player',

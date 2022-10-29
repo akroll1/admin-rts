@@ -32,7 +32,6 @@ export const ShowsFighterFaceoff = ({
       const direction = arrow === 'right' ? 1 : -1;
       const currentIndex = fightIds.findIndex( id => id === fightId)
       let nextIndex = currentIndex + direction;
-      debugger;
       if(nextIndex < 0){
         return length - 1
       }
@@ -90,11 +89,12 @@ export const ShowsFighterFaceoff = ({
           w="100%"
           boxSizing='border-box'
           alignItems="center" 
-          justifyContent="space-around"
+          justifyContent="center"
         >
           { fighters?.length > 0 && fighters.map( fighter => {
             return (
-              <FighterInfoCard 
+              <FighterInfoCard
+                key={fighter.fighterId} 
                 fighter={fighter}
               />
             )})

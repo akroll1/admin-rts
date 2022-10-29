@@ -38,10 +38,12 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
   DesktopNavLink.displayName = 'DesktopNavLink'
   
   export const MobileNavLink = props => {
-    const { active, ...rest } = props
+    const { active, href, ...rest } = props
     // console.log('rest: ', rest);
   return (
     <Link
+      as={RRLink}
+      to={href}
       aria-current={active ? 'page' : undefined}
       w="full"
       display="flex"

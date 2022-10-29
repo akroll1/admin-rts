@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Flex, Text } from '@chakra-ui/react'
+import { useState } from 'react'
+import { 
+    Flex, 
+    Text 
+} from '@chakra-ui/react'
 
 export const FightStoryline = ({ 
     selectedFightSummary 
@@ -18,13 +21,14 @@ export const FightStoryline = ({
 
     return (
         <Flex 
+            id="fight_storyline"
             as="section"
             alignItems="flex-start"
             flexDir="column" 
             px={['2', '4', '8']} 
             mb="2"
             color="fsl-text"
-            // transition="all 0.2s"  
+            w="100%"
         >
             <Text 
                 p="2"

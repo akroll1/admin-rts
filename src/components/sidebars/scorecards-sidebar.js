@@ -1,0 +1,118 @@
+import { useState } from 'react'
+import { 
+    Collapse,
+    Flex,
+} from '@chakra-ui/react'
+import { 
+    ScorecardsNavGroup, 
+    ScorecardsNavItem 
+} from './scorecards-sidebar-components/index'
+import { REVIEW_TYPE } from '../../utils'
+import { SidebarsDividerWithText } from '../../chakra'
+import { useScorecardStore } from '../../stores'
+
+
+export const ScorecardsSidebar = () => { 
+    const { 
+        seasons,
+        selectedFightSummary, 
+        selectedSeason,
+        setSelectedFightSummary,
+    } = useScorecardStore()
+    
+    const [activeSeason, setActiveSeason] = useState('1')
+
+    const selectFight = e => {
+        const { id } = e.currentTarget;
+        const [selected] = selectedSeason.fightSummaries.filter( summary => summary.fight.fightId === id);
+        setSelectedFightSummary(selected)
+    }
+
+    const handleHideShow = id => {
+        if(id === activeSeason){
+            // setActiveSeason('')
+            return
+        }
+        setActiveSeason(id)
+    }
+
+    return (
+
+        <Flex 
+            id="scorecards_sidebar" 
+            as="aside"
+            flex="1 0 20%" 
+            w="100%" 
+            minH={["40vh", "50vh", "80vh"]} 
+            maxH={["40vh", "40vh", "80vh"]}
+            height="auto" 
+            overflowY="scroll" 
+            position="relative" 
+            alignItems="center" 
+            justifyContent="flex-start"
+            borderRadius="lg"
+            direction="column" 
+            p="2" 
+            bg="fsl-sidebar-bg" 
+            color="white" 
+            fontSize="sm"
+        >
+            <SidebarsDividerWithText 
+                fontSize={'1.5rem'} 
+                text="Seasons" 
+                centered={[true, false]}
+            />
+            <Flex
+                w="100%"
+                flexDir="column"
+                alignItems="flex-start"
+            >
+                { seasons?.length && seasons.map( summary => {
+                    const { fightSummaries, season } = summary;
+                    const { seasonId, seasonName } = season;
+                    const active = activeSeason === seasonId;
+                    return (
+                        <ScorecardsNavGroup 
+                            handleHideShow={handleHideShow}
+                            key={seasonId}
+                            id={seasonId}
+                            label={seasonName}
+                            active={active}
+                        >   
+                            <Collapse 
+                                in={active} 
+                                animateOpacity
+                            >
+                                <Flex
+                                    flexDir="column"
+                                    w="100%"
+                                    p="2"
+                                >
+                                { fightSummaries.length && fightSummaries.map( summary => {
+                                    const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
+                                    const active = fightId === selectedFightSummary?.fight?.fightId;
+                                    return (
+                                        <ScorecardsNavItem 
+                                            id={fightId}
+                                            active={active}
+                                            name={REVIEW_TYPE.PREDICTION} 
+                                            fightId={fightId} 
+                                            selectFight={selectFight} 
+                                            // icon={isTitleFight && <IoFlashOutline background="gray" mt="-5px" />} 
+                                            label={fightQuickTitle} 
+                                            key={fightId} 
+                                            isPlaying
+                                        />
+                                    )
+                                })}
+                                </Flex>
+                            </Collapse>
+                        </ScorecardsNavGroup>
+                    )
+                })}
+            </Flex>
+        </Flex>
+    )
+}
+
+
