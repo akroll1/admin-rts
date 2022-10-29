@@ -48,9 +48,12 @@ export const FighterSwipe = ({
             isClosable: true,
         })
     }
+
     const styles = setStyles();
+    
     return (
-        <Flex         
+        <Flex   
+            zIndex={100}      
             borderBottom={`2px solid white`}     
             m="2"
             onClick={scoringComplete ? handleScoringComplete : handleSelect} 

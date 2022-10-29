@@ -21,7 +21,12 @@ export const DividerWithText = props => {
           <Divider borderColor="currentcolor" />
         </Box> 
       }
-      <Text as="span" px="3" color={useColorModeValue('gray.600', 'whiteAlpha.900')} fontWeight="medium">
+      <Text 
+        as="span" 
+        px="3" 
+        color={useColorModeValue('gray.600', 'whiteAlpha.900')} 
+        fontWeight="medium"
+      >
         {text}
       </Text>
       <Box flex="1">
@@ -44,7 +49,8 @@ export const SidebarsDividerWithText = props => {
       mt={mt ? mt : "2"} 
       mb={mb ? mb : "2"} 
       fontFamily="Koulen"
-      fontSize={fontSize ? fontSize : 'inherit'}
+      // fontSize={fontSize ? fontSize : 'inherit'}
+      fontSize={["3xl", "xl"]}
     >
       {centered && 
         <Box flex="1">

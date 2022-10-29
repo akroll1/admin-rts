@@ -1,30 +1,42 @@
-import React, {useState} from 'react'
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { 
+  Button, 
+  Modal, 
+  ModalBody,
+  ModalCloseButton, 
+  ModalContent, 
+  ModalFooter, 
+  ModalHeader, 
+  ModalOverlay
+} from '@chakra-ui/react'
 import { ScoringMoneylineTable } from '../tables'
-import { CustomOverlay } from '../custom-overlay'
 import { useScorecardStore } from '../../stores'
 
 export const MoneylineModal = ({
   props,
 }) => {
-  const [overlay, setOverlay] = useState(<CustomOverlay />)
   const {
     fight,
     fighters,
     modals,
     setModals,
   } = useScorecardStore()
+
+  const closeModal = () => {
+    setModals('moneylineModal', false)
+  }
   return (
     <Modal 
       size="lg"
       blockScrollOnMount={false} 
       isCentered 
       isOpen={modals.moneylineModal} 
+      onClose={closeModal}
       motionPreset="slideInBottom"
     >
-      <ModalOverlay/>
+      <ModalOverlay />
       <ModalContent>
         <ModalHeader textAlign="center">FightSync Props</ModalHeader>
+        <ModalCloseButton onClick={closeModal} />
         <ModalBody>
           <ScoringMoneylineTable 
             fighters={fighters} 

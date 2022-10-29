@@ -17,6 +17,7 @@ const Scoring = () => {
         accessToken,
         chatScorecard,
         collateTableData,
+        currentRound,
         fetchGroupScorecard,
         fight,
         fightComplete,
@@ -24,6 +25,7 @@ const Scoring = () => {
         fighterScores,
         modals,
         setModals,
+        totalRounds,
         tokenExpired,
     } = useScorecardStore();
 
@@ -50,7 +52,13 @@ const Scoring = () => {
     });
 
     const [props, setProps] = useState(null);
+    const [round, setRound] = useState(null)
+
     const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards/${groupscorecard_id}/summary`;
+    
+    useEffect(() => {
+        setRound(parseInt(currentRound))
+    },[currentRound])
 
     useEffect(() => {
         if(modals.moneylineModal){
@@ -150,7 +158,7 @@ const Scoring = () => {
                 
                 <AddGuestJudgeModal 
                     fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
-                    />
+                />
                 <AddMemberModal />
                 <ExpiredTokenModal />
                 <MoneylineModal
@@ -168,14 +176,31 @@ const Scoring = () => {
                 <ScoringSidebarLeft
                     tabs={tabs}
                 />
-                <ScoringMain
-                    fightComplete={fightComplete}
-                    fighters={fighters}
-                    fighterScores={fighterScores} 
-                    isSubmitting={isSubmitting}
-                    tabs={tabs}
-                    totalRounds={fight?.totalRounds}
-                />
+                <Flex
+                    w="100%"
+                    flexDir="column"
+                >
+                    <Heading 
+                        zIndex={99}
+                        mt="4"
+                        mb="2"
+                        as="h2"
+                        size="xl"
+                        textAlign="center"
+                        minH="2rem"
+                        verticalAlign="middle"
+                    >
+                        {`Round ${ round >= totalRounds ? totalRounds : round }`}
+                    </Heading>
+                    <ScoringMain
+                        fightComplete={fightComplete}
+                        fighters={fighters}
+                        fighterScores={fighterScores} 
+                        isSubmitting={isSubmitting}
+                        tabs={tabs}
+                        totalRounds={fight?.totalRounds}
+                    />
+                </Flex>
                 <ScoringSidebarRight
                     tabs={tabs}
                 />

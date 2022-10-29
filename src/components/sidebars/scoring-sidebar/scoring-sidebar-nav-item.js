@@ -1,25 +1,37 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react'
-import { BsCaretRightFill } from 'react-icons/bs'
+import { Flex } from '@chakra-ui/react'
+import { useScorecardStore } from '../../../stores';
 
 export const ScoringSidebarNavItem = props => {
     const { 
         active, 
         fightId, 
         icon, 
-        children, 
-        label, 
-        endElement, 
-        href 
+        label,
+        onclickOption 
     } = props; 
+
+    const {
+        setModals
+    } = useScorecardStore()
+
+    const handleClickOption = e => {
+        if(onclickOption){
+            onclickOption()
+            e.stopPropagation()
+        }
+        e.stopPropagation()
+    }
 
     return (
         <Flex
-            pl="2"
+            flex="1"
+            pl="3"
             justifyContent="space-between"
             alignItems="space-between"
-            w="100%"
+            minW="100%"
+            color={active ? 'white' : 'whiteAlpha.800'}
             id={fightId}
-            onClick={e => e.stopPropagation()}
+            onClick={handleClickOption}
             cursor="pointer"
             userSelect="none"
             rounded="md"
@@ -32,7 +44,9 @@ export const ScoringSidebarNavItem = props => {
                 bg: 'gray.600',
             }}
         >
-            <Flex 
+             <Flex 
+                mt="1"
+                mr="2"
                 justifyContent="center"
                 alignItems="center"
                 fontSize={active ? '1rem' : 'inherit'} 
@@ -40,16 +54,17 @@ export const ScoringSidebarNavItem = props => {
             >
                 {icon}
             </Flex>
-            <Text 
+            <Flex 
+                p="1"
+                pb="0"
                 w="100%"
-                ml="2"
-                fontWeight="medium"
                 fontSize="1rem" 
                 flex="1" 
+                fontWeight="inherit" 
                 color={active ? 'gray.300' : undefined}
             >
                 {label}
-            </Text>
+            </Flex>
         </Flex>
     )
 }

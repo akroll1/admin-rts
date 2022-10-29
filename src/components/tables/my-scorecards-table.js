@@ -14,7 +14,7 @@ export const MyScorecardsTable = ({
       mx="auto" 
       px={{base: '6', md: '8'}}
     >
-      <TableActions />
+      {/* <TableActions /> */}
       <MyScorecardsTableContent scorecards={scorecards} />
       <ScorecardsTablePagination total={scorecards && scorecards.length ? scorecards.length : '0'} />
     </Flex>

@@ -3,7 +3,6 @@ import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 
 export const ScorecardsNavGroup = (props) => {
   const { active, children, id, label, handleHideShow, setShow, show } = props
-  
   const hideShow = e => {
     const { id } = e.currentTarget
     handleHideShow(id)
@@ -11,6 +10,7 @@ export const ScorecardsNavGroup = (props) => {
 
   return (  
     <Flex
+        names={'scorecard_nav_group'}
         w="100%"
         flexDir="column"
         justifyContent="center"
@@ -32,17 +32,18 @@ export const ScorecardsNavGroup = (props) => {
         >
             <Heading
                 w="100%"
+                p="1"
                 pl="2"
                 _hover={{ color:'#fcfcfc'}}
-                fontSize="xl"
+                fontSize={id === 'fight' ? '2xl' : "lg"}
                 color="#f0f0f0"
                 as="h3" 
-                size="md"
             >
                 {label}
             </Heading>
 
             <Flex
+                display={id === 'fight' ? 'none' : 'flex'}
                 mr="4"
             >
                 { active 
@@ -58,11 +59,7 @@ export const ScorecardsNavGroup = (props) => {
                 }
             </Flex>
         </Flex>    
-      <Flex 
-        w="100%"  
-      >
-        {children}
-    </Flex>
+        <Flex w="100%">{children}</Flex>
     </Flex>
   )
 }

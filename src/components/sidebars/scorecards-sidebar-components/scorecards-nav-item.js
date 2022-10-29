@@ -1,4 +1,4 @@
-import { Box, Flex, Icon } from '@chakra-ui/react'
+import { Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { BsCaretRightFill } from 'react-icons/bs'
 import { HiBadgeCheck } from 'react-icons/hi';
 
@@ -22,7 +22,6 @@ export const ScorecardsNavItem = props => {
             justifyContent="space-between"
             alignItems="space-between"
             w="100%"
-            mb="1"
             color={active ? 'white' : 'whiteAlpha.800'}
             id={fightId}
             onClick={e => e.stopPropagation()}
@@ -47,16 +46,16 @@ export const ScorecardsNavItem = props => {
             >
                 {icon}
             </Flex>
-            <Box 
+            <Flex 
+                mb="1"
+                w="100%"
                 fontSize="1rem" 
                 flex="1" 
                 fontWeight="inherit" 
                 color={active ? 'gray.300' : undefined}
             >
                 {label}
-            </Box>
-            {endElement && !children && <Box>{endElement}</Box>}
-            {children && <Box fontSize="xs" flexShrink={0} as={BsCaretRightFill} />}
+            </Flex>
         </Flex>
     )
 }

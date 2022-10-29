@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { 
     Collapse,
     Flex,
@@ -20,7 +20,18 @@ export const ScorecardsSidebar = () => {
         setSelectedFightSummary,
     } = useScorecardStore()
     
-    const [activeSeason, setActiveSeason] = useState('1')
+    const [activeNavGroupItem, setActiveNavGroupItem] = useState({
+        1: true
+    })
+
+    useEffect(() => {
+        if(seasons.length > 0){
+            const tabs = seasons.map( season => season.season.seasonId)
+                .reduce( (acc, curr) => ({ [acc[curr]]: false }), {})
+            Object.assign(tabs, activeNavGroupItem)
+            setActiveNavGroupItem(tabs)
+        }
+    },[seasons])
 
     const selectFight = e => {
         const { id } = e.currentTarget;
@@ -29,13 +40,10 @@ export const ScorecardsSidebar = () => {
     }
 
     const handleHideShow = id => {
-        if(id === activeSeason){
-            // setActiveSeason('')
-            return
-        }
-        setActiveSeason(id)
-    }
 
+            setActiveNavGroupItem(prev => ({ ...prev, [id]: !prev[id] }))
+    }
+    console.log('activeNavGroupItem: ', activeNavGroupItem)
     return (
 
         <Flex 
@@ -67,10 +75,10 @@ export const ScorecardsSidebar = () => {
                 flexDir="column"
                 alignItems="flex-start"
             >
-                { seasons?.length && seasons.map( summary => {
+                { seasons?.length > 0 && seasons.map( summary => {
                     const { fightSummaries, season } = summary;
                     const { seasonId, seasonName } = season;
-                    const active = activeSeason === seasonId;
+                    const active = activeNavGroupItem[seasonId];
                     return (
                         <ScorecardsNavGroup 
                             handleHideShow={handleHideShow}

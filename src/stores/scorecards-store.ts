@@ -218,6 +218,7 @@ export const useScorecardStore = create<ScorecardStore>()(
 
                     if(prediction){
                         const index = prediction.indexOf(',')
+                        console.log('PREDICTION: ', prediction)
                         prediction = prediction.slice(0, index) === fighter1.fighterId 
                             ? `${fighter1.lastName}- ${prediction.slice(index+1)}` 
                             : `${fighter2.lastName}- ${prediction.slice(index+1)}`
@@ -697,7 +698,11 @@ export const useScorecardStore = create<ScorecardStore>()(
             partialize: state => {
                 const { 
                     accessToken, 
+                    activeGroupScorecard,
+                    fight,
+                    fighters,
                     idToken,
+                    scorecards,
                     seasons,
                     selectedFightSummary, 
                     user, 
@@ -707,7 +712,11 @@ export const useScorecardStore = create<ScorecardStore>()(
 
                 return ({ 
                     accessToken,
+                    activeGroupScorecard,
+                    fight,
+                    fighters,
                     idToken,
+                    scorecards,
                     seasons,
                     selectedFightSummary,
                     user,

@@ -4,6 +4,7 @@ import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 import { FighterSwipe } from '../fighter-swipe'
 import { useScorecardStore } from '../../stores'
 import image from '../../image/boxing-background.png'
+import '../../stylesheets/background-image.css'
 
 export const ScoringMain = ({ 
     isSubmitting,
@@ -17,7 +18,6 @@ export const ScoringMain = ({
     const [notSelectedScore, setNotSelectedScore] = useState(9);
     
     const {
-        currentRound,
         fighters,
         fighterScores,
         scoringComplete,
@@ -25,23 +25,10 @@ export const ScoringMain = ({
         submitRoundScores,
         totalRounds,
     } = useScorecardStore();
-    
-    useEffect(() => {
-        setRound(parseInt(currentRound))
-    },[currentRound])
 
     useEffect(() => {
         setUserScoringComplete(scoringComplete)
     },[scoringComplete])
-
-    // useEffect(() => {
-    //     if(userScoringComplete || fighterScores.round === currentRound){
-    //         setIsDisabled(true)
-    //         return setRound(totalRounds);
-    //     }
-    //     return round >= totalRounds ? setRound(parseInt(totalRounds)) : setRound(parseInt(fighterScores.round));
-
-    // }, [fighterScores])
 
     useEffect(() => {
         if(isSubmitting){ 
@@ -93,39 +80,35 @@ export const ScoringMain = ({
         setNotSelectedScore(9)
         setScoringComplete(scoringIsComplete)
     }
-    // console.log('fighters: ', fighters)
-    // console.log('selectedFighter: ', selectedFighter)
-    // console.log('currentRound: ', currentRound)
+
     return (
-        <Flex
-        w="100%"
-        h="100%"
-        >
         <Flex 
-            id="scoring-main"
+            id="scoring_main"
             display={tabs.scoring || tabs.all ? 'flex' : 'none'}
             p={["0", "2"]} 
             m="auto"
+            mt="0"
             flexDir="column" 
             justifyContent="flex-end"
-            w="100%"
-            backgroundImage={`url(${image})`}  
-            >
-            <Heading 
-                mt="4"
-                mb="2"
-                as="h2"
-                size="xl"
-                textAlign="center"
-                minH="2rem"
-                verticalAlign="middle"
-                >
-                {`Round ${ round >= totalRounds ? totalRounds : round }`}
-            </Heading> 
-            <Flex            
+            w="100%"  
+            position="relative"  
+        >
+            <Flex     
+                back       
                 flexDir={["row"]} 
                 w={["100%"]} 
                 m="auto"
+                _before={{
+                    content: "''",
+                    background: `url(${image})`,
+                    opacity: "0.3",
+                    top: "0",
+                    bottom: "0",
+                    left: "0",
+                    right: "0",
+                    position: "absolute",
+                    zIndex: "1"
+                }}
             >
             {
                 fighters.length > 0 && fighters.map( (fighter, i) => (
@@ -152,7 +135,7 @@ export const ScoringMain = ({
                 justifyContent="center"
             >
                 <Flex 
-                    // mt="8" 
+                    zIndex={101}
                     minH="2rem" 
                     visibility={selectedFighter ? `visible` : `hidden`} 
                     w="100%" 
@@ -178,8 +161,8 @@ export const ScoringMain = ({
                         border="1px solid gray" 
                     />
                 </Flex>
-
                 <Button
+                    zIndex={100}
                     minH="3rem"
                     onClick={submitScores}
                     disabled={isDisabled} 
@@ -192,7 +175,6 @@ export const ScoringMain = ({
                     { isDisabled && round >= totalRounds ? `Scoring Complete` : isDisabled ? `Select Fighter` : `Submit Score` }
                 </Button>
             </Flex>
-        </Flex> 
         </Flex> 
     )
 }
