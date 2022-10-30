@@ -99,7 +99,6 @@ export const ScoringMain = ({
 
         >
             <Flex     
-                back       
                 flexDir={["column"]} 
                 w={["100%"]} 
                 position="relative"

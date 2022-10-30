@@ -1,10 +1,11 @@
-import { Avatar, Center, Flex, Heading } from '@chakra-ui/react'
-import { capFirstLetters } from '../../../utils'
+import { 
+    Avatar, 
+    Center, 
+    Flex, 
+    Heading 
+} from '@chakra-ui/react'
 
-export const ScoringSidebarFighterSwipe = ({ 
-    fighter, 
-}) => {
-    const { fighterId, firstName, lastName, ringname } = fighter; 
+export const ScoringSidebarFighterSwipe = () => {
 
     return (
         <Flex
@@ -17,7 +18,6 @@ export const ScoringSidebarFighterSwipe = ({
             <Flex  
                 flexDir="column" 
                 zIndex={100}      
-                id={fighterId}
                 boxSizing="border-box" 
                 flexDirection="column"
                 borderRadius="1px"
@@ -28,18 +28,6 @@ export const ScoringSidebarFighterSwipe = ({
                         size="md" 
                     />
                 </Center>
-            </Flex>
-            <Flex
-                flexDir="row"
-            >
-                <Heading    
-                    textAlign="center" 
-                    as="h2" 
-                    size="xs"
-                    mb="1"
-                >
-                    {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
-                </Heading>
             </Flex>
         </Flex>
     )

@@ -18,7 +18,6 @@ export const ScoringButtons = ({
             flexDir="column" 
             w="100%" 
             alignItems="center" 
-            // justifyContent="center"
         >
             <Flex 
                 zIndex={101}
