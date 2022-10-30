@@ -43,10 +43,6 @@ export const SeasonsForm = () => {
     const [selectedSeason, setSelectedSeason] = useState({})
     const [fightId, setFightId] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [pickerTime, setPickerTime] = useState({
-        starts: Date.now(),
-        ends: Date.now()
-    })
 
     const [form, setForm] = useState(resetForm)
 
@@ -55,7 +51,6 @@ export const SeasonsForm = () => {
     },[])
 
     useEffect(() => {
-        console.log('asdfadsf')
         if(seasons.length > 0){
             setAllSeasons(seasons)
             setSelectedSeason(seasons[0])
@@ -85,8 +80,6 @@ export const SeasonsForm = () => {
         setForm(season.season); 
         setSelectedSeason(season) 
         setSeasonId(season.seasonId)
-        handlePickerChange(season.starts, 'starts')
-        handlePickerChange(season.ends, 'ends')
     }
 
     const handleCreateSeason = () => {
@@ -128,12 +121,6 @@ export const SeasonsForm = () => {
         setForm({ ...form, fightIds: removed })
     }
 
-    const handlePickerChange = (time, id) => {
-        setPickerTime({ ...pickerTime, [id]: parseISO(new Date(time).toISOString()) })
-        // setForm({ ...form, [id]: parseISO(new Date(time).toISOString()) })
-    }
-
-
     const seasonStatusOptions = [
         {
             label: 'Active',
@@ -148,10 +135,9 @@ export const SeasonsForm = () => {
             value: SeasonStatus.PENDING
         },
     ]
-    const { seasonName, seasonDescription, seasonStatus, seasonTagline } = form
-    const { ends, starts } = pickerTime
-    console.log('starts: ', starts)
-    console.log('ends: ', ends)
+    const { ends, seasonName, seasonDescription, seasonStatus, seasonTagline, starts } = form
+
+
     return (
         <Flex
             flexDir="column"
@@ -228,7 +214,7 @@ export const SeasonsForm = () => {
                                         dateFormat="MM/dd/yyyy"
                                         selected={starts}
                                         style={{ background: '#FFF', color: '#333 !important' }}
-                                        onChange={time => handlePickerChange(time, 'starts')}
+                                        onChange={time => setForm({ ...form, starts: new Date(time).getTime() })}
                                     />
                                 </FormControl>
 
@@ -238,7 +224,7 @@ export const SeasonsForm = () => {
                                         dateFormat="MM/dd/yyyy"
                                         selected={ends}
                                         style={{ background: '#FFF', color: '#333 !important' }}
-                                        onChange={time => handlePickerChange(time, 'ends')}
+                                        onChange={time => setForm({ ...form, ends: new Date(time).getTime() })}
                                     />
                                 </FormControl>
                             </VStack>

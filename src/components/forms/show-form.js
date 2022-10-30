@@ -19,7 +19,6 @@ import {
 import { FieldGroup } from '../../chakra'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import parseISO from 'date-fns/parseISO'
 import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
 // import { addDays } from 'date-fns/addDays'
 import { useScorecardStore } from '../../stores'
@@ -44,7 +43,7 @@ export const ShowForm = () => {
         promoter: '',
         showName: '',
         showStoryline: '',
-        showTime: parseISO(new Date().toISOString()),
+        showTime: new Date(),
     })    
 
     useEffect(() => {
@@ -161,7 +160,7 @@ export const ShowForm = () => {
                                     dateFormat="Pp"
                                     selected={showTime}
                                     style={{background: '#FFF', color: '#333 !important'}}
-                                    onChange={showTime => setForm({...form, showTime})}
+                                    onChange={showTime => setForm({ ...form, showTime })}
                                 />
                             </FormControl>
                             <FormControl id="showStoryline">
