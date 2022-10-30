@@ -164,7 +164,7 @@ const Scoring = () => {
             alignItems="center" 
             justifyContent="center" 
             margin="auto" 
-            p="4"
+            p="2"
             bg="transparent"
         >         
             <Flex>
@@ -181,27 +181,20 @@ const Scoring = () => {
             </Flex>
             <Flex 
                 display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
-                mb="3rem"
                 w="100%" 
                 minH="60vh"  
-                maxH="60vh"
             >
                 <ScoringSidebarLeft
                     tabs={tabs}
                 />
-                <Flex
-                    w="100%"
-                    flexDir="column"
-                >
-                    <ScoringMain
-                        fightComplete={fightComplete}
-                        fighters={fighters}
-                        fighterScores={fighterScores} 
-                        isSubmitting={isSubmitting}
-                        tabs={tabs}
-                        totalRounds={fight?.totalRounds}
-                    />
-                </Flex>
+                <ScoringMain
+                    fightComplete={fightComplete}
+                    fighters={fighters}
+                    fighterScores={fighterScores} 
+                    isSubmitting={isSubmitting}
+                    tabs={tabs}
+                    totalRounds={fight?.totalRounds}
+                />
                 <ScoringSidebarRight
                     tabs={tabs}
                 />

@@ -167,11 +167,12 @@ export const ChatSidebar = ({
 
     return (
         <Flex 
-            p="1"
-            display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
             id="chat-sidebar"
+            p="1"
+            w="100%"
+            display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
             flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
-            maxW="100%" 
+            // maxW="100%" 
             bg={tabs.all ? "'fsl-scoring-sidebar-bg'" : "'fsl-scoring-sidebar-bg'"}
             borderRadius="md" 
             ref={chatRef}
@@ -187,6 +188,7 @@ export const ChatSidebar = ({
                 centered={tabs.all ? true : false}
             />
             <Flex 
+                w="100%"
                 overflow="scroll"
                 flexDirection="column"
             >
@@ -200,6 +202,7 @@ export const ChatSidebar = ({
                         p="4"
                         color="white" 
                         fontSize="sm"
+                        w="100%"
                     >    
                         {renderMessages()}  
                         <Flex ref={messagesEndRef}>   

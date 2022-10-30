@@ -705,6 +705,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                     scorecards,
                     seasons,
                     selectedFightSummary, 
+                    show,
                     user, 
                     userScorecard, 
                     userScorecards 
@@ -719,6 +720,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                     scorecards,
                     seasons,
                     selectedFightSummary,
+                    show,
                     user,
                     userScorecard,
                     userScorecards,

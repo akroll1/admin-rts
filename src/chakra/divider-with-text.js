@@ -43,7 +43,7 @@ export const SidebarsDividerWithText = props => {
       align="center" 
       color="gray.300" 
       w="100%"
-      pl="0" 
+      pl={centered ? "0" : "2"} 
       m={my ? my : "auto"}
       my={my ? my : "2"} 
       mt={mt ? mt : "2"} 
@@ -52,23 +52,24 @@ export const SidebarsDividerWithText = props => {
       // fontSize={fontSize ? fontSize : 'inherit'}
       fontSize={["3xl", "xl"]}
     >
-      {centered && 
+      {/* {centered && 
         <Box flex="1">
           <Divider borderColor="currentcolor" />
         </Box> 
-      }
+      } */}
       <Text 
+        margin={centered ? "auto" : "unset"}
         as="span" 
         pl={centered ? "3" : "0"}
         pr="3"
-        color={useColorModeValue('gray.600', 'whiteAlpha.800')} 
+        color={centered ? "gray.300" : "#fafafa"} 
         fontWeight="medium"
       >
         {text}
       </Text>
-      <Box flex="1">
+      {/* <Box flex="1">
         <Divider borderColor="currentcolor" />
-      </Box>
+      </Box> */}
     </Flex>
   );
 }

@@ -61,9 +61,10 @@ export const ScorecardsSidebar = () => {
             borderRadius="lg"
             direction="column" 
             p="2" 
-            bg="fsl-sidebar-bg" 
             color="white" 
             fontSize="sm"
+            bg="fsl-sidebar-bg" 
+            border="1px solid #252525"
         >
             <SidebarsDividerWithText 
                 fontSize={'1.5rem'} 

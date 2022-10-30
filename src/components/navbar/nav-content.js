@@ -1,4 +1,11 @@
-import { Box, Button, Flex, HStack, useDisclosure } from '@chakra-ui/react'
+import { 
+  Box, 
+  Button, 
+  Flex, 
+  Heading,
+  HStack, 
+  useDisclosure 
+} from '@chakra-ui/react'
 import { NavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
 import { ToggleButton, Submenu } from '../../chakra'
@@ -13,7 +20,7 @@ const MobileNavContext = props => {
     <>
       <Flex 
         align="center" 
-        justify="space-between" 
+        // justify="space-between" 
         className="nav-content__mobile" 
         {...props}
       >
@@ -21,6 +28,14 @@ const MobileNavContext = props => {
           <ToggleButton 
             isOpen={isOpen} onClick={onToggle} />
         </Box>
+        <Heading 
+          as="h3" 
+          size="sm"
+          textAlign="center"
+          letterSpacing="1px"
+        >
+          FightSync
+        </Heading>
       </Flex>
       <NavMenu animate={isOpen ? 'open' : 'closed'} onClick={onToggle}>
         {links.map((link, i) => 

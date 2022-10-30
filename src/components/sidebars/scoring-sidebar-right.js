@@ -40,29 +40,11 @@ export const ScoringSidebarRight = ({
             flex={["1 0 25%"]} 
             w="100%" 
             p="2" 
-            bg={tabs.all ? "'fsl-scoring-sidebar-bg'" : "inherit"}
+            bg={tabs.all ? "fsl-sidebar-bg" : "inherit"}
             borderRadius="md" 
             minH={tabs.chat ? "75vh" : "100%"}
+            border="1px solid #252525"
         > 
-            <Flex 
-                w={["100%","auto"]} 
-                position="fixed" 
-                top="3rem" 
-                right="0" 
-                flexDir="column" 
-                zIndex="10000"
-            >
-            {notifications.length > 0 && notifications.map( ({notification, username}) => {
-                return (
-                    <Notification
-                        key={notification}
-                        id={notification}
-                        handleCloseNotification={handleCloseNotification}
-                        notification={notification} 
-                        username={username}
-                    /> 
-                )})}
-            </Flex>  
             <ChatSidebar 
                 setNotifications={setNotifications}
                 setNotificationTimeout={setNotificationTimeout}

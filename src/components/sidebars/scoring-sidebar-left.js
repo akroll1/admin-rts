@@ -1,25 +1,25 @@
+import { useState } from 'react'
 import { 
-    useEffect, 
-    useState 
-} from 'react'
-import { Collapse, Flex, Heading, useToast } from '@chakra-ui/react'
+    Collapse, 
+    Flex, 
+    useToast 
+} from '@chakra-ui/react'
 import { ScorecardsNavGroup } from './scorecards-sidebar-components'
 import { ScoringSidebarNavItem } from './scoring-sidebar/scoring-sidebar-nav-item'
+import { ScoringSidebarFightersFaceoff } from './scoring-sidebar/scoring-sidebar-fighter-faceoff'
 import { 
     FaGavel,
     FaLock, 
     FaLockOpen, 
-    FaMapMarkerAlt, 
     FaRegClock, 
     FaRegMoneyBillAlt, 
-    FaTrophy, 
     FaTv 
 } from 'react-icons/fa'
-import { MdOnlinePrediction } from 'react-icons/md'
-import { useScorecardStore, useStateStore } from '../../stores'
-import { SidebarsDividerWithText } from '../../chakra'
 import { IoScaleOutline } from 'react-icons/io5'
+import { MdOnlinePrediction } from 'react-icons/md'
+import { SidebarsDividerWithText } from '../../chakra'
 import { parseEpoch, transformedWeightclass } from '../../utils'
+import { useScorecardStore, useStateStore } from '../../stores'
 
 export const ScoringSidebarLeft = ({ 
     tabs,
@@ -29,24 +29,17 @@ export const ScoringSidebarLeft = ({
         setModals,
         show,
         transformedPrediction,
-        userScorecard,
     } = useScorecardStore()
     
     const { 
         availableGuestJudges 
     } = useStateStore()
     
-    const [activeNavGroupItem, setActiveNavGroupItem] = useState({
-        fight: true,
-        prediction: false,
-        officialJudges: false,
-        props: false
-    })
+    const [activeNavGroupItem, setActiveNavGroupItem] = useState('officialJudges')
 
     const toast = useToast()
-    const { finalScore = null } = userScorecard
-    const { rounds, weightclass } = fight ? fight : '';
-    const { location, network, showTime } = show
+    const { weightclass } = fight ? fight : '';
+    const { network, showTime } = show
     const isLocked = Date.now() > showTime
 
     const openMemberModal = () => {
@@ -64,8 +57,11 @@ export const ScoringSidebarLeft = ({
     }
 
     const handleHideShow = id => {
-        if(id === 'fight') return
-        setActiveNavGroupItem(prev => ({ ...prev, [id]: !prev[id] }))
+        if(id === activeNavGroupItem){
+            setActiveNavGroupItem('')
+            return
+        }
+        setActiveNavGroupItem(id)
     }
 
     const handleOpenGuestJudgeModal = () => {
@@ -95,15 +91,19 @@ export const ScoringSidebarLeft = ({
             borderRadius="md"
             direction="column" 
             p="1" 
-            bg={tabs.info ? "inherit" : "'fsl-scoring-sidebar-bg'"}
+            bg={tabs.info ? "inherit" : "fsl-sidebar-bg"}
             color={tabs.info ? "#dadada" : "#c8c8c8"}
             fontSize="sm"
             minH={tabs.info ? "75vh" : "100%"}
+            border={tabs.all ? "1px solid #252525" : 'none'}
         >
             <SidebarsDividerWithText 
                 fontSize={'1.5rem'} 
                 text="Fight Info" 
                 centered={tabs.all ? true : false}
+            />
+            <ScoringSidebarFightersFaceoff 
+                tabs={tabs}
             />
             <Flex 
                 flexDir="column"
@@ -111,13 +111,14 @@ export const ScoringSidebarLeft = ({
                 flex="1" 
                 overflowY="scroll" 
                 w="100%"
+                pt="2"
             >
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
                     id="fight"
                     label={fight.fightQuickTitle}
-                    active={activeNavGroupItem['fight']}
+                    active={activeNavGroupItem === 'fight'}
                 >
                     <Flex 
                         w="100%"
@@ -140,12 +141,36 @@ export const ScoringSidebarLeft = ({
                         /> 
                     </Flex>
                 </ScorecardsNavGroup>
+                
+                <ScorecardsNavGroup 
+                    handleHideShow={handleHideShow} 
+                    tabs={tabs} 
+                    id="officialJudges"
+                    label="Official Judges"
+                    active={activeNavGroupItem === 'officialJudges'}
+                >
+                    <Flex 
+                        w="100%"
+                        flexDir="column"
+                    >
+                        <Collapse 
+                            in={activeNavGroupItem === 'officialJudges'} 
+                            animateOpacity
+                        >
+                            <ScoringSidebarNavItem 
+                                onclickOption={handleOpenGuestJudgeModal}
+                                icon={<FaGavel />} 
+                                label="Official Judges"
+                            />
+                        </Collapse>
+                    </Flex>
+                </ScorecardsNavGroup>
                 <ScorecardsNavGroup
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
                     id="prediction"
-                    label="Prediction"
-                    active={activeNavGroupItem['prediction']}
+                    label="Predictions"
+                    active={activeNavGroupItem ==='prediction'}
                 >
                     <Flex 
                         w="100%"
@@ -153,7 +178,7 @@ export const ScoringSidebarLeft = ({
                     >
                         <Collapse 
                             w="100%"
-                            in={activeNavGroupItem['prediction']} 
+                            in={activeNavGroupItem === 'prediction'} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 
@@ -171,43 +196,19 @@ export const ScoringSidebarLeft = ({
                         </Collapse>
                     </Flex>
                 </ScorecardsNavGroup>
-                
-                <ScorecardsNavGroup 
-                    handleHideShow={handleHideShow} 
-                    tabs={tabs} 
-                    id="officialJudges"
-                    label="Official Judges"
-                    active={activeNavGroupItem['officialJudges']}
-                >
-                    <Flex 
-                        w="100%"
-                        flexDir="column"
-                    >
-                        <Collapse 
-                            in={activeNavGroupItem['officialJudges']} 
-                            animateOpacity
-                        >
-                            <ScoringSidebarNavItem 
-                                onclickOption={handleOpenGuestJudgeModal}
-                                icon={<FaGavel />} 
-                                label="Official Judges"
-                            />
-                        </Collapse>
-                    </Flex>
-                </ScorecardsNavGroup>
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
                     id="props"
                     label="Props"
-                    active={activeNavGroupItem['props']}
+                    active={activeNavGroupItem === 'props'}
                 >
                     <Flex 
                         w="100%"
                         flexDir="column"
                     >
                         <Collapse 
-                            in={activeNavGroupItem['props']} 
+                            in={activeNavGroupItem === 'props'} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 

@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Button, Flex } from '@chakra-ui/react'
+import { Button, Flex, Heading } from '@chakra-ui/react'
 import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 
 export const ScoringButtons = ({
@@ -15,39 +14,45 @@ export const ScoringButtons = ({
         <Flex 
             id="scoring_buttons"
             minH="1rem"
-            mb="4" 
-            mt="2" 
+            my="8"
             flexDir="column" 
             w="100%" 
             alignItems="center" 
-            justifyContent="center"
+            // justifyContent="center"
         >
             <Flex 
                 zIndex={101}
                 minH="2rem" 
-                visibility={selectedFighter ? `visible` : `hidden`} 
                 w="100%" 
                 alignItems="center" 
                 justifyContent="center"
+                pointerEvents={selectedFighter ? 'auto' : 'none'}
             >
-                <AddIcon 
-                    onClick={handleAdjustScore}
-                    mr="2"
-                    w="30%"
-                    id="increment"           
-                    h="1.7rem" 
-                    p="1" 
-                    border="1px solid gray" 
-                />
-                <MinusIcon 
-                    onClick={handleAdjustScore}
-                    ml="2"
-                    w="30%"
-                    id="decrement"             
-                    h="1.7rem" 
-                    p="1" 
-                    border="1px solid gray" 
-                />
+                { selectedFighter
+                    ? 
+                        <>
+                            <AddIcon 
+                                onClick={handleAdjustScore}
+                                mr="2"
+                                w="30%"
+                                id="increment"           
+                                h="1.7rem" 
+                                p="1" 
+                                border="1px solid gray" 
+                            />
+                            <MinusIcon 
+                                onClick={handleAdjustScore}
+                                ml="2"
+                                w="30%"
+                                id="decrement"             
+                                h="1.7rem" 
+                                p="1" 
+                                border="1px solid gray" 
+                            />
+                        </>
+                    :
+                        <Heading as="h4" size="md">{`Select Round Winner`}</Heading>
+                }
             </Flex>
             <Button
                 zIndex={100}
@@ -60,7 +65,7 @@ export const ScoringButtons = ({
                 mt="4"
                 w={["90%","50%"]}
             >
-                { isDisabled && round >= totalRounds ? `Scoring Complete` : isDisabled ? `Select Fighter` : `Submit Score` }
+                { isDisabled && round >= totalRounds ? `Scoring Complete` : `Submit Score` }
             </Button>
         </Flex>
     )

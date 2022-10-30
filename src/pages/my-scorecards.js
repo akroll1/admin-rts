@@ -28,6 +28,7 @@ export const MyScorecards = () => {
       color="white" 
       alignItems="flex-start" 
       justifyContent="center" 
+      bg="fsl-body-bg"
     >    
       <ExpiredTokenModal />
 

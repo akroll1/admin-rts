@@ -88,11 +88,11 @@ export const ScoringMain = ({
         <Flex 
             id="scoring_main"
             display={tabs.scoring || tabs.all ? 'flex' : 'none'}
-            p={["0", "2"]} 
+            p={["0", "0"]} 
             m="auto"
             mt="0"
             flexDir="column" 
-            justifyContent="flex-end"
+            justifyContent="flex-start"
             w="100%"  
             position="relative"  
             minH={tabs.info ? "75vh" : "100%"}
@@ -102,7 +102,6 @@ export const ScoringMain = ({
                 back       
                 flexDir={["column"]} 
                 w={["100%"]} 
-                m="auto"
                 position="relative"
                 _before={{
                     content: "''",
