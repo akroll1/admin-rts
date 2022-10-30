@@ -43,7 +43,7 @@ export const ScorecardsSidebar = () => {
 
             setActiveNavGroupItem(prev => ({ ...prev, [id]: !prev[id] }))
     }
-    console.log('activeNavGroupItem: ', activeNavGroupItem)
+
     return (
 
         <Flex 

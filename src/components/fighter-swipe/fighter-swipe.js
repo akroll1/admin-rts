@@ -11,7 +11,6 @@ export const FighterSwipe = ({
     selectedFighter,
 }) => {
     const toast = useToast();
-    console.log('redcorner: ', redCorner)
     const { fighterId, firstName, lastName, ringname } = fighter; 
     
     const handleSelect = e => {
