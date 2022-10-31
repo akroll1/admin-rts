@@ -12,7 +12,7 @@ export const ScoringDividerWithText = props => {
       m="auto" 
       my="4" 
     >
-      {centered && 
+      { centered && 
         <Box flex="1">
           <Divider borderColor="currentcolor" />
         </Box>
@@ -27,9 +27,11 @@ export const ScoringDividerWithText = props => {
     >
         {text}
       </Text>
-      <Box flex="1">
-        <Divider borderColor="currentcolor" />
-      </Box>
+      { centered &&
+        <Box flex="1">
+          <Divider borderColor="currentcolor" />
+        </Box>
+      }
     </Flex>
   );
 }

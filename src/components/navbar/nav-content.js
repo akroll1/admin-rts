@@ -1,4 +1,11 @@
-import { Box, Button, Flex, HStack, useDisclosure } from '@chakra-ui/react'
+import { 
+  Box, 
+  Button, 
+  Flex, 
+  Heading,
+  HStack, 
+  useDisclosure 
+} from '@chakra-ui/react'
 import { NavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
 import { ToggleButton, Submenu } from '../../chakra'
@@ -12,8 +19,9 @@ const MobileNavContext = props => {
   return (
     <>
       <Flex 
+        zIndex={100000}
         align="center" 
-        justify="space-between" 
+        // justify="space-between" 
         className="nav-content__mobile" 
         {...props}
       >
@@ -21,13 +29,28 @@ const MobileNavContext = props => {
           <ToggleButton 
             isOpen={isOpen} onClick={onToggle} />
         </Box>
+        <Heading 
+          as="h3" 
+          size="sm"
+          textAlign="center"
+          letterSpacing="1px"
+        >
+          FightSync
+        </Heading>
       </Flex>
-      <NavMenu animate={isOpen ? 'open' : 'closed'} onClick={onToggle}>
+      <NavMenu animate={isOpen ? 'open' : 'closed'}>
         {links.map((link, i) => 
           link.children ? (
-            <Submenu.Mobile key={i} link={link} />
+            <Submenu.Mobile 
+              key={i} 
+              link={link} 
+            />
           ) : (
-            <NavLink.Mobile key={i} href={link.href}>
+            <NavLink.Mobile 
+              key={i} 
+              href={link.href}
+              onClick={onToggle}
+            >
               {link.label}
             </NavLink.Mobile>
           ),
@@ -43,7 +66,9 @@ const DesktopNavContent = props => {
 
   return (
     <Flex 
-      className="nav-content__desktop" align="center" justify="space-between" {...props}>
+      zIndex={1000000}
+      className="nav-content__desktop" align="center" justify="space-between" {...props}
+    >
       <Button
         minW="20%"
         colorScheme="solid"

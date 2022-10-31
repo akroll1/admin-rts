@@ -1,12 +1,21 @@
-import React, { useState } from 'react'
-import { Flex, Select, Icon, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { useState } from 'react'
+import { 
+  Button, 
+  Flex, 
+  Icon, 
+  Modal, 
+  ModalBody, 
+  ModalContent, 
+  ModalFooter, 
+  ModalHeader, 
+  ModalOverlay,
+  Select, 
+} from '@chakra-ui/react'
 import { FaTrophy } from 'react-icons/fa'
 import { capFirstLetters } from '../../utils'
-import { CustomOverlay } from '../custom-overlay'
 import { useScorecardStore } from '../../stores'
 
 export const PredictionModal = () => {
-  const [overlay, setOverlay] = useState(<CustomOverlay />)
   const [form, setForm] = useState({
     fighter:'',
     result: ''
@@ -33,7 +42,9 @@ export const PredictionModal = () => {
     <Modal 
       blockScrollOnMount={false} 
       isCentered 
+      size="lg"
       isOpen={modals.predictionModal} 
+      onClose={() => setModals('predictionModal', false)}
       motionPreset="slideInBottom"
     >
       <ModalOverlay/>

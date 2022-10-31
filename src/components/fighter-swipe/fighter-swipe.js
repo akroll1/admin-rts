@@ -18,26 +18,6 @@ export const FighterSwipe = ({
         handleFighterSelect(id)
     }
 
-    const setStyles = () => {
-        const evenRoundStyles = {
-            border: '1px solid #DADADA',
-            borderBottom: '3px solid white',
-            background: '#2D3748',
-        }
-        const selectedStyles = {
-            borderBottom: redCorner ? '5px solid red' : '5px solid #1d5d90',
-            background: '#2D3748',
-        }
-        const notSelectedStyles = {
-            // border: '1px solid #DADADA',
-            borderBottom: 'inherit',
-            background: 'inherit'
-        }
-        if(evenRound) return evenRoundStyles
-        if(selectedFighter === fighterId) return selectedStyles
-        if(selectedFighter && selectedFighter !== fighterId) return notSelectedStyles
-    }
-
     const handleScoringComplete = () => {
         toast({
             title: 'Scoring Complete',
@@ -48,54 +28,56 @@ export const FighterSwipe = ({
             isClosable: true,
         })
     }
-    const styles = setStyles();
+
+    const setBottomBorderStyle = () => {
+        if(evenRound) return '3px solid white'
+        if(selectedFighter && selectedFighter === fighterId){
+            if(redCorner) return '3px solid #e62b2b'
+            if(!redCorner) return '3px solid #1d5d90'
+        }
+        return '3px solid transparent'
+    }
+
+    const borderBottomStyles = setBottomBorderStyle();
+
     return (
-        <Flex         
-            borderBottom={`2px solid white`}     
-            m="2"
+        <Flex   
+            zIndex={100}      
+            flexDir="column"
+            justifyContent="flex-start"
+            alignItems="center"
             onClick={scoringComplete ? handleScoringComplete : handleSelect} 
             id={fighterId}
-            style={styles} 
             boxSizing="border-box" 
-            flexDirection="column"
             borderRadius="1px"
-            w="90%"
-            mb="4"  
+            w="100%"
+            mt="4"
+            _after={{
+                content: "''",
+                margin: "0 auto",
+                width: '70%',
+                borderBottom: borderBottomStyles
+            }}
         >
-            <Center m="2">
+            <Center my="">
                 <Avatar 
-                    size="md" 
+                    size="xl" 
                     _hover={{cursor: 'pointer'}} 
                 />
             </Center>
-            <Heading    
-                textAlign="center" 
-                as="h2" 
-                size="xs"
-                mb="1"
+           
+            <Flex
+                flexDir="row"
+                my="4"
             >
-                {capFirstLetters(firstName)} 
-            </Heading>
-            <Heading   
-                letterSpacing="normal" 
-                textAlign="center" 
-                mb="2" 
-                as="h2" 
-                size="md"
-            >
-                {capFirstLetters(lastName)}
-            </Heading>
-            <Flex 
-                flexDirection="row" 
-                alignItems="center" 
-                justifyContent="center"
-            >
-                { selectedFighter && selectedFighter === fighterId &&
-                    <Heading>10</Heading>
-                }
-                { selectedFighter && selectedFighter !== fighterId &&
-                    <Heading>{notSelectedScore}</Heading>
-                }
+                <Heading    
+                    textAlign="center" 
+                    as="h2" 
+                    size="md"
+                    mb="1"
+                >
+                    {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
+                </Heading>
             </Flex>
         </Flex>
     )

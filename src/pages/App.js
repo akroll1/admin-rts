@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from '../components/layout'
 import Home from './home'
@@ -16,7 +15,7 @@ import Fighters from './fighters'
 import Discussion from './discussions'
 import Analytics from './analytics'
 import Shows from './shows'
-import MyScorecards from './my-scorecards'
+import ScorecardsPage from './scorecards'
 import theme from '../theme'
 import { PoundPage } from './pound'
 import { ScorecardsSearch } from './scorecards-search'
@@ -41,7 +40,7 @@ const App = () => {
             <Route exact path="/discussions/:id" element={<Discussion />} />
             <Route exact path="/scorecards" element={
               <PrivateRoute>
-                <MyScorecards /> 
+                <ScorecardsPage /> 
               </PrivateRoute>
             }/>
             <Route exact path="/fighters" element={

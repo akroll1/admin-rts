@@ -2,9 +2,8 @@ import { IoCalendar, IoGrid, IoHelpBuoy } from 'react-icons/io5'
 import { MdWeb } from 'react-icons/md'
 
 export const links = [
-  { label: 'Shows', href: '/shows' },
-  // { label: 'Analytics', href: '/analytics' },
   { label: 'Scorecards', href: '/scorecards' },
+  { label: 'Shows', href: '/shows' },
   {
     label: 'FightSync',
     children: [

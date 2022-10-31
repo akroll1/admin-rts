@@ -1,9 +1,22 @@
-import React, {useEffect, useState} from 'react'
-import { Flex, Heading, useToast } from '@chakra-ui/react'
+import {useEffect, useState} from 'react'
+import { 
+    Flex, 
+    Heading, 
+    useToast 
+} from '@chakra-ui/react'
 import axios from 'axios'
 import { ScoringTable } from '../components/tables'
-import { AddGuestJudgeModal, AddMemberModal, ExpiredTokenModal, MoneylineModal, PredictionModal } from '../components/modals'
-import { ScoringSidebarLeft, ScoringSidebarRight } from '../components/sidebars'
+import { 
+    AddGuestJudgeModal, 
+    AddMemberModal, 
+    ExpiredTokenModal, 
+    MoneylineModal, 
+    PredictionModal 
+} from '../components/modals'
+import { 
+    ScoringSidebarLeft, 
+    ScoringSidebarRight 
+} from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { useScorecardStore, useScoringStore } from '../stores'
 import { useWindowResize } from '../hooks'
@@ -17,6 +30,7 @@ const Scoring = () => {
         accessToken,
         chatScorecard,
         collateTableData,
+        currentRound,
         fetchGroupScorecard,
         fight,
         fightComplete,
@@ -24,6 +38,7 @@ const Scoring = () => {
         fighterScores,
         modals,
         setModals,
+        totalRounds,
         tokenExpired,
     } = useScorecardStore();
 
@@ -50,7 +65,13 @@ const Scoring = () => {
     });
 
     const [props, setProps] = useState(null);
+    const [round, setRound] = useState(null)
+
     const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards/${groupscorecard_id}/summary`;
+    
+    useEffect(() => {
+        setRound(parseInt(currentRound))
+    },[currentRound])
 
     useEffect(() => {
         if(modals.moneylineModal){
@@ -143,14 +164,14 @@ const Scoring = () => {
             alignItems="center" 
             justifyContent="center" 
             margin="auto" 
-            p="4"
+            p="2"
             bg="transparent"
         >         
             <Flex>
                 
                 <AddGuestJudgeModal 
                     fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
-                    />
+                />
                 <AddMemberModal />
                 <ExpiredTokenModal />
                 <MoneylineModal
@@ -160,10 +181,8 @@ const Scoring = () => {
             </Flex>
             <Flex 
                 display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
-                mb="3rem"
                 w="100%" 
                 minH="60vh"  
-                maxH="60vh"
             >
                 <ScoringSidebarLeft
                     tabs={tabs}

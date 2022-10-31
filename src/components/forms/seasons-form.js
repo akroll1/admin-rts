@@ -18,6 +18,7 @@ import { SelectedSeasonTable, SeasonsTable } from '../tables';
 import { SeasonStatus, useScorecardStore } from '../../stores';
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
+import parseISO from 'date-fns/parseISO'
 
 export const SeasonsForm = () => {
     const {
@@ -29,23 +30,19 @@ export const SeasonsForm = () => {
     } = useScorecardStore()
     const resetForm = {
         seasonId: '',
-        ends: new Date().getTime(),
+        ends: 0,
         fightIds: [],
         seasonDescription: '',
         seasonName: '',
         seasonStatus: 'PENDING',
         seasonTagline: '',
-        starts: new Date().getTime(),
+        starts: 0,
     };
     const [seasonId, setSeasonId] = useState(null)
     const [allSeasons, setAllSeasons] = useState([]);
     const [selectedSeason, setSelectedSeason] = useState({})
     const [fightId, setFightId] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [pickerTime, setPickerTime] = useState({
-        starts: new Date().getTime(),
-        ends: new Date().getTime()
-    })
 
     const [form, setForm] = useState(resetForm)
 
@@ -60,7 +57,6 @@ export const SeasonsForm = () => {
             setForm(seasons[0].season)
             setIsSubmitting(false)
             setFightId('')
-            setPickerTime({ ...pickerTime, starts: seasons[0].season.starts, ends: seasons[0].season.ends })
         }
     },[seasons])
 
@@ -83,7 +79,7 @@ export const SeasonsForm = () => {
         const [season] = allSeasons.filter( summary => summary.season.seasonId === id);
         setForm(season.season); 
         setSelectedSeason(season) 
-        setSeasonId(season.seasonId)  
+        setSeasonId(season.seasonId)
     }
 
     const handleCreateSeason = () => {
@@ -125,12 +121,6 @@ export const SeasonsForm = () => {
         setForm({ ...form, fightIds: removed })
     }
 
-    const handlePickerChange = (time, id) => {
-        setPickerTime({ ...pickerTime, [id]: time })
-        setForm({ ...form, [id]: new Date(time.toString()).getTime() })
-    }
-
-
     const seasonStatusOptions = [
         {
             label: 'Active',
@@ -145,8 +135,8 @@ export const SeasonsForm = () => {
             value: SeasonStatus.PENDING
         },
     ]
-    const { seasonName, seasonDescription, seasonStatus, seasonTagline } = form
-    const { ends, starts } = pickerTime
+    const { ends, seasonName, seasonDescription, seasonStatus, seasonTagline, starts } = form
+
 
     return (
         <Flex
@@ -224,7 +214,7 @@ export const SeasonsForm = () => {
                                         dateFormat="MM/dd/yyyy"
                                         selected={starts}
                                         style={{ background: '#FFF', color: '#333 !important' }}
-                                        onChange={time => handlePickerChange(time, 'starts')}
+                                        onChange={time => setForm({ ...form, starts: new Date(time).getTime() })}
                                     />
                                 </FormControl>
 
@@ -234,7 +224,7 @@ export const SeasonsForm = () => {
                                         dateFormat="MM/dd/yyyy"
                                         selected={ends}
                                         style={{ background: '#FFF', color: '#333 !important' }}
-                                        onChange={time => handlePickerChange(time, 'ends')}
+                                        onChange={time => setForm({ ...form, ends: new Date(time).getTime() })}
                                     />
                                 </FormControl>
                             </VStack>
@@ -242,7 +232,7 @@ export const SeasonsForm = () => {
                     </Stack>
                 </form>
             </Flex>
-            <Divider my="8" />
+
 
             { form.seasonId &&
                 <Flex

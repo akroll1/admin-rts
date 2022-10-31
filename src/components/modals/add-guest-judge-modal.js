@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Button, ButtonGroup, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react'
+import { useState, useEffect } from 'react';
+import { 
+    Button, 
+    ButtonGroup, 
+    Input, 
+    InputGroup, 
+    InputRightElement, 
+    Modal, 
+    ModalBody, 
+    ModalContent, 
+    ModalCloseButton, 
+    ModalFooter, 
+    ModalHeader, 
+    ModalOverlay, 
+    Text, 
+    useToast 
+} from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
 import { useScorecardStore, useStateStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
-import { CustomOverlay } from '../custom-overlay';
 
 // now in scoring.ts
 export const AddGuestJudgeModal = ({ 
@@ -19,7 +33,7 @@ export const AddGuestJudgeModal = ({
 
     const availableGuestJudges = useStateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
-    const [overlay, setOverlay] = useState(<CustomOverlay />)
+
     useEffect(() => {
         if(modals.addGuestJudgeModal){
             const currentJudges = availableGuestJudges.length > 0 && availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))
@@ -119,21 +133,28 @@ export const AddGuestJudgeModal = ({
                     alignItems="center" 
                     justifyContent="center"
                 >
-                    <ButtonGroup m="auto" spacing="4">
-                        { availableGuestJudges.length < 0 && 
+                    <ButtonGroup 
+                        m="auto" 
+                        spacing="4"
+                        w="100%"
+                    >
+                        { availableGuestJudges.length > 0 && 
                             <Button 
+                                m="auto"
+                                minW="50%"
                                 size="md"
                                 onClick={setJudges}
                                 loadingText="Submitting"  
-                                colorScheme="solid"
                             >
                                 Set Judges
                             </Button>
                         }
                         <Button 
                             size="md"
+                            m="auto"
+                            minW={availableGuestJudges.length > 0? "50%" : '50%'}
                             colorScheme={availableGuestJudges.length > 0 ? "outline" : 'solid'} 
-                            variant={availableGuestJudges.length > 0 ? 'outline' : 'solid'}
+                            variant={availableGuestJudges > 0 ? "outline" : "solid"}
                             onClick={closeModal}
                         >
                             { availableGuestJudges.length > 0 ? `Cancel` : `Close`}

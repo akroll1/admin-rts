@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { 
     Collapse,
     Flex,
@@ -10,17 +10,32 @@ import {
 import { REVIEW_TYPE } from '../../utils'
 import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
+import { 
+    CheckCircleIcon,
+    NotAllowedIcon, 
+    TimeIcon 
+} from '@chakra-ui/icons'
+import { GiConsoleController } from 'react-icons/gi'
 
-
-export const ScorecardsSidebar = () => { 
+export const ScorecardsPageSidebar = () => { 
     const { 
         seasons,
         selectedFightSummary, 
         selectedSeason,
         setSelectedFightSummary,
+        setSelectedSeason,
     } = useScorecardStore()
     
-    const [activeSeason, setActiveSeason] = useState('1')
+    const [activeNavGroupItem, setActiveNavGroupItem] = useState('1')
+
+    useEffect(() => {
+        if(seasons.length > 0){
+            const tabs = seasons.map( season => season.season.seasonId)
+                .reduce( (acc, curr) => ({ [acc[curr]]: false }), {})
+            Object.assign(tabs, activeNavGroupItem)
+            setActiveNavGroupItem(tabs)
+        }
+    },[seasons])
 
     const selectFight = e => {
         const { id } = e.currentTarget;
@@ -29,15 +44,25 @@ export const ScorecardsSidebar = () => {
     }
 
     const handleHideShow = id => {
-        if(id === activeSeason){
-            // setActiveSeason('')
-            return
-        }
-        setActiveSeason(id)
+        console.log('id: ', id)
+        // if(activeNavGroupItem === id) return
+        setActiveNavGroupItem(id)
+        const [selectedSeason] = seasons.filter( season => season.season.seasonId === id)
+        setSelectedSeason(selectedSeason.season.seasonId)
+    }
+
+    const getLeftIcon = fightStatus => {
+        if(fightStatus === 'COMPLETE') return <CheckCircleIcon />;
+        if(fightStatus === 'PENDING') return <TimeIcon />
+        if(fightStatus === 'CANCELED') return <NotAllowedIcon color="#d98585" />
+    }
+
+    const handleSelectFight = id => {
+        const [selected] = selectedSeason?.fightSummaries?.filter( summary => summary.fight.fightId === id)
+        setSelectedFightSummary(selected)
     }
 
     return (
-
         <Flex 
             id="scorecards_sidebar" 
             as="aside"
@@ -53,24 +78,25 @@ export const ScorecardsSidebar = () => {
             borderRadius="lg"
             direction="column" 
             p="2" 
-            bg="fsl-sidebar-bg" 
             color="white" 
             fontSize="sm"
+            bg="fsl-sidebar-bg" 
+            border="1px solid #252525"
         >
             <SidebarsDividerWithText 
-                fontSize={'1.5rem'} 
-                text="Seasons" 
-                centered={[true, false]}
+                fontSize="xl" 
+                label="Seasons" 
+                my="2"
             />
             <Flex
                 w="100%"
                 flexDir="column"
                 alignItems="flex-start"
             >
-                { seasons?.length && seasons.map( summary => {
+                { seasons?.length > 0 && seasons.map( summary => {
                     const { fightSummaries, season } = summary;
                     const { seasonId, seasonName } = season;
-                    const active = activeSeason === seasonId;
+                    const active = activeNavGroupItem === seasonId;
                     return (
                         <ScorecardsNavGroup 
                             handleHideShow={handleHideShow}
@@ -89,16 +115,19 @@ export const ScorecardsSidebar = () => {
                                     p="2"
                                 >
                                 { fightSummaries.length && fightSummaries.map( summary => {
-                                    const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
+                                    const { fightId, fightQuickTitle, fightStatus, isTitleFight } = summary.fight;
                                     const active = fightId === selectedFightSummary?.fight?.fightId;
+                                    const icon = getLeftIcon(fightStatus);
                                     return (
                                         <ScorecardsNavItem 
+                                            handleSelectFight={handleSelectFight}
                                             id={fightId}
                                             active={active}
                                             name={REVIEW_TYPE.PREDICTION} 
                                             fightId={fightId} 
                                             selectFight={selectFight} 
-                                            // icon={isTitleFight && <IoFlashOutline background="gray" mt="-5px" />} 
+                                            icon={icon}
+                                            isTitleFight={isTitleFight}
                                             label={fightQuickTitle} 
                                             key={fightId} 
                                             isPlaying

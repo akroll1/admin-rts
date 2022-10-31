@@ -77,17 +77,6 @@ export const createTimestamp = epoch => {
     return parseInt(Math.round(new Date(epoch)));
 };
 
-/**
- * @param {number} epoch/1000
- * @returns {string} ISO string
- */
-export const createISOString = timestamp => {
-
-    timestamp *= 1000;
-    const time = parseISO(new Date(timestamp).toISOString());
-}
-
-
 export const isValidEmail = email => {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     // console.log('validate email: ',re.test(email));

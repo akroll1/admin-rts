@@ -1,4 +1,15 @@
-import { Flex, Heading, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { 
+    Flex, 
+    Heading, 
+    Table, 
+    TableCaption, 
+    Tbody, 
+    Td, 
+    Th, 
+    Thead, 
+    Tr, 
+    useColorModeValue as mode 
+} from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 import { useScorecardStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
@@ -65,7 +76,7 @@ export const ScoringTable = ({
     return (      
         <>
             <ScoringDividerWithText 
-                text="Your Group" 
+                text={`Round ${currentRound}`}
                 tabs={tabs} 
                 centered={tabs.all ? true : false}
             />
@@ -84,7 +95,7 @@ export const ScoringTable = ({
                 pt="2"
                 my="auto"
                 h="auto"
-                // maxH={["60vh", "70vh"]}
+                mb={tabs.all ? "0rem" : "4rem"}
             >      
                 <Table 
                     id="scoring_table"
@@ -93,7 +104,6 @@ export const ScoringTable = ({
                     overflowY="scroll" 
                     size={["sm", "md"]} 
                     variant="scoringTable" 
-                    my="4" 
                     borderWidth="1px" 
                     fontSize="sm"
                     bg="whiteAlpha.50"
