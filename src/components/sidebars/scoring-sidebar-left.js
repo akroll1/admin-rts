@@ -86,7 +86,7 @@ export const ScoringSidebarLeft = ({
             w="100%" 
             flex={["1 0 25%"]} 
             position="relative" 
-            alignItems="center" 
+            alignItems={["flex-start", "center"]} 
             justifyContent="center"
             borderRadius="md"
             direction="column" 
@@ -98,9 +98,10 @@ export const ScoringSidebarLeft = ({
             border={tabs.all ? "1px solid #252525" : 'none'}
         >
             <SidebarsDividerWithText 
-                fontSize={'1.5rem'} 
-                text="Fight Info" 
-                centered={tabs.all ? true : false}
+                fontSize="xl" 
+                py="2"
+                mx="1"
+                label="Fight Info" 
             />
             <ScoringSidebarFightersFaceoff 
                 tabs={tabs}

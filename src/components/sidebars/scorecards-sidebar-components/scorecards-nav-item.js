@@ -39,7 +39,7 @@ export const ScorecardsNavItem = props => {
                 mr="3"
                 justifyContent="center"
                 alignItems="center"
-                color={isTitleFight ? '#a17f1a' : 'gray.300'}
+                color={isTitleFight ? 'gray.600' : 'gray.400'}
             >
                 {icon}
             </Flex>

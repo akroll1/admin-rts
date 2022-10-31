@@ -46,6 +46,7 @@ export const SidebarsDividerWithText = props => {
   const { fontSize, mx, my, px, py, label } = props;
   return (
     <Heading
+      textAlign={['left', 'center']}
       fontSize={fontSize}
       mx={mx ? mx : ''}
       my={my ? my : ''}

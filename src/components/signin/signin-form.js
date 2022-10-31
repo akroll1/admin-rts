@@ -1,5 +1,18 @@
-import React, { useEffect, createRef } from 'react'
-import { Box, Button, chakra, FormControl, FormLabel, Heading, Input, SimpleGrid, Stack, Text, VisuallyHidden } from '@chakra-ui/react'
+import { useEffect, createRef } from 'react'
+import { 
+  Box, 
+  Button, 
+  chakra, 
+  Flex,
+  FormControl, 
+  FormLabel, 
+  Heading, 
+  Input, 
+  SimpleGrid, 
+  Stack, 
+  Text, 
+  VisuallyHidden 
+} from '@chakra-ui/react'
 import { Card, DividerWithText } from '../../chakra'
 import { PasswordField } from './password-field'
 import { FaFacebook, FaGoogle } from 'react-icons/fa'
@@ -25,10 +38,31 @@ export const SignInForm = ({
       <Heading textAlign="center" size="xl" fontWeight="extrabold">
         Sign in to your account
       </Heading>
-      <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-        <Text as="span">Don&apos;t have an account?</Text>
-        <Text onClick={() => setFormState({ ...formState, isSignin: false, isSignup: true })} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#FCFCFC'}}>Sign-up now!</Text>
-      </Text>
+      <Flex 
+        flexDir="row"
+        m="auto"
+        w="100%"
+        justifyContent="center"
+        alignItems="center"
+        mb="6"
+      >
+        <Text
+          color="#cacaca"
+        >
+          Don&apos;t have an account?
+        </Text>
+        <Text 
+          onClick={() => setFormState({ ...formState, isSignin: false, isSignup: true })} 
+          _hover={{
+            cursor: 'pointer',
+            color: 'white'
+          }} 
+          ml="2" 
+          color="#fafafa"
+        >
+          Sign-up now!
+        </Text>
+      </Flex>
       <Card>
         <chakra.form onSubmit={e => e.preventDefault()}>
           <Stack spacing="6">

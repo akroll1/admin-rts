@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react'
+import { 
+    useEffect, 
+    useState 
+} from 'react'
 import { 
     Collapse,
     Flex,
@@ -15,7 +18,6 @@ import {
     NotAllowedIcon, 
     TimeIcon 
 } from '@chakra-ui/icons'
-import { GiConsoleController } from 'react-icons/gi'
 
 export const ScorecardsPageSidebar = () => { 
     const { 
@@ -26,7 +28,7 @@ export const ScorecardsPageSidebar = () => {
         setSelectedSeason,
     } = useScorecardStore()
     
-    const [activeNavGroupItem, setActiveNavGroupItem] = useState('1')
+    const [activeNavGroupItem, setActiveNavGroupItem] = useState(1)
 
     useEffect(() => {
         if(seasons.length > 0){
@@ -44,8 +46,6 @@ export const ScorecardsPageSidebar = () => {
     }
 
     const handleHideShow = id => {
-        console.log('id: ', id)
-        // if(activeNavGroupItem === id) return
         setActiveNavGroupItem(id)
         const [selectedSeason] = seasons.filter( season => season.season.seasonId === id)
         setSelectedSeason(selectedSeason.season.seasonId)

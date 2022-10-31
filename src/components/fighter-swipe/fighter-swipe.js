@@ -59,15 +59,21 @@ export const FighterSwipe = ({
                 borderBottom: borderBottomStyles
             }}
         >
-            <Center my="">
-                <Avatar 
-                    size="xl" 
-                    _hover={{cursor: 'pointer'}} 
-                />
-            </Center>
-           
             <Flex
-                flexDir="row"
+                w="100%"
+                flexDir="column"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Center>
+                    <Avatar 
+                        size="xl" 
+                        _hover={{cursor: 'pointer'}} 
+                        />
+                </Center>
+            </Flex>    
+            <Flex
+                flexDir="column"
                 my="4"
             >
                 <Heading    
@@ -78,6 +84,18 @@ export const FighterSwipe = ({
                 >
                     {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
                 </Heading>
+                { selectedFighter && selectedFighter === fighter &&
+                    <Heading    
+                        textAlign="center" 
+                        as="h2" 
+                        size="md"
+                        mb="1"
+                    >
+                        {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
+                    </Heading>
+                
+                
+                }
             </Flex>
         </Flex>
     )
