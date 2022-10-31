@@ -52,6 +52,7 @@ export const SidebarsDividerWithText = props => {
       my={my ? my : ''}
       py={py ? py : ''}
       px={px ? px : ''}
+      mb="2"
     >
       {label}
     </Heading>

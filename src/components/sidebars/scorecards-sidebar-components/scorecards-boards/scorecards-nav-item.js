@@ -30,8 +30,7 @@ export const ScorecardsNavItem = props => {
             rounded="md"
             transition="all 0.2s"
             _hover={{
-                bg: 'gray.700',
-                color: '#fcfcfc'
+                bg: 'gray.700'
             }}
             bg={active ? 'gray.700' : 'inherit'}
         >
@@ -40,16 +39,23 @@ export const ScorecardsNavItem = props => {
                 justifyContent="center"
                 alignItems="center"
                 color={isTitleFight ? 'gray.600' : 'gray.400'}
+                _hover={{
+                    color: '#fff'
+                }}
             >
                 {icon}
             </Flex>
             <Flex 
+                 _hover={{
+                    color: '#fff'
+                }}
                 mb="1"
                 w="100%"
                 fontSize="1rem" 
                 flex="1" 
                 fontWeight="inherit" 
                 color={active ? 'gray.200' : 'gray.300'}
+
             >
                 {label}
             </Flex>

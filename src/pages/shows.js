@@ -8,8 +8,7 @@ import { ShowsMain } from '../components/shows'
 import { ExpiredTokenModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
 
-const Shows = props => {
-
+const Shows = () => {
     const toast = useToast();
     const { 
         createGroupScorecard,
@@ -23,7 +22,6 @@ const Shows = props => {
         userFightReview,
      } = useScorecardStore();
     const { email, sub, username } = user;
-    const [seasonName, setSeasonName] = useState('FightSync')
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
@@ -168,9 +166,7 @@ const Shows = props => {
                 />
             }
 
-            <ShowsSidebar 
-                setSeasonName={setSeasonName}
-            />  
+            <ShowsSidebar />  
             
             <ShowsMain 
                 deleteMember={deleteMember}
@@ -181,7 +177,6 @@ const Shows = props => {
                 handleFormChange={handleFormChange}
                 isSubmitting={isSubmitting}
                 members={members}
-                seasonName={seasonName}
                 setFightReviewForm={setFightReviewForm}
             />
            

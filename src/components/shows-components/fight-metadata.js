@@ -4,7 +4,7 @@ import { parseEpoch } from '../../utils/utils'
 export const FightMetadata = ({ 
     selectedFightSummary 
 }) => {
-    const { location, promoter, showTime } = selectedFightSummary?.show?.location ? selectedFightSummary.show : '';
+    const { promoter, showTime } = selectedFightSummary?.show?.location ? selectedFightSummary.show : '';
     const fightQuickTitle = selectedFightSummary?.fight?.fightQuickTitle ? selectedFightSummary.fight.fightQuickTitle : '';
     return (
         <Flex 

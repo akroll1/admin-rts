@@ -4,8 +4,6 @@ import {
 } from '@chakra-ui/react'
 import { 
   ScorecardsPageTableContent, 
-  TableActions, 
-  ScorecardsPageTablePagination 
 } from './table-els'
 
 export const ScorecardsPageTable = ({ 
@@ -14,29 +12,31 @@ export const ScorecardsPageTable = ({
 
   return (
     <Flex 
-        as="section"
-        id="scorecards_table"
-        flex="1 0 40%" 
-        bg="#151515"
-        flexDirection="column" 
-        justifyContent="center"
-        alignItems="center"
-        boxSizing="border-box" 
-        position="relative"
-        w="100%"
+      as="section"
+      id="scorecards_table"
+      bg="fsl-body-bg"
+      flexDirection="column" 
+      justifyContent="center"
+      alignItems="center"
+      boxSizing="border-box" 
+      position="relative"
+      w="100%"
+      flex="1 0 70%"
+      overflow="scroll"
+      p="4"
+      pt="0"
+      mx="auto"
+      mb="8"
+      maxW={["100%"]}
+    >
+      <Heading 
+        mb="4"
+        textAlign="center"
       >
-        <Heading textAlign="center">Scorecards</Heading>
-        <Flex 
-          flexDir="column"
-          w="100%" 
-          as="section" 
-          mx="auto" 
-          p="2"
-        >
-          {/* <TableActions /> */}
-          <ScorecardsPageTableContent scorecards={scorecards} />
-          {/* <ScorecardsPageTablePagination total={scorecards && scorecards.length ? scorecards.length : '0'} /> */}
-        </Flex>
+        Scorecards
+      </Heading>
+      {/* <TableActions /> */}
+      <ScorecardsPageTableContent scorecards={scorecards} />
     </Flex>
   )
 }

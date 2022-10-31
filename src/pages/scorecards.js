@@ -4,7 +4,6 @@ import { ScorecardsPageTable } from '../components/tables'
 import { ExpiredTokenModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
 import { ScorecardsPageSidebar } from '../components/sidebars'
-import { ScorecardsColumn } from '../components/sidebars/scorecards-sidebar-components'
 
 export const ScorecardsPage = () => {
 
@@ -18,11 +17,12 @@ export const ScorecardsPage = () => {
     fetchUserScorecards()
     fetchAllSeasons()
   },[])
+
   return (
     <Flex 
       w={["100%"]} 
-      m="auto"
-      my="4"
+      p="2"
+      my={["2", "4"]}
       flexWrap="wrap" 
       height="auto" 
       flexDirection={["column", "row"]} 
@@ -30,17 +30,11 @@ export const ScorecardsPage = () => {
       alignItems="flex-start" 
       justifyContent="center" 
       bg="fsl-body-bg"
+      boxSizing="border-box"
     >    
       <ExpiredTokenModal />
-      <Flex
-        flexDir="row"
-        maxH="50vh"
-        w="100%"
-        flex="1 0 55%"
-      >
-        <ScorecardsPageSidebar />
-        <ScorecardsColumn />
-      </Flex>
+       
+      <ScorecardsPageSidebar />
       <ScorecardsPageTable scorecards={userScorecards} />
     </Flex>
   )

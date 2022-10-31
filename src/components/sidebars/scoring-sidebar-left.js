@@ -4,8 +4,8 @@ import {
     Flex, 
     useToast 
 } from '@chakra-ui/react'
-import { ScorecardsNavGroup } from './scorecards-sidebar-components'
 import { ScoringSidebarNavItem } from './scoring-sidebar/scoring-sidebar-nav-item'
+import { ScorecardsNavGroup } from './scorecards-sidebar-components/scorecards-boards/scorecards-nav-group'
 import { ScoringSidebarFightersFaceoff } from './scoring-sidebar/scoring-sidebar-fighter-faceoff'
 import { 
     FaGavel,

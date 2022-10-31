@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Flex, Heading, useColorModeValue as mode } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { 
     FightMetadata, 
     FightReviews, 
@@ -11,6 +11,7 @@ import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { ShowsCountdownTimer } from '../timers'
 import { DividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
+import { ShowsArrows } from './shows-arrows'
 
 export const ShowsMain = ({
     deleteMember,
@@ -21,7 +22,6 @@ export const ShowsMain = ({
     handleFormChange,
     isSubmitting,
     members,
-    seasonName,
     setFightReviewForm, 
 }) => {
     const {
@@ -50,19 +50,10 @@ export const ShowsMain = ({
             alignItems="center"
             boxSizing="border-box" 
             position="relative"
+            w="100%"
         >
-            <Heading 
-                textAlign="left" 
-                as="h1" 
-                size="lg"
-                color="gray"
-                position="absolute"
-                top="0"
-                left="1.5rem"
-            >
-                {seasonName}
-            </Heading>
-            
+            <ShowsArrows />
+
             <FightMetadata
                 selectedFightSummary={selectedFightSummary}
             /> 
