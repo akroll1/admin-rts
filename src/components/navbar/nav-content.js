@@ -21,7 +21,7 @@ const MobileNavContext = props => {
       <Flex 
         zIndex={100000}
         align="center" 
-        // justify="space-between" 
+        justify="space-between" 
         className="nav-content__mobile" 
         {...props}
       >

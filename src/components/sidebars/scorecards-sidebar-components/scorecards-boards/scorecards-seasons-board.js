@@ -1,0 +1,107 @@
+import { useState } from 'react'
+import { Collapse, Flex } from '@chakra-ui/react'
+import { ArrowUpDownIcon } from '@chakra-ui/icons'
+import { ScorecardsBoard } from './scorecards-board'
+import { SidebarsDividerWithText } from '../../../../chakra'
+import { ScorecardsNavGroup } from './scorecards-nav-group'
+import { ScorecardsNavItem } from './scorecards-nav-item'
+import { useScorecardStore } from '../../../../stores'
+import { 
+    InfoOutlineIcon,
+    NotAllowedIcon, 
+    TimeIcon 
+} from '@chakra-ui/icons'
+
+export const ScorecardsSeasonsBoard = () => {
+    const { 
+        seasons,
+        selectedFightSummary, 
+        selectedSeason,
+        setSelectedFightSummary,
+        setSelectedSeason,
+    } = useScorecardStore()
+    const [activeNavGroupItem, setActiveNavGroupItem] = useState('1')
+
+    const selectFight = e => {
+        const { id } = e.currentTarget;
+        const [selected] = selectedSeason.fightSummaries.filter( summary => summary.fight.fightId === id);
+        setSelectedFightSummary(selected)
+    }
+
+    const handleHideShow = id => {
+        setActiveNavGroupItem(id)
+        const [selectedSeason] = seasons.filter( season => season.season.seasonId === id)
+        setSelectedSeason(selectedSeason.season.seasonId)
+    }
+
+    const getLeftIcon = fightStatus => {
+        if(fightStatus === 'COMPLETE') return <InfoOutlineIcon />;
+        if(fightStatus === 'PENDING') return <TimeIcon />
+        if(fightStatus === 'CANCELED') return <NotAllowedIcon color="#d98585" />
+    }
+
+    const handleSelectFight = id => {
+        const [selected] = selectedSeason?.fightSummaries?.filter( summary => summary.fight.fightId === id)
+        setSelectedFightSummary(selected)
+    }
+
+    return (    
+        <ScorecardsBoard
+            label="Seasons"
+        >
+            <Flex
+                w="100%"
+                flexDir="column"
+                alignItems="flex-start"
+                overflow="scroll"
+            >
+                { seasons?.length > 0 && seasons.map( summary => {
+                    const { fightSummaries, season } = summary;
+                    const { seasonId, seasonName } = season;
+                    const active = activeNavGroupItem === seasonId;
+                    return (
+                        <ScorecardsNavGroup 
+                            handleHideShow={handleHideShow}
+                            key={seasonId}
+                            id={seasonId}
+                            label={seasonName}
+                            active={active}
+                        >   
+                            <Collapse 
+                                in={active} 
+                                animateOpacity
+                                w="100%"
+                            >
+                                <Flex
+                                    flexDir="column"
+                                    w="100%"
+                                    p="2"
+                                >
+                                { fightSummaries.length && fightSummaries.map( summary => {
+                                    const { fightId, fightQuickTitle, fightStatus, isTitleFight } = summary.fight;
+                                    const active = fightId === selectedFightSummary?.fight?.fightId;
+                                    const icon = getLeftIcon(fightStatus);
+                                    return (
+                                        <ScorecardsNavItem 
+                                            handleSelectFight={handleSelectFight}
+                                            id={fightId}
+                                            active={active}
+                                            fightId={fightId} 
+                                            selectFight={selectFight} 
+                                            icon={icon}
+                                            isTitleFight={isTitleFight}
+                                            label={fightQuickTitle} 
+                                            key={fightId} 
+                                            isPlaying
+                                        />
+                                    )
+                                })}
+                                </Flex>
+                            </Collapse>
+                        </ScorecardsNavGroup>
+                    )
+                })}
+            </Flex>
+        </ScorecardsBoard>
+    )
+}

@@ -1,3 +1,3 @@
-export * from './scorecards-column'
-export * from './scorecards-nav-group'
-export * from './scorecards-nav-item'
+export * from './scorecards-boards'
+export * from './scorecards-boards/scorecards-leaderboard-board'
+export * from './scorecards-boards/scorecards-metadata-board'
