@@ -1,11 +1,10 @@
 import { 
     Flex, 
     Heading, 
-    useColorModeValue, 
 } from '@chakra-ui/react'
 import { SidebarsDividerWithText } from '../../../chakra';
 import { useScorecardStore } from '../../../stores';
-import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../../utils';
+import { capFirstLetters, transformedWeightclass } from '../../../utils';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
 
 const leaders = [
@@ -18,8 +17,12 @@ const leaders = [
         score: 460,
     },
     {
-        displayName: 'Easton Assasin 2',
+        displayName: 'The Mongoose',
         score: 445,
+    },
+    {
+        displayName: 'Easton Assasin 2',
+        score: 430,
     },
     {
         displayName: 'Motorcity Cobra',
@@ -51,7 +54,7 @@ const Column = props => {
     const { leaders, selectedFightSummary } = props
     return (
         <Flex
-            bg="#252525"
+            bg="#111111"
             position="relative"
             w="100%"
             flexDir="column"
@@ -59,7 +62,7 @@ const Column = props => {
             justifyContent="center"
             mb="4"
             pb="2"
-            border="1px solid #6f6f6f"
+            border="1px solid #383838"
             borderRadius="sm"
         >
             <ArrowUpDownIcon 
@@ -102,6 +105,7 @@ const Column = props => {
 const FightMetadata = ({ 
     selectedFightSummary 
 }) => {
+    
     const getFightDisposition = selectedFightSummary => {
         const { fight, fighters } = selectedFightSummary;
         if(fight.fightStatus === 'CANCELED') return `Canceled`;
@@ -148,7 +152,10 @@ const FightMetadata = ({
             { selectedFightSummaryMetadata.map( (data, _i) => {
                 return (  
                     <Flex
+                        borderBottom="1px solid #303030"
                         display="inline-flex"
+                        alignItems="center"
+                        justifyContent="center"
                     >
                         <Heading 
                             p="1"
@@ -156,12 +163,11 @@ const FightMetadata = ({
                             size="sm"
                             textAlign="left"
                             color="#dadada"
-                            // textDecoration="underline"
                         >
                             {`${data.label}`}&#58; 
                         </Heading>
                         <Heading 
-                            p="1"
+                            px="1"
                             as="h4" 
                             size="sm"
                             textAlign="left"
@@ -185,12 +191,13 @@ export const ScorecardsColumn = () => {
         <Flex
             w="100%"
             p="2"
+            pt="0"
             bg="inherit"
             id="leaderboard_column"
-            flex="1 0 20%"
             flexDir="column"
-            minH="30vh"
+            minH="50%"
             alignItems="center"
+            ml="2"
         >
             <Column
                 selectedFightSummary={selectedFightSummary}
@@ -219,21 +226,40 @@ const LeaderBoard = ({ leaders }) => {
                         alignItems="center"
                         justifyContent="space-between"
                         w="100%"
-                        bg="#171717"
+                        bg="#151515"
                         p="2"
                         mb="1"
-                        minH="3rem"
+                        minH="2rem"
                         borderRadius="md"
                         display="inline-flex"
                         border="1px solid #353535"
+                        _hover={{
+                            cursor: 'pointer'
+                        }}
                     >
-                        <Heading 
-                            color="#cacaca"
-                            as="h4" 
-                            size="sm"
-                        >
-                            {`${_i+1}. ${leader.displayName} `}
-                        </Heading>
+                        <Flex>
+                            <Heading 
+                                color="#aaaaaa"
+                                as="h4" 
+                                size="sm"
+                                mr="2"
+                                minW="2"
+                                >
+                                {`${_i+1} `}
+                            </Heading>
+                            <Heading 
+                                _hover={{
+                                    color: 'white'
+                                }}
+                                textAlign="center"
+                                color="#cacaca"
+                                as="h4" 
+                                size="sm"
+                            >
+                                {`${leader.displayName} `}
+                            </Heading>
+                        </Flex>
+
                         <Heading 
                             as="h4" 
                             size="sm"

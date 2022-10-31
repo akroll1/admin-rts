@@ -16,8 +16,8 @@ export const ScorecardsPageTable = ({
     <Flex 
         as="section"
         id="scorecards_table"
-        flex="1 0 50%" 
-        bg="inherit"
+        flex="1 0 40%" 
+        bg="#151515"
         flexDirection="column" 
         justifyContent="center"
         alignItems="center"
@@ -30,13 +30,12 @@ export const ScorecardsPageTable = ({
           flexDir="column"
           w="100%" 
           as="section" 
-          py="4" 
           mx="auto" 
-          px={{base: '6', md: '8'}}
+          p="2"
         >
           {/* <TableActions /> */}
           <ScorecardsPageTableContent scorecards={scorecards} />
-          <ScorecardsPageTablePagination total={scorecards && scorecards.length ? scorecards.length : '0'} />
+          {/* <ScorecardsPageTablePagination total={scorecards && scorecards.length ? scorecards.length : '0'} /> */}
         </Flex>
     </Flex>
   )

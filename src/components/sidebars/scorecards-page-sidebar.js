@@ -1,7 +1,4 @@
-import { 
-    useEffect, 
-    useState 
-} from 'react'
+import { useState } from 'react'
 import { 
     Collapse,
     Flex,
@@ -14,7 +11,7 @@ import { REVIEW_TYPE } from '../../utils'
 import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 import { 
-    CheckCircleIcon,
+    InfoOutlineIcon,
     NotAllowedIcon, 
     TimeIcon 
 } from '@chakra-ui/icons'
@@ -28,16 +25,7 @@ export const ScorecardsPageSidebar = () => {
         setSelectedSeason,
     } = useScorecardStore()
     
-    const [activeNavGroupItem, setActiveNavGroupItem] = useState(1)
-
-    useEffect(() => {
-        if(seasons.length > 0){
-            const tabs = seasons.map( season => season.season.seasonId)
-                .reduce( (acc, curr) => ({ [acc[curr]]: false }), {})
-            Object.assign(tabs, activeNavGroupItem)
-            setActiveNavGroupItem(tabs)
-        }
-    },[seasons])
+    const [activeNavGroupItem, setActiveNavGroupItem] = useState('1')
 
     const selectFight = e => {
         const { id } = e.currentTarget;
@@ -52,7 +40,7 @@ export const ScorecardsPageSidebar = () => {
     }
 
     const getLeftIcon = fightStatus => {
-        if(fightStatus === 'COMPLETE') return <CheckCircleIcon />;
+        if(fightStatus === 'COMPLETE') return <InfoOutlineIcon />;
         if(fightStatus === 'PENDING') return <TimeIcon />
         if(fightStatus === 'CANCELED') return <NotAllowedIcon color="#d98585" />
     }
@@ -64,12 +52,12 @@ export const ScorecardsPageSidebar = () => {
 
     return (
         <Flex 
+            ml="2"
             id="scorecards_sidebar" 
             as="aside"
-            flex="1 0 20%" 
             w="100%" 
-            minH={["40vh", "50vh", "80vh"]} 
-            maxH={["40vh", "40vh", "80vh"]}
+            // minH={["40vsh", "50vh", "60vh"]} 
+            maxH={['50%']}
             height="auto" 
             overflowY="scroll" 
             position="relative" 
@@ -81,7 +69,7 @@ export const ScorecardsPageSidebar = () => {
             color="white" 
             fontSize="sm"
             bg="fsl-sidebar-bg" 
-            border="1px solid #252525"
+            border="1px solid #383838"
         >
             <SidebarsDividerWithText 
                 fontSize="xl" 

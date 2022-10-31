@@ -49,7 +49,7 @@ export const ScorecardsNavItem = props => {
                 fontSize="1rem" 
                 flex="1" 
                 fontWeight="inherit" 
-                color={active ? 'gray.300' : undefined}
+                color={active ? 'gray.200' : 'gray.300'}
             >
                 {label}
             </Flex>
