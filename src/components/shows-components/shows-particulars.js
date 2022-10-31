@@ -47,7 +47,7 @@ export const ShowsParticulars = ({
                 >
                     <ShowsNavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
                     <ShowsNavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
-                    <ShowsNavItem icon={<FaTrophy />} color="fsl-text" label={ `Title: ${isTitleFight ? `Yes` : `No`}`} />
+                    <ShowsNavItem icon={<FaTrophy />} color="fsl-text" label={ `Title Fight: ${isTitleFight ? `Yes` : `No`}`} />
                 </Flex>
             </Flex>
         </Flex>

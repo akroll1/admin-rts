@@ -32,8 +32,15 @@ export const ScorecardsPage = () => {
       bg="fsl-body-bg"
     >    
       <ExpiredTokenModal />
-      <ScorecardsPageSidebar />
-      <ScorecardsColumn />
+      <Flex
+        flexDir="row"
+        maxH="50vh"
+        w="100%"
+        flex="1 0 55%"
+      >
+        <ScorecardsPageSidebar />
+        <ScorecardsColumn />
+      </Flex>
       <ScorecardsPageTable scorecards={userScorecards} />
     </Flex>
   )
