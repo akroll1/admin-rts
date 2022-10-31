@@ -11,6 +11,7 @@ import { REVIEW_TYPE } from '../../utils'
 import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 import { 
+    ArrowUpDownIcon,
     InfoOutlineIcon,
     NotAllowedIcon, 
     TimeIcon 
@@ -71,6 +72,16 @@ export const ScorecardsPageSidebar = () => {
             bg="fsl-sidebar-bg" 
             border="1px solid #383838"
         >
+             <ArrowUpDownIcon 
+                position="absolute"
+                top="3"
+                left="1"
+                fontSize="0.9rem"
+                color="gray"
+                _hover={{
+                    cursor: 'pointer'
+                }}
+            />
             <SidebarsDividerWithText 
                 fontSize="xl" 
                 label="Seasons" 
