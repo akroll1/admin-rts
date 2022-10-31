@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Heading, CenterButton, ButtonGroup, Flex, Text, useColorModeValue as mode } from '@chakra-ui/react'
 
-export const ScorecardsTablePagination = ({ total }) => {
+export const ScorecardsPageTablePagination = ({ total }) => {
   return (
     <>
       <Flex align="center" justify="space-between">

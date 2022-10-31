@@ -138,9 +138,7 @@ export const ScoringMain = ({
                     flexDir="row"
                     w="100%"
                     textAlign="center"
-
                 >
-
                 {
                     fighters.length > 0 && fighters.map( (fighter, i) => (
                         <FighterSwipe

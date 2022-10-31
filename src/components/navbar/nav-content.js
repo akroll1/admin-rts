@@ -19,6 +19,7 @@ const MobileNavContext = props => {
   return (
     <>
       <Flex 
+        zIndex={100000}
         align="center" 
         // justify="space-between" 
         className="nav-content__mobile" 
@@ -37,12 +38,19 @@ const MobileNavContext = props => {
           FightSync
         </Heading>
       </Flex>
-      <NavMenu animate={isOpen ? 'open' : 'closed'} onClick={onToggle}>
+      <NavMenu animate={isOpen ? 'open' : 'closed'}>
         {links.map((link, i) => 
           link.children ? (
-            <Submenu.Mobile key={i} link={link} />
+            <Submenu.Mobile 
+              key={i} 
+              link={link} 
+            />
           ) : (
-            <NavLink.Mobile key={i} href={link.href}>
+            <NavLink.Mobile 
+              key={i} 
+              href={link.href}
+              onClick={onToggle}
+            >
               {link.label}
             </NavLink.Mobile>
           ),
@@ -58,7 +66,9 @@ const DesktopNavContent = props => {
 
   return (
     <Flex 
-      className="nav-content__desktop" align="center" justify="space-between" {...props}>
+      zIndex={1000000}
+      className="nav-content__desktop" align="center" justify="space-between" {...props}
+    >
       <Button
         minW="20%"
         colorScheme="solid"

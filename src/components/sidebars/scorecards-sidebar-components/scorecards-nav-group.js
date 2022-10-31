@@ -1,14 +1,13 @@
 import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 
-export const ScorecardsNavGroup = (props) => {
+export const ScorecardsNavGroup = props => {
   const { 
     active, 
     children, 
     id, 
     label, 
     handleHideShow, 
-    tabs 
 } = props
 
     const hideShow = e => {

@@ -232,7 +232,7 @@ export const SeasonsForm = () => {
                     </Stack>
                 </form>
             </Flex>
-            <Divider my="8" />
+
 
             { form.seasonId &&
                 <Flex

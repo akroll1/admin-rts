@@ -1,48 +1,45 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react'
-import { BsCaretRightFill } from 'react-icons/bs'
-import { HiBadgeCheck } from 'react-icons/hi';
+import { Flex } from '@chakra-ui/react'
 
 export const ScorecardsNavItem = props => {
     const { 
         active, 
-        isPlaying, 
-        name, 
-        fightId, 
-        selectFight, 
-        icon, 
-        children, 
+        fightId,
+        handleSelectFight, 
+        icon,
+        isTitleFight,  
         label, 
-        endElement, 
-        href 
     } = props; 
 
+    const selectedFight = e => {
+        const { id } = e.currentTarget;
+        e.stopPropagation()
+        handleSelectFight(id)
+    }
     return (
         <Flex
+            p="1"
             pl="2"
             justifyContent="space-between"
             alignItems="space-between"
             w="100%"
             color={active ? 'white' : 'whiteAlpha.800'}
             id={fightId}
-            onClick={e => e.stopPropagation()}
-            href={href}
+            onClick={selectedFight}
             cursor="pointer"
             userSelect="none"
             rounded="md"
             transition="all 0.2s"
-            // bg={active ? 'gray.700' : ''}
             _hover={{
                 bg: 'gray.700',
+                color: '#fcfcfc'
             }}
-            _active={{
-                bg: 'gray.600',
-            }}
+            bg={active ? 'gray.700' : 'inherit'}
         >
             <Flex 
+                mr="3"
                 justifyContent="center"
                 alignItems="center"
-                fontSize={active ? '1rem' : 'inherit'} 
-                color={active ? 'white' : 'gray.300'}
+                color={isTitleFight ? '#a17f1a' : 'gray.300'}
             >
                 {icon}
             </Flex>

@@ -9,13 +9,16 @@ const badgeEnum = {
   // declined: 'red',
 }
 
-export const MyScorecardsTableContent = ({ 
+export const ScorecardsPageTableContent = ({ 
   scorecards 
 }) => {
 
   const navigate = useNavigate();
   return (
-    <Flex overflow="scroll" w="100%">
+    <Flex 
+      overflow="scroll" 
+      w="100%"
+    >
       <Table 
         variant="simple" 
         my="4" 
