@@ -38,7 +38,6 @@ const Scoring = () => {
         fighterScores,
         modals,
         setModals,
-        totalRounds,
         tokenExpired,
     } = useScorecardStore();
 
@@ -124,7 +123,6 @@ const Scoring = () => {
             fetchGuestJudgeScorecards()
         }
     },[fight])
-
 
     const handleAddMemberSubmit = async email => {
         setIsSubmitting(true);

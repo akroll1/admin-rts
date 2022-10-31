@@ -96,7 +96,6 @@ export const ScoringMain = ({
             w="100%"  
             position="relative"  
             minH={tabs.info ? "75vh" : "100%"}
-
         >
             <Flex     
                 flexDir={["column"]} 

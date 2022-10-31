@@ -8,6 +8,25 @@ import { useScorecardStore } from '../../../stores';
 import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../../utils';
 import { ArrowUpDownIcon } from '@chakra-ui/icons';
 
+const leaders = [
+    {
+        displayName: 'BadLeftHook',
+        score: 475,
+    },
+    {
+        displayName: 'Triple_up_the_Jab',
+        score: 460,
+    },
+    {
+        displayName: 'Easton Assasin 2',
+        score: 445,
+    },
+    {
+        displayName: 'Motorcity Cobra',
+        score: 440,
+    },
+]
+
 const ColumnHeading = ({ 
     label, 
     size 
@@ -30,7 +49,6 @@ const ColumnHeading = ({
 
 const Column = props => {
     const { leaders, selectedFightSummary } = props
-    console.log('leaders: ', leaders)
     return (
         <Flex
             bg="#252525"
@@ -60,22 +78,22 @@ const Column = props => {
                 label={leaders && Array.isArray(leaders) ? `Leaderboard` : `Result`}
                 fontSize="xl"
             />
-            { selectedFightSummary?.fight?.fightQuickTitle
-                ?
-                    <>
-                        <ColumnHeading  
-                            label={selectedFightSummary.fight.fightQuickTitle}
-                            size="2xl"
+            { selectedFightSummary?.fight?.fightQuickTitle &&
+                <>
+                    <ColumnHeading  
+                        label={selectedFightSummary.fight.fightQuickTitle}
+                        size="2xl"
                         />
-                        
-                        <FightMetadata 
-                            selectedFightSummary={props.selectedFightSummary}
+                    
+                    <FightMetadata 
+                        selectedFightSummary={props.selectedFightSummary}
                         />
-                    </>
-                :
-                    <LeaderBoard 
-                        leaders={leaders}
-                    />
+                </>
+            }
+            { leaders && Array.isArray(leaders) &&
+                <LeaderBoard 
+                    leaders={leaders && Array.isArray(leaders) ? leaders : []}
+                />
             }
         </Flex>
     )
@@ -165,11 +183,13 @@ export const ScorecardsColumn = () => {
 
     return (
         <Flex
+            w="100%"
+            p="2"
             bg="inherit"
             id="leaderboard_column"
             flex="1 0 20%"
             flexDir="column"
-            minH="40vh"
+            minH="30vh"
             alignItems="center"
         >
             <Column
@@ -181,25 +201,6 @@ export const ScorecardsColumn = () => {
         </Flex>
     )
 }
-
-const leaders = [
-    {
-        displayName: 'BadLeftHook',
-        score: 475,
-    },
-    {
-        displayName: 'Triple_up_the_Jab',
-        score: 460,
-    },
-    {
-        displayName: 'Easton Assasin 2',
-        score: 445,
-    },
-    {
-        displayName: 'Motorcity Cobra',
-        score: 440,
-    },
-]
 
 const LeaderBoard = ({ leaders }) => {
     return (

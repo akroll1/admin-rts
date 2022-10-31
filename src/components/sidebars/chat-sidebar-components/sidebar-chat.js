@@ -1,6 +1,5 @@
-import React, { createRef, useEffect, useState, useRef,} from 'react'
-import { Box, Button, ButtonGroup, Divider, Flex, Input, Text } from '@chakra-ui/react'
-import { DividerWithText } from '../../../chakra'
+import { createRef, useEffect, useState, useRef } from 'react'
+import { Box, Button, ButtonGroup, Divider, Flex, Input } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid'
 import { useScorecardStore } from '../../../stores'
 import { SidebarsDividerWithText } from '../../../chakra'
@@ -183,9 +182,10 @@ export const ChatSidebar = ({
             flexDir="column" 
         >
             <SidebarsDividerWithText 
-                fontSize={'1.5rem'} 
-                text="Group Chat" 
-                centered={tabs.all ? true : false}
+                fontSize="xl" 
+                py="2"
+                mx="1"
+                label="Group Chat" 
             />
             <Flex 
                 w="100%"

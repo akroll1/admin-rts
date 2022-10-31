@@ -15,7 +15,6 @@ export const ScoringSidebarFightersFaceoff = ({
         <>
             <Flex     
                 display={tabs.info ? 'flex' : 'none'}
-                back       
                 flexDir={["column"]} 
                 w={["100%"]} 
                 position="relative"

@@ -1,5 +1,16 @@
-import React, { useEffect, createRef } from 'react'
-import { Box, chakra, Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
+import { useEffect, createRef } from 'react'
+import { 
+  Box, 
+  chakra, 
+  Button, 
+  Flex,
+  FormControl, 
+  FormLabel, 
+  Heading, 
+  Input, 
+  Stack, 
+  Text 
+} from '@chakra-ui/react'
 import { PasswordField } from './password-field'
 import { Card } from '../../chakra'
 
@@ -7,7 +18,7 @@ export const SignUpForm = ({
   form,
   formState, 
   handleFormChange, 
-  // handleSignUp, 
+  handleSignUp, 
   isSubmitting,
   renderForgotPasswordForm,
   setFormState
@@ -24,27 +35,29 @@ export const SignUpForm = ({
       <Heading textAlign="center" size="xl" fontWeight="extrabold">
         Create An Account
       </Heading>
-      <Text 
-        mt="4" 
-        mb="8" 
-        align="center" 
-        textAlign="center" 
-        maxW="md" 
-        fontWeight="medium" 
-        display="flex" 
-        flexDirection={["column", "row" ]}
-        alignItems="center" 
+      <Flex 
+        flexDir="row"
+        m="auto"
+        w="100%"
         justifyContent="center"
+        alignItems="center"
+        mb="6"
       >
-        <Text as="span">Already have an account?</Text>
+        <Text
+          color="#cacaca"
+        >Already have an account?</Text>
         <Text 
-          onClick={() => setFormState({ ...formState, isSignup: false, isSignin: true })} 
-          _hover={{cursor: 'pointer'}} 
-          style={{marginLeft: '0.5rem', color: '#FCFCFC' }}
+          onClick={() => setFormState({ ...formState, isSignin: true, isSignup: false })} 
+          _hover={{
+            cursor: 'pointer',
+            color: 'white'
+          }} 
+          ml="2" 
+          color="#fafafa"
         >
           Sign-In here!
         </Text>
-      </Text>
+      </Flex>
 
       <Card>
         <chakra.form onSubmit={e => e.preventDefault()}>
@@ -80,12 +93,12 @@ export const SignUpForm = ({
               id="signup_button" 
               isLoading={isSubmitting}
               loadingText="Submitting..."
-              // onClick={handleSignUp} 
+              onClick={handleSignUp} 
               type="button" 
               colorScheme="solid" 
               size="lg" 
               fontSize="md"
-              disabled={true}
+              disabled={isSubmitting}
             >
               Sign-Up
             </Button>
