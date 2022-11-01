@@ -4,17 +4,17 @@ import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 export const ScoringButtons = ({
     handleAdjustScore,
     isDisabled,
-    round,
+    lastScoredRound,
     selectedFighter,
     submitScores,
     totalRounds,
 }) => {
-
+    const fightComplete = (lastScoredRound + 1) > totalRounds
     return (
         <Flex 
             id="scoring_buttons"
-            minH="1rem"
-            my="8"
+            minH="1.5rem"
+            my="4"
             flexDir="column" 
             w="100%" 
             alignItems="center" 
@@ -57,14 +57,14 @@ export const ScoringButtons = ({
                 zIndex={100}
                 minH="3rem"
                 onClick={submitScores}
-                disabled={isDisabled} 
+                disabled={isDisabled || fightComplete} 
                 variant={isDisabled ? "outline" : "solid"} 
                 colorScheme="solid" 
                 mx="auto" 
                 mt="4"
                 w={["90%","50%"]}
             >
-                { isDisabled && round >= totalRounds ? `Scoring Complete` : `Submit Score` }
+                { isDisabled && fightComplete ? `Scoring Complete` : `Submit Score` }
             </Button>
         </Flex>
     )

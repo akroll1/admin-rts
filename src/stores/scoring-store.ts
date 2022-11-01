@@ -8,7 +8,7 @@ import { Scorecard } from './models'
 
 
 export interface ScoringStore { 
-    currentRound: number
+    lastScoredRound: number
     fetchGuestJudgeScorecards(): void
     fetchPanelProps(): void
     guestJudgeScorecards: Scorecard[],
@@ -19,7 +19,7 @@ const scorecardStore: any = useScorecardStore.getState();
 const store: any = useStateStore.getState();
 
 export const initialScoringStoreState = {
-    currentRound: 1,
+    lastScoredRound: 1,
     guestJudgeScorecards: [],
     panelProps: [],
     prediction: '',
