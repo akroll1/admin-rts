@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import { 
     Flex, 
-    Heading, 
     useToast 
 } from '@chakra-ui/react'
 import axios from 'axios'
@@ -13,10 +12,7 @@ import {
     MoneylineModal, 
     PredictionModal 
 } from '../components/modals'
-import { 
-    ScoringSidebarLeft, 
-    ScoringSidebarRight 
-} from '../components/sidebars'
+import { ChatSidebar, ScoringSidebarLeft } from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { useScorecardStore, useScoringStore } from '../stores'
 import { useWindowResize } from '../hooks'
@@ -30,8 +26,8 @@ const Scoring = () => {
         accessToken,
         chatScorecard,
         collateTableData,
-        currentRound,
         fetchGroupScorecard,
+        lastScoredRound,
         fight,
         fightComplete,
         fighters,
@@ -64,13 +60,8 @@ const Scoring = () => {
     });
 
     const [props, setProps] = useState(null);
-    const [round, setRound] = useState(null)
 
     const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards/${groupscorecard_id}/summary`;
-    
-    useEffect(() => {
-        setRound(parseInt(currentRound))
-    },[currentRound])
 
     useEffect(() => {
         if(modals.moneylineModal){
@@ -164,6 +155,8 @@ const Scoring = () => {
             margin="auto" 
             p="2"
             bg="transparent"
+            maxW="100%"
+            boxSizing='border-box'
         >         
             <Flex>
                 
@@ -180,7 +173,7 @@ const Scoring = () => {
             <Flex 
                 display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
                 w="100%" 
-                minH="60vh"  
+                minH="70vh"  
             >
                 <ScoringSidebarLeft
                     tabs={tabs}
@@ -193,7 +186,7 @@ const Scoring = () => {
                     tabs={tabs}
                     totalRounds={fight?.totalRounds}
                 />
-                <ScoringSidebarRight
+                <ChatSidebar
                     tabs={tabs}
                 />
             </Flex>

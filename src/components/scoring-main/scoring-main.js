@@ -14,7 +14,6 @@ export const ScoringMain = ({
 }) => {
     const [userScoringComplete, setUserScoringComplete] = useState(false);
     const [evenRound, setEvenRound] = useState(false)
-    const [round, setRound] = useState(null)
     const [isDisabled, setIsDisabled] = useState(false);
     const [selectedFighter, setSelectedFighter] = useState('');
     const [notSelectedScore, setNotSelectedScore] = useState(9);
@@ -22,6 +21,7 @@ export const ScoringMain = ({
     const {
         fighters,
         fighterScores,
+        lastScoredRound,
         scoringComplete,
         setScoringComplete,
         submitRoundScores,
@@ -59,12 +59,12 @@ export const ScoringMain = ({
         const notSelected = selectedFighter === fighter1.fighterId ? fighter2.fighterId : fighter1.fighterId;
         const { scorecardId } = fighterScores
         const update = {
-            round,
+            round: lastScoredRound+ 1,
             scorecardId,
             [notSelected]: notSelectedScore,
             [selectedFighter]: 10
         };
-        const scoringIsComplete = (round+1)  > totalRounds;
+        const scoringIsComplete = (lastScoredRound + 1)  > totalRounds;
         submitRoundScores(update);
         setSelectedFighter('');
         setNotSelectedScore(9)
@@ -89,6 +89,7 @@ export const ScoringMain = ({
             id="scoring_main"
             display={tabs.scoring || tabs.all ? 'flex' : 'none'}
             p={["0", "0"]} 
+            flex="1 0 50%"
             m="auto"
             mt="0"
             flexDir="column" 
@@ -159,7 +160,7 @@ export const ScoringMain = ({
                 handleAdjustScore={handleAdjustScore}
                 isDisabled={isDisabled}
                 isSubmitting={isSubmitting}
-                round={round}
+                lastScoredRound={lastScoredRound}
                 selectedFighter={selectedFighter}
                 setIsDisabled={setIsDisabled}
                 submitScores={submitScores}

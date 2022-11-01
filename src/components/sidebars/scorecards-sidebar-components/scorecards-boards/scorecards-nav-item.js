@@ -38,7 +38,6 @@ export const ScorecardsNavItem = props => {
                 mr="3"
                 justifyContent="center"
                 alignItems="center"
-                color={isTitleFight ? 'gray.600' : 'gray.400'}
                 _hover={{
                     color: '#fff'
                 }}

@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Collapse, Flex } from '@chakra-ui/react'
-import { ArrowUpDownIcon } from '@chakra-ui/icons'
 import { ScorecardsBoard } from './scorecards-board'
-import { SidebarsDividerWithText } from '../../../../chakra'
 import { ScorecardsNavGroup } from './scorecards-nav-group'
 import { ScorecardsNavItem } from './scorecards-nav-item'
 import { useScorecardStore } from '../../../../stores'
@@ -35,9 +33,9 @@ export const ScorecardsSeasonsBoard = () => {
     }
 
     const getLeftIcon = fightStatus => {
-        if(fightStatus === 'COMPLETE') return <InfoOutlineIcon />;
-        if(fightStatus === 'PENDING') return <TimeIcon />
-        if(fightStatus === 'CANCELED') return <NotAllowedIcon color="#d98585" />
+        if(fightStatus === 'COMPLETE') return <InfoOutlineIcon color="gray.600" />;
+        if(fightStatus === 'PENDING') return <TimeIcon color="gray.200" />
+        if(fightStatus === 'CANCELED') return <NotAllowedIcon color="gray.600" />
     }
 
     const handleSelectFight = id => {

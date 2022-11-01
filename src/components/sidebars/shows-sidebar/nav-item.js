@@ -4,15 +4,19 @@ import { BsCaretRightFill } from 'react-icons/bs'
 import { HiBadgeCheck } from 'react-icons/hi';
 
 export const UpcomingNavItem = (props) => {
-  const { active, isPlaying, name, fightId, selectFight, subtle, icon, children, label, endElement, href } = props; 
+  const { 
+    active, 
+    fightId, 
+    icon,
+    isTitleFight, 
+    label, 
+    selectFight, 
+  } = props; 
   return (
     <HStack
       color={active ? 'white' : 'whiteAlpha.900'}
-      name={name}
       id={fightId}
       onClick={selectFight}
-      as="a"
-      href={href}
       w="full"
       p="1"
       pl="3"
@@ -29,8 +33,8 @@ export const UpcomingNavItem = (props) => {
       }}
     >
       <Box 
-        fontSize={active ? '1rem' : 'inherit'} 
-        color={active ? 'white' : 'gray.300'}
+        
+        color={isTitleFight ? 'gray.200' : active ? 'white' : 'gray.500'}
       >
         {icon}
       </Box>
@@ -42,16 +46,6 @@ export const UpcomingNavItem = (props) => {
       >
         {label}
       </Box>
-      { isPlaying && <Box>
-          <Icon 
-            as={HiBadgeCheck} 
-            color="whiteAlpha.600" 
-            verticalAlign="text-bottom" 
-          />
-        </Box>
-      }
-      {endElement && !children && <Box>{endElement}</Box>}
-      {children && <Box fontSize="xs" flexShrink={0} as={BsCaretRightFill} />}
     </HStack>
   )
 }

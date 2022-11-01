@@ -67,7 +67,7 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                     return (
                                         <Th 
                                             key={roundIndex} 
-                                            // style={roundIndex === currentRound ? {color:'white', fontWeight: 'bold', fontSize: '1.3rem', borderBottom:'1px dotted white'} : null} 
+                                            // style={roundIndex === lastScoredRound ? {color:'white', fontWeight: 'bold', fontSize: '1.3rem', borderBottom:'1px dotted white'} : null} 
                                             color="white" 
                                             fontWeight="bold"
                                             textAlign="center"
@@ -91,7 +91,7 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                             const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1.lastName]:0, [fighter2.lastName]: 0}));
                             filledMappedScores = mappedScores.concat(addingRounds)
                         }
-                        const currentRound = mappedScores.length;
+                        const lastScoredRound = mappedScores.length;
                         const index = prediction ? prediction.indexOf(',') : '';
                         const slicedPrediction = prediction ? prediction.slice(0, index) : '';
                         const predictionResult = prediction ? prediction.slice(index+1) : '';
@@ -128,7 +128,7 @@ export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
                                                         <Flex 
                                                             color={i >= mappedScores.length ? 'transparent' : "black"}
                                                             borderRadius="2px"
-                                                            // borderX={(i) % 2 == 0 ? (i) >= currentRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
+                                                            // borderX={(i) % 2 == 0 ? (i) >= lastScoredRound ? "3px solid tranparent" : "3px solid #2e3648" : "3px solid transparent"}
                                                             w="100%"
                                                             p="1"
                                                             bg={roundScores[fighter1.lastName] ? "gray.500" : "gray.600"} 

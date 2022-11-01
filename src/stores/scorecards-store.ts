@@ -48,7 +48,7 @@ export interface ScorecardStore {
     createSeason(createObj: Partial<Season>): void
     createShow(createShowObj: Partial<Show>): void
     createUser(user: User): void
-    currentRound: number
+    lastScoredRound: number
     deleteDiscussion(discussionId: string): void
     deleteFight(fightId: string): void
     deleteFighter(fighterId: string): void
@@ -101,7 +101,7 @@ export interface ScorecardStore {
     selectedSeason: SeasonSummary
     setAccessToken(headers: TokenConfig): void
     setChatScorecard(update: RoundScores): void
-    setCurrentRound(currentRound: number): void
+    setLastScoredRound(round: number): void
     setFighterScores(): void
     setIdToken(headers: TokenConfig): void
     setModals(modal: string, boolean: boolean): void
@@ -152,7 +152,7 @@ export const initialScorecardsStoreState = {
     chatKey: '',
     chatScorecard: {} as RoundScores,
     chatToken: '',
-    currentRound: 12,
+    lastScoredRound: 0,
     discussion: {} as Discussion,
     discussions: [],
     fight: {} as Fight,
@@ -218,7 +218,6 @@ export const useScorecardStore = create<ScorecardStore>()(
 
                     if(prediction){
                         const index = prediction.indexOf(',')
-                        console.log('PREDICTION: ', prediction)
                         prediction = prediction.slice(0, index) === fighter1.fighterId 
                             ? `${fighter1.lastName}- ${prediction.slice(index+1)}` 
                             : `${fighter2.lastName}- ${prediction.slice(index+1)}`
@@ -376,8 +375,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                         set({ modals: { ...resetModals, predictionModal: true }})
                     },5000)
                 }
-                // console.log('userScorecard: ', userScorecard)
-                const currentRound = userScorecard.scores.length + 1
+                const lastScoredRound = userScorecard.scores.length;
                 if(userScorecard.ownerId.includes('@')){
                     const patchUrl = url + `/scorecards/${userScorecard.scorecardId}`
                     const updatedScorecard = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, get().accessToken)
@@ -390,11 +388,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
                 const totalRounds = data.fight.rounds;
                 const scoringComplete = userScorecard.scores.length >= totalRounds;
-                console.log('scoringComplete: ', scoringComplete)
                 await set({ 
                     activeGroupScorecard: data.groupScorecard, 
                     chatKey: data.groupScorecard.chatKey,
-                    currentRound,
+                    lastScoredRound,
                     fight: data.fight, 
                     fighters: data.fighters, 
                     scorecards: data.scorecards,
@@ -532,8 +529,8 @@ export const useScorecardStore = create<ScorecardStore>()(
             setChatToken: (chatToken: string) => {
                 set({ chatToken })
             },
-            setCurrentRound: (currentRound: number) => {
-                set({ currentRound })
+            setLastScoredRound: (round: number) => {
+                set({ lastScoredRound: round })
             },
             setFighterScores: () => {
                 const scores = get().fighters.map( (fighter: any) => {
@@ -656,11 +653,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
                 get().setUserScorecard(updatedScorecard)
                 const updatedScorecards = [...otherScorecards, scorecard]
-                const currentRound: number = +chatScorecard.round + 1
 
                 set({ 
                     chatScorecard, 
-                    currentRound,
+                    lastScoredRound: get().lastScoredRound + 1,
                     scorecards: updatedScorecards,
                 })       
             },

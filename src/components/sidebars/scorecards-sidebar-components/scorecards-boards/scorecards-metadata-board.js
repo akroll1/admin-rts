@@ -13,23 +13,25 @@ import {
 } from '../../../../utils';
 import { ScorecardsBoard } from './scorecards-board';
 
-export const ScorecardsMetadataBoard = () => {
+export const ScorecardsMetadataBoard = ({ label }) => {
     const { 
         selectedFightSummary = {}
     } = useScorecardStore()
     
     const [fightSummary, setFightSummary] = useState([])
 
-    console.log('selectedFightSummary: ', selectedFightSummary)
+    // console.log('selectedFightSummary: ', selectedFightSummary)
     const getFightDisposition = selectedFightSummary => {
         const { fight, fighters } = selectedFightSummary;
         if(fight.fightStatus === 'CANCELED') return `Canceled`;
         if(fight.fightStatus === 'PENDING') return `Upcoming`;
         if(fight.fightStatus === 'COMPLETE'){
             if(fight.officialResult.slice(37) === `DR`) return `Draw`;
-            if(fight.officialResult.slice(37) === `SD`) return `Split Decision`;
             const winner = fight.officialResult[fighters[0].fighterId] ? fighters[0].lastName : fighters[0].lastName;
-            return `${capFirstLetters(winner)} ${fight.officialResult.slice(37)}`
+            if(fight.officialResult.slice(37) === `SD`){
+                return `${winner}- Split Decision`
+            }
+            return `${capFirstLetters(winner)}- ${fight.officialResult.slice(37)}`
         }
     }
 
@@ -65,7 +67,7 @@ export const ScorecardsMetadataBoard = () => {
 
     return (
         <ScorecardsBoard
-            label="Result"
+            label={label}
         >
             { fightSummary.length > 0 && fightSummary.map( (data, _i) => {
                 return (  

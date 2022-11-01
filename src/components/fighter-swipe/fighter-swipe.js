@@ -44,7 +44,7 @@ export const FighterSwipe = ({
         <Flex   
             zIndex={100}      
             flexDir="column"
-            justifyContent="flex-start"
+            justifyContent="space-between"
             alignItems="center"
             onClick={scoringComplete ? handleScoringComplete : handleSelect} 
             id={fighterId}
@@ -84,18 +84,32 @@ export const FighterSwipe = ({
                 >
                     {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
                 </Heading>
-                { selectedFighter && selectedFighter === fighter &&
-                    <Heading    
-                        textAlign="center" 
-                        as="h2" 
-                        size="md"
-                        mb="1"
-                    >
-                        {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
-                    </Heading>
-                
-                
-                }
+                <Flex
+                    w="100%"
+                    minH="1.5rem"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+
+                    { selectedFighter && selectedFighter === fighterId &&
+                        <Heading    
+                            textAlign="center" 
+                            as="h2" 
+                            size="lg"
+                        >
+                            {`10`} 
+                        </Heading>
+                    }
+                    { selectedFighter && selectedFighter !== fighterId &&
+                        <Heading    
+                            textAlign="center" 
+                            as="h2" 
+                            size="lg"
+                        >
+                            {notSelectedScore} 
+                        </Heading>
+                    }
+                </Flex>
             </Flex>
         </Flex>
     )

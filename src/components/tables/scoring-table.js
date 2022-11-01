@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { 
     Flex, 
     Heading, 
@@ -19,12 +20,14 @@ export const ScoringTable = ({
     tabs, 
 }) => {
     const {
-        currentRound,
+        lastScoredRound,
         fight,
         tableData, 
     } = useScorecardStore()
-    console.log('tableData: ', tableData)
-    const totalRounds = fight ? fight.rounds : 12;
+    // console.log('tableData: ', tableData)
+    console.log('lastScoredRound: ', lastScoredRound)
+
+    const totalRounds = fight ? fight.rounds : 1;
 
     const sortData = (a, b) => a.username - b.username
 
@@ -63,7 +66,7 @@ export const ScoringTable = ({
     
     const renderRoundStyles = (i, roundKO, transformedPrediction, fighter) => {
         if((i+1) == roundKO && transformedPrediction == fighter){
-            if(currentRound === (i+1)){
+            if(lastScoredRound === i){
                 return ({ border: '2px solid #e56a54' })    
             } else {
                 return ({ border: '1px solid white' })
@@ -76,7 +79,7 @@ export const ScoringTable = ({
     return (      
         <>
             <ScoringDividerWithText 
-                text={`Round ${currentRound}`}
+                text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
                 tabs={tabs} 
                 centered={tabs.all ? true : false}
             />
@@ -131,18 +134,24 @@ export const ScoringTable = ({
                                         return (
                                             <Th 
                                                 key={roundIndex} 
-                                                // style={roundIndex === currentRound ? {color:'white', fontWeight: 'bold', fontSize: '1.3rem', borderBottom:'1px dotted white'} : null} 
-
                                                 fontWeight="bold"
                                                 textAlign="center"
-                                                style={currentRound === (roundIndex + 1) ? { color: 'white', fontSize: '1.2rem' } : { color: '#c8c8c8'} }
+                                                style={lastScoredRound === (roundIndex) ? { color: 'white', fontSize: '1.2rem' } : { color: '#c8c8c8'} }
                                             >
                                                 {roundIndex+1}
                                             </Th>
                                         )
                                     })
                                 } else if(index === 2){
-                                    return <Th key={index+99} color="white" fontWeight="bold">Total</Th>
+                                    return (
+                                        <Th 
+                                            key={index+99} 
+                                            color="white" 
+                                            fontWeight="bold"
+                                        >
+                                            Total
+                                        </Th>
+                                    )
                                 }
                             })}
                         </Tr>
@@ -200,7 +209,6 @@ export const ScoringTable = ({
                                                             <Flex 
                                                                 w="100%"
                                                                 style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2)}
-                                                                // style={(i+1) == roundKO && (transformedPrediction == fighter2) ? currentRound === (i+1) ? { border: '1px solid #e56a54' } : { border: '1px solid white' } : { border: "1px solid #656565" } } 
                                                                 color={_i >= mappedScores.length ? 'transparent' : "white"}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 

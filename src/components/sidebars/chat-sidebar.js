@@ -1,13 +1,23 @@
-import { createRef, useEffect, useState, useRef } from 'react'
-import { Box, Button, ButtonGroup, Divider, Flex, Input } from '@chakra-ui/react'
+import { 
+    createRef, 
+    useEffect, 
+    useState, 
+    useRef 
+} from 'react'
+import { 
+    Box, 
+    Button, 
+    ButtonGroup, 
+    Divider, 
+    Flex, 
+    Input 
+} from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid'
-import { useScorecardStore } from '../../../stores'
-import { SidebarsDividerWithText } from '../../../chakra'
+import { useScorecardStore } from '../../stores'
+import { SidebarsDividerWithText } from '../../chakra'
 
 
 export const ChatSidebar = ({
-    setNotifications, 
-    setNotificationTimeout,
     tabs,
 }) => {
     const { 
@@ -21,6 +31,8 @@ export const ChatSidebar = ({
     } = useScorecardStore()
 
     const { username } = user
+    const [notificationTimeout, setNotificationTimeout] = useState(false);
+    const [notifications, setNotifications] = useState([]);
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +43,7 @@ export const ChatSidebar = ({
     const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
-    
+
     useEffect(() => {
         if(chatKey){
             requestChatToken(chatKey)
@@ -53,10 +65,29 @@ export const ChatSidebar = ({
 
     useEffect(() => {
         const scrollToBottom = () => {
-          messagesEndRef.current.scrollTop = 0
+            messagesEndRef.current.scrollTop = 0
         };
         scrollToBottom();
-      });
+    });
+
+    useEffect(() => {
+        if(notifications.length > 0){
+            const timer = setTimeout(() => {
+                const temp = notifications;
+                temp.shift(temp.length -1)
+                setNotifications(temp);
+                // setNotificationTimeout(prev => !prev);
+            }, 10000)
+            return () => clearTimeout(timer);
+        }
+    },[notificationTimeout])
+
+    const handleCloseNotification = e => {
+        const { id } = e.currentTarget;
+        const temp = notifications
+        const filtered = temp.filter( ({ notification }) => notification !== id);
+        setNotifications(filtered)
+    };
 
     const initConnection = async (token) => {
         const connectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
@@ -166,13 +197,14 @@ export const ChatSidebar = ({
 
     return (
         <Flex 
+            display={(tabs.all || tabs.chat) ? 'flex' : 'none'}
+            bg="fsl-sidebar-bg"
+            border="1px solid #252525"
             id="chat-sidebar"
             p="1"
             w="100%"
-            display={window.innerWidth <= 768 && tabs.chat ? 'flex' : window.innerWidth > 768 ? 'flex' : 'none'}
-            flex={["1 0 25%", "1 0 25%", "1 0 25%", "1 0 20%"]} 
-            // maxW="100%" 
-            bg={tabs.all ? "'fsl-scoring-sidebar-bg'" : "'fsl-scoring-sidebar-bg'"}
+            flex={["1 0 25%"]} 
+            maxW="100%" 
             borderRadius="md" 
             ref={chatRef}
             overflow="hidden"
@@ -211,12 +243,15 @@ export const ChatSidebar = ({
                 }
                 <Divider p="1" w="50%" mb="2" marginX="auto"/>
                 <Input
+                    w="90%"
+                    bg="#202020"
+                    m="auto"
                     mb="1"
                     as="input"
                     size="sm"
                     type="text"
-                    color="whiteAlpha.800"
-                    _placeholder={{color: 'whiteAlpha.400'}}
+                    color="#dadada"
+                    _placeholder={{color: '#dadada'}}
                     placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
                     isDisabled={!socketActive()}
                     value={chatMessage}
@@ -263,11 +298,15 @@ export const ChatSidebar = ({
                         m="1"
                         p="1"
                         size="sm"
-                        disabled={!socketActive() || powerShotDisabled}
+                        // disabled={!socketActive() || powerShotDisabled}
                         loadingText="Joining..." 
                         onClick={() => handleSendMessage('PREDICTION')} 
                         variant="outline"
                         colorScheme="red"
+                        color='#dadada'
+                        _hover={{
+                            color: '#C01616'
+                        }}
                     >
                         PowerShot
                     </Button>

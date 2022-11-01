@@ -14,6 +14,10 @@ import {
     IoFlashOutline, 
     IoBookmarkOutline 
 } from "react-icons/io5";
+import { 
+    InfoOutlineIcon,
+    NotAllowedIcon,
+} from '@chakra-ui/icons'
 import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 
@@ -118,7 +122,7 @@ export const ShowsSidebar = ({
                                 fightId={fightId} 
                                 selectFight={selectFight} 
                                 icon={isTitleFight && 
-                                    <IoFlashOutline 
+                                    <IoStarOutline 
                                         background="gray" 
                                         mt="-5px" 
                                     />
@@ -137,11 +141,12 @@ export const ShowsSidebar = ({
                         return <UpcomingNavItem 
                             active={active}
                             name={REVIEW_TYPE.REVIEW} 
-                            icon={<IoStarOutline mt="-5px" /> } 
+                            icon={<InfoOutlineIcon mt="-5px" /> } 
                             selectFight={selectFight} 
                             fightId={fightId} 
                             label={fightQuickTitle} 
                             key={fightId} 
+                            isTitleFight={isTitleFight}
                         />
                     })}
                 </NavGroup>
@@ -154,11 +159,12 @@ export const ShowsSidebar = ({
                                 <UpcomingNavItem 
                                     active={active}
                                     name={REVIEW_TYPE.CANCELED} 
-                                    icon={<IoStarOutline mt="-5px" /> } 
+                                    icon={<NotAllowedIcon mt="-5px" /> } 
                                     selectFight={selectFight} 
                                     fightId={fightId} 
                                     label={fightQuickTitle} 
                                     key={fightId} 
+                                    isTitleFight={isTitleFight}
                                 />
                             )
                         })}
