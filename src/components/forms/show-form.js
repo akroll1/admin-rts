@@ -37,18 +37,19 @@ export const ShowForm = () => {
     // showId is kept out of the form for put/post logic.
     const [showId, setShowId] = useState(null);
     const [form, setForm] = useState({
-        fightIds: '', // cast to string[] on submit.
+        fightIds: '', 
         location: '',
         network: '',
         promoter: '',
         showName: '',
         showStoryline: '',
-        showTime: new Date(),
+        showTime: 0,
     })    
 
     useEffect(() => {
         if(show.showId){
-            setForm(show)
+            setForm({ ...show, showId: null })
+            setShowId(show.showId)
         }
     },[show])
 
@@ -62,8 +63,18 @@ export const ShowForm = () => {
             {fightIds: [fightIds[0]]},
             { showId: null }
         )
+
         console.log('postObj: ', postObj);
         createShow(postObj)
+        setForm({
+            fightIds: [], 
+            location: '',
+            network: '',
+            promoter: '',
+            showName: '',
+            showStoryline: '',
+            showTime: 0,
+        })
     }
     
     const handleUpdateShow = () => {
@@ -79,9 +90,15 @@ export const ShowForm = () => {
         return setForm({...form, [id]: value});
     };
 
-    const { fightIds, location, network, promoter, showName, showStatus, showStoryline, showTime } = form;
+    const { 
+        fightIds, 
+        location, 
+        promoter, 
+        showName, 
+        showStoryline, 
+        showTime 
+    } = form;
     const fightId = fightIds[0];
-    console.log('form: ', form);
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">

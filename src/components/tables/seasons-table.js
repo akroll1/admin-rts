@@ -16,8 +16,6 @@ import {
     Tr, 
     useColorModeValue as mode 
   } from '@chakra-ui/react'
-  import { BsSearch } from 'react-icons/bs'
-  import { capFirstLetters, parseEpoch } from '../../utils'
   import { DeleteIcon } from '@chakra-ui/icons'
 import { SeasonStatus } from '../../stores'
   
@@ -33,6 +31,7 @@ import { SeasonStatus } from '../../stores'
         mx="auto" 
         mb="4"
         w="100%"
+        overflow="scroll"
       >
         <TableActions />
         <SeasonsTableContent 

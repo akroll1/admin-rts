@@ -4,7 +4,6 @@ import { ScorecardsBoardsHeaders } from './scorecards-boards-header'
 export const ScorecardsBoard = props => {
     return (
         <Flex
-            id="scorecards_leaderboard"
             bg="#111111"
             position="relative"
             w="100%"
@@ -14,8 +13,8 @@ export const ScorecardsBoard = props => {
             border="1px solid #383838"
             borderRadius="md"
             p="2"
-            my="1"
-            minH="25vh"
+            mx="1"
+            minH="40%"
         >
             <ScorecardsBoardsHeaders
                 {...props}

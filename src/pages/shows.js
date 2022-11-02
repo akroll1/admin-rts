@@ -22,6 +22,7 @@ const Shows = () => {
         userFightReview,
      } = useScorecardStore();
     const { email, sub, username } = user;
+    const [seasonName, setSeasonName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
@@ -166,7 +167,9 @@ const Shows = () => {
                 />
             }
 
-            <ShowsSidebar />  
+            <ShowsSidebar
+                setSeasonName={setSeasonName}
+            />  
             
             <ShowsMain 
                 deleteMember={deleteMember}
@@ -177,6 +180,7 @@ const Shows = () => {
                 handleFormChange={handleFormChange}
                 isSubmitting={isSubmitting}
                 members={members}
+                seasonName={seasonName}
                 setFightReviewForm={setFightReviewForm}
             />
            

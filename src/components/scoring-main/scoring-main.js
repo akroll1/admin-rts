@@ -115,29 +115,10 @@ export const ScoringMain = ({
                 }}
             >
                 <Flex
-                    textAlign="center"
-                    w="100%"
-                    mt="0"
-                    pt="0"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                >
-                    <Heading 
-                        w="100%"
-                        bg="#171717"
-                        zIndex={99}
-                        mb="2"
-                        as="h2"
-                        size="xl"
-                        minH="2rem"
-                    >
-                        Your Scorecard
-                    </Heading>
-                </Flex>
-                <Flex
                     flexDir="row"
                     w="100%"
                     textAlign="center"
+                    alignItems="flex-end"
                 >
                 {
                     fighters.length > 0 && fighters.map( (fighter, i) => (

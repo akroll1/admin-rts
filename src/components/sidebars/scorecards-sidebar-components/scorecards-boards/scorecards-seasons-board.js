@@ -52,6 +52,7 @@ export const ScorecardsSeasonsBoard = () => {
                 flexDir="column"
                 alignItems="flex-start"
                 overflow="scroll"
+                minH={["40vh", "50vh", "60vh"]}
             >
                 { seasons?.length > 0 && seasons.map( summary => {
                     const { fightSummaries, season } = summary;
@@ -75,7 +76,7 @@ export const ScorecardsSeasonsBoard = () => {
                                     w="100%"
                                     p="2"
                                 >
-                                { fightSummaries.length && fightSummaries.map( summary => {
+                                { fightSummaries.length > 0 && fightSummaries.map( summary => {
                                     const { fightId, fightQuickTitle, fightStatus, isTitleFight } = summary.fight;
                                     const active = fightId === selectedFightSummary?.fight?.fightId;
                                     const icon = getLeftIcon(fightStatus);

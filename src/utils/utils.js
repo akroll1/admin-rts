@@ -1,4 +1,3 @@
-import parseISO from 'date-fns/parseISO'
 
 export const predictionIsLocked = epoch => {
     return Date.now() > epoch ? true : false;

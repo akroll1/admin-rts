@@ -1,6 +1,5 @@
 import { 
   Flex, 
-  Heading,
   Table, 
   TableCaption, 
   Tbody, 
@@ -71,6 +70,7 @@ const SelectedSeasonTableContent = ({
       m="4"
       alignItems="center"
       justifyContent="center"
+      overflow="scroll"
     >
       <Table minW="100%" mb="6" borderWidth="1px" fontSize="sm" overflowY="scroll">
         <TableCaption fontSize="1.5rem" placement="top">{selectedSeason.season.seasonName} Fights</TableCaption> 
@@ -89,8 +89,7 @@ const SelectedSeasonTableContent = ({
           </Tr>
         </Thead>
         <Tbody>
-          { selectedSeason?.fightSummaries && selectedSeason.fightSummaries.map( (row, _i) => {
-            // console.log('row: ', row)
+          { selectedSeason?.fightSummaries.length > 0 && selectedSeason.fightSummaries.map( (row, _i) => {
 
             const { fight, fighters, show } = row
             return (

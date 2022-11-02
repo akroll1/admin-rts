@@ -33,6 +33,7 @@ export const NETWORK_ENUMS = [
 	{ value: 'ESPN', label: 'ESPN' },
 	{ value: 'ESPN+', label: 'ESPN+' },
 	{ value: 'FIGHTSYNC', label: 'FightSync' },
+	{ value: 'FITETV', label: 'FITE TV' },
 	{ value: 'FIGHTTV', label: 'Fight TV' },
 	{ value: 'FOXSPORTS', label: 'Fox Sports' },
 	{ value: 'HBO', label: 'HBO' },

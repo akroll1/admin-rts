@@ -44,11 +44,15 @@ export const FightersForm = () => {
     });
 
     useEffect(() => {
-        setForm(fighter)
+        if(fighter?.fighterId){
+            setIsSubmitting(false)
+            setForm(fighter)
+        }
     },[fighter])
 
     const handleFormChange = e => {
         const { id, name, value } = e.currentTarget;
+
         if(name === 'stats'){
             setForm({ ...form, [id]: parseInt(value) });
             return;
@@ -57,6 +61,7 @@ export const FightersForm = () => {
     }
 
     const handleUpdateFighter = () => {
+        setIsSubmitting(true)
         Object.assign(form, {
             fighterId: searchFighterId
         })
@@ -64,6 +69,7 @@ export const FightersForm = () => {
     }
     
     const handleCreateFighter = () => {
+        setIsSubmitting(true)
         createFighter(form)
     }    
     

@@ -103,9 +103,9 @@ export const ScoringSidebarLeft = ({
                 mx="1"
                 label="Fight Info" 
             />
-            <ScoringSidebarFightersFaceoff 
+            {/* <ScoringSidebarFightersFaceoff 
                 tabs={tabs}
-            />
+            /> */}
             <Flex 
                 flexDir="column"
                 h={"auto"}

@@ -1,15 +1,24 @@
 import { useEffect } from 'react'
-import { Flex } from '@chakra-ui/react'
-import { ScorecardsPageTable } from '../components/tables'
-import { ExpiredTokenModal } from '../components/modals'
-import { useScorecardStore } from '../stores'
-import { ScorecardsPageSidebar } from '../components/sidebars'
+import { 
+  Flex, 
+  Heading 
+} from '@chakra-ui/react'
+  import { ScorecardsPageTable } from '../components/tables'
+  import { ExpiredTokenModal } from '../components/modals'
+  import { useScorecardStore } from '../stores'
+  import { ScorecardsPageSidebar } from '../components/sidebars'
+  import { 
+    ScorecardsLeaderboardBoard, 
+  ScorecardsMetadataBoard 
+} from '../components/sidebars/scorecards-sidebar-components'
+import { parseEpoch } from '../utils'
 
 export const ScorecardsPage = () => {
 
   const {
     fetchAllSeasons,
     fetchUserScorecards,
+    selectedSeason,
     userScorecards,
   } = useScorecardStore();
 
@@ -22,7 +31,7 @@ export const ScorecardsPage = () => {
     <Flex 
       w={["100%"]} 
       p="2"
-      my={["2", "4"]}
+      my={["2"]}
       flexWrap="wrap" 
       height="auto" 
       flexDirection={["column", "row"]} 
@@ -35,7 +44,58 @@ export const ScorecardsPage = () => {
       <ExpiredTokenModal />
        
       <ScorecardsPageSidebar />
-      <ScorecardsPageTable scorecards={userScorecards} />
+      <Flex
+        w="100%"
+        flexDir="column"
+        alignItems="center"
+        justifyContent="flex-start"
+        flex="1 0 70%"
+      >
+         <Heading
+          as="h3"
+          size="lg"
+          px="2"
+          py="0"
+          color="#eaeaea"
+        >
+          { selectedSeason?.season?.seasonName
+            ?  `${selectedSeason?.season?.seasonName}`
+            : `Season`
+        }
+        </Heading>
+         <Heading
+          as="h4"
+          size="sm"
+          color="#dadada"
+          mb="1"
+        >
+          { selectedSeason?.season?.starts
+            ?  `${parseEpoch(selectedSeason?.season?.starts).slice(0, 9)} - ${parseEpoch(selectedSeason?.season?.ends).slice(0, 9)}`
+            : ``
+        }
+        </Heading>
+        <Flex
+          boxSizing='border-box'
+          w="100%"
+          flexDir="row"
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          flexWrap="wrap"
+          minH="40vh"
+          overflow="scroll"
+        >
+            <ScorecardsMetadataBoard 
+              label="Result"
+            />
+            <ScorecardsLeaderboardBoard 
+              label="Leaderboard"
+            />
+        </Flex>
+        <ScorecardsPageTable 
+          scorecards={userScorecards} 
+          selectedSeason={selectedSeason}  
+        />
+      </Flex>
     </Flex>
   )
 }

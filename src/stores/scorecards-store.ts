@@ -336,13 +336,9 @@ export const useScorecardStore = create<ScorecardStore>()(
             fetchAllSeasons: async () => {
                 const res = await axios.get(`${url}/seasons`, get().accessToken)
                 const seasons = res.data as SeasonSummary[]
-                // put season 1 first in list.
                 
                 if(seasons.length){
-                    const season1 = seasons.filter( season => season.season.seasonId === '1')
-                    const rest = seasons.filter( season => season.season.seasonId !== '1')
-                    const sett = new Set(season1.concat(rest))
-                    set({ seasons: [...sett], selectedSeason: [...sett][0] })
+                    set({ seasons, selectedSeason: seasons[0] })
                     get().setSeasonsOptions()
                 }
             },

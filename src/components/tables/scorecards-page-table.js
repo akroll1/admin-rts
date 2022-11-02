@@ -2,14 +2,14 @@ import {
   Flex,
   Heading 
 } from '@chakra-ui/react'
-import { 
-  ScorecardsPageTableContent, 
-} from './table-els'
+import { ScorecardsPageTableContent } from './table-els'
+import { parseEpoch } from '../../utils'
 
 export const ScorecardsPageTable = ({ 
-  scorecards 
+  scorecards,
+  selectedSeason,
 }) => {
-
+  console.log('selectedSeason: ', selectedSeason)
   return (
     <Flex 
       as="section"
@@ -21,21 +21,24 @@ export const ScorecardsPageTable = ({
       boxSizing="border-box" 
       position="relative"
       w="100%"
-      flex="1 0 70%"
       overflow="scroll"
       p="4"
       pt="0"
       mx="auto"
+      mt="4"
       mb="8"
       maxW={["100%"]}
     >
       <Heading 
-        mb="4"
+        color="#fafafa"
+        as="h3"
+        size="lg"
         textAlign="center"
+        my="2"
       >
         Scorecards
       </Heading>
-      {/* <TableActions /> */}
+        
       <ScorecardsPageTableContent scorecards={scorecards} />
     </Flex>
   )
