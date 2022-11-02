@@ -57,7 +57,7 @@ export const ScorecardsSeasonsBoard = () => {
                 { seasons?.length > 0 && seasons.map( summary => {
                     const { fightSummaries, season } = summary;
                     const { seasonId, seasonName } = season;
-                    const active = activeNavGroupItem === seasonId;
+                    const active = activeNavGroupItem === selectedSeason?.season?.seasonId;
                     return (
                         <ScorecardsNavGroup 
                             handleHideShow={handleHideShow}
