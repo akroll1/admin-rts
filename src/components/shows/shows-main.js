@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { 
     FightMetadata, 
     FightReviews, 
@@ -26,18 +25,12 @@ export const ShowsMain = ({
 }) => {
     const {
         selectedFightSummary,
+        selectedSeason,
     } = useScorecardStore()
-    const [time, setTime] = useState(0)
 
-    const showTime = selectedFightSummary?.show?.showTime ? selectedFightSummary?.show?.showTime : 0;
+    const showTime = selectedFightSummary?.show?.showTime ? selectedFightSummary.show.showTime : Date.now();
     
-    useEffect(() => {
-        if(selectedFightSummary?.show?.showTime){
-            setTime(selectedFightSummary.show.showTime)
-        }
-    },[selectedFightSummary?.show?.showTime])
-    
-    const UPCOMING = time > Date.now() ? true : false; 
+    const UPCOMING = showTime > Date.now() ? true : false; 
     
     return (
         <Flex 
@@ -52,6 +45,18 @@ export const ShowsMain = ({
             position="relative"
             w="100%"
         >
+            <Heading
+                position="absolute"
+                top="0"
+                left="0"
+                as="h2"
+                size={["md", "lg"]}
+                p="2"
+                color="#bababa"
+            >
+                {selectedSeason.season.seasonName}
+            </Heading>
+
             <ShowsArrows />
 
             <FightMetadata

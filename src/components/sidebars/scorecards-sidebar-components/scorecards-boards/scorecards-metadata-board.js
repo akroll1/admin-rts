@@ -58,47 +58,58 @@ export const ScorecardsMetadataBoard = ({ label }) => {
                     label: `Location`,
                     data: `${selectedFightSummary.show.location}`
                 },
+                {
+                    label: `Notes`,
+                    data: ``
+                },
+                {
+                    label: `Links`,
+                    data: ``
+                },
             ];
-            console.log('selectedFightSummary: ', selectedFightSummary)
-            console.log('selectedFightSummaryMetadata: ', selectedFightSummaryMetadata)
             setFightSummary(selectedFightSummaryMetadata)
         }
     },[selectedFightSummary])
 
     return (
-        <ScorecardsBoard
-            label={label}
+        <Flex
+            flex="1 0 45%"
         >
-            { fightSummary.length > 0 && fightSummary.map( (data, _i) => {
-                return (  
-                    <Flex
-                        key={_i}
-                        borderBottom="1px solid #303030"
-                        display="inline-flex"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        <Heading 
-                            p="1"
-                            as="h4" 
-                            size="sm"
-                            textAlign="left"
-                            color="#dadada"
+            <ScorecardsBoard
+                label={label}
+            >
+                { fightSummary.length > 0 && fightSummary.map( (data, _i) => {
+                    return (  
+                        <Flex
+                            key={_i}
+                            borderBottom="1px solid #303030"
+                            display="inline-flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            minH="1.5rem"
                         >
-                            {`${data.label}`}&#58; 
-                        </Heading>
-                        <Heading 
-                            px="1"
-                            as="h4" 
-                            size="sm"
-                            textAlign="left"
-                            color="#cacaca"
-                        >
-                            {data.data}
-                        </Heading>
-                    </Flex>  
-                )
-            })}
-        </ScorecardsBoard>
+                            <Heading 
+                                p="1"
+                                as="h4" 
+                                size="sm"
+                                textAlign="left"
+                                color="#dadada"
+                            >
+                                {`${data.label}`}&#58; 
+                            </Heading>
+                            <Heading 
+                                px="1"
+                                as="h4" 
+                                size="sm"
+                                textAlign="left"
+                                color="#cacaca"
+                            >
+                                {data.data}
+                            </Heading>
+                        </Flex>  
+                    )
+                })}
+            </ScorecardsBoard>
+        </Flex>
     )
 }

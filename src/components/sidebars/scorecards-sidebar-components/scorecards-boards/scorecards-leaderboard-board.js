@@ -26,6 +26,10 @@ const leaders = [
 
 export const ScorecardsLeaderboardBoard = () => {
     return (
+        <Flex
+            flex="1 0 45%"
+            minH="40%"
+        >
             <ScorecardsBoard
                 label="Leaderboard"
             >
@@ -80,6 +84,7 @@ export const ScorecardsLeaderboardBoard = () => {
                     </Flex>
                 )
             })}
-        </ScorecardsBoard>
+            </ScorecardsBoard>
+        </Flex>
     )
 }

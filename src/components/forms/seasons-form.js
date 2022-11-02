@@ -18,7 +18,6 @@ import { SelectedSeasonTable, SeasonsTable } from '../tables';
 import { SeasonStatus, useScorecardStore } from '../../stores';
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import parseISO from 'date-fns/parseISO'
 
 export const SeasonsForm = () => {
     const {
@@ -76,10 +75,11 @@ export const SeasonsForm = () => {
     }
     
     const handleSeasonSelect = (e, id) => {
-        const [season] = allSeasons.filter( summary => summary.season.seasonId === id);
+        const [season] = allSeasons.filter( season => season.season.seasonId === id);
+        console.log('season: ', season)
         setForm(season.season); 
         setSelectedSeason(season) 
-        setSeasonId(season.seasonId)
+        setSeasonId(season.season.seasonId)
     }
 
     const handleCreateSeason = () => {
@@ -104,7 +104,6 @@ export const SeasonsForm = () => {
             if(isDuplicate) return alert('Fight is in Season')
 
             setIsSubmitting(true)
-            setForm({ ...form, fightIds: [ ...form.fightIds, fightId] })
             Object.assign(form, {
                 seasonId: form.seasonId ? selectedSeason.season.seasonId : '',
                 fightIds: [ ...form.fightIds, fightId]
@@ -135,7 +134,14 @@ export const SeasonsForm = () => {
             value: SeasonStatus.PENDING
         },
     ]
-    const { ends, seasonName, seasonDescription, seasonStatus, seasonTagline, starts } = form
+    const { 
+        ends, 
+        seasonName, 
+        seasonDescription, 
+        seasonStatus, 
+        seasonTagline, 
+        starts 
+    } = form
 
 
     return (

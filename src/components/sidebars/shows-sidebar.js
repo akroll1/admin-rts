@@ -121,11 +121,16 @@ export const ShowsSidebar = ({
                                 name={REVIEW_TYPE.PREDICTION} 
                                 fightId={fightId} 
                                 selectFight={selectFight} 
-                                icon={isTitleFight && 
-                                    <IoStarOutline 
-                                        background="gray" 
-                                        mt="-5px" 
-                                    />
+                                icon={isTitleFight
+                                    ?
+                                        <IoStarOutline 
+                                            background="gray" 
+                                            mt="-5px" 
+                                        />
+                                    :
+                                        <InfoOutlineIcon 
+                                            mt="-5px" 
+                                        />
                                 } 
                                 label={fightQuickTitle} 
                                 key={fightId} 
@@ -170,7 +175,7 @@ export const ShowsSidebar = ({
                         })}
                     </NavGroup>
                 }
-                <NavGroup label="Historical">
+                {/* <NavGroup label="Historical">
                     {historicalShows && historicalShows.length > 0 && historicalShows.map( (fight,i) => {
                         return <UpcomingNavItem 
                             name={REVIEW_TYPE.HISTORICAL} 
@@ -191,7 +196,7 @@ export const ShowsSidebar = ({
                             key={i} 
                         />
                     })}
-                </NavGroup>
+                </NavGroup> */}
             </Stack>
         </Flex>
     )

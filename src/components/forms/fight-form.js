@@ -57,7 +57,6 @@ export const FightForm = () => {
                 officialResult: form.officialResult,
                 rounds: parseInt(form.rounds)
         })
-        // console.log('fightObj: ',fightObj)
         updateFight(fightObj)
     };
     
@@ -92,7 +91,7 @@ export const FightForm = () => {
         setGuestJudgeIds(filtered)
     }
     const { fightQuickTitle, isMainEvent, isTitleFight, fightStoryline, rounds } = form;
-    console.log('form: ', form)
+
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
              <FieldGroup title="Search for a Fight">
