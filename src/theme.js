@@ -1,4 +1,5 @@
 import { 
+  defineStyle,
   extendTheme, 
   theme as chakraTheme,
   useColorModeValue as mode,
@@ -115,6 +116,12 @@ export const fslTheme = {
       },
       'fsl-scoring-blue': {
         _dark: '#1d5d90'
+      },
+      'fsl-subdued-text': {
+        _dark: '#bababa'
+      },
+      'fsl-highlight-heading-text': {
+        _dark: '#fafafa'
       }
 
     }
@@ -255,9 +262,15 @@ const Button = {
   }
 }
 
+const headingTheme = {
+}
+
 const Heading = {
   baseStyle: {
-    color: '#FAFAFA',
+    color: '#eaeaea',
+    letterSpacing: '1px'
+  },
+  defaultProps: {
   }
 }
 
@@ -303,18 +316,6 @@ const Select = {
         cursor: 'pointer'
       }
     },
-    
-  // }
-  // baseStyle: {
-  //   _active: {
-  //     boxShadow: '0 0 0 1px #676767',
-  //     border: '1px solid',
-  //     borderColor: '#393838',
-  //   },
-  //   boxShadow: '0 0 0 1px #676767',
-  //   border: '1px solid',
-  //   borderColor: '#393838',
-  // }
 }
 
 const Table = {
@@ -340,5 +341,4 @@ const theme = extendTheme({
     Table
   }
 });
-// console.log('theme: ', theme)
 export default theme;

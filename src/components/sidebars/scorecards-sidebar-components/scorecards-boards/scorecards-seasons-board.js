@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Collapse, Flex } from '@chakra-ui/react'
 import { ScorecardsBoard } from './scorecards-board'
 import { ScorecardsNavGroup } from './scorecards-nav-group'
@@ -18,7 +18,14 @@ export const ScorecardsSeasonsBoard = () => {
         setSelectedFightSummary,
         setSelectedSeason,
     } = useScorecardStore()
-    const [activeNavGroupItem, setActiveNavGroupItem] = useState('1')
+    const [activeNavGroupItem, setActiveNavGroupItem] = useState()
+
+    useEffect(() => {
+        if(selectedSeason?.season?.seasonId){
+            setActiveNavGroupItem(selectedSeason.season.seasonId)
+            setSelectedFightSummary(selectedSeason.fightSummaries[0])
+        }
+    },[selectedSeason?.season])
 
     const selectFight = e => {
         const { id } = e.currentTarget;

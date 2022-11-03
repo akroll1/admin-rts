@@ -71,7 +71,7 @@ export interface ScorecardStore {
     fetchSelectedFightReviews(fightId: string): void;
     fetchShow(showId: string): void
     fetchUser(): void
-    fetchUserScorecards(): void
+    fetchUserScorecards(seasonId: string): void
     fight: Fight
     fighter: Fighter
     fightComplete: boolean
@@ -372,16 +372,6 @@ export const useScorecardStore = create<ScorecardStore>()(
                     },5000)
                 }
                 const lastScoredRound = userScorecard.scores.length;
-                if(userScorecard.ownerId.includes('@')){
-                    const patchUrl = url + `/scorecards/${userScorecard.scorecardId}`
-                    const updatedScorecard = await axios.patch(patchUrl, { ownerId: user.sub, username: user.username }, get().accessToken)
-                    const update = {
-                        sub: get().user.sub,
-                        username: get().user.username,
-                        eamil: get().user.email
-                    }
-                    const updateUser = await get().updateUser(update)
-                }
                 const totalRounds = data.fight.rounds;
                 const scoringComplete = userScorecard.scores.length >= totalRounds;
                 await set({ 
@@ -452,12 +442,17 @@ export const useScorecardStore = create<ScorecardStore>()(
                 Object.assign(user, get().user)
                 set({ user })
             },
-            fetchUserScorecards: async () => {
-                const res = await axios.get(`${url}/scorecards/${encodeURIComponent(get().user.sub!)}-${encodeURIComponent(get().user.email!)}/all`, get().accessToken)
+            fetchUserScorecards: async (seasonId: string) => {
+                const res = await axios.get(`${url}/scorecards/${encodeURIComponent(get().user.sub!)}/${seasonId}`, get().idToken)
                 const data = res.data as any[]
 
-                const userScorecards = await Promise.all( data.map( async x => {
-                    const { fight, fighters, scorecard } = x;
+                const userScorecards = await Promise.all( data.map( async card => {
+                    console.log('card: ', card)
+                    if(card.scorecard.ownerId.includes('@')){
+                        get().setModals('changeDisplayName', true)
+                    }
+            
+                    const { fight, fighters, scorecard } = card;
                     const { finalScore, groupScorecardId, prediction, scorecardId } = scorecard;
                     const { fightStatus, rounds } = fight;
 
@@ -485,6 +480,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }));
                 // console.log('userScorecards: ', userScorecards)
                 set({ userScorecards })
+            },
+            patchDisplayName: async (displayName: string) => {
+                // this will update the scorecard displayName for a season.
+                const res = await axios.patch(`${url}/scorecards/${get().selectedSeason.season.seasonId}`, { displayName }, get().accessToken)
+                console.log('patchDisplayName: ', res.data)
             },
             patchPrediction: async (prediction: string) => {
                 const res = await axios.patch(`${url}/scorecards/${get().userScorecard.scorecardId}`, { prediction }, get().accessToken)

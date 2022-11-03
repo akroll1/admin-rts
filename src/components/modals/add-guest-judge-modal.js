@@ -76,7 +76,7 @@ export const AddGuestJudgeModal = ({
         >
             <ModalOverlay />
             <ModalContent p="0.5rem">
-                <ModalHeader fontSize="sm">Available Guest Judges</ModalHeader>
+                <ModalHeader fontSize="sm">FightSync Live Judges</ModalHeader>
                 <ModalCloseButton onClick={closeModal} />
                 <ModalBody m="auto" w="100%"> 
                     {availableGuestJudges?.length > 0  
@@ -104,7 +104,7 @@ export const AddGuestJudgeModal = ({
                                     </>
                             )})
 
-                        :   <Text textAlign="center">There are no guest judges for this fight.</Text>
+                        :   <Text textAlign="center">There are no FSL Judges for this fight.</Text>
                     }
                     { myJudges.length > 0 && myJudges.map( judge => {
                         return (

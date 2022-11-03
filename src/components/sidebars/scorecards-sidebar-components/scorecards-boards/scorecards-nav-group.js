@@ -43,8 +43,8 @@ export const ScorecardsNavGroup = props => {
                     pl="2"
                     _hover={{ color:'#fcfcfc'}}
                     fontSize={id === 'fight' ? '2xl' : "lg"}
-                    color="#f0f0f0"
                     as="h3" 
+                    color="fsl-highlight-heading-text"
                 >
                     {label}
                 </Heading>

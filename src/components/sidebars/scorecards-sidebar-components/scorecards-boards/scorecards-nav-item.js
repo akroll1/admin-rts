@@ -22,7 +22,6 @@ export const ScorecardsNavItem = props => {
             justifyContent="space-between"
             alignItems="space-between"
             w="100%"
-            color={active ? 'white' : 'whiteAlpha.800'}
             id={fightId}
             onClick={selectedFight}
             cursor="pointer"
@@ -53,7 +52,7 @@ export const ScorecardsNavItem = props => {
                 fontSize="1rem" 
                 flex="1" 
                 fontWeight="inherit" 
-                color={active ? 'gray.200' : 'gray.300'}
+                color={active ? 'fsl-highlight-heading-text' : '#cacaca'}
 
             >
                 {label}

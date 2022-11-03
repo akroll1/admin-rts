@@ -25,10 +25,12 @@ export const ScoringSidebarLeft = ({
     tabs,
 }) => {
     const {
+        activeGroupScorecard,
         fight,
         setModals,
         show,
         transformedPrediction,
+        user
     } = useScorecardStore()
     
     const { 
@@ -43,7 +45,7 @@ export const ScoringSidebarLeft = ({
     const isLocked = Date.now() > showTime
 
     const openMemberModal = () => {
-        const isAdmin = false
+        const isAdmin = activeGroupScorecard.ownerId === user.sub;
         if(isAdmin){
             setModals('addMemberModal', true)
             return
@@ -147,7 +149,7 @@ export const ScoringSidebarLeft = ({
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
                     id="officialJudges"
-                    label="Official Judges"
+                    label="FightSync Judges"
                     active={activeNavGroupItem === 'officialJudges'}
                 >
                     <Flex 
@@ -161,7 +163,7 @@ export const ScoringSidebarLeft = ({
                             <ScoringSidebarNavItem 
                                 onclickOption={handleOpenGuestJudgeModal}
                                 icon={<FaGavel />} 
-                                label="Official Judges"
+                                label="FSL Judges"
                             />
                         </Collapse>
                     </Flex>

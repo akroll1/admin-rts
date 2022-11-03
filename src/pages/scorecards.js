@@ -3,12 +3,15 @@ import {
   Flex, 
   Heading 
 } from '@chakra-ui/react'
-  import { ScorecardsPageTable } from '../components/tables'
-  import { ExpiredTokenModal } from '../components/modals'
-  import { useScorecardStore } from '../stores'
-  import { ScorecardsPageSidebar } from '../components/sidebars'
-  import { 
-    ScorecardsLeaderboardBoard, 
+import { ScorecardsPageTable } from '../components/tables'
+import { 
+  ChangeDisplayNameModal, 
+  ExpiredTokenModal 
+} from '../components/modals'
+import { useScorecardStore } from '../stores'
+import { ScorecardsPageSidebar } from '../components/sidebars'
+import { 
+  ScorecardsLeaderboardBoard, 
   ScorecardsMetadataBoard 
 } from '../components/sidebars/scorecards-sidebar-components'
 import { parseEpoch } from '../utils'
@@ -23,7 +26,7 @@ export const ScorecardsPage = () => {
   } = useScorecardStore();
 
   useEffect(() => {
-    fetchUserScorecards()
+    fetchUserScorecards('active')
     fetchAllSeasons()
   },[])
 
@@ -41,6 +44,7 @@ export const ScorecardsPage = () => {
       bg="fsl-body-bg"
       boxSizing="border-box"
     >    
+      <ChangeDisplayNameModal />
       <ExpiredTokenModal />
        
       <ScorecardsPageSidebar />
@@ -56,7 +60,6 @@ export const ScorecardsPage = () => {
           size="lg"
           px="2"
           py="0"
-          color="#eaeaea"
         >
           { selectedSeason?.season?.seasonName
             ?  `${selectedSeason?.season?.seasonName}`
@@ -66,7 +69,6 @@ export const ScorecardsPage = () => {
          <Heading
           as="h4"
           size="sm"
-          color="#dadada"
           mb="1"
         >
           { selectedSeason?.season?.starts
@@ -85,10 +87,8 @@ export const ScorecardsPage = () => {
           overflow="scroll"
         >
             <ScorecardsMetadataBoard 
-              label="Result"
             />
             <ScorecardsLeaderboardBoard 
-              label="Leaderboard"
             />
         </Flex>
         <ScorecardsPageTable 
