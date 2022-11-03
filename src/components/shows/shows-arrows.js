@@ -53,6 +53,7 @@ export const ShowsArrows = () => {
             { ['left', 'right'].map( el => {
                 return (
                     <Flex
+                        key={el}
                         p="4"
                         maxW={["30%", "20%"]}
                         justifyContent="space-between"
@@ -86,23 +87,12 @@ export const ShowsArrows = () => {
                                         mr="0"
                                         width="100%"
                                         height="100%"
-                                    />}
+                                    />
+                            }
                         />
                     </Flex>
                 )
             })}
-            {/* </Flex> */}
-            {/* <Flex> */}
-                {/* <ChevronRightIcon 
-                    id="right"
-                    color="fsl-text"
-
-                    _hover={{ 
-                    cursor: 'pointer',
-                    color: '#fcfcfc'
-                    }} */}
-                {/* /> */}
-            {/* </Flex> */}
         </Flex>
     )
 }

@@ -13,7 +13,7 @@ import {
 } from '../../../../utils';
 import { ScorecardsBoard } from './scorecards-board';
 
-export const ScorecardsMetadataBoard = ({ label }) => {
+export const ScorecardsMetadataBoard = () => {
     const { 
         selectedFightSummary = {}
     } = useScorecardStore()
@@ -59,10 +59,6 @@ export const ScorecardsMetadataBoard = ({ label }) => {
                     data: `${selectedFightSummary.show.location}`
                 },
                 {
-                    label: `Notes`,
-                    data: ``
-                },
-                {
                     label: `Links`,
                     data: ``
                 },
@@ -76,8 +72,15 @@ export const ScorecardsMetadataBoard = ({ label }) => {
             flex="1 0 45%"
         >
             <ScorecardsBoard
-                label={label}
+                label={`Result`}
             >
+                <Heading
+                    m="auto"
+                    as="h3"
+                    size="md"
+                >
+                    {selectedFightSummary?.fight?.fightId ? `${selectedFightSummary.fight.fightQuickTitle}` : `` }
+                </Heading>
                 { fightSummary.length > 0 && fightSummary.map( (data, _i) => {
                     return (  
                         <Flex
@@ -93,7 +96,7 @@ export const ScorecardsMetadataBoard = ({ label }) => {
                                 as="h4" 
                                 size="sm"
                                 textAlign="left"
-                                color="#dadada"
+                                color="fsl-subdued-text"
                             >
                                 {`${data.label}`}&#58; 
                             </Heading>
@@ -102,7 +105,7 @@ export const ScorecardsMetadataBoard = ({ label }) => {
                                 as="h4" 
                                 size="sm"
                                 textAlign="left"
-                                color="#cacaca"
+                                color="fsl-highlight-heading-text"
                             >
                                 {data.data}
                             </Heading>

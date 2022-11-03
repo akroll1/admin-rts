@@ -86,6 +86,7 @@ export const FighterSwipe = ({
                     flexDir="column"
                 >
                     <Heading 
+                        letterSpacing="1px"
                         w="100%"
                         zIndex={99}
                         as="h2"
@@ -112,6 +113,7 @@ export const FighterSwipe = ({
                 w="100%"
             >   
                 <Heading
+                    letterSpacing="0.5px"
                     as="h3"
                     size="md"
                 >

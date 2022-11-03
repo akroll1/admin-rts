@@ -1,17 +1,8 @@
-import { 
-    Flex,
-} from '@chakra-ui/react'
-import { useScorecardStore } from '../../stores'
-import { 
-    ScorecardsSeasonsBoard
-} from './scorecards-sidebar-components'
+import { Flex } from '@chakra-ui/react'
+import { ScorecardsSeasonsBoard } from './scorecards-sidebar-components'
 
 export const ScorecardsPageSidebar = () => { 
-    const { 
-    
-    } = useScorecardStore()
 
-   
     return (
         <Flex 
             id="scorecards_sidebar" 

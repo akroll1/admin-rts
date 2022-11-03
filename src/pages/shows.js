@@ -1,15 +1,15 @@
 import {useState, useEffect} from 'react'
-import { Flex, useColorModePreference as mode, useToast } from '@chakra-ui/react'
-
+import { Flex, useToast } from '@chakra-ui/react'
 import { ShowsSidebar } from '../components/sidebars'
-import { ReviewFormModal } from '../components/modals'
-import { removeBadEmails, REVIEW_TYPE, isValidEmail } from '../utils'
+import { removeBadEmails, isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
-import { ExpiredTokenModal } from '../components/modals'
+import { ExpiredTokenModal, ReviewFormModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
+import { useNavigate } from 'react-router'
 
 const Shows = () => {
     const toast = useToast();
+    const navigate = useNavigate()
     const { 
         createGroupScorecard,
         fetchAllSeasons,
@@ -116,14 +116,13 @@ const Shows = () => {
     }
 
     const handleCreateGroupScorecard = async () => {
-        setIsSubmitting(true);
         // this can be pushed down to zustand.
+        setIsSubmitting(true);
         const tempMembersArr = members.concat(email);
         const goodEmails = removeBadEmails(tempMembersArr);
         const dedupedEmails = [...new Set(goodEmails)];
 
         const scorecardObj = {
-            admin: email, // necessary to create a groupScorecard, membersArr.
             fighterIds: [selectedFightSummary.fighters[0].fighterId, selectedFightSummary.fighters[1].fighterId],
             fightId: selectedFightSummary.fight.fightId,
             groupScorecardName: selectedFightSummary.fight.fightQuickTitle,
@@ -140,6 +139,9 @@ const Shows = () => {
                 status: 'success',
                 isClosable: true
             })
+            setTimeout(() => {
+                navigate('/scorecards')
+            },3000)
         }
         setIsSubmitting(false);        
     };

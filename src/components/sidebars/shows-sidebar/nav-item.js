@@ -42,7 +42,7 @@ export const UpcomingNavItem = (props) => {
         fontSize="1rem" 
         flex="1" 
         fontWeight="inherit" 
-        color={active ? 'gray.300' : undefined}
+        color={active ? 'fsl-highlight-heading-text' : '#cacaca'}
       >
         {label}
       </Box>

@@ -9,6 +9,7 @@ export interface Modals {
 export const resetModals = {
     addMemberModal: false,
     addGuestJudgeModal: false,
+    changeDisplayName: false,
     expiredTokenModal: false,
     moneylineModal: false,
     predictionModal: false,

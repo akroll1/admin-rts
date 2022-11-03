@@ -47,6 +47,7 @@ export const FightMetadata = ({
                 size="md"
                 color="#dadada"
                 py="0"
+                minH="1.5rem"
             >
                 { promoter ? promoter  : ''}
             </Heading>

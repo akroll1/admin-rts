@@ -53,12 +53,12 @@ export const ScorecardsLeaderboardBoard = () => {
                     >
                         <Flex>
                             <Heading 
-                                color="#aaaaaa"
                                 as="h4" 
                                 size="sm"
                                 mr="2"
                                 minW="2"
-                                >
+                                color="fsl-subdued-text"
+                            >
                                 {`${_i+1} `}
                             </Heading>
                             <Heading 
@@ -66,7 +66,6 @@ export const ScorecardsLeaderboardBoard = () => {
                                     color: 'white'
                                 }}
                                 textAlign="center"
-                                color="#cacaca"
                                 as="h4" 
                                 size="sm"
                             >

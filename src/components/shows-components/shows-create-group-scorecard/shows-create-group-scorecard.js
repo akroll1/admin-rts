@@ -1,7 +1,13 @@
-import React from 'react'
-import { Button, Flex, FormControl, FormGroup, FormLabel, Input, InputGroup, InputRightElement, Stack, StackDivider } from '@chakra-ui/react'
+import { 
+    Button, 
+    Flex, 
+    FormControl, 
+    Input, 
+    InputGroup, 
+    InputRightElement
+} from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
-import { DividerWithText, FieldGroup } from '../../../chakra'
+import { DividerWithText } from '../../../chakra'
 
 export const ShowsCreateGroupScorecard = ({ 
     deleteMember, 

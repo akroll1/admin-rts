@@ -157,8 +157,16 @@ export const ScoringTable = ({
                     </Thead>
                     <Tbody>
                         {sortedTable?.length > 0 && sortedTable?.map( (row, idx) => {
-                            const { fighters, finalScore, mappedScores, prediction, totals, username } = row;;
-                            let filledMappedScores;   
+                            const { 
+                                fighters, 
+                                finalScore, 
+                                mappedScores, 
+                                prediction, 
+                                totals, 
+                                username 
+                            } = row;;
+                            let filledMappedScores; 
+
                             if(mappedScores.length <= totalRounds){
                                 const numberToFill = totalRounds - (mappedScores.length);
                                 const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1]:0, [fighter2]: 0}));
@@ -168,6 +176,7 @@ export const ScoringTable = ({
                             const transformedPrediction = prediction ? prediction.slice(0, index) : '';
                             const predictionResult = prediction ? prediction.slice(index+2) : '';
                             const roundKO = prediction ? predictionResult.slice(2) : '';
+
                             return (
                                 <Tr key={idx} p="0">
                                     {columns.map( (column, i) => {
