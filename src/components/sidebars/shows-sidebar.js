@@ -95,7 +95,6 @@ export const ShowsSidebar = ({
             <SidebarsDividerWithText 
                 fontSize={'1.5rem'} 
                 text="Shows" 
-                // centered={tabs.all ? true : false}
                 centered={[true, false]}
             />
             <Select 

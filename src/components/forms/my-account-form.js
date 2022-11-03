@@ -5,7 +5,6 @@ import {
   Button, 
   Checkbox, 
   FormControl, 
-  FormErrorMessage, 
   FormHelperText, 
   FormLabel, 
   Heading, 
@@ -20,7 +19,6 @@ import {
   VStack 
 } from '@chakra-ui/react'
 import { HiCloudUpload } from 'react-icons/hi'
-import { FaGoogle } from 'react-icons/fa'
 import { LanguageSelect, FieldGroup } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 
@@ -43,13 +41,7 @@ export const MyAccountForm = () => {
   })
 
   useEffect(() => {
-    const run = async () => {
-
-      if(user.email_verified){
-        await fetchUser(user)
-        setForm(user)
-      }
-    }
+    fetchUser(user)
   },[])
   
   useEffect(() => {
@@ -71,9 +63,6 @@ export const MyAccountForm = () => {
       firstName: form.firstName,
       lastName: form.lastName,
       isPublic: form.isPublic,
-      sub: form.sub,
-      username: form.username,
-      email: form.email
     }
     updateUser(options)
   }
@@ -141,17 +130,7 @@ export const MyAccountForm = () => {
               <LanguageSelect />
             </VStack>
           </FieldGroup>
-          <FieldGroup title="Connect accounts">
-            <HStack width="full">
-              <Button 
-                size="sm" 
-                variant="outline" 
-                leftIcon={<Box as={FaGoogle} color="red.400" />}
-              >
-                Google
-              </Button>
-            </HStack>
-          </FieldGroup>
+
           <FieldGroup title="Profile Image">
             <Stack 
               direction="row" 
@@ -161,8 +140,6 @@ export const MyAccountForm = () => {
             >
               <Avatar
                 size="xl"
-                name="Dan Abramov"
-                src="https://bit.ly/dan-abramov"
               />
               <Box>
                 <HStack spacing="5">
@@ -190,7 +167,6 @@ export const MyAccountForm = () => {
         <FieldGroup mt="8">
           <HStack width="full">
             <Button 
-
               onClick={handleUpdateUser} 
               type="submit" 
               colorScheme="solid"

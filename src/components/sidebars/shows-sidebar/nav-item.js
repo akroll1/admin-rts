@@ -34,7 +34,7 @@ export const UpcomingNavItem = (props) => {
     >
       <Box 
         
-        color={isTitleFight ? 'gray.200' : active ? 'white' : 'gray.500'}
+        color={isTitleFight ? 'gray.200' : active ? 'white' : 'gray.400'}
       >
         {icon}
       </Box>
@@ -42,7 +42,7 @@ export const UpcomingNavItem = (props) => {
         fontSize="1rem" 
         flex="1" 
         fontWeight="inherit" 
-        color={active ? 'fsl-highlight-heading-text' : '#cacaca'}
+        color={active ? 'fsl-highlight-heading-text' : '#dadada'}
       >
         {label}
       </Box>
