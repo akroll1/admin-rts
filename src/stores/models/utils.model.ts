@@ -14,3 +14,10 @@ export const resetModals = {
     moneylineModal: false,
     predictionModal: false,
 }
+
+export interface ToastOption {
+    title: string
+    duration: number
+    status: string
+    isClosable: boolean
+}

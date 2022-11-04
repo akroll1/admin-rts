@@ -5,7 +5,7 @@ import {
 } from '@chakra-ui/react'
 import { ScorecardsPageTable } from '../components/tables'
 import { 
-  ChangeDisplayNameModal, 
+  DisplayNameModal, 
   ExpiredTokenModal 
 } from '../components/modals'
 import { useScorecardStore } from '../stores'
@@ -44,7 +44,7 @@ export const ScorecardsPage = () => {
       bg="fsl-body-bg"
       boxSizing="border-box"
     >    
-      <ChangeDisplayNameModal />
+      <DisplayNameModal />
       <ExpiredTokenModal />
        
       <ScorecardsPageSidebar />

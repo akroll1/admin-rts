@@ -7,6 +7,8 @@ import { useScorecardStore } from '../../stores'
 export const PoundForm = () => {
   const {
     fetchList,
+    poundListOfficial,
+    poundListUser,
     submitList,
   } = useScorecardStore();
 
@@ -16,13 +18,14 @@ export const PoundForm = () => {
   const [fighterIdsList, setFighterIdsList] = useState([]);
 
   useEffect(() => {
-    // fetchList('pound')
+    fetchList('pound')
   },[])
 
   const setForm = e => {
     const { value } = e.currentTarget;
     return setFighterId(value.trim());
   }
+
   const handleSubmitList = () => {
     const listObj = {
       comment: 'New List',
@@ -42,17 +45,19 @@ export const PoundForm = () => {
   }
 
   const selectFighter = e => {
-      const { id } = e.currentTarget;
-      const selected = poundList.filter( fighter => fighter.fighterId === id);
-      setFighterId(selected[0].fighterId)
+    const { id } = e.currentTarget;
+    const selected = poundList.filter( fighter => fighter.fighterId === id);
+    setFighterId(selected[0].fighterId)
   }
 
+  console.log('fighterIdsList: ', fighterIdsList)
+  console.log('poundListOfficial ', poundListOfficial)
   return (
     <Box px={{base: '4',md: '10'}} py="16" maxWidth="3xl" mx="auto">
       <form id="pound-form" onSubmit={(e) => {e.preventDefault()}}>
         <Stack spacing="4" divider={<StackDivider />}>
           <Heading size="lg" as="h1" paddingBottom="4">
-            Pound-4-Pound List Form
+            Official Pound-4-Pound List Form
           </Heading>
           <FieldGroup title="Fighter to Add">
             <VStack width="full" spacing="6">
@@ -81,7 +86,12 @@ export const PoundForm = () => {
       <Flex flexDir="column" m="3" mt="3rem" maxHeight="15rem" overflowY="scroll">
         <Heading mb="3" as="h3" size="md">Pound-4-Pound Table</Heading>
         <Heading as="h5" size="xs">*Duplicates will not saved</Heading>
-        <FightersTable p="1" selectFighter={selectFighter} deleteFighter={deleteFighter} fighters={poundList} />
+        <FightersTable 
+          p="1" 
+          selectFighter={selectFighter} 
+          deleteFighter={deleteFighter} 
+          fighters={poundList} 
+        />
       </Flex>
     </Box>
   )

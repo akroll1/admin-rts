@@ -5,8 +5,10 @@ export interface Scorecard {
     groupScorecardId: string
     ownerId: string
     prediction: string | null 
-    scores: RoundScores[]
+    scores: ScoredRound[]
     username: string
 }
 
-export interface RoundScores extends Record<string, string | number>{}
+export interface ScoredRound {
+    [index: string]: string | number
+}

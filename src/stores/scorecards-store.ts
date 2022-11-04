@@ -1,41 +1,39 @@
 import create from "zustand"
 import { persist } from "zustand/middleware"
 import axios from 'axios'
-import { Scorecard } from "./models/scorecard.model"
-import { CreateGroupScorecard, GroupScorecard, GroupScorecardSummary } from "./models/group-scorecard.model"
 import { capFirstLetters } from '../utils'
+import { Discussion } from './models/discussion.model'
 import { 
-    Discussion,
     Fight, 
-    Fighter, 
-    FighterScores, 
     FightPostObj,
     FightResolutionOptions,
     FightSummary, 
-    fightSummaryStub, 
-    List,
+    FightUpdateOptions
+} from './models/fight.model' 
+import { Fighter, FighterScores } from './models/fighter.model'
+import { 
+    CreateGroupScorecard, 
+    GroupScorecard, 
+    GroupScorecardSummary 
+} from "./models/group-scorecard.model"
+import { List } from './models/lists.model'
+import { Panelist, PanelSummary } from "./models/panel.model"
+import { Review, ReviewPut } from './models/review.model'
+import { ScoredRound, Scorecard } from "./models/scorecard.model"
+import { Season, SeasonSummary } from './models/season.model'
+import { Show } from "./models/show.model"
+import { TokenConfig, User } from './models/user.model'
+import { 
     Modals, 
-    resetModals, 
-    Panelist,
-    PanelSummary,
-    Review, 
-    ReviewPut, 
-    RoundScores, 
-    Season,
-    seasonStub,
-    SeasonSummary,
-    Show, 
-    TokenConfig, 
-    User,
-    FightUpdateOptions, 
-} from './models'
-import { IoConstructOutline } from "react-icons/io5"
+    resetModals,
+    ToastOption
+} from './models/utils.model'
 
 export interface ScorecardStore {
     accessToken: TokenConfig
     activeGroupScorecard: GroupScorecard
     chatKey: string
-    chatScorecard: RoundScores
+    chatScorecard: ScoredRound // create a good schema, please.
     chatToken: string
     checkForUserFightReview(): void
     collateTableData(): void
@@ -93,24 +91,21 @@ export interface ScorecardStore {
     seasons: SeasonSummary[]
     seasonsOptions: Record<string, string>[]
     scorecards: Scorecard[]
-    scoredRounds: number
     scoringComplete: boolean
     selectedFightReview: Review
     selectedFightReviews: Review[]
     selectedFightSummary: FightSummary
     selectedSeason: SeasonSummary
     setAccessToken(headers: TokenConfig): void
-    setChatScorecard(update: RoundScores): void
-    setLastScoredRound(round: number): void
+    setChatScorecard(update: ScoredRound): void
     setFighterScores(): void
     setIdToken(headers: TokenConfig): void
     setModals(modal: string, boolean: boolean): void
-    setScoredRounds(scoredRounds: number): void
     setScoringComplete(boolean: boolean): void
     setSeasonsOptions(): void
     setSelectedFightSummary(summary: FightSummary): void
     setSelectedSeason(seasonId: string): void
-    setToast(toastOptions: ToastOptions): void
+    setToast(toastOptions: ToastOption): void
     setTokenExpired(state: boolean): void
     setTransformedPrediction(rawPrediction: string | null): void
     setUser(user: User): void
@@ -119,9 +114,9 @@ export interface ScorecardStore {
     stats: any[]
     submitFightResolution(resolution: FightResolutionOptions, fightId: string): void
     submitList(list: List): void
-    submitRoundScores(chatScorecard: RoundScores): void
+    submitChatScorescard(chatScorecard: ScoredRound): void
     tableData: any[]
-    toast: ToastOptions
+    toast: ToastOption
     totalRounds: number
     tokenExpired: boolean
     transformedPrediction: string
@@ -138,19 +133,13 @@ export interface ScorecardStore {
     userScorecards: any[]
     // addMemberToActiveScorecard(email: string): void
 }
-interface ToastOptions {
-    title: string
-    duration: number
-    status: string
-    isClosable: boolean
-}
 
 export const initialScorecardsStoreState = {
     isSubmitting: false,
     accessToken: {} as TokenConfig,
     activeGroupScorecard: {} as GroupScorecard,
     chatKey: '',
-    chatScorecard: {} as RoundScores,
+    chatScorecard: {} as ScoredRound,
     chatToken: '',
     lastScoredRound: 0,
     discussion: {} as Discussion,
@@ -177,7 +166,6 @@ export const initialScorecardsStoreState = {
         label: 'All Shows'
     }],
     scorecards: [],
-    scoredRounds: 0,
     scoringComplete: false,
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
@@ -186,7 +174,7 @@ export const initialScorecardsStoreState = {
     show: {} as Show,
     stats: [],
     tableData: [],
-    toast: {} as ToastOptions,
+    toast: {} as ToastOption,
     totalRounds: 12,
     tokenExpired: false,
     transformedPrediction: '',
@@ -275,7 +263,9 @@ export const useScorecardStore = create<ScorecardStore>()(
                 console.log('FIGHTER- create res.data: ', res.data);
             },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
-                const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().accessToken);
+                console.log('scorecardObj: ', scorecardObj)
+                return
+                const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().idToken);
                 const data = res.data as GroupScorecard;
                 if(res.status === 200) return true;
             },  
@@ -388,9 +378,6 @@ export const useScorecardStore = create<ScorecardStore>()(
                 });
                 /////// PREDICTION ///////
                 get().setTransformedPrediction(userScorecard.prediction)
-                
-                /////// SCORED_ROUNDS ///////
-                get().setScoredRounds(userScorecard.scores.length)
                 /////// FIGHTER_SCORES ///////
                 get().setFighterScores()
                 get().collateTableData()
@@ -519,14 +506,11 @@ export const useScorecardStore = create<ScorecardStore>()(
             setAccessToken: (accessToken: TokenConfig) => {
                 set({ accessToken })
             },
-            setChatScorecard: async (chatScorecard: RoundScores) => {
+            setChatScorecard: async (chatScorecard: ScoredRound) => {
                 set({ chatScorecard })
             },
             setChatToken: (chatToken: string) => {
                 set({ chatToken })
-            },
-            setLastScoredRound: (round: number) => {
-                set({ lastScoredRound: round })
             },
             setFighterScores: () => {
                 const scores = get().fighters.map( (fighter: any) => {
@@ -548,15 +532,6 @@ export const useScorecardStore = create<ScorecardStore>()(
                     [modal]: boolean 
                 })
                 set({ modals })
-            },
-            setScoredRounds: (scoredRounds: number) => {
-                const totalRounds = get().fight?.rounds!;
-                if(scoredRounds + 1 > totalRounds){
-                    set({ fightComplete: true })
-                    set({ scoredRounds: totalRounds })
-                } else {
-                    set({ scoredRounds })
-                }
             },
             setScoringComplete: (boolean: boolean) => {
                 set({ scoringComplete: boolean })
@@ -588,7 +563,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             //     const [selectedSeasonFight] = get().seasons.map( season => season)
             //     .filter( fightSummary => fightSummary.filter( fightSummary.fightSummarie)
             // },
-            setToast: (options: ToastOptions) => {
+            setToast: (options: ToastOption) => {
                 set({ toast: options })
                 setTimeout(() => {
                     set({ toast: { title: '', status: '', duration: 0, isClosable: true,} })
@@ -634,7 +609,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const data = res.data
                 console.log('DATA: ', data)
             },
-            submitRoundScores: async (chatScorecard: RoundScores) => {
+            submitChatScorescard: async (chatScorecard: ScoredRound) => {
                 console.log('chatScorecard: ', chatScorecard) 
                 const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, chatScorecard, get().accessToken)
                 // const data = res.data

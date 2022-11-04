@@ -72,15 +72,8 @@ export const ScorecardsMetadataBoard = () => {
             flex="1 0 45%"
         >
             <ScorecardsBoard
-                label={`Result`}
+                label={selectedFightSummary?.fight?.fightQuickTitle ? selectedFightSummary?.fight?.fightQuickTitle : `Result`}
             >
-                <Heading
-                    m="auto"
-                    as="h3"
-                    size="md"
-                >
-                    {selectedFightSummary?.fight?.fightId ? `${selectedFightSummary.fight.fightQuickTitle}` : `` }
-                </Heading>
                 { fightSummary.length > 0 && fightSummary.map( (data, _i) => {
                     return (  
                         <Flex
