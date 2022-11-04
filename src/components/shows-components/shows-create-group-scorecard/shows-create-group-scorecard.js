@@ -6,7 +6,7 @@ import {
     InputGroup, 
     InputRightElement
 } from '@chakra-ui/react'
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
+import { AddIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
 import { DividerWithText } from '../../../chakra'
 
 export const ShowsCreateGroupScorecard = ({ 
@@ -14,10 +14,15 @@ export const ShowsCreateGroupScorecard = ({
     emailValue, 
     handleEmailSubmit, 
     handleFormChange, 
-    handleCreateGroupScorecard, 
     isSubmitting,
-    members 
+    setDisplayNameModal,
+    invites 
 }) => {
+    
+    const handleSubmit = () => {
+        setDisplayNameModal(true)
+    }
+
     return ( 
         <Flex
             w="100%"
@@ -28,7 +33,7 @@ export const ShowsCreateGroupScorecard = ({
         >
             <DividerWithText 
                 p="0" 
-                text={'Create a Scorecard'} 
+                text={'Create a Group Scorecard'} 
                 fontSize="2xl"
                 mt="2"
             />
@@ -39,39 +44,52 @@ export const ShowsCreateGroupScorecard = ({
                 alignItems="flex-end"
                 justifyContent="flex-end"
             >
-                <FormControl id="membersArr">
-                    { members.map((member, i) => {
+                <FormControl 
+                    id="invites_form"
+                >
+                    { invites.map( (invite, _i) => {
                         return (
-                            <InputGroup key={i}>
+                            <InputGroup 
+                                mb="2"
+                                key={invite}
+                            >
                                 <Input 
                                     mb="1"
                                     size="md" 
                                     readOnly 
-                                    key={member} 
-                                    value={members[i]} 
+                                    value={invites[_i]} 
                                     placeholder="first.last@email.com" 
                                     type="email" 
                                     maxLength={255} 
-                                    color={i == 0 ? 'lightgray' : 'white'}
+                                    color={_i == 0 ? '#bababa' : '#eaeaea'}
                                 />
                                 <InputRightElement 
-                                    display={i === 0 ? 'none' : 'flex'} 
                                     children={
-                                        <DeleteIcon 
-                                            id={member} 
-                                            onClick={deleteMember} 
-                                            _hover={{cursor: 'pointer', color: 'gray'}} 
-                                            color="white" 
-                                            alignItems="center"
-                                            justifyContent="center"
-                                        />
+                                        _i === 0
+                                        ?
+                                            <LockIcon
+                                                color="#9a9a9a"
+                                                _hover={{
+                                                    cursor: 'not-allowed'
+                                                }}
+                                            />
+                                        :
+                                            <DeleteIcon 
+                                                id={invite} 
+                                                onClick={deleteMember} 
+                                                _hover={{cursor: 'pointer', color: 'white'}} 
+                                                color="#dadada" 
+                                                alignItems="center"
+                                                justifyContent="center"
+                                            />
+                                            
                                     } 
                                 />
                             </InputGroup>
                         )
                     })}
                     <Input 
-                        onChange={e => handleFormChange(e)} 
+                        onChange={handleFormChange} 
                         value={ emailValue } 
                         id="emailValue" 
                         // _focus={{color: 'black',background: 'lightgray'}} 
@@ -79,37 +97,40 @@ export const ShowsCreateGroupScorecard = ({
                         placeholder="email@example.com" 
                         type="email" maxLength={255} 
                     />
-                    <Flex m="auto" alignItems="center" justifyContent="center" flexDir={['column', 'row']}>     
+                    <Flex 
+                        m="auto" 
+                        alignItems="center" 
+                        justifyContent="center" 
+                        flexDir={['column', 'row']}
+                    >     
                         <Button 
-                            onClick={ handleEmailSubmit } 
+                            onClick={handleEmailSubmit} 
                             leftIcon={<AddIcon />} 
                             m="2"
                             mt={["4"]}
-                            type="button"
+                            type="submit"
                             colorScheme="solid" 
                             variant="outline"
                             color="#CACACA"
-                            // borderColor="#e62b2b"
-                            // border="2px solid #e62b2b"
                             size={["lg", "md"]}
                             _hover={{
                                 color: 'white',
-                                border: '1px solid #DADADA',
+                                border: '1px solid #353535',
                                 bg: "#353535"
                             }}
                             bg="#252525"
                         >
-                            Add Members
+                            Add Member
                         </Button>
                         <Button 
                             size={["lg", "md"]}
                             isLoading={isSubmitting}
                             loadingText="Submitting"
                             m="2" 
+                            type="submit"
                             mt={["4"]} 
-                            onClick={handleCreateGroupScorecard} 
-                            type="button" 
-                            colorScheme="solid"
+                            onClick={handleSubmit} 
+                            colorScheme="solid" 
                         >
                             Create Scorecard
                         </Button>

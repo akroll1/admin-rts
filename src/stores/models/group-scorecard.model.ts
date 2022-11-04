@@ -16,14 +16,11 @@ export interface GroupScorecard {
 }
 
 export interface CreateGroupScorecard {
-	admin: string
-	fighterIds: string[]
-	fightId: string
+	seasonId: string
 	groupScorecardName: string
-	members: string[]
 	ownerId: string
-	rounds: number
-	showId: string
+	invites: string[],
+	displayName: string // for the owner's scorecard, not group scorecard
 }
 
 export interface GroupScorecardSummary {

@@ -70,7 +70,7 @@ export const ShowsArrows = () => {
                             color="#cacaca"
                             _hover={{
                                 color: 'white',
-                                border: '1px solid #cacaca'
+                                border: '1px solid #fff'
                             }}
                             _focus={{
                                 border: 'none'

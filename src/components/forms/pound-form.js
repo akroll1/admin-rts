@@ -51,7 +51,6 @@ export const PoundForm = () => {
   }
 
   console.log('fighterIdsList: ', fighterIdsList)
-  console.log('poundListUser ', poundListUser)
   console.log('poundListOfficial ', poundListOfficial)
   return (
     <Box px={{base: '4',md: '10'}} py="16" maxWidth="3xl" mx="auto">

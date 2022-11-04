@@ -20,10 +20,10 @@ export const FightMetadata = ({
             mt="4"
         >
             <Heading 
-                letterSpacing="1px" 
                 as="h2" 
                 size="xl"
-                >
+                color="#fafafa"
+            >
                     { fightQuickTitle ? fightQuickTitle : ''}
                 </Heading>
             <Flex

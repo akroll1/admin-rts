@@ -20,8 +20,10 @@ export const ShowsMain = ({
     handleEmailSubmit, 
     handleFormChange,
     isSubmitting,
-    members,
+    invites,
+    setDisplayNameModal,
     setFightReviewForm, 
+    username
 }) => {
     const {
         selectedFightSummary,
@@ -97,7 +99,6 @@ export const ShowsMain = ({
                 <ShowsParticulars 
                     selectedFightSummary={selectedFightSummary}
                 />
-
                 {/* <Props /> */}
                 
                 { UPCOMING 
@@ -107,9 +108,10 @@ export const ShowsMain = ({
                             emailValue={emailValue} 
                             handleEmailSubmit={handleEmailSubmit} 
                             handleFormChange={handleFormChange} 
-                            handleCreateGroupScorecard={handleCreateGroupScorecard} 
                             isSubmitting={isSubmitting}
-                            members={members} 
+                            invites={invites} 
+                            setDisplayNameModal={setDisplayNameModal}
+                            username={username}
                         />
                     :
                         <>
@@ -118,7 +120,6 @@ export const ShowsMain = ({
                                 fontSize={"2xl"}
                                 mb="2"
                                 mt="4"
-
                             />
                             <FightReviews 
                                 fightReviewForm={fightReviewForm} 

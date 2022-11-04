@@ -8,11 +8,10 @@ import {
 } from '@chakra-ui/react'
 
 export const DividerWithText = props => {
-  const { centered, fontSize, text, m, mb, mt, my, p } = props;
+  const { centered, color, fontSize, text, m, mb, mt, my, p } = props;
   return (
     <Flex 
       align="center" 
-      color="gray.300" 
       w="100%"
       // pl={p ? p : "6"} 
       m={my ? my : "auto"}
@@ -21,7 +20,7 @@ export const DividerWithText = props => {
       mb={mb ? mb : "2"} 
       fontFamily="Koulen"
       fontSize={fontSize ? fontSize : 'inherit'}
-    >
+      >
       {centered && 
         <Box flex="1">
           <Divider borderColor="currentcolor" />
@@ -30,7 +29,8 @@ export const DividerWithText = props => {
       <Text 
         as="span" 
         px="3" 
-        color={useColorModeValue('gray.600', 'whiteAlpha.900')} 
+        color={color ? color : "gray.300"}
+        // color={useColorModeValue('gray.600', 'whiteAlpha.900')} 
         fontWeight="medium"
       >
         {text}
