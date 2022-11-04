@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 
 export const ScorecardsNavItem = props => {
     const { 
@@ -11,17 +11,16 @@ export const ScorecardsNavItem = props => {
     } = props; 
 
     const selectedFight = e => {
-        const { id } = e.currentTarget;
         e.stopPropagation()
+        const { id } = e.currentTarget;
         handleSelectFight(id)
     }
     return (
-        <Flex
+        <HStack
             p="1"
             pl="2"
-            justifyContent="space-between"
-            alignItems="space-between"
             w="100%"
+            color={active ? '#fafafa' : '#dadada'}
             id={fightId}
             onClick={selectedFight}
             cursor="pointer"
@@ -29,12 +28,13 @@ export const ScorecardsNavItem = props => {
             rounded="md"
             transition="all 0.2s"
             _hover={{
-                bg: 'gray.700'
+                color: '#fafafa',
             }}
-            bg={active ? 'gray.700' : 'inherit'}
+            border={active ? '1px solid #9a9a9a' : 'none'}
+            
         >
             <Flex 
-                mr="3"
+                mr="2"
                 justifyContent="center"
                 alignItems="center"
                 _hover={{
@@ -46,17 +46,15 @@ export const ScorecardsNavItem = props => {
             <Flex 
                  _hover={{
                     color: '#fff'
-                }}
-                mb="1"
+                }}        
                 w="100%"
                 fontSize="1rem" 
                 flex="1" 
                 fontWeight="inherit" 
-                color={active ? 'fsl-highlight-heading-text' : '#cacaca'}
-
+                color={active ? 'fsl-highlight-heading-text' : '#dadada'}
             >
                 {label}
             </Flex>
-        </Flex>
+        </HStack>
     )
 }

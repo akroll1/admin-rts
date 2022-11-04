@@ -27,7 +27,7 @@ export const ScorecardsPage = () => {
 
   useEffect(() => {
     fetchUserScorecards('active')
-    fetchAllSeasons()
+    // fetchAllSeasons()
   },[])
 
   return (

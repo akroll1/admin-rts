@@ -133,14 +133,14 @@ const Shows = () => {
         setInvites(removedEmail)
     }
 
-    const handleCreateGroupScorecard = async (groupScorecardName, displayName) => {
+    const handleCreateGroupScorecard = async (nameOptions) => {
         setIsSubmitting(true);
         const scorecardObj = {
-            seasonId: selectedSeason.season.seasonId,
-            groupScorecardName,
-            ownerId: sub,
+            displayName: nameOptions.displayName,
+            groupScorecardName: nameOptions.groupScorecardName,
             invites,
-            displayName
+            seasonId: selectedSeason.season.seasonId,
+            ownerId: sub,
         }
         const created = await createGroupScorecard(scorecardObj);
         if(created){

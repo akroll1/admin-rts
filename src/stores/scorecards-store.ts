@@ -264,7 +264,6 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
                 console.log('scorecardObj: ', scorecardObj)
-                return
                 const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().idToken);
                 const data = res.data as GroupScorecard;
                 if(res.status === 200) return true;

@@ -3,6 +3,7 @@ import {
     Button, 
     Divider,
     Flex,
+    FormErrorMessage,
     Heading,
     Input, 
     Modal, 
@@ -11,6 +12,7 @@ import {
     ModalCloseButton, 
     ModalFooter,
     ModalOverlay,
+    FormControl,
 } from '@chakra-ui/react'
 import { useScorecardStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
@@ -25,19 +27,39 @@ export const DisplayNameModal = ({
         selectedFightSummary
     } = useScorecardStore();
 
-    const [scorecardName, setScorecardName] = useState(selectedFightSummary.fight.fightQuickTitle)
-    const [name, setName] = useState(username)
+    const [form, setForm] = useState({
+       groupScorecardName: '',
+       displayName: ''
+    })
+
+    useEffect(() => {
+        if(selectedFightSummary?.fight?.fightQuickTitle){
+            setForm({
+                groupScorecardName: selectedFightSummary.fight.fightQuickTitle,
+                displayName: username
+            })
+        }
+    },[selectedFightSummary])
+
+    const handleFormChange = e => {
+        const { id, value } = e.currentTarget;
+        if(value.length > 30) return
+        setForm({ ...form, [id]: value })
+    }
 
     const createScorecard = () => {
-        handleCreateGroupScorecard(scorecardName, name)
+        handleCreateGroupScorecard(form)
         closeModal()
     }
 
     const closeModal = () => {
-        setName(username);
-        setScorecardName(selectedFightSummary.fight.fightQuickTitle)
+        setForm({ groupScorecardName: selectedFightSummary.fight.fightQuickTitle, displayName: username })
         setDisplayNameModal(false)
     }
+
+    const { groupScorecardName, displayName } = form
+    const groupScorecardNameError = groupScorecardName?.length > 29;
+    const displayNameError = displayName?.length > 29;
 
     return ( 
         <Modal  
@@ -77,24 +99,29 @@ export const DisplayNameModal = ({
                             asdfminH="2rem"  
                             as="h2"
                             size="md"
+                            wordBreak="break-all"
                         >
-                            {scorecardName}
+                            {groupScorecardName}
                         </Heading>
-                        <Input 
-                            flex="1 0 45%"
-                            alignSelf="start"
-                            maxW="70%"
-                            ml="0"
-                            size="sm"
-                            mt="0"
-                            value={scorecardName}
-                            onChange={e => setScorecardName(e.currentTarget.value)}  
-                        />
+                        <FormControl isInvalid={groupScorecardNameError}>
+                            <Input 
+                                id="groupScorecardName"
+                                flex="1 0 45%"
+                                alignSelf="start"
+                                maxW="70%"
+                                ml="0"
+                                size="sm"
+                                mt="0"
+                                value={groupScorecardName}
+                                onChange={handleFormChange}  
+                            />
+                            <FormErrorMessage>Too Long!</FormErrorMessage>
+                        </FormControl>
                     </Flex>
                     <DividerWithText
                         color="#bababa"
                         text="Your Display Name" 
-                    />
+                        />
                     <Flex
                         p="2"
                         w="100%"
@@ -104,24 +131,29 @@ export const DisplayNameModal = ({
                         mb="4"
                     >
                         <Heading
+                            wordBreak="break-all"
                             pl="6"
                             flex="1 0 45%"
                             asdfminH="2rem"  
                             as="h2"
                             size="md"
                         >
-                            {name}
+                            {displayName}
                         </Heading>
-                        <Input 
-                            flex="1 0 45%"
-                            alignSelf="start"
-                            maxW="70%"
-                            ml="0"
-                            size="sm"
-                            mt="0"
-                            value={name}
-                            onChange={e => setName(e.currentTarget.value)}  
-                        />
+                        <FormControl isInvalid={displayNameError}>
+                            <Input 
+                                id="displayName"
+                                flex="1 0 45%"
+                                alignSelf="start"
+                                maxW="70%"
+                                ml="0"
+                                size="sm"
+                                mt="0"
+                                value={displayName}
+                                onChange={handleFormChange}  
+                            />
+                            <FormErrorMessage>Too Long!</FormErrorMessage>
+                        </FormControl>
                     </Flex>
                     <Divider />
                     <ModalFooter 
@@ -130,21 +162,23 @@ export const DisplayNameModal = ({
                         display="flex"
                         justifyContent="center"
                         alignItems="center"
+                        flexDir="column"
+                        p="1"
                     >
                         <Button 
-                            flex="1 0 40%"
-                            mx="1.5"
+                            minW="40%"
+                            m="1"
                             size="md"
                             onClick={createScorecard}
                             loadingText="Submitting" 
                             colorScheme="solid"
                             px="1"
-                        >
+                            >
                             Create Scorecard
                         </Button>
                         <Button 
-                            flex="1 0 40%"
-                            mx="1.5"
+                            minW="40%"
+                            m="1"
                             px="1"
                             size="md"
                             onClick={closeModal}

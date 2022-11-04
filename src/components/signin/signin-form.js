@@ -35,7 +35,11 @@ export const SignInForm = ({
 
   return (
     <Box>
-      <Heading textAlign="center" size="xl" fontWeight="extrabold">
+      <Heading 
+        textAlign="center" 
+        size="xl" 
+        fontWeight="extrabold"
+      >
         Sign in to your account
       </Heading>
       <Flex 

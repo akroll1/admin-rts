@@ -16,7 +16,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
       isExternal={false}
       fontWeight="semibold"
       aria-current={active ? 'page' : undefined}
-      color={mode('gray.400', 'gray.400')}
+      color={mode('#fafafa', '#cacaca')}
       transition="all 0.2s"
       {...rest}
       _hover={{
