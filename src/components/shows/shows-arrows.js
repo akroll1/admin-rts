@@ -68,17 +68,14 @@ export const ShowsArrows = () => {
                             w="100%"
                             h="20%"
                             color="#cacaca"
+                            border="1px solid #795858"
                             _hover={{
                                 color: 'white',
                                 border: '1px solid #fff'
                             }}
-                            _focus={{
-                                border: 'none'
-                            }}
                             icon={el === 'right' 
                                 ? 
                                     <ChevronRightIcon 
-                                        // m="auto"
                                         width="100%" 
                                         height="100%" 
                                     /> 

@@ -56,7 +56,7 @@ export const ShowsMain = ({
                 p="2"
                 color="#bababa"
             >
-                {selectedSeason.season.seasonName}
+                { selectedSeason?.season?.seasonName ? selectedSeason.season.seasonName : `` }
             </Heading>
 
             <ShowsArrows />

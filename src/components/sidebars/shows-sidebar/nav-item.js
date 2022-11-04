@@ -23,22 +23,16 @@ export const UpcomingNavItem = (props) => {
       cursor="pointer"
       userSelect="none"
       rounded="md"
-      transition="all 0.2s"
-      bg={active ? 'gray.700' : ''}
-      _hover={{
-        bg: 'gray.700',
-      }}
-      _active={{
-        bg: 'gray.600',
-      }}
-    >
+      border={active ? '1px solid #9a9a9a' : 'none'}
+      >
       <Box 
         
         color={isTitleFight ? 'gray.200' : active ? 'white' : 'gray.400'}
-      >
+        >
         {icon}
       </Box>
       <Box 
+        transition="all 0.2s"
         fontSize="1rem" 
         flex="1" 
         fontWeight="inherit" 

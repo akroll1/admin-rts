@@ -104,7 +104,7 @@ export const ShowsCreateGroupScorecard = ({
                         flexDir={['column', 'row']}
                     >     
                         <Button 
-                            onClick={handleEmailSubmit} 
+                            minW={["90%", "50%"]}
                             leftIcon={<AddIcon />} 
                             m="2"
                             mt={["4"]}
@@ -119,10 +119,12 @@ export const ShowsCreateGroupScorecard = ({
                                 bg: "#353535"
                             }}
                             bg="#252525"
+                            onClick={handleEmailSubmit} 
                         >
                             Add Member
                         </Button>
                         <Button 
+                            minW={["90%", "50%"]}
                             size={["lg", "md"]}
                             isLoading={isSubmitting}
                             loadingText="Submitting"
