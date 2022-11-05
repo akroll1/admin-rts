@@ -1,5 +1,5 @@
 import { WeightClass } from "./enums"
-import { Fight, Fighter, Scorecard, Show } from "./index"
+import { Fight, Fighter, FightSummary, Scorecard, Show } from "./index"
 
 export interface GroupScorecard {
 	groupScorecardId: string
@@ -25,8 +25,6 @@ export interface CreateGroupScorecard {
 
 export interface GroupScorecardSummary {
     groupScorecard: GroupScorecard
-    fight: Fight
+    fightSummary: FightSummary
     scorecards: Scorecard[]
-    show: Show
-    fighters: Fighter[]
 }

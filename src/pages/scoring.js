@@ -106,7 +106,9 @@ const Scoring = () => {
     },[tokenExpired])
 
     useEffect(() => {
-        collateTableData()
+        if(chatScorecard.scorecardId){
+            collateTableData()
+        }
     },[chatScorecard])
 
     useEffect(() => {

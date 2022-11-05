@@ -20,14 +20,14 @@ export const ScorecardsPage = () => {
 
   const {
     fetchAllSeasons,
-    fetchUserScorecards,
+    fetchUserScorecardsBySeason,
     selectedSeason,
     userScorecards,
   } = useScorecardStore();
 
   useEffect(() => {
-    fetchUserScorecards('active')
-    // fetchAllSeasons()
+    fetchUserScorecardsBySeason('active')
+    fetchAllSeasons()
   },[])
 
   return (

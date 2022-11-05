@@ -34,8 +34,8 @@ export const ScorecardsSearch = () => {
     } = useScorecardStore();
 
     useEffect(() => {
-        if(userScorecard){
-            collateTableData(userScorecard);
+        if(userScorecard?.scorecardId){
+            // collateTableData(userScorecard);
         }
     },[userScorecard]);
 
