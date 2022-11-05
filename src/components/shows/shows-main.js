@@ -16,7 +16,6 @@ export const ShowsMain = ({
     deleteMember,
     emailValue,
     fightReviewForm, 
-    handleCreateGroupScorecard,
     handleEmailSubmit, 
     handleFormChange,
     isSubmitting,

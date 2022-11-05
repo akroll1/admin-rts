@@ -46,7 +46,9 @@ export const ScorecardsSeasonsBoard = () => {
     }
 
     const handleSelectFight = id => {
+        console.log('selectedSeason: ', selectedSeason)
         const [selected] = selectedSeason?.fightSummaries?.filter( summary => summary.fight.fightId === id)
+        console.log('SELECTED: ', selected)
         setSelectedFightSummary(selected)
     }
 
@@ -93,7 +95,6 @@ export const ScorecardsSeasonsBoard = () => {
                                             id={fightId}
                                             active={active}
                                             fightId={fightId} 
-                                            selectFight={selectFight} 
                                             icon={icon}
                                             isTitleFight={isTitleFight}
                                             label={fightQuickTitle} 

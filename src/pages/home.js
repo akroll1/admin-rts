@@ -9,25 +9,26 @@ const Home = () => {
   return (
 
     <Box 
+      id="home"
       as="section" 
       bg="brand.base" 
-      py="3"
+      p="4"
+      pt="2"
     >
       <Box 
-        maxW={{ base: 'xl', md: '7xl' }} 
+        maxW={['xl','7xl']} 
         mx="auto" 
-        px={{ base: '6', md: '8' }}
       >
         <Stack 
-          p="4" 
+          p={["2", "4"]} 
           m="auto" 
-          spacing={{ base: '4', lg: '4' }} 
-          direction={{ base: 'column', lg: 'row' }}
+          spacing={['2', '4', '4']} 
+          direction={['column', 'column', 'row']}
         >
           <Box maxW={{ lg: 'lg' }}>
             <Heading
               size="xl"
-              mt="4"
+              mt={["2", "2", "4"]}
               fontWeight="extrabold"
               letterSpacing="normal"
               lineHeight="normal"
@@ -38,15 +39,18 @@ const Home = () => {
               Here you go.
             </Heading>
 
-
-            
-            <Text fontSize="lg" mt="4" color={mode('gray.600', 'fsl-body-text')}>
+            <Text 
+              fontSize="lg" 
+              mt="4" 
+              color={mode('gray.600', 'fsl-body-text')}
+            >
               Score fights in real-time and compete against other boxing fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live!
             </Text>
             <Button
               onClick={() => navigate('/learn-more')}
               className="group"
-              mt={["4", "8"]}
+              mt={["4", "6", "6", "8"]}
+              mb="2"
               size={["lg", "lg"]}
               px="8"
               fontSize="1.2rem"
@@ -68,7 +72,7 @@ const Home = () => {
             </Button>
           </Box>
           <Center 
-            flex="1" 
+            flex="1 0 60%" 
             shadow="lg" 
             maxW={{ lg: 'xl' }}
           >
@@ -84,7 +88,7 @@ const Home = () => {
             />
           </Center>
         </Stack>
-        <Divider my={["8", "20"]} 
+        <Divider my={["8", "10", "20"]} 
           opacity={1} 
         />
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: '12', md: '8' }}>

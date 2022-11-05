@@ -69,7 +69,7 @@ export interface ScorecardStore {
     fetchSelectedFightReviews(fightId: string): void;
     fetchShow(showId: string): void
     fetchUser(): void
-    fetchUserScorecards(seasonId: string): void
+    fetchUserScorecardsBySeason(seasonId: string): void
     fight: Fight
     fighter: Fighter
     fightComplete: boolean
@@ -199,9 +199,8 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             collateTableData: () => {
                 const collated = get().scorecards.map( (scorecard: any) => {
-                    
-                    const [fighter1, fighter2] = get().fighters
-                    let { finalScore, prediction, scores, username } = scorecard
+                    const [fighter1, fighter2] = get().selectedFightSummary.fighters
+                    let { finalScore, prediction, scores, displayName } = scorecard
                     const sortRoundAscending = (a: any, b: any) => a.round - b.round
 
                     if(prediction){
@@ -241,7 +240,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                         mappedScores,
                         prediction,
                         totals,
-                        username,
+                        displayName,
                     })
                 })
                 const stats = new Set(collated)
@@ -264,7 +263,6 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
                 console.log('scorecardObj: ', scorecardObj)
-                return
                 const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().idToken);
                 const data = res.data as GroupScorecard;
                 if(res.status === 200) return true;
@@ -344,7 +342,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchGroupScorecard: async (groupScorecardId: string) => {
                 const user = get().user;
-                const res = await axios.get(`${url}/group-scorecards/${groupScorecardId}/summary`, get().idToken);
+                const res = await axios.get(`${url}/group-scorecards/${groupScorecardId}/summary`, get().accessToken);
                 if(res.data === `Token expired!`){
                     get().setTokenExpired(true)
                     return
@@ -362,23 +360,19 @@ export const useScorecardStore = create<ScorecardStore>()(
                     },5000)
                 }
                 const lastScoredRound = userScorecard.scores.length;
-                const totalRounds = data.fight.rounds;
-                const scoringComplete = userScorecard.scores.length >= totalRounds;
+                const scoringComplete = userScorecard.scores.length >= get().totalRounds;
                 await set({ 
                     activeGroupScorecard: data.groupScorecard, 
                     chatKey: data.groupScorecard.chatKey,
                     lastScoredRound,
-                    fight: data.fight, 
-                    fighters: data.fighters, 
                     scorecards: data.scorecards,
                     scoringComplete,
-                    show: data.show,
-                    totalRounds,
                     userScorecard,
                 });
                 /////// PREDICTION ///////
                 get().setTransformedPrediction(userScorecard.prediction)
                 /////// FIGHTER_SCORES ///////
+                get().setSelectedFightSummary(data.fightSummary)
                 get().setFighterScores()
                 get().collateTableData()
             },
@@ -429,15 +423,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 Object.assign(user, get().user)
                 set({ user })
             },
-            fetchUserScorecards: async (seasonId: string) => {
+            fetchUserScorecardsBySeason: async (seasonId: string) => {
                 const res = await axios.get(`${url}/scorecards/${encodeURIComponent(get().user.sub!)}/${seasonId}`, get().idToken)
                 const data = res.data as any[]
 
                 const userScorecards = await Promise.all( data.map( async card => {
-                    console.log('card: ', card)
-                    if(card.scorecard.ownerId.includes('@')){
-                        get().setModals('changeDisplayName', true)
-                    }
             
                     const { fight, fighters, scorecard } = card;
                     const { finalScore, groupScorecardId, prediction, scorecardId } = scorecard;
@@ -462,7 +452,8 @@ export const useScorecardStore = create<ScorecardStore>()(
                         label,
                         prediction: transformedPrediction,
                         rounds,
-                        scorecardId
+                        scorecardId,
+                        totalRounds: fight.rounds
                     })
                 }));
                 // console.log('userScorecards: ', userScorecards)
