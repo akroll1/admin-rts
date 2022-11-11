@@ -30,7 +30,7 @@ export const ScorecardsNavItem = props => {
             _hover={{
                 color: '#fafafa',
             }}
-            border={active ? '1px solid #9a9a9a' : 'none'}
+            border={active ? '1px solid #9a9a9a' : '1px solid transparent'}
             
         >
             <Flex 

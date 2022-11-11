@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { 
   Flex, 
   Heading 
@@ -15,19 +14,19 @@ import {
   ScorecardsMetadataBoard 
 } from '../components/sidebars/scorecards-sidebar-components'
 import { parseEpoch } from '../utils'
+import { useEffect } from 'react'
 
 export const ScorecardsPage = () => {
 
   const {
-    fetchAllSeasons,
+    fetchSeasonSummaries,
     fetchUserScorecardsBySeason,
-    selectedSeason,
-    userScorecards,
+    selectedSeasonSummary,
   } = useScorecardStore();
 
   useEffect(() => {
+    fetchSeasonSummaries()
     fetchUserScorecardsBySeason('active')
-    fetchAllSeasons()
   },[])
 
   return (
@@ -61,8 +60,8 @@ export const ScorecardsPage = () => {
           px="2"
           py="0"
         >
-          { selectedSeason?.season?.seasonName
-            ?  `${selectedSeason?.season?.seasonName}`
+          { selectedSeasonSummary?.season?.seasonName
+            ?  `${selectedSeasonSummary?.season?.seasonName}`
             : `Season`
         }
         </Heading>
@@ -71,8 +70,8 @@ export const ScorecardsPage = () => {
           size="sm"
           mb="1"
         >
-          { selectedSeason?.season?.starts
-            ?  `${parseEpoch(selectedSeason?.season?.starts).slice(0, 9)} - ${parseEpoch(selectedSeason?.season?.ends).slice(0, 9)}`
+          { selectedSeasonSummary?.season?.starts
+            ?  `${parseEpoch(selectedSeasonSummary?.season?.starts).slice(0, 9)} - ${parseEpoch(selectedSeasonSummary?.season?.ends).slice(0, 9)}`
             : ``
         }
         </Heading>
@@ -91,10 +90,7 @@ export const ScorecardsPage = () => {
             <ScorecardsLeaderboardBoard 
             />
         </Flex>
-        <ScorecardsPageTable 
-          scorecards={userScorecards} 
-          selectedSeason={selectedSeason}  
-        />
+        <ScorecardsPageTable />
       </Flex>
     </Flex>
   )

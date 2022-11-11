@@ -21,15 +21,14 @@ import {
 import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 
-export const ShowsSidebar = ({
-    setSeasonName
-}) => { 
+export const ShowsSidebar = () => { 
     const { 
         seasonsOptions,
-        selectedFightSummary, 
-        selectedSeason,
-        setSelectedFightSummary,
-        setSelectedSeason,
+        selectedSeasonFightSummaries,
+        selectedSeasonFightSummary, 
+        selectedSeasonSummary,
+        setSelectedSeasonFightSummary,
+        setSelectedSeasonSummary,
     } = useScorecardStore()
     
     const [canceled, setCanceled] = useState([])
@@ -37,24 +36,23 @@ export const ShowsSidebar = ({
     const [upcoming, setUpcoming] = useState([])
 
     useEffect(() => {
-        if(selectedSeason?.season?.seasonId){
-            const { CANCELED, COMPLETE, PENDING } = filterFights(selectedSeason.fightSummaries)
+        if(selectedSeasonFightSummaries?.length > 0){
+            const { CANCELED, COMPLETE, PENDING } = filterFights(selectedSeasonSummary.fightSummaries)
             setCanceled(CANCELED)
             setRecent(COMPLETE)
             setUpcoming(PENDING)
             if(!PENDING.length && COMPLETE.length){
-                setSelectedFightSummary(COMPLETE[0])
+                setSelectedSeasonFightSummary(COMPLETE[0].fight.fightId)
             }
             if(PENDING.length){
-                setSelectedFightSummary(PENDING[0])
+                setSelectedSeasonFightSummary(PENDING[0].fight.fightId)
             }
         }
-    }, [selectedSeason?.season?.seasonId])
+    }, [selectedSeasonFightSummaries])
     
     const selectFight = e => {
         const { id } = e.currentTarget;
-        const [selected] = selectedSeason.fightSummaries.filter( summary => summary.fight.fightId === id);
-        setSelectedFightSummary(selected)
+        setSelectedSeasonFightSummary(id)
     }
 
     const historicalShows = [
@@ -66,9 +64,7 @@ export const ShowsSidebar = ({
 
     const handleSeasonSelect = e => {
         const { value } = e.currentTarget;
-        const [selected] = seasonsOptions.filter( option => option.value === value)
-        setSeasonName(selected.label)
-        setSelectedSeason(value)
+        setSelectedSeasonSummary(value)
     }
 
     return (
@@ -113,7 +109,7 @@ export const ShowsSidebar = ({
                 <NavGroup label="Upcoming">
                     { upcoming.length && upcoming.map( summary => {
                         const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
-                        const active = fightId === selectedFightSummary?.fight?.fightId;
+                        const active = fightId === selectedSeasonFightSummary?.fight?.fightId;
                         return (
                             <UpcomingNavItem 
                                 active={active}
@@ -141,7 +137,7 @@ export const ShowsSidebar = ({
                 <NavGroup label="Recent">
                     {recent.length > 0 && recent.map( summary => {
                         const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
-                        const active = fightId === selectedFightSummary?.fight?.fightId;
+                        const active = fightId === selectedSeasonFightSummary?.fight?.fightId;
                         return <UpcomingNavItem 
                             active={active}
                             name={REVIEW_TYPE.REVIEW} 
@@ -158,7 +154,7 @@ export const ShowsSidebar = ({
                     <NavGroup label="Canceled">
                         { canceled.length > 0 && canceled.map( summary => {
                             const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
-                            const active = fightId === selectedFightSummary?.fight?.fightId;                            
+                            const active = fightId === selectedSeasonFightSummary?.fight?.fightId;                            
                             return (
                                 <UpcomingNavItem 
                                     active={active}

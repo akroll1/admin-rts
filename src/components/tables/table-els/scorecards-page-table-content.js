@@ -1,7 +1,16 @@
-import React, { useState } from 'react'
-import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { 
+  Table, 
+  Tbody, 
+  Td, 
+  Th, 
+  Thead, 
+  Tr, 
+  useColorModeValue as mode 
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { useScorecardStore } from '../../../stores'
 
 const badgeEnum = {
   completed: 'green',
@@ -9,11 +18,21 @@ const badgeEnum = {
   // declined: 'red',
 }
 
-export const ScorecardsPageTableContent = ({ 
-  scorecards 
-}) => {
+export const ScorecardsPageTableContent = () => {
+  
+  const {
+    userScorecards,
+    selectedSeasonSummary
+  } = useScorecardStore() 
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(userScorecards.length && selectedSeasonSummary.fightSummaries.length){
+      
+    }
+  },[userScorecards, selectedSeasonSummary])
+
   return (
     <Table 
       variant="simple" 
@@ -26,21 +45,24 @@ export const ScorecardsPageTableContent = ({
     >
       <Thead bg={mode('gray.50', '#262626')}>
         <Tr>
-            <Th textAlign='center' whiteSpace="nowrap" scope="col">
+            <Th whiteSpace="nowrap" scope="col">
               Scorecard  
             </Th>
-            <Th textAlign='center' whiteSpace="nowrap" scope="col">
+            <Th whiteSpace="nowrap" scope="col">
               Prediction
             </Th>
-            <Th textAlign='center' whiteSpace="nowrap" scope="col">
+            <Th whiteSpace="nowrap" scope="col">
               Score
+            </Th>
+            <Th whiteSpace="nowrap" scope="col"textAlign="center">
+              See Scorecard
             </Th>
         </Tr>
       </Thead>
       <Tbody>
-        { scorecards?.length > 0 && scorecards.map((row, index) => {
-          const { fightStatus, finalScore, groupScorecardId, label, prediction, rounds, scorecardId } = row;
-          const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
+        { userScorecards?.length > 0 && userScorecards.map((row, index) => {
+          const { fightStatus, finalScore, groupScorecardId, prediction } = row;
+          // const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
           const renderScoreOrStatus = () => {
             if(fightStatus === `CANCELED`) return `Canceled`;
             if(fightStatus === `PENDING`) return `Upcoming`;
@@ -49,7 +71,7 @@ export const ScorecardsPageTableContent = ({
           }
           return (
             <Tr 
-              border="none"
+              border="1px solid #ffffff29"
               key={index} 
               _hover={{
                 textAlign: "left",
@@ -60,18 +82,31 @@ export const ScorecardsPageTableContent = ({
                 borderRadius: '5px'
               }} 
             >
-              <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} whiteSpace="nowrap">
-                { label }
+              <Td 
+                onClick={() => console.log('setSelectedFightSummary')} 
+                whiteSpace="nowrap"
+              >
+                { 'label was here' }
               </Td>
-              <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} whiteSpace="nowrap">
-                { prediction }                      
+              <Td 
+                onClick={() => console.log('setSelectedFightSummary')} 
+                whiteSpace="nowrap"
+              >
+                { prediction ? prediction : `No Prediction`}                      
               </Td>
-              <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
+              <Td 
+                onClick={() => console.log('setSelectedFightSummary')} 
+                whiteSpace="nowrap"
+              >
                 { renderScoreOrStatus() }                      
               </Td>
-              {/* <Td onClick={() => navigate(`/scorecards/${scorecardId}`)} textAlign="center" whiteSpace="nowrap">
+              <Td 
+                onClick={() => navigate(`/scorecards/${groupScorecardId}`)} 
+                textAlign="center" 
+                whiteSpace="nowrap"
+              >
                 <ExternalLinkIcon /> 
-              </Td> */}
+              </Td>
             </Tr>
         )})}
       </Tbody>

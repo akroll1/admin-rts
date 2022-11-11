@@ -3,13 +3,9 @@ import {
   Heading 
 } from '@chakra-ui/react'
 import { ScorecardsPageTableContent } from './table-els'
-import { parseEpoch } from '../../utils'
 
-export const ScorecardsPageTable = ({ 
-  scorecards,
-  selectedSeason,
-}) => {
-  console.log('selectedSeason: ', selectedSeason)
+export const ScorecardsPageTable = () => {
+
   return (
     <Flex 
       as="section"
@@ -39,7 +35,7 @@ export const ScorecardsPageTable = ({
         Scorecards
       </Heading>
         
-      <ScorecardsPageTableContent scorecards={scorecards} />
+      <ScorecardsPageTableContent />
     </Flex>
   )
 }

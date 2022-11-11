@@ -1,4 +1,7 @@
-import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import { 
+    Flex, 
+    Heading 
+} from '@chakra-ui/react'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 
 export const ScorecardsNavGroup = props => {
@@ -7,12 +10,12 @@ export const ScorecardsNavGroup = props => {
     children, 
     id, 
     label, 
-    handleHideShow, 
+    handleSelectSeason, 
 } = props
 
-    const hideShow = e => {
+    const selectSeason = e => {
         const { id } = e.currentTarget
-        handleHideShow(id)
+        handleSelectSeason(id)
     }
 
     return (  
@@ -22,7 +25,7 @@ export const ScorecardsNavGroup = props => {
             flexDir="column"
             justifyContent="center"
             alignItems="flex-start"
-            onClick={hideShow}
+            onClick={selectSeason}
             id={id}
             mb="1"
         >
