@@ -16,10 +16,10 @@ const Shows = () => {
     const navigate = useNavigate()
     const { 
         createGroupScorecard,
-        fetchAllSeasons,
+        fetchSeasonSummaries,
         putUserFightReview,
         selectedFightSummary, 
-        selectedSeason,
+        selectedSeasonSummary,
         setModals,
         setTokenExpired,
         tokenExpired,
@@ -28,7 +28,6 @@ const Shows = () => {
      } = useScorecardStore();
     const { email, sub, username } = user;
 
-    const [seasonName, setSeasonName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
@@ -57,7 +56,7 @@ const Shows = () => {
     },[tokenExpired])
 
     useEffect(() => {
-        fetchAllSeasons()
+        fetchSeasonSummaries()
     },[])
 
     useEffect(() => {
@@ -133,13 +132,13 @@ const Shows = () => {
         setInvites(removedEmail)
     }
 
-    const handleCreateGroupScorecard = async (nameOptions) => {
+    const handleCreateGroupScorecard = async nameOptions => {
         setIsSubmitting(true);
         const scorecardObj = {
             displayName: nameOptions.displayName,
             groupScorecardName: nameOptions.groupScorecardName,
             invites,
-            seasonId: selectedSeason.season.seasonId,
+            seasonId: selectedSeasonSummary.season.seasonId,
             ownerId: sub,
         }
         const created = await createGroupScorecard(scorecardObj);
@@ -185,9 +184,7 @@ const Shows = () => {
                 />
             }
 
-            <ShowsSidebar
-                setSeasonName={setSeasonName}
-            />  
+            <ShowsSidebar />  
             
             <ShowsMain 
                 deleteMember={deleteMember}
@@ -197,7 +194,6 @@ const Shows = () => {
                 handleFormChange={handleFormChange}
                 isSubmitting={isSubmitting}
                 invites={invites}
-                seasonName={seasonName}
                 setDisplayNameModal={setDisplayNameModal}
                 setFightReviewForm={setFightReviewForm}
                 username={username}

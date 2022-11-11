@@ -1,5 +1,9 @@
-import React from 'react'
-import { Button, Heading, CenterButton, ButtonGroup, Flex, Text, useColorModeValue as mode } from '@chakra-ui/react'
+import { 
+  Heading, 
+  Flex, 
+  Text, 
+  useColorModeValue as mode 
+} from '@chakra-ui/react'
 
 export const ScorecardsPageTablePagination = ({ total }) => {
   return (

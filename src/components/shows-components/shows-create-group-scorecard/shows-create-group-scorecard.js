@@ -126,7 +126,7 @@ export const ShowsCreateGroupScorecard = ({
                         <Button 
                             minW={["90%", "40%"]}
                             size={["lg", "md"]}
-                            // isLoading={isSubmitting}
+                            isLoading={isSubmitting}
                             loadingText="Submitting"
                             m="2" 
                             type="submit"

@@ -15,14 +15,14 @@ import { ScorecardsBoard } from './scorecards-board';
 
 export const ScorecardsMetadataBoard = () => {
     const { 
-        selectedFightSummary = {}
+        selectedSeasonFightSummary
     } = useScorecardStore()
     
     const [fightSummary, setFightSummary] = useState([])
 
-    // console.log('selectedFightSummary: ', selectedFightSummary)
-    const getFightDisposition = selectedFightSummary => {
-        const { fight, fighters } = selectedFightSummary;
+    // console.log('selectedSeasonFightSummary: ', selectedSeasonFightSummary)
+    const getFightDisposition = selectedSeasonFightSummary => {
+        const { fight, fighters } = selectedSeasonFightSummary;
         if(fight.fightStatus === 'CANCELED') return `Canceled`;
         if(fight.fightStatus === 'PENDING') return `Upcoming`;
         if(fight.fightStatus === 'COMPLETE'){
@@ -36,43 +36,43 @@ export const ScorecardsMetadataBoard = () => {
     }
 
     useEffect(() => {
-        if(selectedFightSummary?.fighters?.length){
-            const selectedFightSummaryMetadata = [
+        if(selectedSeasonFightSummary?.fighters?.length){
+            const selectedSeasonFightSummaryMetadata = [
                 {
                     label: `Result`,
-                    data: `${getFightDisposition(selectedFightSummary)}`
+                    data: `${getFightDisposition(selectedSeasonFightSummary)}`
                 },
                 {
                     label: `Rounds`,
-                    data: `${selectedFightSummary.fight.rounds}`
+                    data: `${selectedSeasonFightSummary.fight.rounds}`
                 },
                 {
                     label: `Weightclass`,
-                    data: `${transformedWeightclass(selectedFightSummary.fight.weightclass)}`
+                    data: `${transformedWeightclass(selectedSeasonFightSummary.fight.weightclass)}`
                 },
                 {
                     label: `Title Fight`,
-                    data: `${selectedFightSummary.fight.isTitleFight ? `Yes` : `No`}`
+                    data: `${selectedSeasonFightSummary.fight.isTitleFight ? `Yes` : `No`}`
                 },
                 {
                     label: `Location`,
-                    data: `${selectedFightSummary.show.location}`
+                    data: `${selectedSeasonFightSummary.show.location}`
                 },
                 {
                     label: `Links`,
                     data: ``
                 },
             ];
-            setFightSummary(selectedFightSummaryMetadata)
+            setFightSummary(selectedSeasonFightSummaryMetadata)
         }
-    },[selectedFightSummary])
+    },[selectedSeasonFightSummary])
 
     return (
         <Flex
             flex="1 0 45%"
         >
             <ScorecardsBoard
-                label={selectedFightSummary?.fight?.fightQuickTitle ? selectedFightSummary?.fight?.fightQuickTitle : `Result`}
+                label={selectedSeasonFightSummary?.fight?.fightQuickTitle ? selectedSeasonFightSummary?.fight?.fightQuickTitle : `Result`}
             >
                 { fightSummary.length > 0 && fightSummary.map( (data, _i) => {
                     return (  

@@ -1,12 +1,8 @@
-import React from 'react'
-import { Box, Button, Flex, Icon, LightMode, Stack, Text, useColorModeValue } from '@chakra-ui/react'
-import { VscChromeClose } from 'react-icons/vsc'
+import { Flex, Stack, Text } from '@chakra-ui/react'
 import { Timer } from './timer'
 
 export const ShowsCountdownTimer = ({ showTime }) => {
-  const removeCountdown = () => {
-    document.getElementById('countdown-timer').remove();
-  }
+
   return (
     <Flex 
       id="countdown-timer" 
@@ -15,7 +11,7 @@ export const ShowsCountdownTimer = ({ showTime }) => {
       color="white" 
       maxW="100%" 
       w="90%"
-      p={["0", "0", "1"]}
+      p={["0", "0", "2"]}
       justifyContent="space-evenly"
       borderRadius="5px"
     >

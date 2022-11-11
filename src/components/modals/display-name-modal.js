@@ -24,22 +24,21 @@ export const DisplayNameModal = ({
     username
 }) => {
     const {
-        selectedFightSummary
+        selectedSeasonSummary
     } = useScorecardStore();
-
     const [form, setForm] = useState({
        groupScorecardName: '',
        displayName: ''
     })
 
     useEffect(() => {
-        if(selectedFightSummary?.fight?.fightQuickTitle){
+        if(selectedSeasonSummary?.season?.seasonName){
             setForm({
-                groupScorecardName: selectedFightSummary.fight.fightQuickTitle,
+                groupScorecardName: selectedSeasonSummary.season.seasonName,
                 displayName: username
             })
         }
-    },[selectedFightSummary])
+    },[selectedSeasonSummary])
 
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
@@ -53,7 +52,7 @@ export const DisplayNameModal = ({
     }
 
     const closeModal = () => {
-        setForm({ groupScorecardName: selectedFightSummary.fight.fightQuickTitle, displayName: username })
+        setForm({ groupScorecardName: selectedSeasonSummary.season.seasonName, displayName: username })
         setDisplayNameModal(false)
     }
 
@@ -63,7 +62,7 @@ export const DisplayNameModal = ({
 
     return ( 
         <Modal  
-            size="md"
+            size="lg"
             closeOnOverlayClick={false}
             isCentered
             onClose={closeModal}
@@ -162,12 +161,12 @@ export const DisplayNameModal = ({
                         display="flex"
                         justifyContent="center"
                         alignItems="center"
-                        flexDir="column"
+                        flexDir={["column", "column", "row"]}
                         p="1"
                     >
                         <Button 
                             minW="40%"
-                            m="1"
+                            m={["1", "1", "2"]}
                             size="md"
                             onClick={createScorecard}
                             loadingText="Submitting" 
@@ -178,7 +177,7 @@ export const DisplayNameModal = ({
                         </Button>
                         <Button 
                             minW="40%"
-                            m="1"
+                            m={["1", "1", "2"]}
                             px="1"
                             size="md"
                             onClick={closeModal}

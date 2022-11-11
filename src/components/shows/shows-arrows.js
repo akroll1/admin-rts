@@ -6,19 +6,19 @@ import { useScorecardStore } from '../../stores'
 export const ShowsArrows = () => {
     const [currentFightId, setCurrentFightId] = useState('')
     const { 
-      selectedSeason,
-      selectedFightSummary,
-      setSelectedFightSummary,
+        selectedSeasonFightSummary,
+        selectedSeasonSummary,
+        setSelectedSeasonFightSummary,
     } = useScorecardStore() 
   
     useEffect(() => {
-      if(selectedFightSummary.season?.seasonId){
-        setCurrentFightId(selectedFightSummary.fight.fightId)
+      if(selectedSeasonFightSummary?.season?.seasonId){
+        setCurrentFightId(selectedSeasonFightSummary.fight.fightId)
       }
-    },[selectedFightSummary])
+    },[selectedSeasonFightSummary])
     const rotateFighters = e => {
         const { id } = e.currentTarget;
-        const { fightIds } = selectedSeason.season;
+        const { fightIds } = selectedSeasonSummary.season;
         const calculateNextIndex = (fightId, length, arrow) => {
             const direction = arrow === 'right' ? 1 : -1;
             const currentIndex = fightIds.findIndex( id => id === fightId)
@@ -31,10 +31,10 @@ export const ShowsArrows = () => {
             }
             return nextIndex
         }
-        const nextIndex = calculateNextIndex(currentFightId, selectedSeason.season.fightIds.length, id)
+        const nextIndex = calculateNextIndex(currentFightId, selectedSeasonSummary.season.fightIds.length, id)
         const nextFightId = fightIds[nextIndex]
-        const [nextFightSummary] = selectedSeason.fightSummaries.filter( summary => summary.fight.fightId === nextFightId)
-        setSelectedFightSummary(nextFightSummary)
+        const [nextFightSummary] = selectedSeasonSummary.fightSummaries.filter( fightSummary => fightSummary.fight.fightId === nextFightId)
+        setSelectedSeasonFightSummary(nextFightSummary.fight.fightId)
         setCurrentFightId(nextFightSummary.fight.fightId)
     }
 

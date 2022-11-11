@@ -35,6 +35,7 @@ export const ShowsFighterFaceoff = ({
           boxSizing='border-box'
           alignItems="center" 
           justifyContent="center"
+          minH="7rem"
         >
           { fighters?.length > 0 && fighters.map( fighter => {
             return (

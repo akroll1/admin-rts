@@ -18,6 +18,7 @@ export interface GroupScorecard {
 export interface CreateGroupScorecard {
 	seasonId: string
 	groupScorecardName: string
+	groupScorecardNotes?: string
 	ownerId: string
 	invites: string[],
 	displayName: string // for the owner's scorecard, not group scorecard

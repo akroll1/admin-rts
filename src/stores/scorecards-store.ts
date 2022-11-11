@@ -57,7 +57,6 @@ export interface ScorecardStore {
     discussions: Discussion[]
     fetchAllDiscussions(): void
     fetchAllPanelists(): void
-    fetchAllSeasons(): void
     fetchDiscussion(discussionId: string): void
     fetchFighter(fighterId: string): void
     fetchGroupScorecard(groupScorecardId: string): void
@@ -65,7 +64,9 @@ export interface ScorecardStore {
     fetchPanel(panelId: string): void
     fetchPanelist(panelistId: string): void
     fetchPanelSummaries(): void
-    fetchSeason(seasonId: string): void
+    fetchSeasonSummaries(): void
+    fetchSeasonSummary(seasonId: string): void
+    fetchSeasons(): void
     fetchSelectedFightReviews(fightId: string): void;
     fetchShow(showId: string): void
     fetchUser(): void
@@ -75,7 +76,7 @@ export interface ScorecardStore {
     fightComplete: boolean
     fighters: Fighter[]
     fighterScores: FighterScores
-    groupScorecards: GroupScorecard[]
+    groupScorecards: Scorecard[]
     idToken: TokenConfig
     isSubmitting: boolean
     modals: Modals
@@ -87,15 +88,15 @@ export interface ScorecardStore {
     poundListUser: List
     putUserFightReview(reviewObj: ReviewPut): void
     requestChatToken(chatKey: string): void
-    season: Season
-    seasons: SeasonSummary[]
+    seasons: Season[]
+    seasonSummaries: SeasonSummary[]
     seasonsOptions: Record<string, string>[]
-    scorecards: Scorecard[]
     scoringComplete: boolean
     selectedFightReview: Review
     selectedFightReviews: Review[]
-    selectedFightSummary: FightSummary
-    selectedSeason: SeasonSummary
+    selectedSeasonFightSummary: FightSummary
+    selectedSeasonFightSummaries: FightSummary[]
+    selectedSeasonSummary: SeasonSummary
     setAccessToken(headers: TokenConfig): void
     setChatScorecard(update: ScoredRound): void
     setFighterScores(): void
@@ -103,11 +104,12 @@ export interface ScorecardStore {
     setModals(modal: string, boolean: boolean): void
     setScoringComplete(boolean: boolean): void
     setSeasonsOptions(): void
-    setSelectedFightSummary(summary: FightSummary): void
-    setSelectedSeason(seasonId: string): void
+    setSelectedSeasonFightSummary(fightId: string): void
+    setSelectedSeasonSummary(seasonId: string): void
     setToast(toastOptions: ToastOption): void
     setTokenExpired(state: boolean): void
     setTransformedPrediction(rawPrediction: string | null): void
+    setTransformedResult(officialResult: string): void
     setUser(user: User): void
     setUserScorecard(scorecard: Scorecard): void
     show: Show
@@ -120,6 +122,7 @@ export interface ScorecardStore {
     totalRounds: number
     tokenExpired: boolean
     transformedPrediction: string
+    transformedResult: string
     updateDiscussion(discussionObj: Partial<Discussion>): void
     updateFight(fightUpdateOptions: FightUpdateOptions): void
     updateFighter(updateFighterObj: Partial<Fighter>): void
@@ -130,7 +133,7 @@ export interface ScorecardStore {
     user: User
     userFightReview: Review
     userScorecard: Scorecard
-    userScorecards: any[]
+    userScorecards: Scorecard[]
     // addMemberToActiveScorecard(email: string): void
 }
 
@@ -159,18 +162,15 @@ export const initialScorecardsStoreState = {
     poundListOfficial: {} as List,
     poundListUser: {} as List,
     prediction: null,
-    season: {} as Season,
-    seasons: [],
-    seasonsOptions: [{
-        value: '1',
-        label: 'All Shows'
-    }],
-    scorecards: [],
     scoringComplete: false,
+    seasons: [] as Season[],
+    seasonsOptions: [],
+    seasonSummaries: [] as SeasonSummary[],
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
-    selectedFightSummary: {} as FightSummary,
-    selectedSeason: {} as SeasonSummary,
+    selectedSeasonFightSummary: {} as FightSummary,
+    selectedSeasonFightSummaries: [] as FightSummary[],
+    selectedSeasonSummary: {} as SeasonSummary,
     show: {} as Show,
     stats: [],
     tableData: [],
@@ -178,10 +178,11 @@ export const initialScorecardsStoreState = {
     totalRounds: 12,
     tokenExpired: false,
     transformedPrediction: '',
+    transformedResult: '',
     user: {} as User,
     userFightReview: {} as Review,
     userScorecard: {} as Scorecard,
-    userScorecards: [],
+    userScorecards: [] as Scorecard[],
 }
 
 const url = process.env.REACT_APP_API;
@@ -191,63 +192,64 @@ export const useScorecardStore = create<ScorecardStore>()(
         (set, get) => ({
             ...initialScorecardsStoreState,
             checkForUserFightReview: async () => {
-                const res = await axios.get(`${url}/reviews/${get().selectedFightSummary.fight.fightId}/user`, get().accessToken);
+                const res = await axios.get(`${url}/reviews/${get().selectedSeasonFightSummary.fight.fightId}/user`, get().accessToken);
                 const data = res.data as Review;
                 if(data?.reviewId){
                     set({ userFightReview: data })
                 };
             },
             collateTableData: () => {
-                const collated = get().scorecards.map( (scorecard: any) => {
-                    const [fighter1, fighter2] = get().selectedFightSummary.fighters
-                    let { finalScore, prediction, scores, displayName } = scorecard
-                    const sortRoundAscending = (a: any, b: any) => a.round - b.round
+                return
+                // const collated = get().scorecards.map( (scorecard: any) => {
+                //     const [fighter1, fighter2] = get().selectedFightSummary.fighters
+                //     let { finalScore, prediction, scores, displayName } = scorecard
+                //     const sortRoundAscending = (a: any, b: any) => a.round - b.round
 
-                    if(prediction){
-                        const index = prediction.indexOf(',')
-                        prediction = prediction.slice(0, index) === fighter1.fighterId 
-                            ? `${fighter1.lastName}- ${prediction.slice(index+1)}` 
-                            : `${fighter2.lastName}- ${prediction.slice(index+1)}`
-                    }
+                //     if(prediction){
+                //         const index = prediction.indexOf(',')
+                //         prediction = prediction.slice(0, index) === fighter1.fighterId 
+                //             ? `${fighter1.lastName}- ${prediction.slice(index+1)}` 
+                //             : `${fighter2.lastName}- ${prediction.slice(index+1)}`
+                //     }
 
-                    const totals = scores.reduce( (acc: any, curr: any) => {
+                //     const totals = scores.reduce( (acc: any, curr: any) => {
                         
-                        if(curr[fighter1.fighterId]){
-                            // this is the score, below
-                            acc[fighter1.lastName] += curr[fighter1.fighterId]
-                        }
-                        if(curr[fighter2.fighterId]){
-                            acc[fighter2.lastName] += curr[fighter2.fighterId]
-                        }
-                        return acc;
-                    }, {[fighter1.lastName]: 0, [fighter2.lastName]: 0 })
+                //         if(curr[fighter1.fighterId]){
+                //             // this is the score, below
+                //             acc[fighter1.lastName] += curr[fighter1.fighterId]
+                //         }
+                //         if(curr[fighter2.fighterId]){
+                //             acc[fighter2.lastName] += curr[fighter2.fighterId]
+                //         }
+                //         return acc;
+                //     }, {[fighter1.lastName]: 0, [fighter2.lastName]: 0 })
                     
-                    const mappedScores = scores.map( (score: any) => {
-                        const { round } = score;
-                        const f1name = fighter1.lastName;
-                        const f2name = fighter2.lastName;
-                        return ({
-                            round,
-                            [f1name]: score[fighter1.fighterId] ? score[fighter1.fighterId] : 0,
-                            [f2name]: score[fighter2.fighterId] ? score[fighter2.fighterId] : 0
-                        })
-                    })
-                    .sort(sortRoundAscending);
+                //     const mappedScores = scores.map( (score: any) => {
+                //         const { round } = score;
+                //         const f1name = fighter1.lastName;
+                //         const f2name = fighter2.lastName;
+                //         return ({
+                //             round,
+                //             [f1name]: score[fighter1.fighterId] ? score[fighter1.fighterId] : 0,
+                //             [f2name]: score[fighter2.fighterId] ? score[fighter2.fighterId] : 0
+                //         })
+                //     })
+                //     .sort(sortRoundAscending);
 
-                    return ({
-                        fighters: [fighter1.lastName, fighter2.lastName],
-                        finalScore,
-                        mappedScores,
-                        prediction,
-                        totals,
-                        displayName,
-                    })
-                })
-                const stats = new Set(collated)
-                set({ 
-                    stats: [...stats],
-                    tableData: [...stats],
-                })
+                //     return ({
+                //         fighters: [fighter1.lastName, fighter2.lastName],
+                //         finalScore,
+                //         mappedScores,
+                //         prediction,
+                //         totals,
+                //         displayName,
+                //     })
+                // })
+                // const stats = new Set(collated)
+                // set({ 
+                //     stats: [...stats],
+                //     tableData: [...stats],
+                // })
             },
             createDiscussion: async (discussionObj: Partial<Discussion>) => {
                 const res = await axios.post(`${url}/discussions`, discussionObj, get().accessToken)
@@ -263,7 +265,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
                 console.log('scorecardObj: ', scorecardObj)
-                const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().idToken);
+                const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().accessToken);
                 const data = res.data as GroupScorecard;
                 if(res.status === 200) return true;
             },  
@@ -277,7 +279,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             createSeason: async (createObj: Partial<Season>) => {
                 const res = await axios.post(`${url}/seasons`, createObj, get().accessToken)
-                get().fetchAllSeasons()
+                get().fetchSeasons()
             },
             createShow: async (createShowObj: Partial<Show>) => {
                 const res = await axios.post(`${url}/shows`, createShowObj, get().accessToken)
@@ -305,7 +307,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             deleteSeason: async (seasonId: string) => {
                 const res = await axios.delete(`${url}/seasons/${seasonId}`, get().accessToken)
                 console.log('DELETE- season: ' , res.data)
-                get().fetchAllSeasons()
+                get().fetchSeasons()
             },
             deleteShow: async (showId: string) => {
                 const res = await axios.delete(`${url}/shows/${showId}`, get().accessToken)
@@ -320,15 +322,6 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.get(`${url}/panelists`, get().accessToken)
                 const panelists = res.data as Panelist[]
                 set({ panelists })
-            },
-            fetchAllSeasons: async () => {
-                const res = await axios.get(`${url}/seasons`, get().accessToken)
-                const seasons = res.data as SeasonSummary[]
-                
-                if(seasons.length){
-                    set({ seasons, selectedSeason: seasons[0] })
-                    get().setSeasonsOptions()
-                }
             },
             fetchDiscussion: async (discussionId: string) => {
                 const res = await axios.get(`${url}/discussions/${discussionId}`, get().accessToken)
@@ -365,14 +358,14 @@ export const useScorecardStore = create<ScorecardStore>()(
                     activeGroupScorecard: data.groupScorecard, 
                     chatKey: data.groupScorecard.chatKey,
                     lastScoredRound,
-                    scorecards: data.scorecards,
+                    groupScorecards: data.scorecards,
                     scoringComplete,
                     userScorecard,
                 });
                 /////// PREDICTION ///////
                 get().setTransformedPrediction(userScorecard.prediction)
                 /////// FIGHTER_SCORES ///////
-                get().setSelectedFightSummary(data.fightSummary)
+                // get().setSelectedSeasonFightSummary(data.fightSummary)
                 get().setFighterScores()
                 get().collateTableData()
             },
@@ -397,10 +390,29 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const panelSummaries = res.data as PanelSummary[]
                 set({ panelSummaries })
             },
-            fetchSeason: async (seasonId: string) => {
+            fetchSeasonSummaries: async () => {
+                const res = await axios.get(`${url}/seasons`, get().accessToken)
+                const seasonSummaries = res.data as SeasonSummary[]
+                set({ 
+                    seasonSummaries, 
+                    selectedSeasonSummary: seasonSummaries[0],
+                    selectedSeasonFightSummaries: seasonSummaries[0].fightSummaries,
+                    selectedSeasonFightSummary: seasonSummaries[0].fightSummaries[0]
+                })
+                get().setSeasonsOptions()
+            },
+            fetchSeasonSummary: async (seasonId: string) => {
                 const res = await axios.get(`${url}/seasons/${seasonId}`, get().accessToken)
-                const season = res.data as Season
-                set({ season })
+                const selectedSeasonSummary = res.data as SeasonSummary
+                set({ 
+                    selectedSeasonSummary, 
+                    selectedSeasonFightSummary: selectedSeasonSummary.fightSummaries[0],
+                })
+            },
+            fetchSeasons: async () => {
+                const res = await axios.get(`${url}/seasons`, get().accessToken)
+                const seasons = res.data as Season[]
+                set({ seasons })
             },
             fetchSelectedFightReviews: async (fightId: string) => {
                 const res = await axios.get(`${url}/reviews/${fightId}/fight`, get().accessToken);
@@ -425,43 +437,12 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchUserScorecardsBySeason: async (seasonId: string) => {
                 const res = await axios.get(`${url}/scorecards/${encodeURIComponent(get().user.sub!)}/${seasonId}`, get().idToken)
-                const data = res.data as any[]
-
-                const userScorecards = await Promise.all( data.map( async card => {
-            
-                    const { fight, fighters, scorecard } = card;
-                    const { finalScore, groupScorecardId, prediction, scorecardId } = scorecard;
-                    const { fightStatus, rounds } = fight;
-
-                    const [fighter1, fighter2] = fighters.map( (fighter: any) => fighter.lastName);
-                    let transformedPrediction;
-                    if(!prediction){
-                        transformedPrediction = `Set Prediction`
-                    }
-                    if(prediction){
-                        const predictionId = prediction.slice(0, 36)
-                        const [fighter] = fighters.filter( (fighter: any) => fighter.fighterId === predictionId)
-                        transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${prediction.split(',')[1]}`
-                    }
-                    const label = `${capFirstLetters(fighter1)} vs ${capFirstLetters(fighter2)}`;
-                    return ({
-                        fighters,
-                        fightStatus,
-                        finalScore,
-                        groupScorecardId,
-                        label,
-                        prediction: transformedPrediction,
-                        rounds,
-                        scorecardId,
-                        totalRounds: fight.rounds
-                    })
-                }));
-                // console.log('userScorecards: ', userScorecards)
+                const userScorecards = res.data as Scorecard[]
                 set({ userScorecards })
             },
             patchDisplayName: async (displayName: string) => {
                 // this will update the scorecard displayName for a season.
-                const res = await axios.patch(`${url}/scorecards/${get().selectedSeason.season.seasonId}`, { displayName }, get().accessToken)
+                const res = await axios.patch(`${url}/scorecards/${get().selectedSeasonSummary.season.seasonId}`, { displayName }, get().accessToken)
                 console.log('patchDisplayName: ', res.data)
             },
             patchPrediction: async (prediction: string) => {
@@ -528,12 +509,12 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ scoringComplete: boolean })
             },
             setSeasonsOptions: () => {
-                const seasons = get().seasons;
-                if(seasons.length){
-                    const seasonsOptions = seasons.map( season => {
+                const seasonSummaries = get().seasonSummaries;
+                if(seasonSummaries.length){
+                    const seasonsOptions = seasonSummaries.map( seasonSummary => {
                         return ({
-                            value: season.season.seasonId,
-                            label: season.season.seasonName
+                            value: seasonSummary.season.seasonId,
+                            label: seasonSummary.season.seasonName
                         })
                     })
                     set({ seasonsOptions })
@@ -543,17 +524,24 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const [selected] = get().selectedFightReviews.filter( review => review.reviewId === reviewId);
                 set({ selectedFightReview: selected });
             },
-            setSelectedFightSummary: (summary: FightSummary) => {
-                set({ selectedFightSummary: summary })
+            setSelectedSeasonFightSummary: (fightId: string) => {
+                const [selectedSeasonFightSummary] = get().selectedSeasonFightSummaries.filter( fightSummary => fightSummary.fight.fightId === fightId)
+                set({ selectedSeasonFightSummary })
+                if(selectedSeasonFightSummary.fight.officialResult){
+                    get().setTransformedResult(selectedSeasonFightSummary.fight.officialResult)
+                }
+                // clear out previous officialResult.
             },
-            setSelectedSeason: (seasonId: string) => {
-                const [selected] = get().seasons.filter( season => season.season.seasonId === seasonId);
-                set({ selectedSeason: selected })
+            setSelectedSeasonSummary: (seasonId: string) => {
+                const [selectedSeasonSummary] = get().seasonSummaries.filter( seasonSummary => seasonSummary.season.seasonId === seasonId)
+                const { fightSummaries } = selectedSeasonSummary;
+                get().setSelectedSeasonFightSummary(fightSummaries[0].fight.fightId)
+                set({ 
+                    selectedSeasonSummary,
+                    selectedSeasonFightSummaries: fightSummaries,
+                    selectedSeasonFightSummary: fightSummaries[0]
+                })
             },
-            // setSelectedSeasonFightSummary: (selectedSeasonFightId: string) => {
-            //     const [selectedSeasonFight] = get().seasons.map( season => season)
-            //     .filter( fightSummary => fightSummary.filter( fightSummary.fightSummarie)
-            // },
             setToast: (options: ToastOption) => {
                 set({ toast: options })
                 setTimeout(() => {
@@ -574,10 +562,19 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
                 if(rawPrediction){
                     const predictionId = rawPrediction.slice(0, 36)
-                    const [fighter] = get().fighters.filter( fighter => fighter.fighterId === predictionId)
+                    const [fighter] = get().selectedSeasonFightSummary.fighters.filter( fighter => fighter.fighterId === predictionId)
                     const transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
                     set({ transformedPrediction })
                 }
+            },
+            setTransformedResult: (officialResult: string) => {
+                if(officialResult){
+                    const fightWinnerId = officialResult.slice(0, 36)
+                    const [fighter] = get().selectedSeasonFightSummary.fighters.filter( fighter => fighter.fighterId === fightWinnerId)
+                    const transformedResult = `${capFirstLetters(fighter.lastName)}- ${officialResult.split(',')[1]}`
+                    set({ transformedResult })
+                }
+
             },
             setUser: (user: User) => {
                 set({ user, modals: {...resetModals} })
@@ -605,21 +602,21 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, chatScorecard, get().accessToken)
                 // const data = res.data
                 ///////////////////////////////////////////////////////   
-                let [scorecard] = get().scorecards.filter( scorecard => scorecard.scorecardId === chatScorecard.scorecardId);
-                const otherScorecards = get().scorecards.filter( scorecard => scorecard.scorecardId !== chatScorecard.scorecardId) 
-                const tempScores = scorecard.scores.concat(chatScorecard);
-                scorecard.scores = tempScores;
+                let [userScorecard] = get().groupScorecards.filter( scorecard => scorecard.scorecardId === chatScorecard.scorecardId);
+                const otherScorecards = get().groupScorecards.filter( scorecard => scorecard.scorecardId !== chatScorecard.scorecardId) 
+                const tempScores = userScorecard.scores.concat(chatScorecard);
+                userScorecard.scores = tempScores;
                 const updatedScorecard = {
                     ...get().userScorecard, 
                     scores: tempScores
                 }
                 get().setUserScorecard(updatedScorecard)
-                const updatedScorecards = [...otherScorecards, scorecard]
+                const updatedScorecards = [...otherScorecards, userScorecard]
 
                 set({ 
                     chatScorecard, 
                     lastScoredRound: get().lastScoredRound + 1,
-                    scorecards: updatedScorecards,
+                    groupScorecards: updatedScorecards,
                 })       
             },
             updateDiscussion: async (updateObj: Partial<Discussion>) => {
@@ -640,7 +637,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             updateSeason: async (updateObj: Partial<Season>) => {
                 const res = await axios.put(`${url}/seasons/${updateObj.seasonId}`, updateObj, get().accessToken)
-                get().fetchAllSeasons()
+                get().fetchSeasons()
             },
             updateShow: async (update: any) => {
                 const res = await axios.put(`${url}/shows/${update.showId}`, update, get().accessToken)
@@ -660,10 +657,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                     fight,
                     fighters,
                     idToken,
-                    scorecards,
+                    groupScorecards,
                     seasons,
-                    selectedFightSummary, 
-                    selectedSeason,
+                    // selectedSeasonFightSummaries,
+                    // selectedSeasonFightSummary, 
+                    selectedSeasonSummary,
                     show,
                     user, 
                     userScorecard, 
@@ -676,10 +674,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                     fight,
                     fighters,
                     idToken,
-                    scorecards,
+                    groupScorecards,
                     seasons,
-                    selectedFightSummary,
-                    selectedSeason,
+                    // selectedSeasonFightSummaries,
+                    // selectedSeasonFightSummary,
+                    selectedSeasonSummary,
                     show,
                     user,
                     userScorecard,

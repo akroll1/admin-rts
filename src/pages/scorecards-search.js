@@ -97,7 +97,8 @@ export const ScorecardsSearch = () => {
     const { officialResult, finalScore, totalRounds, username } = userScorecard?.username ? getScorecardData(userScorecard) : '';
     
     // console.log('autocomplete: ' , autocomplete)
-    console.log('searchedUserScorecards: ', searchedUserScorecards);
+    // console.log('searchedUserScorecards: ', searchedUserScorecards);
+    
     return (
         <Flex 
             p="8" 

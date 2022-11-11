@@ -39,7 +39,7 @@ const MobileNavContext = props => {
         </Heading>
       </Flex>
       <NavMenu animate={isOpen ? 'open' : 'closed'}>
-        {links.map((link, i) => 
+        {links.map( (link, i) => 
           link.children ? (
             <Submenu.Mobile 
               key={i} 
@@ -93,7 +93,7 @@ const DesktopNavContent = props => {
         aria-label="Main Menu" 
         listStyleType="none"
       >
-        {links.map((link, idx) => (
+        {links.map( (link, idx) => (
           <Box as="li" key={idx} id={`nav__menuitem-${idx}`}>
             {link.children ? (
               <Submenu.Desktop link={link} />
