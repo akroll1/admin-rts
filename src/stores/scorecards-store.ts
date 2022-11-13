@@ -6,13 +6,13 @@ import { Discussion } from './models/discussion.model'
 import { 
     Fight, 
     FightPostObj,
-    FightResolutionOptions,
+    FightResolution,
     FightSummary, 
     FightUpdateOptions
 } from './models/fight.model' 
 import { Fighter, FighterScores } from './models/fighter.model'
 import { 
-    CreateGroupScorecard, 
+    CreateSeasonScorecard, 
     GroupScorecard, 
     GroupScorecardSummary 
 } from "./models/group-scorecard.model"
@@ -40,7 +40,7 @@ export interface ScorecardStore {
     createDiscussion(discussionObj: Partial<Discussion>): void
     createFight(createFightObj: FightPostObj): void
     createFighter(createFighterObj: Fighter): void
-    createGroupScorecard(scorecardObj: CreateGroupScorecard): Promise<boolean | undefined>
+    createSeasonScorecard(scorecardObj: CreateSeasonScorecard): Promise<boolean | undefined>
     createPanel(panelId: string): void
     createPanelist(panelistObj: Partial<Panelist>): void
     createSeason(createObj: Partial<Season>): void
@@ -59,6 +59,7 @@ export interface ScorecardStore {
     fetchAllPanelists(): void
     fetchDiscussion(discussionId: string): void
     fetchFighter(fighterId: string): void
+    fetchFightSummary(fightId: string): void
     fetchGroupScorecard(groupScorecardId: string): void
     fetchList(listType: string): void
     fetchPanel(panelId: string): void
@@ -114,7 +115,7 @@ export interface ScorecardStore {
     setUserScorecard(scorecard: Scorecard): void
     show: Show
     stats: any[]
-    submitFightResolution(resolution: FightResolutionOptions, fightId: string): void
+    submitFightResolution(resolutionObj: FightResolution): void
     submitList(list: List): void
     submitChatScorescard(chatScorecard: ScoredRound): void
     tableData: any[]
@@ -182,7 +183,7 @@ export const initialScorecardsStoreState = {
     user: {} as User,
     userFightReview: {} as Review,
     userScorecard: {} as Scorecard,
-    userScorecards: [] as Scorecard[],
+    userScorecards: [],
 }
 
 const url = process.env.REACT_APP_API;
@@ -263,12 +264,13 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.post(`${url}/fighters`, createFighterObj, get().accessToken)
                 console.log('FIGHTER- create res.data: ', res.data);
             },
-            createGroupScorecard: async (scorecardObj: CreateGroupScorecard) => {
+            createSeasonScorecard: async (scorecardObj: CreateSeasonScorecard) => {
                 console.log('scorecardObj: ', scorecardObj)
+                return
                 const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().accessToken);
                 const data = res.data as GroupScorecard;
                 if(res.status === 200) return true;
-            },  
+            },
             createPanel: async (panelId: string) => {
                 const res = await axios.post(`${url}/panels`, { panelId }, get().accessToken)
                 console.log('res.data: ', res.data)
@@ -332,6 +334,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.get(`${url}/fighters/${fighterId}`, get().accessToken)
                 const fighter = res.data as Fighter
                 set({ fighter })
+            },
+            fetchFightSummary: async (fightId: string) => {
+                const res = await axios.get(`${url}/fights/${fightId}/summary`, get().accessToken)
+                const selectedSeasonFightSummary = res.data as FightSummary
+                set({ selectedSeasonFightSummary })
             },
             fetchGroupScorecard: async (groupScorecardId: string) => {
                 const user = get().user;
@@ -438,12 +445,7 @@ export const useScorecardStore = create<ScorecardStore>()(
             fetchUserScorecardsBySeason: async (seasonId: string) => {
                 const res = await axios.get(`${url}/scorecards/${encodeURIComponent(get().user.sub!)}/${seasonId}`, get().idToken)
                 const userScorecards = res.data as Scorecard[]
-                set({ userScorecards })
-            },
-            patchDisplayName: async (displayName: string) => {
-                // this will update the scorecard displayName for a season.
-                const res = await axios.patch(`${url}/scorecards/${get().selectedSeasonSummary.season.seasonId}`, { displayName }, get().accessToken)
-                console.log('patchDisplayName: ', res.data)
+                set({ userScorecards: [] })
             },
             patchPrediction: async (prediction: string) => {
                 const res = await axios.patch(`${url}/scorecards/${get().userScorecard.scorecardId}`, { prediction }, get().accessToken)
@@ -582,8 +584,8 @@ export const useScorecardStore = create<ScorecardStore>()(
             setUserScorecard: (userScorecard: Scorecard) => {
                 set({ userScorecard })
             },
-            submitFightResolution: async (resolution: FightResolutionOptions, fightId: string) => {
-                const res = await axios.put(`${url}/resolutions/${fightId}`, resolution, get().accessToken)
+            submitFightResolution: async (resolutionObj: FightResolution) => {
+                const res = await axios.put(`${url}/resolutions/${resolutionObj.fightId}`, resolutionObj, get().accessToken)
                 const data = res.data
                 console.log('RESOLUTION put res: ', data)
             },

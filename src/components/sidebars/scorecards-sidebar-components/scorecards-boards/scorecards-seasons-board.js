@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Collapse, Flex } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { Collapse, Flex, useControllableState } from '@chakra-ui/react'
 import { ScorecardsBoard } from './scorecards-board'
 import { ScorecardsNavGroup } from './scorecards-nav-group'
 import { ScorecardsNavItem } from './scorecards-nav-item'
@@ -13,13 +13,18 @@ import {
 export const ScorecardsSeasonsBoard = () => {
     const { 
         seasonSummaries,
-        selectedSeasonFightSummaries,
         selectedSeasonFightSummary, 
         selectedSeasonSummary,
         setSelectedSeasonFightSummary,
         setSelectedSeasonSummary,
     } = useScorecardStore()
     const [activeNavGroupItem, setActiveNavGroupItem] = useState(selectedSeasonSummary?.season?.seasonId)
+    
+    useEffect(() => {
+        if(selectedSeasonSummary?.season?.seasonId){
+            setActiveNavGroupItem(selectedSeasonSummary.season.seasonId)
+        }
+    }, [selectedSeasonSummary])
 
     const getLeftIcon = fightStatus => {
         if(fightStatus === 'COMPLETE') return <InfoOutlineIcon color="gray.600" />;
@@ -28,7 +33,6 @@ export const ScorecardsSeasonsBoard = () => {
     }
 
     const handleSelectSeason = id => {
-        setActiveNavGroupItem(id)
         setSelectedSeasonSummary(id)
     }
 

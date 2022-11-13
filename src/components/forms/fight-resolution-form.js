@@ -1,13 +1,33 @@
 import { useState, useEffect } from 'react'
-import { Box, Button, ButtonGroup, Flex, FormControl, FormLabel, Heading, HStack, Input, Radio, RadioGroup, Select, Stack, StackDivider, useToast, VStack } from '@chakra-ui/react'
+import { 
+    Box, 
+    Button, 
+    ButtonGroup, 
+    Flex, 
+    FormControl, 
+    FormLabel, 
+    Heading, 
+    HStack, 
+    Input, 
+    Radio, 
+    RadioGroup, 
+    Select, 
+    Stack, 
+    StackDivider, 
+    useToast, 
+    VStack 
+} from '@chakra-ui/react'
 import { DividerWithText, FieldGroup } from '../../chakra'
-import axios from 'axios'
-import { capFirstLetters, FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM } from '../../utils'
+import { 
+    capFirstLetters, 
+    FIGHT_STATUS_SELECT_CONSTANTS, 
+    OFFICIAL_RESULTS_ENUM 
+} from '../../utils'
 import { useScorecardStore } from '../../stores'
 
 export const FightResolutionForm = () => {
     const { 
-        fightSummary, 
+        selectedSeasonFightSummary, 
         fetchFightSummary,
         submitFightResolution,
         toast
@@ -15,7 +35,7 @@ export const FightResolutionForm = () => {
 
     const toaster = useToast()
     const [fightResolution, setFightResolution] = useState('')
-    const [selectFightStatus, setSelectFightStatus] = useState('')
+    const [resolvedFightStatus, setResolvedFightStatus] = useState('')
     const [radio, setRadio] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightId, setFightId] = useState('')
@@ -36,19 +56,60 @@ export const FightResolutionForm = () => {
     // },[toast])
 
     useEffect(() => {
-        if(fightSummary.fighters.length > 0 ){
-            setForm(fightSummary)
+        if(selectedSeasonFightSummary?.fighters?.length > 0 ){
+            setForm({ ...form, fight: selectedSeasonFightSummary.fight, fighters: selectedSeasonFightSummary.fighters })
         }
-    },[fightSummary])
+    },[selectedSeasonFightSummary])
+
+    const resolveFighterUpdates = officialResult => {
+
+        const [winner, how] = officialResult.split(',');
+        
+        return form.fighters.map( fighter => {  
+            const isWinner = fighter.fighterId === winner;
+            if(how === `DQ`){
+                // DQ is a special case, this shows as a winner.
+                return ({
+                    [fighter.fighterId]: isWinner ? `dq` : `wins`,
+                })
+            }
+
+            if(officialResult === `DR`){
+                return({
+                    [fighter.fighterId]: 'draws'
+                })
+            }
+
+            if(officialResult === `UD`){
+
+            }
+            
+            if(how.includes(`KO`)){
+                return ({
+                    [fighter.fighterId]: isWinner ? `kos` : `losses`
+                })
+            }
+            return ({
+                [fighter.fighterId]: isWinner ? 'wins' : 'losses'
+            })
+        })
+    }
 
     const handleSubmitResolution = () => {
+        
+        if(!fightId) return alert('No fightId.');
+        if(!resolvedFightStatus) return alert('Select fight status.');
+        if(!fightResolution) return alert('Set fight resolution.');
+        if(!radio) return alert('Select a winner.');
+
+        const officialResult = radio === `DR` ? `DR` : `${radio},${fightResolution}`;
+        console.log('officialResult: ', officialResult)
+        const fighterUpdates = resolveFighterUpdates(officialResult)
         const resolutionObj = {
-            officialResult: radio === `DR` ? `DR` : `${radio},${fightResolution}`,
-            fightStatus: selectFightStatus
-        };
-        if(!resolutionObj.officialResult || !resolutionObj.fightStatus){
-            alert('Please select a resolution.')
-            return
+            fightId,
+            fightStatus: radio === `DR` ? 'COMPLETE' : resolvedFightStatus,
+            officialResult,
+            fighterUpdates
         }
         console.log('resolutionObj: ', resolutionObj);
         submitFightResolution(resolutionObj, fightId)
@@ -61,12 +122,12 @@ export const FightResolutionForm = () => {
         const wonHow = officialResult.slice(37);
         return `${winner}: ${wonHow}`;
     }
-    const handleFetchFightSummary = () => {
+    const handleFetchSelectedFightSummary = () => {
         fetchFightSummary(fightId)
     }
 
     const { fightQuickTitle, fightStatus, officialResult, rounds, weightclass } = form.fight;
-    const [fighter1, fighter2] = form.fighters
+    const [fighter1, fighter2] = form.fighters.length ? form.fighters : [];
     const theOfficialResult = form.fighters.length > 0 ? setOfficalResult() : '';
 
     return (
@@ -88,7 +149,7 @@ export const FightResolutionForm = () => {
                                     minW="33%" 
                                     isLoading={isSubmitting} 
                                     loadingText="Searching..." 
-                                    onClick={handleFetchFightSummary} 
+                                    onClick={handleFetchSelectedFightSummary} 
                                     type="button" 
                                     colorScheme="solid"
                                 >
@@ -129,7 +190,7 @@ export const FightResolutionForm = () => {
                                 { OFFICIAL_RESULTS_ENUM.map( result => <option key={result.value} value={result.value}>{result.label}</option> )}
                             </Select>
                             <Select 
-                                onChange={e => setSelectFightStatus(e.currentTarget.value)}
+                                onChange={e => setResolvedFightStatus(e.currentTarget.value)}
                                 w="50%" 
                                 mt="4"
                             >

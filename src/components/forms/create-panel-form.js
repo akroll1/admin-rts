@@ -69,9 +69,9 @@ export const CreatePanelForm = () => {
     const handleCreatePanel = () => {
         createPanel(form.panelId)
     }
-    console.log('form: ', form)
-    console.log('selectedSummary: ', selectedSummary)
-    console.log('summaries: ', summaries)
+    // console.log('form: ', form)
+    // console.log('selectedSummary: ', selectedSummary)
+    // console.log('summaries: ', summaries)
     return (
         <>
             <Box px={{base: '4', md: '4'}} py="4" maxWidth="3xl" mx="auto">

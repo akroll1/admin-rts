@@ -23,7 +23,7 @@ export const SeasonsForm = () => {
     const {
         createSeason,
         deleteSeason,
-        fetchAllSeasons,
+        fetchSeasonSummaries,
         seasons,
         updateSeason,
     } = useScorecardStore()
@@ -46,7 +46,7 @@ export const SeasonsForm = () => {
     const [form, setForm] = useState(resetForm)
 
     useEffect(() => {
-        fetchAllSeasons()
+        fetchSeasonSummaries()
     },[])
 
     useEffect(() => {

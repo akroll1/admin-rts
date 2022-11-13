@@ -1,12 +1,10 @@
+import { useEffect } from 'react'
 import { 
   Flex, 
   Heading 
 } from '@chakra-ui/react'
 import { ScorecardsPageTable } from '../components/tables'
-import { 
-  DisplayNameModal, 
-  ExpiredTokenModal 
-} from '../components/modals'
+import { ExpiredTokenModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
 import { ScorecardsPageSidebar } from '../components/sidebars'
 import { 
@@ -14,7 +12,6 @@ import {
   ScorecardsMetadataBoard 
 } from '../components/sidebars/scorecards-sidebar-components'
 import { parseEpoch } from '../utils'
-import { useEffect } from 'react'
 
 export const ScorecardsPage = () => {
 
@@ -43,7 +40,6 @@ export const ScorecardsPage = () => {
       bg="fsl-body-bg"
       boxSizing="border-box"
     >    
-      <DisplayNameModal />
       <ExpiredTokenModal />
        
       <ScorecardsPageSidebar />

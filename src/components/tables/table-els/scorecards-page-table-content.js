@@ -27,11 +27,11 @@ export const ScorecardsPageTableContent = () => {
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if(userScorecards.length && selectedSeasonSummary.fightSummaries.length){
+  // useEffect(() => {
+  //   if(userScorecards?.length && selectedSeasonSummary?.fightSummaries.length){
       
-    }
-  },[userScorecards, selectedSeasonSummary])
+  //   }
+  // },[userScorecards, selectedSeasonSummary])
 
   return (
     <Table 
@@ -60,7 +60,7 @@ export const ScorecardsPageTableContent = () => {
         </Tr>
       </Thead>
       <Tbody>
-        { userScorecards?.length > 0 && userScorecards.map((row, index) => {
+        { userScorecards && userScorecards?.length > 0 && userScorecards?.map((row, index) => {
           const { fightStatus, finalScore, groupScorecardId, prediction } = row;
           // const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
           const renderScoreOrStatus = () => {
