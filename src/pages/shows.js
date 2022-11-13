@@ -4,7 +4,7 @@ import { ShowsSidebar } from '../components/sidebars'
 import { isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import { 
-    DisplayNameModal,
+    CreateGroupModal,
     ExpiredTokenModal, 
     ReviewFormModal 
 } from '../components/modals'
@@ -15,7 +15,7 @@ const Shows = () => {
     const toast = useToast();
     const navigate = useNavigate()
     const { 
-        createGroupScorecard,
+        createSeasonScorecard,
         fetchSeasonSummaries,
         putUserFightReview,
         selectedFightSummary, 
@@ -132,7 +132,7 @@ const Shows = () => {
         setInvites(removedEmail)
     }
 
-    const handleCreateGroupScorecard = async nameOptions => {
+    const handleCreateSeasonScorecard = async nameOptions => {
         setIsSubmitting(true);
         const scorecardObj = {
             displayName: nameOptions.displayName,
@@ -141,7 +141,7 @@ const Shows = () => {
             seasonId: selectedSeasonSummary.season.seasonId,
             ownerId: sub,
         }
-        const created = await createGroupScorecard(scorecardObj);
+        const created = await createSeasonScorecard(scorecardObj);
         if(created){
             toast({ 
                 title: 'Group Created!',
@@ -167,9 +167,9 @@ const Shows = () => {
             alignItems="flex-start" 
             justifyContent="center" 
         >    
-            <DisplayNameModal 
+            <CreateGroupModal 
                 displayNameModal={displayNameModal}
-                handleCreateGroupScorecard={handleCreateGroupScorecard}
+                handleCreateSeasonScorecard={handleCreateSeasonScorecard}
                 setDisplayNameModal={setDisplayNameModal}
                 username={username}
             />

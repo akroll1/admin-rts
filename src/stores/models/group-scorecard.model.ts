@@ -1,5 +1,4 @@
-import { WeightClass } from "./enums"
-import { Fight, Fighter, FightSummary, Scorecard, Show } from "./index"
+import { FightSummary, Scorecard } from "./index"
 
 export interface GroupScorecard {
 	groupScorecardId: string
@@ -15,13 +14,13 @@ export interface GroupScorecard {
 	updatedAt?: string
 }
 
-export interface CreateGroupScorecard {
+export interface CreateSeasonScorecard {
 	seasonId: string
+	displayName: string // for the owner's scorecard, not group scorecard
 	groupScorecardName: string
 	groupScorecardNotes?: string
-	ownerId: string
 	invites: string[],
-	displayName: string // for the owner's scorecard, not group scorecard
+	ownerId: string
 }
 
 export interface GroupScorecardSummary {

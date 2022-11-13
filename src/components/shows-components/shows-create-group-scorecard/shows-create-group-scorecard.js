@@ -33,7 +33,7 @@ export const ShowsCreateGroupScorecard = ({
         >
             <DividerWithText 
                 p="0" 
-                text={'Create a Group Scorecard'} 
+                text={'Create a Group'} 
                 fontSize="2xl"
                 mt="2"
             />

@@ -13,13 +13,14 @@ import {
     ModalFooter,
     ModalOverlay,
     FormControl,
+    Textarea,
 } from '@chakra-ui/react'
 import { useScorecardStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
 
-export const DisplayNameModal = ({
+export const CreateGroupModal = ({
     displayNameModal,
-    handleCreateGroupScorecard,
+    handleCreateSeasonScorecard,
     setDisplayNameModal,
     username
 }) => {
@@ -27,13 +28,15 @@ export const DisplayNameModal = ({
         selectedSeasonSummary
     } = useScorecardStore();
     const [form, setForm] = useState({
-       groupScorecardName: '',
-       displayName: ''
+        groupNotes: '',
+        groupScorecardName: '',
+        displayName: ''
     })
 
     useEffect(() => {
         if(selectedSeasonSummary?.season?.seasonName){
             setForm({
+                groupNotes: '',
                 groupScorecardName: selectedSeasonSummary.season.seasonName,
                 displayName: username
             })
@@ -42,12 +45,18 @@ export const DisplayNameModal = ({
 
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
+        if(id === 'groupNotes'){
+            if(value.length > 200){
+                return
+            }
+            return setForm({ ...form, [id]: value })
+        }
         if(value.length > 30) return
         setForm({ ...form, [id]: value })
     }
 
     const createScorecard = () => {
-        handleCreateGroupScorecard(form)
+        handleCreateSeasonScorecard(form)
         closeModal()
     }
 
@@ -56,7 +65,8 @@ export const DisplayNameModal = ({
         setDisplayNameModal(false)
     }
 
-    const { groupScorecardName, displayName } = form
+    const { groupNotes, groupScorecardName, displayName } = form
+    const groupNotesError = groupNotes?.length > 199;
     const groupScorecardNameError = groupScorecardName?.length > 29;
     const displayNameError = displayName?.length > 29;
 
@@ -82,7 +92,7 @@ export const DisplayNameModal = ({
                 >
                     <DividerWithText 
                         color="#bababa"
-                        text="Group Scorecard Name" 
+                        text="Group Name" 
                     />
                     <Flex
                         p="2"
@@ -95,7 +105,7 @@ export const DisplayNameModal = ({
                         <Heading
                             pl="6"
                             flex="1 0 45%"
-                            asdfminH="2rem"  
+                            minH="2rem"  
                             as="h2"
                             size="md"
                             wordBreak="break-all"
@@ -117,10 +127,35 @@ export const DisplayNameModal = ({
                             <FormErrorMessage>Too Long!</FormErrorMessage>
                         </FormControl>
                     </Flex>
+                    <DividerWithText 
+                        color="#bababa"
+                        text="Notes" 
+                    />
+                    <Flex
+                        p="2"
+                        w="100%"
+                        display="inline-flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        mb="4"
+                    >
+                        <FormControl isInvalid={groupNotesError}>
+                            <Textarea 
+                                id="groupNotes"
+                                alignSelf="start"
+                                ml="0"
+                                size="sm"
+                                mt="0"
+                                value={groupNotes}
+                                onChange={handleFormChange}  
+                            />
+                            <FormErrorMessage>Too Long!</FormErrorMessage>
+                        </FormControl>
+                    </Flex>
                     <DividerWithText
                         color="#bababa"
                         text="Your Display Name" 
-                        />
+                    />
                     <Flex
                         p="2"
                         w="100%"
@@ -133,7 +168,7 @@ export const DisplayNameModal = ({
                             wordBreak="break-all"
                             pl="6"
                             flex="1 0 45%"
-                            asdfminH="2rem"  
+                            minH="2rem"  
                             as="h2"
                             size="md"
                         >
@@ -155,6 +190,7 @@ export const DisplayNameModal = ({
                         </FormControl>
                     </Flex>
                     <Divider />
+                    
                     <ModalFooter 
                         w="100%"
                         m="auto"
@@ -167,17 +203,6 @@ export const DisplayNameModal = ({
                         <Button 
                             minW="40%"
                             m={["1", "1", "2"]}
-                            size="md"
-                            onClick={createScorecard}
-                            loadingText="Submitting" 
-                            colorScheme="solid"
-                            px="1"
-                            >
-                            Create Scorecard
-                        </Button>
-                        <Button 
-                            minW="40%"
-                            m={["1", "1", "2"]}
                             px="1"
                             size="md"
                             onClick={closeModal}
@@ -186,6 +211,17 @@ export const DisplayNameModal = ({
                             variant="outline"
                         >
                             Cancel
+                        </Button>
+                        <Button 
+                            minW="40%"
+                            m={["1", "1", "2"]}
+                            size="md"
+                            onClick={createScorecard}
+                            loadingText="Submitting" 
+                            colorScheme="solid"
+                            px="1"
+                        >
+                            Create Scorecard
                         </Button>
                     </ModalFooter>
                 </ModalBody>
