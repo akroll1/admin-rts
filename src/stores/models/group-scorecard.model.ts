@@ -14,13 +14,20 @@ export interface GroupScorecard {
 	updatedAt?: string
 }
 
-export interface CreateSeasonScorecard {
-	seasonId: string
+export interface CreateScorecard {
 	displayName: string // for the owner's scorecard, not group scorecard
 	groupScorecardName: string
 	groupScorecardNotes?: string
-	invites: string[],
-	ownerId: string
+	groupScorecardType: GroupScorecardType
+	members: string[],
+	sub: string
+	targetId: string
+}
+
+export enum GroupScorecardType {
+    SEASON = 'SEASON',
+    SHOW = 'SHOW',
+    FIGHT = 'FIGHT'
 }
 
 export interface GroupScorecardSummary {

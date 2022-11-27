@@ -11,28 +11,35 @@ import {
 import { useNavigate } from 'react-router'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { useScorecardStore } from '../../../stores'
-
-const badgeEnum = {
-  completed: 'green',
-  active: 'orange',
-  // declined: 'red',
-}
+import { capFirstLetters } from '../../../utils'
 
 export const ScorecardsPageTableContent = () => {
   
   const {
+    seasonSummaries,
     userScorecards,
-    selectedSeasonSummary
   } = useScorecardStore() 
-
+  const [collatedScorecards, setCollatedScorecards] = useState([])
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if(userScorecards?.length && selectedSeasonSummary?.fightSummaries.length){
-      
-  //   }
-  // },[userScorecards, selectedSeasonSummary])
-
+  useEffect(() => {
+    if(seasonSummaries.length && userScorecards.length){
+      const userScorecardsFightIds = userScorecards.map( card => card.fightId)
+      const sum = [seasonSummaries[0]]
+      const summaries = sum.map( season => season)
+        .reduce( (acc, season) => Array.isArray(season.fightSummaries) ? acc.concat(season.fightSummaries) : [],[])
+        .filter( summary => userScorecardsFightIds.includes(summary.fight.fightId))
+        .map( filtered => {
+          const [scorecard] = userScorecards.filter( c => c.fightId === filtered.fight.fightId)
+          return ({
+            ...filtered,
+            scorecard
+          })
+        })
+      setCollatedScorecards(summaries)
+    }
+  },[seasonSummaries])
+  console.log('collatedScorecards: ', collatedScorecards)
   return (
     <Table 
       variant="simple" 
@@ -45,13 +52,13 @@ export const ScorecardsPageTableContent = () => {
     >
       <Thead bg={mode('gray.50', '#262626')}>
         <Tr>
-            <Th whiteSpace="nowrap" scope="col">
-              Scorecard  
+            <Th whiteSpace="nowrap" scope="col" textAlign="center">
+              Fight  
             </Th>
-            <Th whiteSpace="nowrap" scope="col">
+            <Th whiteSpace="nowrap" scope="col" textAlign="center">
               Prediction
             </Th>
-            <Th whiteSpace="nowrap" scope="col">
+            <Th whiteSpace="nowrap" scope="col" textAlign="center">
               Score
             </Th>
             <Th whiteSpace="nowrap" scope="col"textAlign="center">
@@ -60,8 +67,19 @@ export const ScorecardsPageTableContent = () => {
         </Tr>
       </Thead>
       <Tbody>
-        { userScorecards && userScorecards?.length > 0 && userScorecards?.map((row, index) => {
-          const { fightStatus, finalScore, groupScorecardId, prediction } = row;
+        { collatedScorecards.length > 0 && collatedScorecards.map( (row, index) => {
+          // console.log('row: ', row)
+          const { fight, fighters, scorecard } = row
+          const { fightQuickTitle, fightStatus } = fight;
+          const { finalScore, prediction } = scorecard;
+          const setPrediction = rawPrediction => {
+            if(rawPrediction){
+              const predictionId = rawPrediction.slice(0, 36)
+              const [fighter] = fighters.filter( fighter => fighter.fighterId === predictionId)
+              return `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
+            }
+            return `No Prediction`
+          }
           // const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
           const renderScoreOrStatus = () => {
             if(fightStatus === `CANCELED`) return `Canceled`;
@@ -86,13 +104,13 @@ export const ScorecardsPageTableContent = () => {
                 onClick={() => console.log('setSelectedFightSummary')} 
                 whiteSpace="nowrap"
               >
-                { 'label was here' }
+                {fightQuickTitle}
               </Td>
               <Td 
                 onClick={() => console.log('setSelectedFightSummary')} 
                 whiteSpace="nowrap"
               >
-                { prediction ? prediction : `No Prediction`}                      
+                { setPrediction(prediction)}                      
               </Td>
               <Td 
                 onClick={() => console.log('setSelectedFightSummary')} 
@@ -101,7 +119,7 @@ export const ScorecardsPageTableContent = () => {
                 { renderScoreOrStatus() }                      
               </Td>
               <Td 
-                onClick={() => navigate(`/scorecards/${groupScorecardId}`)} 
+                onClick={() => navigate(`/scorecards/${'groupScorecardId'}`)} 
                 textAlign="center" 
                 whiteSpace="nowrap"
               >

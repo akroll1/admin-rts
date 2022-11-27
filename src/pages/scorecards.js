@@ -16,14 +16,16 @@ import { parseEpoch } from '../utils'
 export const ScorecardsPage = () => {
 
   const {
+    fetchUserInvites,
     fetchSeasonSummaries,
-    fetchUserScorecardsBySeason,
+    fetchUserScorecards,
     selectedSeasonSummary,
   } = useScorecardStore();
 
   useEffect(() => {
+    fetchUserInvites()
     fetchSeasonSummaries()
-    fetchUserScorecardsBySeason('active')
+    fetchUserScorecards()
   },[])
 
   return (

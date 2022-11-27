@@ -14,7 +14,7 @@ import { ShowsArrows } from './shows-arrows'
 import { OfficialResultBanner } from '../shows-components'
 
 export const ShowsMain = ({
-    deleteMember,
+    deleteInvite,
     emailValue,
     fightReviewForm, 
     handleEmailSubmit, 
@@ -109,7 +109,7 @@ export const ShowsMain = ({
                 { UPCOMING 
                     ?
                         <ShowsCreateGroupScorecard 
-                            deleteMember={deleteMember} 
+                            deleteInvite={deleteInvite} 
                             emailValue={emailValue} 
                             handleEmailSubmit={handleEmailSubmit} 
                             handleFormChange={handleFormChange} 

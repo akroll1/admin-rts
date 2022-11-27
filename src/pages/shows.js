@@ -15,7 +15,7 @@ const Shows = () => {
     const toast = useToast();
     const navigate = useNavigate()
     const { 
-        createSeasonScorecard,
+        createGroupScorecard,
         fetchSeasonSummaries,
         putUserFightReview,
         selectedFightSummary, 
@@ -103,14 +103,14 @@ const Shows = () => {
 
     const handleEmailSubmit = e => {
         e.preventDefault();
-        // limit to 5 members for now.
+        // limit to 5 invites for now.
         const isValid = isValidEmail(emailValue);
         if(!emailValue) return;
         if(isValid){
-            const tempMembers = invites.concat(emailValue);
-            const dedupedEmails = [...new Set(tempMembers)];    
+            const tempInvites = invites.concat(emailValue);
+            const dedupedEmails = [...new Set(tempInvites)];    
             if(dedupedEmails.length >= 5){
-                alert('Group members is limited to 5.')
+                alert('Group is limited to 5 members.')
                 return
             } 
             setInvites(dedupedEmails)
@@ -126,22 +126,25 @@ const Shows = () => {
         }
     }
 
-    const deleteMember = e => {
+    const deleteInvite = e => {
         const { id } = e.currentTarget;
         const removedEmail = invites.filter( email => email !== id)
         setInvites(removedEmail)
     }
 
-    const handleCreateSeasonScorecard = async nameOptions => {
+    const handleCreateSeasonScorecard = async createGroupOptions => {
+
         setIsSubmitting(true);
         const scorecardObj = {
-            displayName: nameOptions.displayName,
-            groupScorecardName: nameOptions.groupScorecardName,
-            invites,
-            seasonId: selectedSeasonSummary.season.seasonId,
-            ownerId: sub,
+            displayName: createGroupOptions.displayName,
+            groupScorecardName: createGroupOptions.groupScorecardName,
+            groupScorecardNotes: createGroupOptions.groupScorecardNotes,
+            groupScorecardType: createGroupOptions.groupScorecardType,
+            invites: invites.slice(1),
+            sub,
+            targetId: createGroupOptions.targetId
         }
-        const created = await createSeasonScorecard(scorecardObj);
+        const created = await createGroupScorecard(scorecardObj);
         if(created){
             toast({ 
                 title: 'Group Created!',
@@ -187,7 +190,7 @@ const Shows = () => {
             <ShowsSidebar />  
             
             <ShowsMain 
-                deleteMember={deleteMember}
+                deleteInvite={deleteInvite}
                 emailValue={emailValue}
                 fightReviewForm={fightReviewForm}
                 handleEmailSubmit={handleEmailSubmit}

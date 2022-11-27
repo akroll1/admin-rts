@@ -10,13 +10,13 @@ import { AddIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
 import { DividerWithText } from '../../../chakra'
 
 export const ShowsCreateGroupScorecard = ({ 
-    deleteMember, 
+    deleteInvite, 
     emailValue, 
     handleEmailSubmit, 
     handleFormChange, 
     isSubmitting,
+    invites, 
     setDisplayNameModal,
-    invites 
 }) => {
     
     const handleSubmit = () => {
@@ -76,7 +76,7 @@ export const ShowsCreateGroupScorecard = ({
                                         :
                                             <DeleteIcon 
                                                 id={invite} 
-                                                onClick={deleteMember} 
+                                                onClick={deleteInvite} 
                                                 _hover={{cursor: 'pointer', color: 'white'}} 
                                                 color="#dadada" 
                                                 alignItems="center"

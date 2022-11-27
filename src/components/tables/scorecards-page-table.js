@@ -2,10 +2,14 @@ import {
   Flex,
   Heading 
 } from '@chakra-ui/react'
+import { useScorecardStore } from '../../stores'
 import { ScorecardsPageTableContent } from './table-els'
 
 export const ScorecardsPageTable = () => {
 
+  const {
+    userScorecards
+  } = useScorecardStore()
   return (
     <Flex 
       as="section"
@@ -32,7 +36,9 @@ export const ScorecardsPageTable = () => {
         textAlign="center"
         my="2"
       >
-        Scorecards
+        {userScorecards && Array.isArray(userScorecards) && userScorecards.length > 0 
+          ? 'Scorecards' 
+          : 'Create a Scorecard'}
       </Heading>
         
       <ScorecardsPageTableContent />
