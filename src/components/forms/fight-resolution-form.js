@@ -103,7 +103,7 @@ export const FightResolutionForm = () => {
         if(!radio) return alert('Select a winner.');
 
         const officialResult = radio === `DR` ? `DR` : `${radio},${fightResolution}`;
-        console.log('officialResult: ', officialResult)
+        // console.log('officialResult: ', officialResult)
         const fighterUpdates = resolveFighterUpdates(officialResult)
         const resolutionObj = {
             fightId,
@@ -111,7 +111,7 @@ export const FightResolutionForm = () => {
             officialResult,
             fighterUpdates
         }
-        console.log('resolutionObj: ', resolutionObj);
+        // console.log('resolutionObj: ', resolutionObj);
         submitFightResolution(resolutionObj, fightId)
     }
 

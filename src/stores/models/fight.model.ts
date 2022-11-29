@@ -58,7 +58,7 @@ export interface FightResolution {
     fightId: string
     fightStatus: string
 	officialResult: string
-    fighterUpdates: Record<string, string>[]
+    fighterUpdates: Record<string, string[]>[]
 
 }
 

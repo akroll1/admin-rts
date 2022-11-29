@@ -49,7 +49,7 @@ export const ScorecardsSeasonsBoard = () => {
                 flexDir="column"
                 alignItems="flex-start"
                 overflow="scroll"
-                minH={["40vh", "50vh", "60vh"]}
+                // minH={["40vh", "50vh", "60vh"]}
             >
                 { seasonSummaries?.length > 0 && seasonSummaries?.map( seasonSummary => {
                     const { fightSummaries, season } = seasonSummary;
