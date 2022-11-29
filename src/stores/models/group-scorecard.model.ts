@@ -35,3 +35,9 @@ export interface GroupScorecardSummary {
     fightSummary: FightSummary
     scorecards: Scorecard[]
 }
+
+export interface CreateGroupScorecardReturn {
+	groupScorecard: GroupScorecard
+	message: string 
+	outstandingInvites: string[] | null
+}

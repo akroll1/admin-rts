@@ -1,3 +1,5 @@
+import { GroupScorecard } from "./group-scorecard.model"
+
 export interface Scorecard {
     scorecardId: string
     fightId: string
@@ -11,4 +13,9 @@ export interface Scorecard {
 
 export interface ScoredRound {
     [index: string]: string | number
+}
+
+export interface ScorecardSummary {
+    scorecardGroups: GroupScorecard[]
+    scorecard: Scorecard
 }

@@ -33,7 +33,7 @@ export const ShowsCreateGroupScorecard = ({
         >
             <DividerWithText 
                 p="0" 
-                text={'Create a Group'} 
+                text={'Create a Scorecard and Win'} 
                 fontSize="2xl"
                 mt="2"
             />
@@ -105,7 +105,7 @@ export const ShowsCreateGroupScorecard = ({
                     >     
                         <Button 
                             minW={["90%", "40%"]}
-                            leftIcon={<AddIcon />} 
+                            leftIcon={invites.length >= 4 ? '' : <AddIcon />} 
                             m="2"
                             mt={["4"]}
                             type="submit"
@@ -120,8 +120,9 @@ export const ShowsCreateGroupScorecard = ({
                             }}
                             bg="#252525"
                             onClick={handleEmailSubmit} 
+                            disabled={invites.length >= 4}
                         >
-                            Add Member
+                            {`${invites.length >= 4 ? '5 Member Limit' : 'Add Member'}`}
                         </Button>
                         <Button 
                             minW={["90%", "40%"]}

@@ -144,19 +144,20 @@ const Shows = () => {
             sub,
             targetId: createGroupOptions.targetId
         }
-        const created = await createGroupScorecard(scorecardObj);
-        if(created){
-            toast({ 
-                title: 'Group Created!',
-                duration: 5000,
-                status: 'success',
-                isClosable: true
-            })
+        const res = await createGroupScorecard(scorecardObj);
+        setIsSubmitting(false);     
+        // need logic to add another member, if members < 5.   
+        toast({ 
+            title: res.message,
+            duration: 5000,
+            status: res.message.includes('Success!') ? 'success' : 'error',
+            isClosable: true
+        })
+        if(res.message.includes('Success!')){
             setTimeout(() => {
                 navigate('/scorecards')
             },3000)
         }
-        setIsSubmitting(false);        
     };
 
     return (

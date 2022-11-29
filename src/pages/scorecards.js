@@ -88,8 +88,8 @@ export const ScorecardsPage = () => {
             <ScorecardsLeaderboardBoard 
             />
         </Flex>
-        <ScorecardsPageTable />
       </Flex>
+      <ScorecardsPageTable />
     </Flex>
   )
 }

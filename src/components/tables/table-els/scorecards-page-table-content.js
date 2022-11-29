@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
 import { 
+  Flex,
+  Icon,
   Table, 
   Tbody, 
   Td, 
@@ -9,39 +10,31 @@ import {
   useColorModeValue as mode 
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { useScorecardStore } from '../../../stores'
+import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../../utils'
 
-export const ScorecardsPageTableContent = () => {
-  
-  const {
-    seasonSummaries,
-    userScorecards,
-  } = useScorecardStore() 
-  const [collatedScorecards, setCollatedScorecards] = useState([])
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if(seasonSummaries.length && userScorecards.length){
-      const userScorecardsFightIds = userScorecards.map( card => card.fightId)
-      const sum = [seasonSummaries[0]]
-      const summaries = sum.map( season => season)
-        .reduce( (acc, season) => Array.isArray(season.fightSummaries) ? acc.concat(season.fightSummaries) : [],[])
-        .filter( summary => userScorecardsFightIds.includes(summary.fight.fightId))
-        .map( filtered => {
-          const [scorecard] = userScorecards.filter( c => c.fightId === filtered.fight.fightId)
-          return ({
-            ...filtered,
-            scorecard
-          })
-        })
-      setCollatedScorecards(summaries)
+export const ScorecardsPageTableContent = ({ 
+  collatedScorecards,
+  groupType,
+  handleScorecardSelect,
+  selectedScorecard
+}) => {
+  // console.log('collatedScorecards: ', collatedScorecards)
+  console.log('selectedScorecard: ', selectedScorecard)
+  const navigate = useNavigate();
+  const renderLink = (groupType, selectedScorecard, scorecard, fightQuickTitle) => {
+    if(groupType === 'FIGHT' && selectedScorecard?.scorecard?.fightId === scorecard.scorecard.fightId){
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+    } 
+    if(groupType === 'SEASON' && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId){
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
     }
-  },[seasonSummaries])
-  console.log('collatedScorecards: ', collatedScorecards)
+    return fightQuickTitle
+  }
+
   return (
     <Table 
+      w="100%"
       variant="simple" 
       border="1px solid rgba(255, 255, 255, 0.16)" 
       fontSize="sm" 
@@ -52,25 +45,25 @@ export const ScorecardsPageTableContent = () => {
     >
       <Thead bg={mode('gray.50', '#262626')}>
         <Tr>
-            <Th whiteSpace="nowrap" scope="col" textAlign="center">
+            <Th whiteSpace="nowrap" scope="col" textAlign="left">
               Fight  
             </Th>
-            <Th whiteSpace="nowrap" scope="col" textAlign="center">
+            <Th whiteSpace="nowrap" scope="col" textAlign="left">
               Prediction
             </Th>
-            <Th whiteSpace="nowrap" scope="col" textAlign="center">
+            <Th whiteSpace="nowrap" scope="col" textAlign="left">
               Score
             </Th>
-            <Th whiteSpace="nowrap" scope="col"textAlign="center">
+            {/* <Th whiteSpace="nowrap" scope="col"textAlign="center">
               See Scorecard
-            </Th>
+            </Th> */}
         </Tr>
       </Thead>
       <Tbody>
         { collatedScorecards.length > 0 && collatedScorecards.map( (row, index) => {
           // console.log('row: ', row)
           const { fight, fighters, scorecard } = row
-          const { fightQuickTitle, fightStatus } = fight;
+          const { fightId, fightQuickTitle, fightStatus } = fight;
           const { finalScore, prediction } = scorecard;
           const setPrediction = rawPrediction => {
             if(rawPrediction){
@@ -89,42 +82,54 @@ export const ScorecardsPageTableContent = () => {
           }
           return (
             <Tr 
-              border="1px solid #ffffff29"
+              id="test"
+              // border="1px solid #ffffff29"
+              onClick={e => handleScorecardSelect(e, fightId, selectedScorecard.scorecardGroups[0].groupScorecardType)} 
               key={index} 
+              border="1px solid transparent"
               _hover={{
                 textAlign: "left",
                 cursor: 'pointer', 
-                bg: '#535353', 
+                border: '1px solid gray', 
                 color: '#fff', 
                 borderBottom: '2px solid #262626',
                 borderRadius: '5px'
               }} 
+              bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
             >
               <Td 
-                onClick={() => console.log('setSelectedFightSummary')} 
                 whiteSpace="nowrap"
+                id={fightId}
               >
-                {fightQuickTitle}
+                {renderLink(groupType, selectedScorecard, scorecard, fightQuickTitle)}
+                {/* { groupType === 'SEASON' && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId 
+                // { selectedScorecard?.scorecard.scorecardId.includes(fightId) && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId 
+                  ? <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+                  // : <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+                  : fightQuickTitle
+                } */}
               </Td>
               <Td 
-                onClick={() => console.log('setSelectedFightSummary')} 
+                onClick={handleScorecardSelect} 
                 whiteSpace="nowrap"
+                id={fightId}
               >
                 { setPrediction(prediction)}                      
               </Td>
               <Td 
-                onClick={() => console.log('setSelectedFightSummary')} 
+                onClick={handleScorecardSelect} 
                 whiteSpace="nowrap"
+                id={fightId}
               >
                 { renderScoreOrStatus() }                      
               </Td>
-              <Td 
+              {/* <Td 
                 onClick={() => navigate(`/scorecards/${'groupScorecardId'}`)} 
                 textAlign="center" 
                 whiteSpace="nowrap"
               >
                 <ExternalLinkIcon /> 
-              </Td>
+              </Td> */}
             </Tr>
         )})}
       </Tbody>

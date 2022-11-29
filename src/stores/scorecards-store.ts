@@ -13,6 +13,7 @@ import {
 import { Fighter, FighterScores } from './models/fighter.model'
 import { 
     CreateScorecard, 
+    CreateGroupScorecardReturn,
     GroupScorecard, 
     GroupScorecardSummary 
 } from "./models/group-scorecard.model"
@@ -20,7 +21,7 @@ import { AcceptInviteOptions } from './models/invite.model'
 import { List } from './models/lists.model'
 import { Panelist, PanelSummary } from "./models/panel.model"
 import { Review, ReviewPut } from './models/review.model'
-import { ScoredRound, Scorecard } from "./models/scorecard.model"
+import { Scorecard, ScorecardSummary, ScoredRound } from "./models/scorecard.model"
 import { Season, SeasonSummary } from './models/season.model'
 import { Show } from "./models/show.model"
 import { TokenConfig, User } from './models/user.model'
@@ -42,7 +43,7 @@ export interface ScorecardStore {
     createDiscussion(discussionObj: Partial<Discussion>): void
     createFight(createFightObj: FightPostObj): void
     createFighter(createFighterObj: Fighter): void
-    createGroupScorecard(scorecardObj: CreateScorecard): Promise<boolean | undefined>
+    createGroupScorecard(scorecardObj: CreateScorecard): Promise<CreateGroupScorecardReturn>
     createPanel(panelId: string): void
     createPanelist(panelistObj: Partial<Panelist>): void
     createSeason(createObj: Partial<Season>): void
@@ -139,7 +140,9 @@ export interface ScorecardStore {
     userInvites: string[]
     userFightReview: Review
     userScorecard: Scorecard
+    userScorecardSummary: ScorecardSummary
     userScorecards: Scorecard[]
+    userScorecardSummaries: ScorecardSummary[]
     // addMemberToActiveScorecard(email: string): void
 }
 
@@ -189,7 +192,9 @@ export const initialScorecardsStoreState = {
     userFightReview: {} as Review,
     userInvites: [],
     userScorecard: {} as Scorecard,
+    userScorecardSummary: {} as ScorecardSummary,
     userScorecards: [],
+    userScorecardSummaries: [],
 }
 
 const url = process.env.REACT_APP_API;
@@ -284,10 +289,8 @@ export const useScorecardStore = create<ScorecardStore>()(
                 console.log('FIGHTER- create res.data: ', res.data);
             },
             createGroupScorecard: async (scorecardObj: CreateScorecard) => {
-                console.log('scorecardObj: ', scorecardObj)
                 const res = await axios.post(`${url}/group-scorecards`, scorecardObj, get().accessToken);
-                const data = res.data as GroupScorecard;
-                if(res.status === 200) return true;
+                return res.data as CreateGroupScorecardReturn
             },
             createPanel: async (panelId: string) => {
                 const res = await axios.post(`${url}/panels`, { panelId }, get().accessToken)
@@ -383,7 +386,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
                 const lastScoredRound = userScorecard.scores.length;
                 const scoringComplete = userScorecard.scores.length >= get().totalRounds;
-                await set({ 
+                set({ 
                     activeGroupScorecard: data.groupScorecard, 
                     chatKey: data.groupScorecard.chatKey,
                     lastScoredRound,
@@ -466,8 +469,12 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchUserScorecards: async () => {
                 const res = await axios.get(`${url}/me/scorecards/${get().user.sub}`, get().accessToken)
-                const userScorecards = res.data as Scorecard[]
-                set({ userScorecards })
+                const userScorecardSummaries = res.data as ScorecardSummary[]
+                const userScorecards: Scorecard[] = userScorecardSummaries.map( scorecard => scorecard.scorecard)
+                set({ 
+                    userScorecards,
+                    userScorecardSummaries,
+                })
             },
             fetchUserScorecardsBySeason: async (seasonId: string) => {
                 const res = await axios.get(`${url}/me/${encodeURIComponent(get().user.sub!)}/${seasonId}`, get().accessToken)
