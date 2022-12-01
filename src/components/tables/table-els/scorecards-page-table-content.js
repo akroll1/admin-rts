@@ -19,9 +19,9 @@ export const ScorecardsPageTableContent = ({
   handleScorecardSelect,
   selectedScorecard
 }) => {
-  // console.log('collatedScorecards: ', collatedScorecards)
-  console.log('selectedScorecard: ', selectedScorecard)
+
   const navigate = useNavigate();
+
   const renderLink = (groupType, selectedScorecard, scorecard, fightQuickTitle) => {
     if(groupType === 'FIGHT' && selectedScorecard?.scorecard?.fightId === scorecard.scorecard.fightId){
       return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
@@ -54,9 +54,6 @@ export const ScorecardsPageTableContent = ({
             <Th whiteSpace="nowrap" scope="col" textAlign="left">
               Score
             </Th>
-            {/* <Th whiteSpace="nowrap" scope="col"textAlign="center">
-              See Scorecard
-            </Th> */}
         </Tr>
       </Thead>
       <Tbody>
@@ -71,19 +68,18 @@ export const ScorecardsPageTableContent = ({
               const [fighter] = fighters.filter( fighter => fighter.fighterId === predictionId)
               return `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
             }
-            return `No Prediction`
+            return `Set Prediction`
           }
           // const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
           const renderScoreOrStatus = () => {
             if(fightStatus === `CANCELED`) return `Canceled`;
             if(fightStatus === `PENDING`) return `Upcoming`;
             if(finalScore) return finalScore;
-            if(!finalScore && !prediction) return `No Prediction`; 
+            if(!finalScore && !prediction) return `DNP`; 
           }
           return (
             <Tr 
-              id="test"
-              // border="1px solid #ffffff29"
+              id={fightId}
               onClick={e => handleScorecardSelect(e, fightId, selectedScorecard.scorecardGroups[0].groupScorecardType)} 
               key={index} 
               border="1px solid transparent"
@@ -97,39 +93,15 @@ export const ScorecardsPageTableContent = ({
               }} 
               bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
             >
-              <Td 
-                whiteSpace="nowrap"
-                id={fightId}
-              >
+              <Td whiteSpace="nowrap">
                 {renderLink(groupType, selectedScorecard, scorecard, fightQuickTitle)}
-                {/* { groupType === 'SEASON' && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId 
-                // { selectedScorecard?.scorecard.scorecardId.includes(fightId) && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId 
-                  ? <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
-                  // : <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
-                  : fightQuickTitle
-                } */}
               </Td>
-              <Td 
-                onClick={handleScorecardSelect} 
-                whiteSpace="nowrap"
-                id={fightId}
-              >
+              <Td whiteSpace="nowrap">
                 { setPrediction(prediction)}                      
               </Td>
-              <Td 
-                onClick={handleScorecardSelect} 
-                whiteSpace="nowrap"
-                id={fightId}
-              >
+              <Td whiteSpace="nowrap">
                 { renderScoreOrStatus() }                      
               </Td>
-              {/* <Td 
-                onClick={() => navigate(`/scorecards/${'groupScorecardId'}`)} 
-                textAlign="center" 
-                whiteSpace="nowrap"
-              >
-                <ExternalLinkIcon /> 
-              </Td> */}
             </Tr>
         )})}
       </Tbody>

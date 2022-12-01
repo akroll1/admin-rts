@@ -46,14 +46,11 @@ export const ScorecardsPageTable = () => {
   },[seasonSummaries])
 
   const handleScorecardSelect = (e, id, groupScorecardType) => {
-    console.log('id: ', id)
-    console.log('groupScorecardType: ', groupScorecardType)
     const [scorecard] = collatedScorecards.filter( card => card.fight.fightId === id)
-    console.log('SCORECARD: ', scorecard)
     setSelectedScorecard(scorecard.scorecard)
     setGroupType(groupScorecardType)
   }
-  console.log('selectedScorecard: ', selectedScorecard)
+
   return (
     <Flex 
       as="section"

@@ -118,7 +118,7 @@ const Shows = () => {
             toast({
                 title: `Added ${emailValue} to Group!`,
                 duration: 5000,
-                status: 'success',
+                status: 'info',
                 isClosable: true
             })
         } else {

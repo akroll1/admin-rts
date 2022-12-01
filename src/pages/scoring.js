@@ -117,35 +117,6 @@ const Scoring = () => {
         }
     },[fight])
 
-    const handleAddMemberSubmit = async email => {
-        setIsSubmitting(true);
-        const { admin, groupScorecardId, groupScorecardName, fightId } = groupScorecard;
-        const fighterIds = fighters.map( ({ fighterId }) => fighterId);
-        const update = {
-            admin,
-            fighterIds,
-            fightId,
-            groupScorecardId,
-            groupScorecardName, // for email.
-            members: [email], // for alignment of createMemberScorecards, server.
-            rounds: fight.totalRounds,
-            username: email
-        }
-        return await axios.put(groupScorecardsUrl, update, accessToken)
-            .then( res => {
-                setModals('addMemberModal', false);
-                if(res.status === 200){
-                    return toast({ 
-                        title: `Email invite was sent to member.`,
-                        duration: 5000,
-                        status: 'success',
-                        isClosable: true
-                    })
-                }
-            }).catch( err => console.log(err))
-            .finally(() => setIsSubmitting(false))
-    };
-
     return (
         <Flex 
             id="scoring"

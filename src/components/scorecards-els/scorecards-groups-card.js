@@ -69,7 +69,7 @@ export const ScorecardsGroupsCard = ({
                                 <Flex
                                     
                                     onClick={(e) => scorecardSelect(e, selectedScorecard.scorecard.fightId, groupScorecard.groupScorecardType, groupScorecard.groupScorecardId)}
-                                    color="#dadada"
+                                    color={groupScorecard.groupScorecardId === active ? '#fff' : '#dadada'}
                                     mb="2"
                                     mt="3"
                                     w="100%"
@@ -78,7 +78,7 @@ export const ScorecardsGroupsCard = ({
                                         color: '#fff',
                                     }}
                                 >
-                                    <ListItem mt="2" as="h6" size="xs">{`${groupScorecard.groupScorecardName}`}</ListItem>
+                                    <ListItem fontWeight={groupScorecard.groupScorecardId === active ? 'bold' : 'normal'} mt="2" as="h6" size="xs">{`${groupScorecard.groupScorecardName}`}</ListItem>
                                     <ListItem as="h6" fontSize="xs">{`Type- ${groupScorecard.groupScorecardType === 'FIGHT' ? 'Fight' : 'Season'}`}</ListItem>
                                     <ListItem as="h6" fontSize="xs">{`Total Members- ${groupScorecard.members.length}`}</ListItem>
                                 </Flex>
