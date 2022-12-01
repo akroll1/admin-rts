@@ -14,7 +14,11 @@ import { ProfileButton } from './profile-button'
 import { useNavigate } from 'react-router'
 
 const MobileNavContext = props => {
+  const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
+  const handleFightSyncButtonClick = () => {
+    onToggle();
+  }
 
   return (
     <>
@@ -24,16 +28,22 @@ const MobileNavContext = props => {
         justify="space-between" 
         className="nav-content__mobile" 
         {...props}
-      >
-        <Box flexBasis="6rem">
+        >
+        <Box 
+          flexBasis="6rem"
+        >
           <ToggleButton 
-            isOpen={isOpen} onClick={onToggle} />
+            isOpen={isOpen} 
+            handleFightSyncButtonClick={handleFightSyncButtonClick} 
+          />
         </Box>
         <Heading 
           as="h3" 
           size="sm"
           textAlign="center"
           letterSpacing="1px"
+          cursor="pointer"
+          onClick={() => navigate('/')}
         >
           FightSync
         </Heading>
@@ -55,7 +65,9 @@ const MobileNavContext = props => {
             </NavLink.Mobile>
           ),
         )}
-          <ProfileButton />
+          <ProfileButton 
+            onToggle={onToggle}
+          />
       </NavMenu>
     </>
   )
@@ -67,7 +79,10 @@ const DesktopNavContent = props => {
   return (
     <Flex 
       zIndex={1000000}
-      className="nav-content__desktop" align="center" justify="space-between" {...props}
+      className="nav-content__desktop" 
+      align="center" 
+      justify="space-between" 
+      {...props}
     >
       <Button
         minW="20%"
@@ -81,9 +96,9 @@ const DesktopNavContent = props => {
           color: 'white'
         }}
         color="#c8c8c8" 
-        onClick={() => navigate('/')} 
+        onClick={() => navigate('/signin')} 
         background="transparent"
-        to="/"
+        to="/signin"
       >
         FightSync
       </Button>

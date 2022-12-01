@@ -37,9 +37,8 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
   })
   DesktopNavLink.displayName = 'DesktopNavLink'
   
-  export const MobileNavLink = props => {
-    const { active, href, ...rest } = props
-    // console.log('rest: ', rest);
+export const MobileNavLink = props => {
+  const { active, href, onToggle, ...rest } = props
   return (
     <Link
       as={RRLink}
@@ -51,6 +50,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
       height="14"
       fontWeight="semibold"
       borderBottomWidth="1px"
+      onClick={onToggle}
       {...rest}
     />
   )
