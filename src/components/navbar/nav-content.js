@@ -17,7 +17,6 @@ const MobileNavContext = props => {
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const handleFightSyncButtonClick = () => {
-    // const style = document.getElementById('test').style.opacity;
     onToggle();
   }
 
@@ -49,10 +48,7 @@ const MobileNavContext = props => {
           FightSync
         </Heading>
       </Flex>
-      <NavMenu 
-        animate={isOpen ? 'open' : 'closed'}
-        id="test"
-      >
+      <NavMenu animate={isOpen ? 'open' : 'closed'}>
         {links.map( (link, i) => 
           link.children ? (
             <Submenu.Mobile 
