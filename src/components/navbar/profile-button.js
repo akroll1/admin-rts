@@ -1,13 +1,19 @@
 import { useState } from 'react'
-import { Box, Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
+import { 
+    Flex, 
+    Menu, 
+    MenuButton, 
+    MenuDivider, 
+    MenuItem, 
+    MenuList 
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
 import { useScorecardStore } from '../../stores'
 
-export const ProfileButton = () => {
+export const ProfileButton = ({ onToggle }) => {
     const navigate = useNavigate();
     const {
         reset,
-        setUser,
         user
     } = useScorecardStore();
     const { isLoggedIn } = user
@@ -15,7 +21,10 @@ export const ProfileButton = () => {
 
     const openProfile = () => {
         if(isLoggedIn) return setOpen(true)
-        if(!isLoggedIn) navigate('/signin')
+        if(!isLoggedIn) {
+            navigate('/signin')
+            onToggle()
+        }
     }
 
     const handleSignOutClick = () => {
@@ -32,6 +41,7 @@ export const ProfileButton = () => {
 
     return (
         <Flex 
+            id="profile_btn"
             m="auto"
             minW="20%"
         >
