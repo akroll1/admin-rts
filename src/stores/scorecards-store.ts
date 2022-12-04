@@ -619,7 +619,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 }
                 if(rawPrediction){
                     const predictionId = rawPrediction.slice(0, 36)
-                    const [fighter] = get().selectedSeasonFightSummary.fighters.filter( fighter => fighter.fighterId === predictionId)
+                    const [fighter] = get().activeGroupScorecard?.fighters?.filter( fighter => fighter.fighterId === predictionId)
                     const transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
                     set({ transformedPrediction })
                 }
@@ -656,9 +656,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const update = Object.entries(roundScores).filter( entry => entry[0] !== 'round' && entry[0] !== 'scorecardId')
                     .reduce( (acc: any, curr) => {
                         if(typeof curr[1] === 'number'){
-                            console.log('curr: ', curr)
                             acc[curr[0]] = curr[1]
-                            console.log('acc: ', acc)
                             return acc
                         }
                     },{})
