@@ -93,15 +93,9 @@ export const ScorecardsPageTableContent = ({
               }} 
               bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
             >
-              <Td whiteSpace="nowrap">
-                {renderLink(groupType, selectedScorecard, scorecard, fightQuickTitle)}
-              </Td>
-              <Td whiteSpace="nowrap">
-                { setPrediction(prediction)}                      
-              </Td>
-              <Td whiteSpace="nowrap">
-                { renderScoreOrStatus() }                      
-              </Td>
+              <Td whiteSpace="nowrap">{ renderLink(groupType, selectedScorecard, scorecard, fightQuickTitle) }</Td>
+              <Td whiteSpace="nowrap">{ setPrediction(prediction) }</Td>
+              <Td whiteSpace="nowrap">{ renderScoreOrStatus() }</Td>
             </Tr>
         )})}
       </Tbody>

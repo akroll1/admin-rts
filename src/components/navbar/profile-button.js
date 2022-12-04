@@ -24,6 +24,11 @@ export const ProfileButton = ({ onToggle }) => {
         if(!isLoggedIn) {
             navigate('/signin')
             onToggle()
+            if(open){
+                setOpen(false)
+            } else {
+                setOpen(true)
+            }
         }
     }
 
@@ -36,28 +41,29 @@ export const ProfileButton = ({ onToggle }) => {
     const handleNavigate = e => {
         setOpen(false)
         const { value } = e.currentTarget
+        onToggle()
         navigate(value)
     }
 
     return (
         <Flex 
-            id="profile_btn"
-            m="auto"
+            m="1rem auto"
             minW="20%"
         >
             <Menu m="auto">
                 <MenuButton 
+                    id="profile_btn"
                     m="auto"
                     size='md'
                     color="#C8C8C8"
                     _hover={{color: 'white'}}
-                    fontSize="20px"
+                    fontSize="1.1rem"
                     fontWeight="600"
                     onClick={openProfile}
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
-                {open &&
+                {isLoggedIn &&
                     <MenuList>
                         <MenuItem value="/scorecards" onClick={handleNavigate}>Scorecards</MenuItem>
                         <MenuItem value="/dashboard/account" onClick={handleNavigate}>Profile</MenuItem>

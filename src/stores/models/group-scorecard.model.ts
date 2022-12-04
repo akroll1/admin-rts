@@ -1,4 +1,4 @@
-import { FightSummary, Scorecard } from "./index"
+import { Fight, Fighter, FightSummary, Scorecard, Show } from "./index"
 
 export interface GroupScorecard {
 	groupScorecardId: string
@@ -31,9 +31,11 @@ export enum GroupScorecardType {
 }
 
 export interface GroupScorecardSummary {
-    groupScorecard: GroupScorecard
-    fightSummary: FightSummary
-    scorecards: Scorecard[]
+	fight: Fight
+	fighters: Fighter[]
+	groupScorecard: GroupScorecard
+	scorecards: Scorecard[]
+	show: Show
 }
 
 export interface CreateGroupScorecardReturn {

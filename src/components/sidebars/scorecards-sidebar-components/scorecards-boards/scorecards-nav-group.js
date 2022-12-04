@@ -10,12 +10,12 @@ export const ScorecardsNavGroup = props => {
     children, 
     id, 
     label, 
-    handleSelectSeason, 
+    handleHideShow, 
 } = props
 
     const selectSeason = e => {
         const { id } = e.currentTarget
-        handleSelectSeason(id)
+        handleHideShow(id)
     }
 
     return (  

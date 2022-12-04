@@ -3,10 +3,10 @@ import { Box, Flex, Text, useColorModeValue as mode} from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
 
 export const ScoringTableInfo = ({ 
+  displayName, 
   fighters,
   finalScore,
   prediction,
-  username, 
 }) => {
   const usernameCheck = username => {
     if(username?.includes('@')){
@@ -14,11 +14,6 @@ export const ScoringTableInfo = ({
     } 
     return username; 
   }
-
-  
-  // console.log('fighters: ', fighters)
-  // console.log('prediction: ', prediction)
-  // console.log('username: ', username)
   
   const predictionWinner = prediction ? prediction.split('-')[0] : `No Prediction`;
   const predictionHow = prediction ? prediction.split('-')[1] : ``;
@@ -46,7 +41,7 @@ export const ScoringTableInfo = ({
         justifyContent="space-between"
         alignItems="center"
       >
-          <Text>{`${usernameCheck(username)}`}</Text>
+          <Text>{`${usernameCheck(displayName)}`}</Text>
           <Text color="fsl-text">{`${finalScore ? "Score: " + finalScore : ""}`}</Text> 
       </Flex>
       { fighters?.length > 0 && fighters.map( (fighter, _i) => {
