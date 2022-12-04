@@ -1,5 +1,6 @@
 export * from './fight-review'
 export * from './fight-storyline'
+export * from './official-result-banner'
 export * from './props'
 export * from './shows-create-group-scorecard'
 export * from './shows-editable-display-name'

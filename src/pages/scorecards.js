@@ -4,10 +4,7 @@ import {
   Heading 
 } from '@chakra-ui/react'
 import { ScorecardsPageTable } from '../components/tables'
-import { 
-  DisplayNameModal, 
-  ExpiredTokenModal 
-} from '../components/modals'
+import { ExpiredTokenModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
 import { ScorecardsPageSidebar } from '../components/sidebars'
 import { 
@@ -19,15 +16,16 @@ import { parseEpoch } from '../utils'
 export const ScorecardsPage = () => {
 
   const {
-    fetchAllSeasons,
-    fetchUserScorecardsBySeason,
-    selectedSeason,
-    userScorecards,
+    fetchUserInvites,
+    fetchSeasonSummaries,
+    fetchUserScorecards,
+    selectedSeasonSummary,
   } = useScorecardStore();
 
   useEffect(() => {
-    fetchUserScorecardsBySeason('active')
-    fetchAllSeasons()
+    fetchUserInvites()
+    fetchSeasonSummaries()
+    fetchUserScorecards()
   },[])
 
   return (
@@ -44,7 +42,6 @@ export const ScorecardsPage = () => {
       bg="fsl-body-bg"
       boxSizing="border-box"
     >    
-      <DisplayNameModal />
       <ExpiredTokenModal />
        
       <ScorecardsPageSidebar />
@@ -61,8 +58,8 @@ export const ScorecardsPage = () => {
           px="2"
           py="0"
         >
-          { selectedSeason?.season?.seasonName
-            ?  `${selectedSeason?.season?.seasonName}`
+          { selectedSeasonSummary?.season?.seasonName
+            ?  `${selectedSeasonSummary?.season?.seasonName}`
             : `Season`
         }
         </Heading>
@@ -71,8 +68,8 @@ export const ScorecardsPage = () => {
           size="sm"
           mb="1"
         >
-          { selectedSeason?.season?.starts
-            ?  `${parseEpoch(selectedSeason?.season?.starts).slice(0, 9)} - ${parseEpoch(selectedSeason?.season?.ends).slice(0, 9)}`
+          { selectedSeasonSummary?.season?.starts
+            ?  `${parseEpoch(selectedSeasonSummary?.season?.starts).slice(0, 9)} - ${parseEpoch(selectedSeasonSummary?.season?.ends).slice(0, 9)}`
             : ``
         }
         </Heading>
@@ -86,16 +83,11 @@ export const ScorecardsPage = () => {
           minH="40vh"
           overflow="scroll"
         >
-            <ScorecardsMetadataBoard 
-            />
-            <ScorecardsLeaderboardBoard 
-            />
+          <ScorecardsMetadataBoard />
+          <ScorecardsLeaderboardBoard />
         </Flex>
-        <ScorecardsPageTable 
-          scorecards={userScorecards} 
-          selectedSeason={selectedSeason}  
-        />
       </Flex>
+      <ScorecardsPageTable />
     </Flex>
   )
 }

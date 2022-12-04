@@ -9,10 +9,10 @@ import { useScorecardStore } from '../../stores'
 import { useBoundStore } from '../../stores/useBoundStore'
 
 export const ShowsParticulars = ({
-    selectedFightSummary
+    selectedSeasonFightSummary
 }) => {
-    const { isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
-    const { location, network, showTime } = selectedFightSummary?.show ? selectedFightSummary.show : '';
+    const { isTitleFight, rounds, weightclass } = selectedSeasonFightSummary?.fight ? selectedSeasonFightSummary.fight : '';
+    const { location, network, showTime } = selectedSeasonFightSummary?.show ? selectedSeasonFightSummary.show : '';
     return (
         <Flex 
             as="section"

@@ -20,29 +20,26 @@ export const ScoringTable = ({
     tabs, 
 }) => {
     const {
+        activeGroupScorecard,
         lastScoredRound,
-        fight,
         tableData, 
     } = useScorecardStore()
     // console.log('tableData: ', tableData)
-
-    const totalRounds = fight ? fight.rounds : 1;
-
+    const totalRounds = activeGroupScorecard?.fight ? activeGroupScorecard.fight.rounds : 12;
     const sortData = (a, b) => a.username - b.username
-
-    const data = new Set(tableData?.sort(sortData))
-    const sortedTable = [...data]
+    const sortedTable = [...new Set(tableData?.sort(sortData))]
+    // console.log('sortedTable: ', sortedTable)
 
     const columns = [
         {
             Header: 'Player',
             accessor: 'player',
-            Cell: function TableCell( fighters, prediction, username, finalScore ) {
+            Cell: function TableCell( fighters, prediction, displayName, finalScore ) {
                 return (
                     <ScoringTableInfo 
                         fighters={fighters} 
                         prediction={prediction} 
-                        username={username} 
+                        displayName={displayName} 
                         finalScore={finalScore}
                     />
                 )
@@ -110,7 +107,7 @@ export const ScoringTable = ({
                     fontSize="sm"
                     bg="whiteAlpha.50"
                 >
-                    { fight?.fightStatus === `COMPLETE` && <TableCaption placement="top"><Heading size="md">FIGHT IS OFFICIAL</Heading></TableCaption> }
+                    { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <TableCaption placement="top"><Heading size="md">FIGHT IS OFFICIAL</Heading></TableCaption> }
                     <Thead bg={mode('gray.50', '#111111')}>
                         <Tr>
                             {columns.map((column, index) => {
@@ -163,7 +160,7 @@ export const ScoringTable = ({
                                 mappedScores, 
                                 prediction, 
                                 totals, 
-                                username 
+                                displayName 
                             } = row;;
                             let filledMappedScores; 
 
@@ -182,7 +179,7 @@ export const ScoringTable = ({
                                     {columns.map( (column, i) => {
                                         // console.log('column: ',column)
                                         const cell = row[column.accessor];
-                                        const element = column.Cell?.( fighters, prediction, username, finalScore ) ?? cell;
+                                        const element = column.Cell?.( fighters, prediction, displayName, finalScore ) ?? cell;
                                         
                                         if(i === 0){
                                             return (

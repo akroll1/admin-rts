@@ -1,19 +1,60 @@
+import { useEffect, useState } from 'react'
 import { 
   Flex,
   Heading 
 } from '@chakra-ui/react'
+import { GroupScorecardType, useScorecardStore } from '../../stores'
 import { ScorecardsPageTableContent } from './table-els'
-import { parseEpoch } from '../../utils'
+import { ScorecardsGroupsCard } from '../scorecards-els'
 
-export const ScorecardsPageTable = ({ 
-  scorecards,
-  selectedSeason,
-}) => {
-  console.log('selectedSeason: ', selectedSeason)
+export const ScorecardsPageTable = () => {
+ 
+  const {
+    seasonSummaries,
+    userScorecardSummaries,
+    userScorecards
+  } = useScorecardStore() 
+  
+  const [collatedScorecards, setCollatedScorecards] = useState([])
+  const [selectedScorecard, setSelectedScorecard] = useState([])
+  const [groupType, setGroupType] = useState('')
+
+  useEffect(() => {
+    if(collatedScorecards.length){
+      setSelectedScorecard(collatedScorecards[0].scorecard)
+      setGroupType(collatedScorecards[0].scorecard.scorecardGroups[0].groupScorecardType)
+    }
+  },[collatedScorecards])
+
+  useEffect(() => {
+    if(seasonSummaries.length && userScorecardSummaries.length){
+      const userScorecardsFightIds = userScorecardSummaries.map( summary => summary)
+        .map( summary => summary.scorecard.fightId)
+      const sum = [seasonSummaries[0]]
+      const summaries = sum.map( season => season)
+        .reduce( (acc, season) => Array.isArray(season.fightSummaries) ? acc.concat(season.fightSummaries) : [],[])
+        .filter( summary => userScorecardsFightIds.includes(summary.fight.fightId))
+        .map( filtered => {
+          const [scorecard] = userScorecardSummaries.filter( c => c.scorecard.fightId === filtered.fight.fightId)
+          return ({
+            ...filtered,
+            scorecard
+          })
+        })
+      setCollatedScorecards(summaries)
+    }
+  },[seasonSummaries])
+
+  const handleScorecardSelect = (e, id, groupScorecardType) => {
+    const [scorecard] = collatedScorecards.filter( card => card.fight.fightId === id)
+    setSelectedScorecard(scorecard.scorecard)
+    setGroupType(groupScorecardType)
+  }
+
   return (
     <Flex 
       as="section"
-      id="scorecards_table"
+      id="scorecards_page_table"
       bg="fsl-body-bg"
       flexDirection="column" 
       justifyContent="center"
@@ -36,10 +77,36 @@ export const ScorecardsPageTable = ({
         textAlign="center"
         my="2"
       >
-        Scorecards
+        {userScorecards && Array.isArray(userScorecards) && userScorecards.length > 0 
+          ? 'Scorecards' 
+          : 'Create a Scorecard'}
       </Heading>
-        
-      <ScorecardsPageTableContent scorecards={scorecards} />
+      <Flex
+        w="100%"
+        flexDir={["column", "row"]}
+        flexWrap="wrap-reverse"
+      >
+        <Flex
+          flex="1 0 30%"
+        >
+          <ScorecardsGroupsCard 
+            handleScorecardSelect={handleScorecardSelect}
+            selectedScorecard={selectedScorecard}
+          />
+        </Flex>
+        <Flex
+          flex="1 0 70%"
+          overflow="scroll"
+          w="100%"
+        >
+          <ScorecardsPageTableContent 
+            collatedScorecards={collatedScorecards} 
+            groupType={groupType}
+            handleScorecardSelect={handleScorecardSelect}
+            selectedScorecard={selectedScorecard}
+          />
+        </Flex>
+      </Flex>
     </Flex>
   )
 }

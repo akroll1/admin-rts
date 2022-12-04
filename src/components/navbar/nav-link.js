@@ -16,7 +16,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
       isExternal={false}
       fontWeight="semibold"
       aria-current={active ? 'page' : undefined}
-      color={mode('#fafafa', '#cacaca')}
+      color={mode('#fafafa', '#dadada')}
       transition="all 0.2s"
       {...rest}
       _hover={{
@@ -37,9 +37,8 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
   })
   DesktopNavLink.displayName = 'DesktopNavLink'
   
-  export const MobileNavLink = props => {
-    const { active, href, ...rest } = props
-    // console.log('rest: ', rest);
+export const MobileNavLink = props => {
+  const { active, href, onToggle, ...rest } = props
   return (
     <Link
       as={RRLink}
@@ -51,6 +50,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
       height="14"
       fontWeight="semibold"
       borderBottomWidth="1px"
+      onClick={onToggle}
       {...rest}
     />
   )

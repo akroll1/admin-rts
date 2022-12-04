@@ -4,9 +4,9 @@ import { FaChevronDown } from 'react-icons/fa'
 import { NavLink, NavMenu } from '../components/navbar'
 import { SubmenuItem as DesktopMenuItem } from './sub-menu-item'
 
-const DesktopSubmenu = (props) => {
-  const { link } = props
+const DesktopSubmenu = ({ link }) => {
   const { isOpen, getMenuProps, getTriggerProps } = useNavMenu()
+
   return (
     <>
       <NavLink.Desktop
@@ -38,7 +38,7 @@ const DesktopSubmenu = (props) => {
           px="8"
         >
           <SimpleGrid spacing="10" columns={2}>
-            {link.children?.map((item, idx) => (
+            {link.children?.map( (item, idx) => (
               <DesktopMenuItem 
                 key={idx} 
                 title={item.label} 
@@ -55,8 +55,7 @@ const DesktopSubmenu = (props) => {
   )
 }
 
-const MobileSubMenu = (props) => {
-  const { link } = props
+const MobileSubMenu = ({ link }) => {
   const { isOpen, onToggle } = useDisclosure()
   return (
     <Box>
@@ -75,10 +74,11 @@ const MobileSubMenu = (props) => {
       </NavLink.Mobile>
       <Collapse in={isOpen}>
         <Box pl="5">
-          {link.children?.map((item, idx) => (
+          {link.children?.map( (item, idx) => (
             <NavLink.Mobile 
               key={idx} 
               href={item.href}
+              onClick={onToggle}
             >
               {item.label}
             </NavLink.Mobile>

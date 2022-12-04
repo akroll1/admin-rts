@@ -50,7 +50,7 @@ const ToggleIcon = (props) => {
 }
 
 export const ToggleButton = (props) => {
-  const { isOpen, onClick } = props
+  const { isOpen, handleFightSyncButtonClick } = props
   return (
     <Center
       marginStart="-6"
@@ -61,7 +61,7 @@ export const ToggleButton = (props) => {
       _active={{
         color: 'white',
       }}
-      onClick={onClick}
+      onClick={handleFightSyncButtonClick}
     >
       <ToggleIcon active={isOpen} />
       <VisuallyHidden>Toggle Menu</VisuallyHidden>

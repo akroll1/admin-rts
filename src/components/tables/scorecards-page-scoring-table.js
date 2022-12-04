@@ -1,10 +1,19 @@
-
-import React from 'react'
-import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
-import { ScoringTableInfo } from './scoring-table-els'
+import { 
+    Flex, 
+    Table, 
+    Tbody, 
+    Td, 
+    Th, 
+    Thead, 
+    Tr, 
+    useColorModeValue as mode 
+} from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils';
 
-export const ScorecardsPageScoringTable = ({ tableData, totalRounds }) => {
+export const ScorecardsPageScoringTable = ({ 
+    tableData, 
+    totalRounds 
+}) => {
     // console.log('tableData: ', tableData)
     const sort = (a, b) => a.username - b.username;
     const sortedTable = tableData.sort( sort )

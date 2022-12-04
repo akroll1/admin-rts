@@ -1,13 +1,19 @@
 import { useState } from 'react'
-import { Box, Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react'
+import { 
+    Flex, 
+    Menu, 
+    MenuButton, 
+    MenuDivider, 
+    MenuItem, 
+    MenuList 
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
 import { useScorecardStore } from '../../stores'
 
-export const ProfileButton = () => {
+export const ProfileButton = ({ onToggle }) => {
     const navigate = useNavigate();
     const {
         reset,
-        setUser,
         user
     } = useScorecardStore();
     const { isLoggedIn } = user
@@ -15,7 +21,15 @@ export const ProfileButton = () => {
 
     const openProfile = () => {
         if(isLoggedIn) return setOpen(true)
-        if(!isLoggedIn) navigate('/signin')
+        if(!isLoggedIn) {
+            navigate('/signin')
+            onToggle()
+            if(open){
+                setOpen(false)
+            } else {
+                setOpen(true)
+            }
+        }
     }
 
     const handleSignOutClick = () => {
@@ -27,27 +41,29 @@ export const ProfileButton = () => {
     const handleNavigate = e => {
         setOpen(false)
         const { value } = e.currentTarget
+        onToggle()
         navigate(value)
     }
 
     return (
         <Flex 
-            m="auto"
+            m="1rem auto"
             minW="20%"
         >
             <Menu m="auto">
                 <MenuButton 
+                    id="profile_btn"
                     m="auto"
                     size='md'
                     color="#C8C8C8"
                     _hover={{color: 'white'}}
-                    fontSize="20px"
+                    fontSize="1.1rem"
                     fontWeight="600"
                     onClick={openProfile}
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
-                {open &&
+                {isLoggedIn &&
                     <MenuList>
                         <MenuItem value="/scorecards" onClick={handleNavigate}>Scorecards</MenuItem>
                         <MenuItem value="/dashboard/account" onClick={handleNavigate}>Profile</MenuItem>

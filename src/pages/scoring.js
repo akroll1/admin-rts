@@ -16,21 +16,19 @@ import { ChatSidebar, ScoringSidebarLeft } from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { useScorecardStore, useScoringStore } from '../stores'
 import { useWindowResize } from '../hooks'
+import { useParams } from 'react-router'
 
-const Scoring = () => {
+
+const Scoring = props => {
 
     const toast = useToast();
-    const groupscorecard_id = window.location.pathname.slice(9) ? window.location.pathname.slice(9) : sessionStorage.getItem('groupscorecard_id');
-    //////////////////  SCORE STATE /////////////////////////
+    let { fightId, groupScorecardId } = useParams()
     const { 
-        accessToken,
-        chatScorecard,
+        activeGroupScorecard,
+        chatScore,
         collateTableData,
-        fetchGroupScorecard,
-        lastScoredRound,
-        fight,
+        fetchGroupScorecardSummary,
         fightComplete,
-        fighters,
         fighterScores,
         modals,
         setModals,
@@ -40,7 +38,6 @@ const Scoring = () => {
     const { 
         fetchGuestJudgeScorecards,
         fetchPanelProps,
-        panelProps,
     } = useScoringStore();
 
     const [tabs, setTabs] = useState({
@@ -52,22 +49,16 @@ const Scoring = () => {
     });
     const windowWidth = useWindowResize();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [groupScorecard, setGroupScorecard] = useState({
-        totalRounds: '', 
-        fighterA: '', 
-        fighterB: '', 
-        scorecardName: '',
-    });
-
-    const [props, setProps] = useState(null);
-
-    const groupScorecardsUrl = process.env.REACT_APP_API + `/group-scorecards/${groupscorecard_id}/summary`;
 
     useEffect(() => {
-        if(modals.moneylineModal){
-            fetchPanelProps()
+        fetchGroupScorecardSummary(fightId, groupScorecardId)
+    },[])
+    
+    useEffect(() => {
+        if(tokenExpired){
+            setModals('expiredTokenModal', true)
         }
-    }, [modals])
+    },[tokenExpired])
 
     useEffect(() => {
         // get window width size for scoring tabs.
@@ -96,55 +87,16 @@ const Scoring = () => {
     },[windowWidth])
 
     useEffect(() => {
-        fetchGroupScorecard(groupscorecard_id)
-    },[])
-    
-    useEffect(() => {
-        if(tokenExpired){
-            setModals('expiredTokenModal', true)
+        if(modals.moneylineModal){
+            fetchPanelProps()
         }
-    },[tokenExpired])
+    }, [modals])
 
     useEffect(() => {
-        if(chatScorecard.scorecardId){
+        if(chatScore?.scorecardId){
             collateTableData()
         }
-    },[chatScorecard])
-
-    useEffect(() => {
-        if(fight?.guestJudgeIds?.length > 0){
-            fetchGuestJudgeScorecards()
-        }
-    },[fight])
-
-    const handleAddMemberSubmit = async email => {
-        setIsSubmitting(true);
-        const { admin, groupScorecardId, groupScorecardName, fightId } = groupScorecard;
-        const fighterIds = fighters.map( ({ fighterId }) => fighterId);
-        const update = {
-            admin,
-            fighterIds,
-            fightId,
-            groupScorecardId,
-            groupScorecardName, // for email.
-            members: [email], // for alignment of createMemberScorecards, server.
-            rounds: fight.totalRounds,
-            username: email
-        }
-        return await axios.put(groupScorecardsUrl, update, accessToken)
-            .then( res => {
-                setModals('addMemberModal', false);
-                if(res.status === 200){
-                    return toast({ 
-                        title: `Email invite was sent to member.`,
-                        duration: 5000,
-                        status: 'success',
-                        isClosable: true
-                    })
-                }
-            }).catch( err => console.log(err))
-            .finally(() => setIsSubmitting(false))
-    };
+    },[chatScore])
 
     return (
         <Flex 
@@ -163,7 +115,7 @@ const Scoring = () => {
             <Flex>
                 
                 <AddGuestJudgeModal 
-                    fetchGuestJudgeScorecards={fetchGuestJudgeScorecards}
+                    fetchGuestJudgeScorecards={() => fetchGuestJudgeScorecards()}
                 />
                 <AddMemberModal />
                 <ExpiredTokenModal />
@@ -182,11 +134,11 @@ const Scoring = () => {
                 />
                 <ScoringMain
                     fightComplete={fightComplete}
-                    fighters={fighters}
+                    fighters={activeGroupScorecard?.fighters}
                     fighterScores={fighterScores} 
                     isSubmitting={isSubmitting}
                     tabs={tabs}
-                    totalRounds={fight?.totalRounds}
+                    totalRounds={activeGroupScorecard?.fight?.totalRounds}
                 />
                 <ChatSidebar
                     tabs={tabs}

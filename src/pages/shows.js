@@ -4,7 +4,7 @@ import { ShowsSidebar } from '../components/sidebars'
 import { isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import { 
-    DisplayNameModal,
+    CreateGroupModal,
     ExpiredTokenModal, 
     ReviewFormModal 
 } from '../components/modals'
@@ -16,10 +16,9 @@ const Shows = () => {
     const navigate = useNavigate()
     const { 
         createGroupScorecard,
-        fetchAllSeasons,
+        fetchSeasonSummaries,
         putUserFightReview,
         selectedFightSummary, 
-        selectedSeason,
         setModals,
         setTokenExpired,
         tokenExpired,
@@ -28,7 +27,6 @@ const Shows = () => {
      } = useScorecardStore();
     const { email, sub, username } = user;
 
-    const [seasonName, setSeasonName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
@@ -57,7 +55,7 @@ const Shows = () => {
     },[tokenExpired])
 
     useEffect(() => {
-        fetchAllSeasons()
+        fetchSeasonSummaries()
     },[])
 
     useEffect(() => {
@@ -104,14 +102,14 @@ const Shows = () => {
 
     const handleEmailSubmit = e => {
         e.preventDefault();
-        // limit to 5 members for now.
+        // limit to 5 invites for now.
         const isValid = isValidEmail(emailValue);
         if(!emailValue) return;
         if(isValid){
-            const tempMembers = invites.concat(emailValue);
-            const dedupedEmails = [...new Set(tempMembers)];    
+            const tempInvites = invites.concat(emailValue);
+            const dedupedEmails = [...new Set(tempInvites)];    
             if(dedupedEmails.length >= 5){
-                alert('Group members is limited to 5.')
+                alert('Group is limited to 5 members.')
                 return
             } 
             setInvites(dedupedEmails)
@@ -119,7 +117,7 @@ const Shows = () => {
             toast({
                 title: `Added ${emailValue} to Group!`,
                 duration: 5000,
-                status: 'success',
+                status: 'info',
                 isClosable: true
             })
         } else {
@@ -127,34 +125,38 @@ const Shows = () => {
         }
     }
 
-    const deleteMember = e => {
+    const deleteInvite = e => {
         const { id } = e.currentTarget;
         const removedEmail = invites.filter( email => email !== id)
         setInvites(removedEmail)
     }
 
-    const handleCreateGroupScorecard = async (nameOptions) => {
+    const handleCreateSeasonScorecard = async createGroupOptions => {
+
         setIsSubmitting(true);
         const scorecardObj = {
-            displayName: nameOptions.displayName,
-            groupScorecardName: nameOptions.groupScorecardName,
-            invites,
-            seasonId: selectedSeason.season.seasonId,
-            ownerId: sub,
+            displayName: createGroupOptions.displayName,
+            groupScorecardName: createGroupOptions.groupScorecardName,
+            groupScorecardNotes: createGroupOptions.groupScorecardNotes,
+            groupScorecardType: createGroupOptions.groupScorecardType,
+            invites: invites.slice(1),
+            sub,
+            targetId: createGroupOptions.targetId
         }
-        const created = await createGroupScorecard(scorecardObj);
-        if(created){
-            toast({ 
-                title: 'Group Created!',
-                duration: 5000,
-                status: 'success',
-                isClosable: true
-            })
+        const res = await createGroupScorecard(scorecardObj);
+        setIsSubmitting(false);     
+        // need logic to add another member, if members < 5.   
+        toast({ 
+            title: res.message,
+            duration: 5000,
+            status: res.message.includes('Success!') ? 'success' : 'error',
+            isClosable: true
+        })
+        if(res.message.includes('Success!')){
             setTimeout(() => {
                 navigate('/scorecards')
             },3000)
         }
-        setIsSubmitting(false);        
     };
 
     return (
@@ -168,9 +170,9 @@ const Shows = () => {
             alignItems="flex-start" 
             justifyContent="center" 
         >    
-            <DisplayNameModal 
+            <CreateGroupModal 
                 displayNameModal={displayNameModal}
-                handleCreateGroupScorecard={handleCreateGroupScorecard}
+                handleCreateSeasonScorecard={handleCreateSeasonScorecard}
                 setDisplayNameModal={setDisplayNameModal}
                 username={username}
             />
@@ -185,19 +187,16 @@ const Shows = () => {
                 />
             }
 
-            <ShowsSidebar
-                setSeasonName={setSeasonName}
-            />  
+            <ShowsSidebar />  
             
             <ShowsMain 
-                deleteMember={deleteMember}
+                deleteInvite={deleteInvite}
                 emailValue={emailValue}
                 fightReviewForm={fightReviewForm}
                 handleEmailSubmit={handleEmailSubmit}
                 handleFormChange={handleFormChange}
                 isSubmitting={isSubmitting}
                 invites={invites}
-                seasonName={seasonName}
                 setDisplayNameModal={setDisplayNameModal}
                 setFightReviewForm={setFightReviewForm}
                 username={username}

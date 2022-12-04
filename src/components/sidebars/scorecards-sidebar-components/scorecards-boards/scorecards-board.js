@@ -15,6 +15,7 @@ export const ScorecardsBoard = props => {
             p="2"
             mx="1"
             minH="40%"
+            mb="2"
         >
             <ScorecardsBoardsHeaders
                 {...props}

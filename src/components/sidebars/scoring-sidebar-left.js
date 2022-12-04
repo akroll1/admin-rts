@@ -26,10 +26,8 @@ export const ScoringSidebarLeft = ({
 }) => {
     const {
         activeGroupScorecard,
-        fight,
         setModals,
-        show,
-        transformedPrediction,
+        scoringTransformedPrediction,
         user
     } = useScorecardStore()
     
@@ -40,12 +38,12 @@ export const ScoringSidebarLeft = ({
     const [activeNavGroupItem, setActiveNavGroupItem] = useState('officialJudges')
 
     const toast = useToast()
-    const { weightclass } = fight ? fight : '';
-    const { network, showTime } = show
+    const { weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
+    const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';
     const isLocked = Date.now() > showTime
 
     const openMemberModal = () => {
-        const isAdmin = activeGroupScorecard.ownerId === user.sub;
+        const isAdmin = activeGroupScorecard.groupScorecard.ownerId === user.sub;
         if(isAdmin){
             setModals('addMemberModal', true)
             return
@@ -114,13 +112,12 @@ export const ScoringSidebarLeft = ({
                 flex="1" 
                 overflowY="scroll" 
                 w="100%"
-                pt="2"
             >
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
                     id="fight"
-                    label={fight.fightQuickTitle}
+                    label={activeGroupScorecard?.fight?.fightQuickTitle}
                     active={activeNavGroupItem === 'fight'}
                 >
                     <Flex 
@@ -188,13 +185,13 @@ export const ScoringSidebarLeft = ({
                                 id="prediction"
                                 icon={isLocked ? <FaLock /> : <FaLockOpen />} 
                                 onclickOption={handlePredictionModalToggle}
-                                label={ transformedPrediction ? transformedPrediction : 'Set Prediction' }
+                                label={ scoringTransformedPrediction ? scoringTransformedPrediction : 'Not Set' }
                             /> 
                             <ScoringSidebarNavItem 
                                 id="fslPrediction"
                                 button="button" 
                                 icon={<MdOnlinePrediction size="1.1rem" />} 
-                                label="FSL Predictions- "
+                                label="FSL- "
                             /> 
                         </Collapse>
                     </Flex>

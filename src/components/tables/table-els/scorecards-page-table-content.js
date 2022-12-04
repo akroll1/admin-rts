@@ -1,21 +1,40 @@
-import React, { useState } from 'react'
-import { Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode } from '@chakra-ui/react'
+import { 
+  Flex,
+  Icon,
+  Table, 
+  Tbody, 
+  Td, 
+  Th, 
+  Thead, 
+  Tr, 
+  useColorModeValue as mode 
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
-
-const badgeEnum = {
-  completed: 'green',
-  active: 'orange',
-  // declined: 'red',
-}
+import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
+import { capFirstLetters } from '../../../utils'
 
 export const ScorecardsPageTableContent = ({ 
-  scorecards 
+  collatedScorecards,
+  groupType,
+  handleScorecardSelect,
+  selectedScorecard
 }) => {
 
   const navigate = useNavigate();
+
+  const renderLink = (groupType, selectedScorecard, scorecard, fightQuickTitle) => {
+    if(groupType === 'FIGHT' && selectedScorecard?.scorecard?.fightId === scorecard.scorecard.fightId){
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+    } 
+    if(groupType === 'SEASON' && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId){
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+    }
+    return fightQuickTitle
+  }
+
   return (
     <Table 
+      w="100%"
       variant="simple" 
       border="1px solid rgba(255, 255, 255, 0.16)" 
       fontSize="sm" 
@@ -26,52 +45,57 @@ export const ScorecardsPageTableContent = ({
     >
       <Thead bg={mode('gray.50', '#262626')}>
         <Tr>
-            <Th textAlign='center' whiteSpace="nowrap" scope="col">
-              Scorecard  
+            <Th whiteSpace="nowrap" scope="col" textAlign="left">
+              Fight  
             </Th>
-            <Th textAlign='center' whiteSpace="nowrap" scope="col">
+            <Th whiteSpace="nowrap" scope="col" textAlign="left">
               Prediction
             </Th>
-            <Th textAlign='center' whiteSpace="nowrap" scope="col">
+            <Th whiteSpace="nowrap" scope="col" textAlign="left">
               Score
             </Th>
         </Tr>
       </Thead>
       <Tbody>
-        { scorecards?.length > 0 && scorecards.map((row, index) => {
-          const { fightStatus, finalScore, groupScorecardId, label, prediction, rounds, scorecardId } = row;
-          const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
+        { collatedScorecards.length > 0 && collatedScorecards.map( (row, index) => {
+          // console.log('row: ', row)
+          const { fight, fighters, scorecard } = row
+          const { fightId, fightQuickTitle, fightStatus } = fight;
+          const { finalScore, prediction } = scorecard;
+          const setPrediction = rawPrediction => {
+            if(rawPrediction){
+              const predictionId = rawPrediction.slice(0, 36)
+              const [fighter] = fighters.filter( fighter => fighter.fighterId === predictionId)
+              return `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
+            }
+            return `Set Prediction`
+          }
+          // const transformedFightStatus = fightStatus.charAt(0).toUpperCase() + fightStatus.slice(1).toLowerCase();
           const renderScoreOrStatus = () => {
             if(fightStatus === `CANCELED`) return `Canceled`;
             if(fightStatus === `PENDING`) return `Upcoming`;
             if(finalScore) return finalScore;
-            if(!finalScore && !prediction) return `No Prediction`; 
+            if(!finalScore && !prediction) return `DNP`; 
           }
           return (
             <Tr 
-              border="none"
+              id={fightId}
+              onClick={e => handleScorecardSelect(e, fightId, selectedScorecard.scorecardGroups[0].groupScorecardType)} 
               key={index} 
+              border="1px solid transparent"
               _hover={{
                 textAlign: "left",
                 cursor: 'pointer', 
-                bg: '#535353', 
+                border: '1px solid gray', 
                 color: '#fff', 
                 borderBottom: '2px solid #262626',
                 borderRadius: '5px'
               }} 
+              bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
             >
-              <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} whiteSpace="nowrap">
-                { label }
-              </Td>
-              <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} whiteSpace="nowrap">
-                { prediction }                      
-              </Td>
-              <Td onClick={() => navigate(`/scoring/${groupScorecardId}`)} textAlign="center" whiteSpace="nowrap">
-                { renderScoreOrStatus() }                      
-              </Td>
-              {/* <Td onClick={() => navigate(`/scorecards/${scorecardId}`)} textAlign="center" whiteSpace="nowrap">
-                <ExternalLinkIcon /> 
-              </Td> */}
+              <Td whiteSpace="nowrap">{ renderLink(groupType, selectedScorecard, scorecard, fightQuickTitle) }</Td>
+              <Td whiteSpace="nowrap">{ setPrediction(prediction) }</Td>
+              <Td whiteSpace="nowrap">{ renderScoreOrStatus() }</Td>
             </Tr>
         )})}
       </Tbody>

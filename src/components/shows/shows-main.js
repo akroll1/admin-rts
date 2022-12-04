@@ -11,9 +11,10 @@ import { ShowsCountdownTimer } from '../timers'
 import { DividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
 import { ShowsArrows } from './shows-arrows'
+import { OfficialResultBanner } from '../shows-components'
 
 export const ShowsMain = ({
-    deleteMember,
+    deleteInvite,
     emailValue,
     fightReviewForm, 
     handleEmailSubmit, 
@@ -25,11 +26,11 @@ export const ShowsMain = ({
     username
 }) => {
     const {
-        selectedFightSummary,
-        selectedSeason,
+        selectedSeasonFightSummary,
+        selectedSeasonSummary,
     } = useScorecardStore()
 
-    const showTime = selectedFightSummary?.show?.showTime ? selectedFightSummary.show.showTime : Date.now();
+    const showTime = selectedSeasonFightSummary?.show?.showTime ? selectedSeasonFightSummary.show.showTime : Date.now();
     
     const UPCOMING = showTime > Date.now() ? true : false; 
     
@@ -45,6 +46,7 @@ export const ShowsMain = ({
             boxSizing="border-box" 
             position="relative"
             w="100%"
+            minH="50vh"
         >
             <Heading
                 position="absolute"
@@ -55,28 +57,32 @@ export const ShowsMain = ({
                 p="2"
                 color="#bababa"
             >
-                { selectedSeason?.season?.seasonName ? selectedSeason.season.seasonName : `` }
+                { selectedSeasonSummary?.season?.seasonName ? selectedSeasonSummary.season.seasonName : `` }
             </Heading>
 
             <ShowsArrows />
 
             <FightMetadata
-                selectedFightSummary={selectedFightSummary}
+                selectedSeasonFightSummary={selectedSeasonFightSummary}
             /> 
 
             <ShowsFighterFaceoff 
-                fighters={selectedFightSummary.fighters} 
+                fighters={selectedSeasonFightSummary?.fighters} 
                 showTime={showTime}
             />
 
             { showTime > Date.now() && 
                 <ShowsCountdownTimer showTime={showTime} /> 
             }
+            { Date.now() > showTime && 
+                <OfficialResultBanner /> 
+            }
 
             <Flex
                 flexDir="column"
                 p="4"
                 w="100%"
+                minH="10rem"
             >
                 <DividerWithText 
                     fontSize="2xl" 
@@ -85,7 +91,7 @@ export const ShowsMain = ({
                     p="0" 
                 />
                 <FightStoryline 
-                    selectedFightSummary={selectedFightSummary} 
+                    selectedSeasonFightSummary={selectedSeasonFightSummary} 
                 /> 
             
                 <DividerWithText 
@@ -96,14 +102,14 @@ export const ShowsMain = ({
                 />
 
                 <ShowsParticulars 
-                    selectedFightSummary={selectedFightSummary}
+                    selectedSeasonFightSummary={selectedSeasonFightSummary}
                 />
                 {/* <Props /> */}
                 
                 { UPCOMING 
                     ?
                         <ShowsCreateGroupScorecard 
-                            deleteMember={deleteMember} 
+                            deleteInvite={deleteInvite} 
                             emailValue={emailValue} 
                             handleEmailSubmit={handleEmailSubmit} 
                             handleFormChange={handleFormChange} 

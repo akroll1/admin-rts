@@ -3,6 +3,7 @@ import {
     Button, 
     Divider,
     Flex,
+    FormControl,
     FormErrorMessage,
     Heading,
     Input, 
@@ -12,58 +13,86 @@ import {
     ModalCloseButton, 
     ModalFooter,
     ModalOverlay,
-    FormControl,
+    Radio, 
+    RadioGroup,
+    Text,
+    Textarea,
 } from '@chakra-ui/react'
 import { useScorecardStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
 
-export const DisplayNameModal = ({
+export const CreateGroupModal = ({
     displayNameModal,
-    handleCreateGroupScorecard,
+    handleCreateSeasonScorecard,
     setDisplayNameModal,
     username
 }) => {
+    
     const {
-        selectedFightSummary
+        selectedSeasonFightSummary,
+        selectedSeasonSummary
     } = useScorecardStore();
 
     const [form, setForm] = useState({
-       groupScorecardName: '',
-       displayName: ''
+        groupScorecardNotes: '',
+        groupScorecardName: '',
+        displayName: ''
     })
+    const [value, setValue] = useState('1')
 
     useEffect(() => {
-        if(selectedFightSummary?.fight?.fightQuickTitle){
+        setForm({ ...form, groupScorecardName: value === '1' ?  selectedSeasonSummary?.season?.seasonName : selectedSeasonFightSummary?.fight?.fightQuickTitle })
+    },[value])
+
+    useEffect(() => {
+        if(selectedSeasonSummary?.season?.seasonName && selectedSeasonFightSummary?.fight?.fightId){
             setForm({
-                groupScorecardName: selectedFightSummary.fight.fightQuickTitle,
+                groupScorecardNotes: '',
+                groupScorecardName: selectedSeasonSummary.season.seasonName,
                 displayName: username
             })
         }
-    },[selectedFightSummary])
+    },[selectedSeasonSummary, selectedSeasonFightSummary])
 
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
+        if(id === 'groupScorecardNotes'){
+            if(value.length > 200){
+                return
+            }
+            return setForm({ ...form, [id]: value })
+        }
         if(value.length > 30) return
         setForm({ ...form, [id]: value })
     }
 
     const createScorecard = () => {
-        handleCreateGroupScorecard(form)
+        Object.assign(form, {
+            groupScorecardType: value === '1' ? 'SEASON' : 'FIGHT',
+            targetId: value === '1' ? selectedSeasonSummary?.season?.seasonId : selectedSeasonFightSummary?.fight?.fightId,
+        })
+        handleCreateSeasonScorecard(form)
         closeModal()
     }
 
     const closeModal = () => {
-        setForm({ groupScorecardName: selectedFightSummary.fight.fightQuickTitle, displayName: username })
+        setForm({ 
+            groupScorecardName: selectedSeasonSummary.season.seasonName, 
+            displayName: username,
+            groupScorecardNotes: '',
+        })
+        setValue('1')
         setDisplayNameModal(false)
     }
 
-    const { groupScorecardName, displayName } = form
+    const { groupScorecardNotes, groupScorecardName, displayName } = form
+    const groupScorecardNotesError = groupScorecardNotes?.length > 199;
     const groupScorecardNameError = groupScorecardName?.length > 29;
     const displayNameError = displayName?.length > 29;
 
     return ( 
         <Modal  
-            size="md"
+            size="lg"
             closeOnOverlayClick={false}
             isCentered
             onClose={closeModal}
@@ -81,9 +110,36 @@ export const DisplayNameModal = ({
                     px="4"
                     my="2"
                 >
+                    <Text as="h3">
+                        Score
+                    </Text>
+                    <Heading>
+                        {value === '1' ? selectedSeasonSummary?.season?.seasonName : selectedSeasonFightSummary?.fight?.fightQuickTitle}
+                    </Heading>
+                    <Flex
+                        px="4"
+                        py="2"
+                        alignSelf="center"
+                        flexDir="inline-flex"
+                    >
+                        <RadioGroup onChange={setValue} value={value}>
+                            <Radio 
+                                mx="2" 
+                                value={'1'}
+                            >
+                                {selectedSeasonSummary?.season?.seasonName}
+                            </Radio>
+                            <Radio 
+                                mx="2" 
+                                value={'2'}
+                            >
+                                {selectedSeasonFightSummary?.fight?.fightQuickTitle}
+                            </Radio>
+                        </RadioGroup>
+                    </Flex>
                     <DividerWithText 
                         color="#bababa"
-                        text="Group Scorecard Name" 
+                        text="Group Name" 
                     />
                     <Flex
                         p="2"
@@ -96,7 +152,7 @@ export const DisplayNameModal = ({
                         <Heading
                             pl="6"
                             flex="1 0 45%"
-                            asdfminH="2rem"  
+                            minH="2rem"  
                             as="h2"
                             size="md"
                             wordBreak="break-all"
@@ -118,10 +174,10 @@ export const DisplayNameModal = ({
                             <FormErrorMessage>Too Long!</FormErrorMessage>
                         </FormControl>
                     </Flex>
-                    <DividerWithText
+                    <DividerWithText 
                         color="#bababa"
                         text="Your Display Name" 
-                        />
+                    />
                     <Flex
                         p="2"
                         w="100%"
@@ -134,7 +190,7 @@ export const DisplayNameModal = ({
                             wordBreak="break-all"
                             pl="6"
                             flex="1 0 45%"
-                            asdfminH="2rem"  
+                            minH="2rem"  
                             as="h2"
                             size="md"
                         >
@@ -155,30 +211,45 @@ export const DisplayNameModal = ({
                             <FormErrorMessage>Too Long!</FormErrorMessage>
                         </FormControl>
                     </Flex>
-                    <Divider />
+                    <DividerWithText
+                        color="#bababa"
+                        text="Notes" 
+                    />
+                    <Flex
+                        maxW={["90%", "80%"]}
+                        p="2"
+                        w="100%"
+                        display="inline-flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        mb="4"
+                    >
+                        <FormControl isInvalid={groupScorecardNotesError}>
+                            <Textarea 
+                                id="groupScorecardNotes"
+                                alignSelf="start"
+                                ml="0"
+                                size="sm"
+                                mt="0"
+                                value={groupScorecardNotes}
+                                onChange={handleFormChange}  
+                            />
+                            <FormErrorMessage>Too Long!</FormErrorMessage>
+                        </FormControl>
+                    </Flex>
+                    
                     <ModalFooter 
                         w="100%"
                         m="auto"
                         display="flex"
                         justifyContent="center"
                         alignItems="center"
-                        flexDir="column"
+                        flexDir={["column", "column", "row"]}
                         p="1"
                     >
                         <Button 
                             minW="40%"
-                            m="1"
-                            size="md"
-                            onClick={createScorecard}
-                            loadingText="Submitting" 
-                            colorScheme="solid"
-                            px="1"
-                            >
-                            Create Scorecard
-                        </Button>
-                        <Button 
-                            minW="40%"
-                            m="1"
+                            m={["1", "1", "2"]}
                             px="1"
                             size="md"
                             onClick={closeModal}
@@ -187,6 +258,17 @@ export const DisplayNameModal = ({
                             variant="outline"
                         >
                             Cancel
+                        </Button>
+                        <Button 
+                            minW="40%"
+                            m={["1", "1", "2"]}
+                            size="md"
+                            onClick={createScorecard}
+                            loadingText="Submitting" 
+                            colorScheme="solid"
+                            px="1"
+                        >
+                            Create Scorecard
                         </Button>
                     </ModalFooter>
                 </ModalBody>

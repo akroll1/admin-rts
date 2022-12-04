@@ -19,7 +19,7 @@ export const ScoringMain = ({
     const [notSelectedScore, setNotSelectedScore] = useState(9);
     
     const {
-        fighters,
+        activeGroupScorecard,
         fighterScores,
         lastScoredRound,
         scoringComplete,
@@ -55,17 +55,17 @@ export const ScoringMain = ({
     }
 
     const submitScores = () => {
-        const [fighter1, fighter2] = fighters;
+        const [fighter1, fighter2] = activeGroupScorecard?.fighters;
         const notSelected = selectedFighter === fighter1.fighterId ? fighter2.fighterId : fighter1.fighterId;
         const { scorecardId } = fighterScores
-        const update = {
+        const roundScores = {
             round: lastScoredRound+ 1,
             scorecardId,
             [notSelected]: notSelectedScore,
             [selectedFighter]: 10
         };
         const scoringIsComplete = (lastScoredRound + 1)  > totalRounds;
-        submitRoundScores(update);
+        submitRoundScores(roundScores);
         setSelectedFighter('');
         setNotSelectedScore(9)
         setScoringComplete(scoringIsComplete)
@@ -120,15 +120,14 @@ export const ScoringMain = ({
                     textAlign="center"
                     alignItems="flex-end"
                 >
-                {
-                    fighters.length > 0 && fighters.map( (fighter, i) => (
+                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, i) => (
                         <FighterSwipe
                             evenRound={evenRound}
                             fighter={fighter}
                             handleFighterSelect={handleFighterSelect}
                             key={i}
                             notSelectedScore={notSelectedScore}
-                            redCorner={fighters[0].fighterId === selectedFighter}
+                            redCorner={activeGroupScorecard?.fighters[0]?.fighterId === selectedFighter}
                             scoringComplete={userScoringComplete}
                             selectedFighter={selectedFighter}
                         />
