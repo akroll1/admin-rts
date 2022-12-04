@@ -22,14 +22,13 @@ export const PredictionModal = () => {
   });
   
   const {
-    fight,
-    fighters,
+    activeGroupScorecard,
     modals,
     patchPrediction,
     setModals,
   } = useScorecardStore();
 
-  const totalRounds = new Array(fight?.rounds).fill(0);
+  const totalRounds = activeGroupScorecard?.fight?.rounds ? new Array(activeGroupScorecard?.fight?.rounds).fill(0) : new Array().fill(12);
 
   const handleSubmitPrediction = () => {
     if(!form.fighter || !form.result) return setModals('predictionModal', false)
@@ -71,13 +70,13 @@ export const PredictionModal = () => {
                   m="1" 
                   placeholder="Select winner"
                 >
-                  { fighters.map( fighter => {
-                      const { fighterId, firstName, lastName, ringname } = fighter;
-                      return (
-                        <option key={fighterId} id={fighterId} value={fighterId}>{`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`}</option>
-                      )
-                      })
-                    }
+                  { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard.fighters.map( fighter => {
+                    const { fighterId, firstName, lastName, ringname } = fighter;
+                    return (
+                      <option key={fighterId} id={fighterId} value={fighterId}>{`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`}</option>
+                    )
+                    })
+                  }
                 </Select>
                 <Select 
                   // _hover={{cursor: 'pointer'}} 
@@ -87,8 +86,8 @@ export const PredictionModal = () => {
                   placeholder="Select Result"
                 >
                     <option value="DC">Decision</option>
-                    {totalRounds.map( (round,i) => {
-                        return <option key={i} value={'KO'+(i+1)}>KO{i+1}</option>
+                    {totalRounds.map( (round, _i) => {
+                        return <option key={_i} value={'KO'+(_i+1)}>KO{_i+1}</option>
                     })}
                 </Select>
               </Flex>

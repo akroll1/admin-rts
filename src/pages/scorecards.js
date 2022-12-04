@@ -83,10 +83,8 @@ export const ScorecardsPage = () => {
           minH="40vh"
           overflow="scroll"
         >
-            <ScorecardsMetadataBoard 
-            />
-            <ScorecardsLeaderboardBoard 
-            />
+          <ScorecardsMetadataBoard />
+          <ScorecardsLeaderboardBoard />
         </Flex>
       </Flex>
       <ScorecardsPageTable />

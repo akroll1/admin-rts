@@ -19,7 +19,6 @@ const Shows = () => {
         fetchSeasonSummaries,
         putUserFightReview,
         selectedFightSummary, 
-        selectedSeasonSummary,
         setModals,
         setTokenExpired,
         tokenExpired,

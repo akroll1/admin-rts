@@ -43,7 +43,7 @@ const MobileNavContext = props => {
           textAlign="center"
           letterSpacing="1px"
           cursor="pointer"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/signin')}
         >
           FightSync
         </Heading>
@@ -54,6 +54,7 @@ const MobileNavContext = props => {
             <Submenu.Mobile 
               key={i} 
               link={link} 
+              onClick={onToggle}
             />
           ) : (
             <NavLink.Mobile 
@@ -67,6 +68,7 @@ const MobileNavContext = props => {
         )}
           <ProfileButton 
             onToggle={onToggle}
+            handleFightSyncButtonClick={handleFightSyncButtonClick} 
           />
       </NavMenu>
     </>

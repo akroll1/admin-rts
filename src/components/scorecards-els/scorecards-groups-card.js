@@ -37,9 +37,10 @@ export const ScorecardsGroupsCard = ({
         <Card
             w="100%"
             borderRadius="5px"
-            m="1"
-            py="2"
-            px="1"
+            m={["0", "1"]}
+            py={["0", "2"]}
+            px={["0", "1"]}
+            mb="2"
             variant="filled"
             bg="#111111"
         >
@@ -83,7 +84,7 @@ export const ScorecardsGroupsCard = ({
                                     <ListItem as="h6" fontSize="xs">{`Total Members- ${groupScorecard.members.length}`}</ListItem>
                                 </Flex>
                                 <Icon 
-                                    onClick={() => navigate(`/scoring/${groupScorecard.groupScorecardId}`)}
+                                    onClick={() => navigate(`/scoring/${groupScorecard.groupScorecardId}/${selectedScorecard.scorecard.fightId}`)}
                                     mr="2"
                                     as={ExternalLinkIcon} 
                                     w="6"

@@ -54,7 +54,7 @@ export const ScorecardsPageTable = () => {
   return (
     <Flex 
       as="section"
-      id="scorecards_table"
+      id="scorecards_page_table"
       bg="fsl-body-bg"
       flexDirection="column" 
       justifyContent="center"
@@ -83,23 +83,25 @@ export const ScorecardsPageTable = () => {
       </Heading>
       <Flex
         w="100%"
-        flexDir="row"
+        flexDir={["column", "row"]}
+        flexWrap="wrap-reverse"
       >
-        
         <Flex
-          flex="1 0 70%"
+          flex="1 0 30%"
         >
-          <ScorecardsPageTableContent 
-            collatedScorecards={collatedScorecards} 
-            groupType={groupType}
+          <ScorecardsGroupsCard 
             handleScorecardSelect={handleScorecardSelect}
             selectedScorecard={selectedScorecard}
           />
         </Flex>
         <Flex
-          flex="1 0 30%"
+          flex="1 0 70%"
+          overflow="scroll"
+          w="100%"
         >
-          <ScorecardsGroupsCard 
+          <ScorecardsPageTableContent 
+            collatedScorecards={collatedScorecards} 
+            groupType={groupType}
             handleScorecardSelect={handleScorecardSelect}
             selectedScorecard={selectedScorecard}
           />

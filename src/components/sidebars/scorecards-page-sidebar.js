@@ -8,7 +8,7 @@ export const ScorecardsPageSidebar = () => {
         <Flex 
             id="scorecards_sidebar" 
             flexDir="row"
-            maxH={["40vh", "40vh", "60vh", "100vh"]}
+            maxH={["70vh"]}
             w="100%"
             flex="1 0 30%"
             overflow="scroll"

@@ -22,7 +22,7 @@ export const ChatSidebar = ({
 }) => {
     const { 
         chatKey,
-        chatScorecard,
+        chatScore,
         chatToken,
         requestChatToken,
         setChatScorecard,
@@ -37,6 +37,7 @@ export const ChatSidebar = ({
     const [chatMessages, setChatMessages] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [powerShotDisabled, setPowerShotDisabled] = useState(false);
+    // change PowerShot to Calling It, you get one per fight.
 
     const chatRef = createRef();
     const messagesEndRef = createRef();
@@ -57,11 +58,11 @@ export const ChatSidebar = ({
     },[chatToken])
     
     useEffect(() => {
-        if(chatScorecard?.scorecardId && socketActive()){
-            console.log('handleSendMesage')
+        if(chatScore?.scorecardId && socketActive()){
+            // console.log('handleSendMesage')
             handleSendMessage('UPDATE')
         }
-    },[chatScorecard])
+    },[chatScore])
 
     useEffect(() => {
         const scrollToBottom = () => {
@@ -123,7 +124,7 @@ export const ChatSidebar = ({
             action: 'SEND_MESSAGE',
             content: messageType,
             Attributes: {
-                [messageType]: JSON.stringify(messageType === 'UPDATE' ? chatScorecard : sanitizedMessage)
+                [messageType]: JSON.stringify(messageType === 'UPDATE' ? chatScore : sanitizedMessage)
             }
         });
         connection.send(data);
@@ -304,11 +305,8 @@ export const ChatSidebar = ({
                         variant="outline"
                         colorScheme="red"
                         color='#dadada'
-                        _hover={{
-                            color: '#C01616'
-                        }}
                     >
-                        PowerShot
+                        Calling It
                     </Button>
                 </ButtonGroup>
             </Flex>
