@@ -78,6 +78,7 @@ export interface ScorecardStore {
     fetchShow(showId: string): void
     fetchUser(): void
     fetchUserInvites(): void
+    fetchUserScorecards(): void
     fetchUserScorecardsBySeason(seasonId: string): void
     fight: Fight
     fighter: Fighter
@@ -108,6 +109,8 @@ export interface ScorecardStore {
     selectedSeasonFightSummary: FightSummary
     selectedSeasonFightSummaries: FightSummary[]
     selectedSeasonSummary: SeasonSummary
+    sentChatScores: RoundScores | null
+    sendingChatScores(roundScores: RoundScores): void
     setAccessToken(headers: TokenConfig): void
     setFighterScores(): void
     setIdToken(headers: TokenConfig): void
@@ -186,6 +189,7 @@ export const initialScorecardsStoreState = {
     selectedSeasonFightSummary: {} as FightSummary,
     selectedSeasonFightSummaries: [] as FightSummary[],
     selectedSeasonSummary: {} as SeasonSummary,
+    sentChatScores: null,
     show: {} as Show,
     stats: [],
     tableData: [],
@@ -219,7 +223,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.post(`${url}/me`, acceptInviteObj, get().accessToken)
                 const data = res.data
                 console.log('ACCEPT_INVITE data: ', data)
-                get().fetchUserScorecardsBySeason('active')
+                get().fetchUserScorecards()
                 get().fetchUserInvites()
             },
             checkForUserFightReview: async () => {
@@ -230,7 +234,6 @@ export const useScorecardStore = create<ScorecardStore>()(
                 };
             },
             collateTableData: () => {
-                console.log('collate here')
 
                 const collated = get().groupScorecards.map( scorecard => {
                     const [fighter1, fighter2] = get().activeGroupScorecard.fighters
@@ -651,22 +654,39 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const data = res.data
                 console.log('DATA: ', data)
             },
+            sendingChatScores: (roundScores: RoundScores) => {
+                set({ sentChatScores: roundScores })
+                setTimeout(() => {
+                    set({ sentChatScores: null })
+                },3000)
+            },
+            updateScorecardsFromChat: (roundScores: RoundScores) => {
+                const userScorecards = get().groupScorecards;
+                const [roundScoresOwner] = userScorecards.filter( userScorecard => userScorecard.scorecardId === roundScores.scorecardId);
+                const otherScorecards = userScorecards.filter( userScorecard => userScorecard.scorecardId !== roundScores.scorecardId);
+                const scores: RoundScores[] = roundScoresOwner.scores;
+                const update = {
+                    ...roundScoresOwner,
+                    scores: scores.concat(roundScores)
+                };
+                const completeChatUpdate = otherScorecards.slice().concat(update)
+                set({ groupScorecards: completeChatUpdate })
+                get().collateTableData()
+            },
             submitRoundScores: async (roundScores: RoundScores) => {
-                console.log('roundScores: ', roundScores) 
-                const update = Object.entries(roundScores).filter( entry => entry[0] !== 'round' && entry[0] !== 'scorecardId')
+                const update = Object.entries(roundScores).filter( entry => entry[0] !== 'scorecardId')
                     .reduce( (acc: any, curr) => {
-                        if(typeof curr[1] === 'number'){
-                            acc[curr[0]] = curr[1]
-                            return acc
-                        }
+                        acc[curr[0]] = curr[1]
+                        return acc
                     },{})
 
+                if(get().activeGroupScorecard.groupScorecard.chatKey){
+                    get().sendingChatScores(roundScores)
+                }
                 const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, update, get().accessToken)
-                // const data = res.data
-                ///////////////////////////////////////////////////////   
                 let [userScorecard] = get().groupScorecards.filter( scorecard => scorecard.scorecardId === roundScores.scorecardId);
                 const otherScorecards = get().groupScorecards.filter( scorecard => scorecard.scorecardId !== roundScores.scorecardId) 
-                let tempScores: any = userScorecard.scores;
+                let tempScores: RoundScores[] = userScorecard.scores.slice();
                 tempScores.concat(update);
                 const updatedScorecard = {
                     ...userScorecard, 

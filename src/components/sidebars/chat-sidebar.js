@@ -25,8 +25,9 @@ export const ChatSidebar = ({
         chatScore,
         chatToken,
         requestChatToken,
-        setChatScorecard,
+        sendingChatScores,
         setChatToken,
+        updateScorecardsFromChat,
         user
     } = useScorecardStore()
 
@@ -36,7 +37,7 @@ export const ChatSidebar = ({
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [powerShotDisabled, setPowerShotDisabled] = useState(false);
+    const [callingItDisabled, setCallingItDisabled] = useState(false);
     // change PowerShot to Calling It, you get one per fight.
 
     const chatRef = createRef();
@@ -44,6 +45,12 @@ export const ChatSidebar = ({
     const [connection, setConnection] = useState(null);
     const connectionRef = useRef(connection);
     connectionRef.current = connection;
+
+    useEffect(() => {
+        if(sendingChatScores.scorecardId){
+            handleSendRoundScoresViaChat(sendingChatScores)
+        }
+    },[sendingChatScores])
 
     useEffect(() => {
         if(chatKey){
@@ -115,12 +122,24 @@ export const ChatSidebar = ({
         };
     };
 
+    const handleSendRoundScoresViaChat = scoresToSend => {
+        const data = JSON.stringify({
+            requestId: uuidv4(),
+            action: 'SEND_MESSAGE',
+            content: 'UPDATE',
+            Attributes: {
+                'UPDATE': JSON.stringify(scoresToSend)
+            }
+        });
+        connection.send(data);
+    }
+
     const handleSendMessage = messageType => {
         if(messageType !== 'UPDATE' && !chatMessage) return
         const sanitizedMessage = chatMessage.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-        const uuid = uuidv4();
+
         const data = JSON.stringify({
-            requestId: uuid,
+            requestId: uuidv4(),
             action: 'SEND_MESSAGE',
             content: messageType,
             Attributes: {
@@ -130,14 +149,14 @@ export const ChatSidebar = ({
         connection.send(data);
         setChatMessage('');
         if(messageType === 'PREDICTION'){
-            setPowerShotDisabled(true);
+            setCallingItDisabled(true);
             setTimeout(() => {
-                setPowerShotDisabled(false)
+                setCallingItDisabled(false)
             },10000)
         }
     };
     const handleReceiveMessage = data => {
-        console.log('data- 102: ', data)
+        // console.log('data- 102: ', data)
         const { Attributes, Content, Sender, Type } = data;
         const user = Sender?.Attributes ? Sender.Attributes.username : '';
         const message = JSON.parse(Attributes[Content]);
@@ -148,9 +167,8 @@ export const ChatSidebar = ({
             setNotificationTimeout(prev => !prev);
             setChatMessages(prev => [{ message, username: user, type: Type }, ...prev ]);
         } else if(Content === 'UPDATE'){
-            // CHAT SCORECARD DATA
-            const update = JSON.parse(Attributes.UPDATE);
-            setChatScorecard({})
+            const update = JSON.parse(data.Attributes.UPDATE)
+            updateScorecardsFromChat(update)
         }
     };
     
@@ -299,7 +317,7 @@ export const ChatSidebar = ({
                         m="1"
                         p="1"
                         size="sm"
-                        // disabled={!socketActive() || powerShotDisabled}
+                        // disabled={!socketActive() || callingItDisabled}
                         loadingText="Joining..." 
                         onClick={() => handleSendMessage('PREDICTION')} 
                         variant="outline"

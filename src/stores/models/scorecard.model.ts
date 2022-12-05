@@ -8,7 +8,7 @@ export interface Scorecard {
 	groups: string[] // groupScorecardIds
 	ownerId: string 
 	prediction: string | null
-	scores: Record<string, number>[]
+	scores: Record<string, number | string>[]
 	targetId: string // fightId or seasonId
 }
 
