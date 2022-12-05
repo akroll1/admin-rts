@@ -68,7 +68,7 @@ export const ShowsArrows = () => {
                             w="100%"
                             h="20%"
                             color="#cacaca"
-                            border={["1px solid #4d4d4d", "1px solid transparent"]}
+                            border={["1px solid transparent"]}
                             _hover={{
                                 color: 'white',
                                 border: '1px solid #fff'
