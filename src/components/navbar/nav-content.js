@@ -77,7 +77,7 @@ const MobileNavContext = props => {
 
 const DesktopNavContent = props => {
   const navigate = useNavigate();
-
+  const { isOpen, onToggle } = useDisclosure(); 
   return (
     <Flex 
       zIndex={1000000}
@@ -121,7 +121,9 @@ const DesktopNavContent = props => {
         ))}
       </HStack>
       <HStack spacing="8" minW="200px" justify="space-between">
-        <ProfileButton />
+        <ProfileButton 
+          onToggle={onToggle}
+        />
       </HStack>
     </Flex>
   )

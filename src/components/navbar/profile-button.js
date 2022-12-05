@@ -39,8 +39,8 @@ export const ProfileButton = ({ onToggle }) => {
     }
 
     const handleNavigate = e => {
-        setOpen(false)
         const { value } = e.currentTarget
+        setOpen(false)
         onToggle()
         navigate(value)
     }
