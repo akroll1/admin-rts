@@ -57,11 +57,11 @@ import {
               </Button>
               <Testimonial
                 // logo={<LearnMoreLogo />}
-                author="Mike Tyson"
+                author="Rocky Marciano"
                 company="HOF Champion"
                 image="https://bit.ly/dan-abramov"
               >
-                &ldquo;Watch me score the fight in real-time on the FightSync app. Search all my past scorecards and see my predictions.&rdquo;
+                &ldquo;Watch my scorecard as I score the fight on the FightSync app. Search all my past scorecards and see my predictions.&rdquo;
               </Testimonial>
             </Box>
             <Box position="relative" w="100%" h="100%" m="autp">

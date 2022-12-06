@@ -145,31 +145,30 @@ export const FighterSwipe = ({
                         {`${kos} KO`}
                     </Heading>
                 </Flex>
-                    <Flex
-                        w="100%"
-                        minH="1.5rem"
-                        justifyContent="center"
-                        alignItems="center"
+                <Flex
+                    w="100%"
+                    minH="1.5rem"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                { selectedFighter && selectedFighter === fighterId &&
+                    <Heading    
+                        textAlign="center" 
+                        as="h2" 
+                        size="lg"
                     >
-
-                    { selectedFighter && selectedFighter === fighterId &&
-                        <Heading    
-                            textAlign="center" 
-                            as="h2" 
-                            size="lg"
-                        >
-                            {`10`} 
-                        </Heading>
-                    }
-                    { selectedFighter && selectedFighter !== fighterId &&
-                        <Heading    
-                            textAlign="center" 
-                            as="h2" 
-                            size="lg"
-                        >
-                            {notSelectedScore} 
-                        </Heading>
-                    }
+                        {`10`} 
+                    </Heading>
+                }
+                { selectedFighter && selectedFighter !== fighterId &&
+                    <Heading    
+                        textAlign="center" 
+                        as="h2" 
+                        size="lg"
+                    >
+                        {notSelectedScore} 
+                    </Heading>
+                }
                 </Flex>
             </Flex>
         </Flex>

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, OrderedList, useToast } from '@chakra-ui/react'
 import { DragHandleIcon } from '@chakra-ui/icons'
 import { capFirstLetters, PANELIST_PREDICTIONS_OPTIONS } from '../../utils'
 import { MyPanelsFormTable } from '../tables'
-import { MyPanelsRadioButtons } from './my-panels-form-els'
 import { useScorecardStore } from '../../stores'
+import { FighterSelection } from './my-panels-form-els'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -20,16 +20,10 @@ export const MyPanelsForm = () => {
     submitPanelPredictions,
   } = useScorecardStore()
 
-  const toast = useToast();  
+  const [selectedFighter, setSelectedFighter] = useState('')
   const [summaries, setSummaries] = useState([])
   const [selectedSummary, setSelectedSummary] = useState({})
-  const [rerender, setRerender] = useState(false);
   const [predictionsList, setPredictionsList] = useState([]);
-  const [winner, setWinner] = useState('');
-  const [selectedPanel, setSelectedPanel] = useState({
-    fighters: [],
-    rounds: []
-  });
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
 
   useEffect(() => {
@@ -43,28 +37,17 @@ export const MyPanelsForm = () => {
     }
   },[panelSummaries])
 
-
   useEffect(() => {
-    if(selectedSummary.fighters?.length === 2){
-      const [fighter1, fighter2] = selectedSummary.fighters;
-      const createPredictionsList = () => {
-        return [fighter1, fighter2].map( fighter => {
-          return PANELIST_PREDICTIONS_OPTIONS.map( option => {
-            return ({
-              value: `${fighter.fighterId},${option.value}`,
-              label: `${capFirstLetters(fighter.lastName)} ${option.label}`
-            })
-          })
+    if(selectedFighter.fighterId){
+      const list = PANELIST_PREDICTIONS_OPTIONS.map( option => {
+        return ({
+          value: `${selectedFighter.fighterId},${option.value}`,
+          label: `${capFirstLetters(selectedFighter.lastName)} ${option.label}`
         })
-      }
-      const list = createPredictionsList();
-      const reducedList = list.reduce( (acc, curr) => {
-        if(Array.isArray(curr)) return acc.concat(...curr)
-      },[])
-      setPredictionsList(reducedList);
+      })
+      setPredictionsList(list)
     }
-  }, [selectedSummary])
-
+  },[selectedFighter])
 
   const onDragStart = e => {
     const initialPosition = Number(e.currentTarget.dataset.position);
@@ -129,12 +112,23 @@ export const MyPanelsForm = () => {
     const [panel] = summaries.filter( summary => summary.panelId === id);
     setSelectedSummary(panel);
   }
+  const handleFighterSelect = fighter => {
+    setSelectedFighter(fighter)
+  }
+  
+  const setPrediction = () => {
+    if(!selectedFighter) return "Select Winner"
+    if(selectedFighter.fighterId === "DRAW") return "Draw"
+    return `${capFirstLetters(selectedFighter.lastName)}`
+  }
 
+  const fighters = selectedSummary?.fighters?.length > 0 ? selectedSummary?.fighters : [];
   const [fighter1, fighter2] = selectedSummary?.fighters?.length === 2 ? selectedSummary.fighters : [];
-  console.log('summaries: ', summaries)
-  console.log('selectedSummary: ', selectedSummary)
+  // console.log('summaries: ', summaries)
+  // console.log('selectedSummary: ', selectedSummary)
   return (
     <Flex 
+      w="100%"
       id="my_panels_form" 
       boxSizing="border-box" 
       flexDir="column" 
@@ -143,42 +137,46 @@ export const MyPanelsForm = () => {
     >
       <Heading 
         as="h2" 
-        size="lg"
-        p="4" 
+        size={["md","lg"]}
+        p="2" 
         m="1"
       >
-        Panel Member Predictions
+        Panel Member Area
       </Heading>
       <Flex 
+        w="100%"
         as="section" 
-        w="50%"
+        // w={["90%", "50%"]}
         m="auto"
         flexDir="column" 
         alignItems="center" 
         justifyContent="center"
       >
 
-        <MyPanelsFormTable 
-          handlePanelSelect={handlePanelSelect} 
-          summaries={summaries} 
+        <FighterSelection 
+          handleFighterSelect={handleFighterSelect}
+          fighters={fighters}
+          selectedFighter={selectedFighter}
         />
 
         <Heading 
           as="h2" 
-          size={["sm", "md"]}
+          mt="4"
+          size={["sm", "md", "lg"]}
         >
-          {`${fighter1?.lastName ? capFirstLetters(fighter1.lastName) : ''} vs ${fighter2?.lastName ? capFirstLetters(fighter2.lastName) : ''}`}
+          Prediction: {setPrediction()}
         </Heading>
 
           <OrderedList 
             overflow="scroll" 
             ml="0" 
             boxSizing="border-box" 
-            w="100%" 
+            w={["100%", "50%"]}
             listStyleType="none"
+            minH="5rem"
           >
           
-          { predictionsList.map( (item, i) => {
+          { selectedFighter.fighterId !== 'DRAW' && predictionsList.length > 0 && predictionsList.map( (item, i) => {
             return (
               <ListItem
                 display="flex" 
@@ -219,6 +217,10 @@ export const MyPanelsForm = () => {
               </ListItem>
           )})}
           </OrderedList>
+        <MyPanelsFormTable 
+          handlePanelSelect={handlePanelSelect} 
+          summaries={summaries} 
+        />
         <ButtonGroup m="4" p="4">
           <Button 
             onClick={handleSubmitPredictions} 
@@ -228,7 +230,7 @@ export const MyPanelsForm = () => {
             Submit My Predictions
           </Button>
           <Button 
-            onClick={() => setRerender(true)} 
+            // onClick={() => setRerender(true)} 
             variant="outline"
           >
             Cancel

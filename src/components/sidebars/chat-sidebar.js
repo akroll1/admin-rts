@@ -159,6 +159,7 @@ export const ChatSidebar = ({
         // console.log('data- 102: ', data)
         const { Attributes, Content, Sender, Type } = data;
         const user = Sender?.Attributes ? Sender.Attributes.username : '';
+        // Getting undefined here, clean up.
         const message = JSON.parse(Attributes[Content]);
         if(Content === 'CHAT'){
             setChatMessages(prev => [{ message, username: user, type: Type }, ...prev ]);

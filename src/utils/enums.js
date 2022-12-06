@@ -86,10 +86,10 @@ export const OFFICIAL_RESULTS_ENUM = [
 ];
 
 export const PANELIST_PREDICTIONS_OPTIONS = [
-	{ value: 'DC', label: 'Decision' },
-	{ value: 'SD', label: 'Split Decision' },
-	{ value: 'KO13' , label: 'KO - Rds 1-3' },
-	{ value: 'KO46' , label: 'KO - Rds 4-6' },
-	{ value: 'KO79' , label: 'KO - Rds 7-9' },
-	{ value: 'KO10' , label: 'KO - Rds 10-12' }
+	{ value: 'DC', label: 'UD' },
+	{ value: 'SD', label: 'SD' },
+	{ value: 'KO13' , label: 'KO 1-3' },
+	{ value: 'KO46' , label: 'KO 4-6' },
+	{ value: 'KO79' , label: 'KO 7-9' },
+	{ value: 'KO10' , label: 'KO 10-12' }
 ]

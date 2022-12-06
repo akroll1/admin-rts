@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
-import { 
-    Flex,
-    Heading 
-} from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { FighterSwipe } from '../fighter-swipe'
 import { ScoringButtons } from './scoring-buttons'
 import { useScorecardStore } from '../../stores'
