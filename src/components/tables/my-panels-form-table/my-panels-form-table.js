@@ -13,8 +13,7 @@ export const MyPanelsFormTable = ({
         maxH="15rem" 
         overflow="scroll" 
         mx="auto" 
-        mt="1rem" 
-        px={{ base: '6', md: '8' }}
+        px={{ base: '3', md: '4' }}
         minW="100%"
     >
       <MyPanelsTableContent handlePanelSelect={handlePanelSelect} summaries={summaries} />
@@ -45,6 +44,7 @@ const MyPanelsTableContent = ({
   handlePanelSelect, 
   summaries 
 }) => {
+
   return (
     <Table my="8" borderWidth="1px" fontSize="sm" variant="striped">
       <Thead bg={mode('gray.50', 'gray.800')}>
@@ -62,10 +62,12 @@ const MyPanelsTableContent = ({
         </Tr>
       </Thead>
       <Tbody>
-        {summaries?.length > 0 && summaries.map( summary => {
+        {summaries?.length > 0 && summaries?.map( summary => {
             const [fighter1, fighter2] = summary.fighters
             return (
-                <Tr _hover={{cursor: 'pointer'}} onClick={handlePanelSelect} 
+                <Tr 
+                  _hover={{cursor: 'pointer'}} 
+                  onClick={handlePanelSelect} 
                   id={summary.panelId} 
                   key={summary.panelId}
                 >
