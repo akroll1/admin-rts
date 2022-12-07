@@ -98,9 +98,9 @@ const DesktopNavContent = props => {
           color: 'white'
         }}
         color="#c8c8c8" 
-        onClick={() => navigate('/signin')} 
+        onClick={() => navigate('/')} 
         background="transparent"
-        to="/signin"
+        to="/"
       >
         FightSync
       </Button>

@@ -49,7 +49,7 @@ export const ScorecardsInvitationsBoard = () => {
                 flexDir="column"
                 alignItems="flex-start"
                 overflow="scroll"
-                minH={['auto']}
+                // minH={['auto']}
             >
                 <Flex
                     w="100%"
@@ -124,7 +124,7 @@ const InviteListItem = ({ handleIconClick, invite }) => {
                     color="#fafafa"
                     as="h4"
                     size="md"
-                    >
+                >
                     {`${groupScorecardName}`}
                 </Heading>
 

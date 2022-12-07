@@ -66,7 +66,7 @@ export const FighterSelectionSwipe = ({
                     :
                     <>
                         <Heading 
-                            color={selectedFighter.fighterId === "DRAW" ? 'gray' : '#fff'}
+                            color={selectedFighter.fighterId === fighterId ? '#fff' : 'gray'}
                             letterSpacing="1px"
                             w="100%"
                             zIndex={99}

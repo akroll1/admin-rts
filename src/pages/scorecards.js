@@ -1,17 +1,9 @@
-import { useEffect } from 'react'
-import { 
-  Flex, 
-  Heading 
-} from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { ScorecardsPageTable } from '../components/tables'
 import { ExpiredTokenModal } from '../components/modals'
 import { useScorecardStore } from '../stores'
 import { ScorecardsPageSidebar } from '../components/sidebars'
-import { 
-  ScorecardsLeaderboardBoard, 
-  ScorecardsMetadataBoard 
-} from '../components/sidebars/scorecards-sidebar-components'
-import { parseEpoch } from '../utils'
 
 export const ScorecardsPage = () => {
 
@@ -19,14 +11,51 @@ export const ScorecardsPage = () => {
     fetchUserInvites,
     fetchSeasonSummaries,
     fetchUserScorecards,
-    selectedSeasonSummary,
+    seasonSummaries,
+    userScorecardSummaries
   } = useScorecardStore();
+
+  const [collatedScorecards, setCollatedScorecards] = useState([])
+  const [selectedScorecard, setSelectedScorecard] = useState([])
+  const [groupType, setGroupType] = useState('')
 
   useEffect(() => {
     fetchUserInvites()
     fetchSeasonSummaries()
     fetchUserScorecards()
   },[])
+
+  useEffect(() => {
+    if(collatedScorecards.length){
+      setSelectedScorecard(collatedScorecards[0].scorecard)
+      setGroupType(collatedScorecards[0].scorecard.scorecardGroups[0].groupScorecardType)
+    }
+  },[collatedScorecards])
+
+  useEffect(() => {
+    if(seasonSummaries.length && userScorecardSummaries.length){
+      const userScorecardsFightIds = userScorecardSummaries.map( summary => summary)
+        .map( summary => summary.scorecard.fightId)
+      const sum = [seasonSummaries[0]]
+      const summaries = sum.map( season => season)
+        .reduce( (acc, season) => Array.isArray(season.fightSummaries) ? acc.concat(season.fightSummaries) : [],[])
+        .filter( summary => userScorecardsFightIds.includes(summary.fight.fightId))
+        .map( filtered => {
+          const [scorecard] = userScorecardSummaries.filter( c => c.scorecard.fightId === filtered.fight.fightId)
+          return ({
+            ...filtered,
+            scorecard
+          })
+        })
+      setCollatedScorecards(summaries)
+    }
+  },[seasonSummaries])
+
+  const handleScorecardSelect = (e, id, groupScorecardType) => {
+    const [scorecard] = collatedScorecards.filter( card => card.fight.fightId === id)
+    setSelectedScorecard(scorecard.scorecard)
+    setGroupType(groupScorecardType)
+  }
 
   return (
     <Flex 
@@ -43,51 +72,34 @@ export const ScorecardsPage = () => {
       boxSizing="border-box"
     >    
       <ExpiredTokenModal />
-       
-      <ScorecardsPageSidebar />
       <Flex
         w="100%"
-        flexDir="column"
-        alignItems="center"
-        justifyContent="flex-start"
-        flex="1 0 70%"
       >
-         <Heading
+        <Heading 
+          color="#fafafa"
           as="h3"
           size="lg"
-          px="2"
-          py="0"
+          mb={["2","4","8"]}
+          mx="auto"
         >
-          { selectedSeasonSummary?.season?.seasonName
-            ?  `${selectedSeasonSummary?.season?.seasonName}`
-            : `Season`
-        }
+          { collatedScorecards.length > 0 ? `Scorecards` : `Create A Scorecard`}
         </Heading>
-         <Heading
-          as="h4"
-          size="sm"
-          mb="1"
-        >
-          { selectedSeasonSummary?.season?.starts
-            ?  `${parseEpoch(selectedSeasonSummary?.season?.starts).slice(0, 9)} - ${parseEpoch(selectedSeasonSummary?.season?.ends).slice(0, 9)}`
-            : ``
-        }
-        </Heading>
-        <Flex
-          boxSizing='border-box'
-          w="100%"
-          flexDir="row"
-          alignItems="flex-start"
-          justifyContent="flex-start"
-          flexWrap="wrap"
-          minH="40vh"
-          overflow="scroll"
-        >
-          <ScorecardsMetadataBoard />
-          <ScorecardsLeaderboardBoard />
-        </Flex>
       </Flex>
-      <ScorecardsPageTable />
+      <Flex
+        w="100%"
+      >
+        <ScorecardsPageSidebar 
+          handleScorecardSelect={handleScorecardSelect}
+          selectedScorecard={selectedScorecard}
+        />
+
+        <ScorecardsPageTable 
+          collatedScorecards={collatedScorecards}
+          groupType={groupType}  
+          handleScorecardSelect={handleScorecardSelect}
+          selectedScorecard={selectedScorecard}
+        /> 
+      </Flex>
     </Flex>
   )
 }
