@@ -39,10 +39,11 @@ export const ScorecardsGroupsCard = ({
                 w="100%"
                 borderRadius="5px"
                 variant="filled"
-                bg="#111111"
+                border="1px solid #353535"
+                mb="4"
             >
                 <CardBody>
-                    <UnorderedList>
+                    <UnorderedList mx="2" p="2">
                         { selectedScorecard?.scorecardGroups?.length > 0 && selectedScorecard.scorecardGroups.map( (groupScorecard, _i) => {
                             return (
                                 <Flex

@@ -1,10 +1,11 @@
 import { 
+  Alert,
+  AlertIcon,
   Box, 
   Divider, 
   Flex, 
   Heading, 
-  Text, 
-  useColorModeValue 
+  Text,
 } from '@chakra-ui/react'
 
 export const DividerWithText = props => {
@@ -43,7 +44,7 @@ export const DividerWithText = props => {
 }
 
 export const SidebarsDividerWithText = props => {
-  const { fontSize, mx, my, px, py, label } = props;
+  const { fontSize, mx, my, pendingInvites, px, py, label } = props;
   return (
     <Heading
       textAlign={['left', 'center']}
@@ -57,4 +58,34 @@ export const SidebarsDividerWithText = props => {
       {label}
     </Heading>
   );
+}
+
+export const InvitationsHeader = ({ 
+  fontSize,
+  pendingInvites
+}) => {
+  return (
+    <Flex 
+      display="inline-flex"
+      alignItems="center"
+      justifyContent="center"
+      p="2"
+    >
+      <Heading
+        fontSize={fontSize}
+      >
+        Invitations
+      </Heading>
+      { pendingInvites && 
+        <Alert 
+          p="1"
+          status="error"
+          bg="transparent"
+          m="auto"
+        >
+          <AlertIcon w="3" p="0" mt="-2" ml="-1" />
+        </Alert>
+      }
+    </Flex>
+  )
 }

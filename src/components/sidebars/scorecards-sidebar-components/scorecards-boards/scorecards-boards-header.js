@@ -3,6 +3,7 @@ import {
 } from '@chakra-ui/react'
 import { SidebarsDividerWithText } from '../../../../chakra'
 import { ArrowUpDownIcon } from '@chakra-ui/icons'
+import { InvitationsHeader } from '../../../../chakra'
 
 export const ScorecardsBoardsHeaders = props => (
     <Flex       
@@ -20,7 +21,11 @@ export const ScorecardsBoardsHeaders = props => (
     </Flex>
 )
 
-const ScorecardsHeading = ({ label }) => {
+const ScorecardsHeading = ({ 
+    label,
+    pendingInvites
+}) => {
+
     return (
         <>
             <ArrowUpDownIcon 
@@ -35,10 +40,34 @@ const ScorecardsHeading = ({ label }) => {
             />
 
             <SidebarsDividerWithText
-                py="2"
-                label={label}
                 fontSize="xl"
+                label={label}
+                pendingInvites={pendingInvites}
+                py="2"
             />
         </>
+    )
+}
+
+export const ScorecardsInvitationsHeading = ({
+    label,
+    pendingInvites
+}) => {
+    return (
+        <Flex       
+            position="relative"
+            w="100%"
+            flexDir="column"
+            alignItems="center"
+            justifyContent="flex-start"
+            bg="#111111"
+            borderRadius="md"
+        >
+            <InvitationsHeader
+                fontSize="xl"
+                label={label}
+                pendingInvites={pendingInvites}
+            />
+        </Flex>
     )
 }

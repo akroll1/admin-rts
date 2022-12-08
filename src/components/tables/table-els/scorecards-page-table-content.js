@@ -37,7 +37,7 @@ export const ScorecardsPageTableContent = ({
       fontSize="sm" 
       size={['sm', 'md']}
       overflow="scroll"
-      m="auto"
+      // m="auto"
       bg="#151515"
     >
       <Thead bg={mode('gray.50', '#262626')}>
