@@ -39,10 +39,10 @@ import {
         <Box maxW={{ base: 'xl', md: '7xl' }} mx="auto" px={{ base: '6', md: '8' }}>
           <Grid templateColumns={{ base: '1fr', md: '360px 1fr' }} gap="64px">
             <Box>
-              <Heading size="2xl" letterSpacing="tight" fontWeight="bold">
+              <Heading size="2xl" letterSpacing="normal" fontWeight="bold">
                 Score Fights In Real Time
               </Heading>
-              <Text mt="6" mb="8" fontSize="lg" fontWeight="medium">
+              <Text my="2" fontSize="lg" fontWeight="medium">
                 Score fights in real-time, all scorecards saved in the cloud.
               </Text>
               <Button 
