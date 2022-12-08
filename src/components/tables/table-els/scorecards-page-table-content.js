@@ -21,10 +21,10 @@ export const ScorecardsPageTableContent = ({
 
   const renderLink = (groupType, selectedScorecard, scorecard, fightQuickTitle) => {
     if(groupType === 'FIGHT' && selectedScorecard?.scorecard?.fightId === scorecard.scorecard.fightId){
-      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" ml="-2" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
     } 
     if(groupType === 'SEASON' && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId){
-      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" ml="-2" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
     }
     return fightQuickTitle
   }
