@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, OrderedList, useToast } from '@chakra-ui/react'
+import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, OrderedList } from '@chakra-ui/react'
 import { DragHandleIcon } from '@chakra-ui/icons'
 import { capFirstLetters, PANELIST_PREDICTIONS_OPTIONS } from '../../utils'
 import { MyPanelsFormTable } from '../tables'
@@ -18,6 +18,7 @@ export const MyPanelsForm = () => {
     fetchPanelSummaries,
     panelSummaries,
     submitPanelPredictions,
+    user,
   } = useScorecardStore()
 
   const [selectedFighter, setSelectedFighter] = useState('')
@@ -101,10 +102,13 @@ export const MyPanelsForm = () => {
     const predictionsListValues = predictionsList.length > 0 && predictionsList.map( prediction => prediction.value);
     const predictionObj = {
       panelistPredictions: predictionsListValues,
-      panelId: selectedSummary.panelId
+      panelId: selectedSummary.panelId,
+      panelistId: user.sub
     }
-    // console.log('predictionObj: ', predictionObj)
-    submitPanelPredictions(predictionObj)
+    // this needs to go to panelistPredictions and 
+    // the available on the panelists own page.
+    console.log('predictionObj: ', predictionObj)
+    // submitPanelPredictions(predictionObj)
   }
 
   const handlePanelSelect = e => {
@@ -123,7 +127,6 @@ export const MyPanelsForm = () => {
   }
 
   const fighters = selectedSummary?.fighters?.length > 0 ? selectedSummary?.fighters : [];
-  const [fighter1, fighter2] = selectedSummary?.fighters?.length === 2 ? selectedSummary.fighters : [];
   // console.log('summaries: ', summaries)
   // console.log('selectedSummary: ', selectedSummary)
   return (
@@ -135,14 +138,6 @@ export const MyPanelsForm = () => {
       alignItems="center" 
       justifyContent="center"
     >
-      <Heading 
-        as="h2" 
-        size={["md","lg"]}
-        p="2" 
-        m="1"
-      >
-        Panel Member Area
-      </Heading>
       <Flex 
         w="100%"
         as="section" 
@@ -152,7 +147,6 @@ export const MyPanelsForm = () => {
         alignItems="center" 
         justifyContent="center"
       >
-
         <FighterSelection 
           handleFighterSelect={handleFighterSelect}
           fighters={fighters}

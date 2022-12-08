@@ -10,7 +10,7 @@ import {
 import { CheckIcon, DeleteIcon } from '@chakra-ui/icons'
 import { useScorecardStore } from '../../../../stores'
 import { parseEpoch } from '../../../../utils'
-import { ScorecardsBoard } from './scorecards-board'
+import { InvitationsHeader } from '../../../../chakra'
 
 export const ScorecardsInvitationsBoard = () => {
 
@@ -31,9 +31,32 @@ export const ScorecardsInvitationsBoard = () => {
     }
 
     return (
-        <ScorecardsBoard
-            label={`Invitations`}
+        <Flex
+            bg="#111111"
+            position="relative"
+            w="100%"
+            flexDir="column"
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            border="1px solid #383838"
+            borderRadius="md"
+            p="2"
+            mb="2"
         >
+            <Flex       
+                position="relative"
+                w="100%"
+                flexDir="column"
+                alignItems="center"
+                justifyContent="flex-start"
+                bg="#111111"
+                borderRadius="md"
+            >
+                <InvitationsHeader
+                    fontSize="xl"
+                    pendingInvites={userInvites.length > 0}
+                />
+            </Flex>
             { userInvites.length === 0 &&
                 <Text
                     color="#bababa"
@@ -49,7 +72,7 @@ export const ScorecardsInvitationsBoard = () => {
                 flexDir="column"
                 alignItems="flex-start"
                 overflow="scroll"
-                minH={['auto']}
+                // minH={['auto']}
             >
                 <Flex
                     w="100%"
@@ -67,12 +90,11 @@ export const ScorecardsInvitationsBoard = () => {
                     })}
                 </Flex>
             </Flex>
-        </ScorecardsBoard>
+        </Flex>
     )
 }
 
 const InviteListItem = ({ handleIconClick, invite }) => {
-    console.log('invite: ', invite)
 
     const {
         accepted,
@@ -89,7 +111,6 @@ const InviteListItem = ({ handleIconClick, invite }) => {
 
     return (
         <Flex 
-            bg="fsl-body-bg" 
             mb="2"
             w="100%"
             fontSize="sm" 
@@ -124,7 +145,7 @@ const InviteListItem = ({ handleIconClick, invite }) => {
                     color="#fafafa"
                     as="h4"
                     size="md"
-                    >
+                >
                     {`${groupScorecardName}`}
                 </Heading>
 

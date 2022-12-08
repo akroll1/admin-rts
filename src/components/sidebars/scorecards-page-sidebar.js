@@ -1,24 +1,30 @@
 import { Flex } from '@chakra-ui/react'
-import { ScorecardsSeasonsBoard } from './scorecards-sidebar-components'
 import { ScorecardsInvitationsBoard } from './scorecards-sidebar-components'
+import { ScorecardsGroupsCard } from '../scorecards-els'
 
-export const ScorecardsPageSidebar = () => { 
+export const ScorecardsPageSidebar = ({
+    handleScorecardSelect,
+    selectedScorecard,
+}) => { 
+
 
     return (
         <Flex 
-            id="scorecards_sidebar" 
-            flexDir="row"
-            maxH={["70vh"]}
+            id="scorecards_page_sidebar" 
+            flexDir="column"
             w="100%"
             flex="1 0 30%"
             overflow="scroll"
             flexWrap={["wrap-reverse", "wrap-reverse", "wrap"]}
             alignItems="flex-start"
             justifyContent="flex-start"
-            h="auto"
+            boxSizing="border-box"
         >
-            <ScorecardsSeasonsBoard />
             <ScorecardsInvitationsBoard />
+            <ScorecardsGroupsCard 
+                handleScorecardSelect={handleScorecardSelect}
+                selectedScorecard={selectedScorecard}
+            />
         </Flex>
     )
 }

@@ -23,7 +23,8 @@ export const FighterSelection = ({
             flexDir={["column"]} 
             w={["100%"]} 
             position="relative"
-            maxH={["20vh", "25vh", "50vh"]}
+            // maxH={["20vh", "25vh", "50vh"]}
+            h="auto"
             _before={{
                 content: "''",
                 background: `url(${image})`,
@@ -36,6 +37,17 @@ export const FighterSelection = ({
                 zIndex: "1"
             }}
         >
+            <Heading 
+                textAlign="center"
+                zIndex={10}
+                color="#fff"
+                as="h2" 
+                size={["md","lg"]}
+                pt="2" 
+                mt="1"
+            >
+                Panel Member Area
+            </Heading>
             <Flex
                 flexDir="row"
                 w="100%"
@@ -46,7 +58,6 @@ export const FighterSelection = ({
                 { optionsArr.length > 0 && 
                     optionsArr.map( (fighter, _i) => <FighterSelectionSwipe 
                         key={_i}
-                        marker={_i}
                         fighter={fighter} 
                         handleFighterSelect={handleFighterSelect} 
                         selectedFighter={selectedFighter}

@@ -13,8 +13,6 @@ export const ScorecardsBoard = props => {
             border="1px solid #383838"
             borderRadius="md"
             p="2"
-            mx="1"
-            minH="40%"
             mb="2"
         >
             <ScorecardsBoardsHeaders

@@ -5,17 +5,20 @@ import {
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 
 export const ScorecardsNavGroup = props => {
-  const { 
-    active, 
-    children, 
-    id, 
-    label, 
-    handleHideShow, 
-} = props
+
+    const { 
+        active, 
+        children, 
+        id, 
+        label, 
+        handleHideShow, 
+        handleSelectSeason,
+    } = props
 
     const selectSeason = e => {
         const { id } = e.currentTarget
-        handleHideShow(id)
+        // handleHideShow(id)
+        handleSelectSeason(id)
     }
 
     return (  

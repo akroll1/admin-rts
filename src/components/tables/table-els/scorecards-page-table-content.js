@@ -9,8 +9,7 @@ import {
   Tr, 
   useColorModeValue as mode 
 } from '@chakra-ui/react'
-import { useNavigate } from 'react-router'
-import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
+import { LinkIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../../utils'
 
 export const ScorecardsPageTableContent = ({ 
@@ -20,14 +19,12 @@ export const ScorecardsPageTableContent = ({
   selectedScorecard
 }) => {
 
-  const navigate = useNavigate();
-
   const renderLink = (groupType, selectedScorecard, scorecard, fightQuickTitle) => {
     if(groupType === 'FIGHT' && selectedScorecard?.scorecard?.fightId === scorecard.scorecard.fightId){
-      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" ml="-2" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
     } 
     if(groupType === 'SEASON' && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId){
-      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
+      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" ml="-2" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
     }
     return fightQuickTitle
   }
@@ -40,7 +37,7 @@ export const ScorecardsPageTableContent = ({
       fontSize="sm" 
       size={['sm', 'md']}
       overflow="scroll"
-      m="auto"
+      // m="auto"
       bg="#151515"
     >
       <Thead bg={mode('gray.50', '#262626')}>
@@ -57,7 +54,7 @@ export const ScorecardsPageTableContent = ({
         </Tr>
       </Thead>
       <Tbody>
-        { collatedScorecards.length > 0 && collatedScorecards.map( (row, index) => {
+        { collatedScorecards?.length > 0 && collatedScorecards?.map( (row, index) => {
           // console.log('row: ', row)
           const { fight, fighters, scorecard } = row
           const { fightId, fightQuickTitle, fightStatus } = fight;
@@ -82,13 +79,13 @@ export const ScorecardsPageTableContent = ({
               id={fightId}
               onClick={e => handleScorecardSelect(e, fightId, selectedScorecard.scorecardGroups[0].groupScorecardType)} 
               key={index} 
-              border="1px solid transparent"
+              border="1px solid #383838"
               _hover={{
                 textAlign: "left",
                 cursor: 'pointer', 
-                border: '1px solid gray', 
+                bg: "#202020",
                 color: '#fff', 
-                borderBottom: '2px solid #262626',
+                borderBottom: '1px solid #262626',
                 borderRadius: '5px'
               }} 
               bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
