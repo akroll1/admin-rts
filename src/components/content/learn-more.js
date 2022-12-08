@@ -42,7 +42,7 @@ import {
               <Heading size="2xl" letterSpacing="normal" fontWeight="bold">
                 Score Fights In Real Time
               </Heading>
-              <Text my="2" fontSize="lg" fontWeight="medium">
+              <Text mt="2" mb="4" fontSize="lg" fontWeight="medium" lineHeight="1.4rem">
                 Score fights in real-time, all scorecards saved in the cloud.
               </Text>
               <Button 
