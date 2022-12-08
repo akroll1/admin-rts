@@ -54,7 +54,7 @@ export const ScorecardsInvitationsBoard = () => {
             >
                 <InvitationsHeader
                     fontSize="xl"
-                    pendingInvites={userInvites.length}
+                    pendingInvites={userInvites.length > 0}
                 />
             </Flex>
             { userInvites.length === 0 &&
@@ -111,7 +111,6 @@ const InviteListItem = ({ handleIconClick, invite }) => {
 
     return (
         <Flex 
-            // bg="fsl-body-bg" 
             mb="2"
             w="100%"
             fontSize="sm" 

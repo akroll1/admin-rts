@@ -31,7 +31,7 @@ const Home = () => {
               mt={["2", "2", "4"]}
               fontWeight="extrabold"
               letterSpacing="normal"
-              lineHeight="normal"
+              lineHeight="2rem"
             >
               Can't get enough boxing?
             </Heading>
@@ -40,8 +40,10 @@ const Home = () => {
             </Heading>
 
             <Text 
+              lineHeight="1.4rem"
               fontSize="lg" 
-              mt="4" 
+              mt="1" 
+              pr="4"
               color={mode('gray.600', 'fsl-body-text')}
             >
               Score fights and compete against other fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live and in real-time!
@@ -49,7 +51,7 @@ const Home = () => {
             <Button
               onClick={() => navigate('/learn-more')}
               className="group"
-              mt={["4", "6", "6", "8"]}
+              mt={["4"]}
               mb="2"
               size={["lg", "lg"]}
               px="8"

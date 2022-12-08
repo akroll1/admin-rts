@@ -85,9 +85,6 @@ export const ScorecardsPage = () => {
           { collatedScorecards.length > 0 ? `Scorecards` : `Create A Scorecard`}
         </Heading>
       </Flex>
-      <Flex
-        w="100%"
-      >
         <ScorecardsPageSidebar 
           handleScorecardSelect={handleScorecardSelect}
           selectedScorecard={selectedScorecard}
@@ -99,7 +96,6 @@ export const ScorecardsPage = () => {
           handleScorecardSelect={handleScorecardSelect}
           selectedScorecard={selectedScorecard}
         /> 
-      </Flex>
     </Flex>
   )
 }

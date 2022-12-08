@@ -20,7 +20,7 @@ export const ScorecardsPageTable = ({
     <Flex 
       as="section"
       id="scorecards_page_table"
-      flex="1 0 70%"
+      flex="1 0 60%"
       bg="fsl-body-bg"
       flexDirection="column" 
       justifyContent="flex-start"
@@ -30,7 +30,7 @@ export const ScorecardsPageTable = ({
       w="100%"
       overflow="scroll"
       p="4"
-      pt="0"
+      pt="2"
       mx="auto"
       mb="8"
     >
