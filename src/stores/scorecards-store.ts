@@ -431,7 +431,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ panelSummaries })
             },
             fetchSeasonSummaries: async () => {
-                const res = await axios.get(`${url}/seasons`, get().accessToken)
+                const res = await axios.get(`${url}/seasons`)
                 const seasonSummaries = res.data as SeasonSummary[]
                 set({ 
                     seasonSummaries, 
@@ -629,6 +629,9 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             setTransformedResult: (officialResult: string) => {
                 if(officialResult){
+                    if(officialResult === 'CANCELED'){
+                        return set({ transformedResult: `Canceled`})
+                    }
                     const fightWinnerId = officialResult.slice(0, 36)
                     const [fighter] = get().selectedSeasonFightSummary.fighters.filter( fighter => fighter.fighterId === fightWinnerId)
                     const transformedResult = `${capFirstLetters(fighter.lastName)} - ${officialResult.split(',')[1]}`

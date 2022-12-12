@@ -138,7 +138,6 @@ export const SeasonsForm = () => {
         ends, 
         seasonName, 
         seasonDescription, 
-        seasonStatus, 
         seasonTagline, 
         starts 
     } = form
@@ -146,6 +145,7 @@ export const SeasonsForm = () => {
 
     return (
         <Flex
+            id="seasons_form"
             flexDir="column"
             minW="100%"
         >

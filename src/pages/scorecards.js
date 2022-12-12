@@ -17,7 +17,6 @@ export const ScorecardsPage = () => {
 
   const [collatedScorecards, setCollatedScorecards] = useState([])
   const [selectedScorecard, setSelectedScorecard] = useState([])
-  const [groupType, setGroupType] = useState('')
 
   useEffect(() => {
     fetchUserInvites()
@@ -28,7 +27,6 @@ export const ScorecardsPage = () => {
   useEffect(() => {
     if(collatedScorecards.length){
       setSelectedScorecard(collatedScorecards[0].scorecard)
-      setGroupType(collatedScorecards[0].scorecard.scorecardGroups[0].groupScorecardType)
     }
   },[collatedScorecards])
 
@@ -51,10 +49,9 @@ export const ScorecardsPage = () => {
     }
   },[seasonSummaries])
 
-  const handleScorecardSelect = (e, id, groupScorecardType) => {
+  const handleScorecardSelect = (e, id) => {
     const [scorecard] = collatedScorecards.filter( card => card.fight.fightId === id)
     setSelectedScorecard(scorecard.scorecard)
-    setGroupType(groupScorecardType)
   }
 
   return (
@@ -92,7 +89,6 @@ export const ScorecardsPage = () => {
 
         <ScorecardsPageTable 
           collatedScorecards={collatedScorecards}
-          groupType={groupType}  
           handleScorecardSelect={handleScorecardSelect}
           selectedScorecard={selectedScorecard}
         /> 

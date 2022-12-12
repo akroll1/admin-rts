@@ -136,7 +136,7 @@ export const TableActions = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {allSeasons.length && allSeasons.map( (row, _i) => {
+            {allSeasons.length > 0 && allSeasons.map( (row, _i) => {
                 const { season } = row;
                 const { fightIds, seasonId, ends, seasonName, starts } = season;
                 const totalFights = fightIds.length;
