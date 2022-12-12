@@ -7,14 +7,9 @@ import { ScorecardsPageTableContent } from './table-els'
 
 export const ScorecardsPageTable = ({ 
   collatedScorecards,
-  groupType,
   handleScorecardSelect,
   selectedScorecard
 }) => {
- 
-  const {
-    userScorecards
-  } = useScorecardStore() 
   
   return (
     <Flex 
@@ -37,7 +32,6 @@ export const ScorecardsPageTable = ({
     >
       <ScorecardsPageTableContent 
         collatedScorecards={collatedScorecards} 
-        groupType={groupType}
         handleScorecardSelect={handleScorecardSelect}
         selectedScorecard={selectedScorecard}
       />

@@ -51,7 +51,7 @@ export const ShowsCreateGroupScorecard = ({
                         return (
                             <InputGroup 
                                 mb="2"
-                                key={invite}
+                                key={_i}
                             >
                                 <Input 
                                     mb="1"
