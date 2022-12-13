@@ -10,7 +10,7 @@ import { LearnMore, NotFound } from '../components/content'
 import { PrivateRoute } from '../components/partials'
 import FeaturedFights from './featured-fights'
 import CounterPunch from './counterpunch'
-import { Blog, BlogArticle } from '../components/blog'
+import { Blog, BlogArticlePage } from '../components/blog'
 import Fighters from './fighters'
 import Discussion from './discussions'
 import Analytics from './analytics'
@@ -33,7 +33,7 @@ const App = () => {
             <Route exact path="/scoring/:groupScorecardId/:fightId" element={<Scoring />} />
             <Route exact path="/scoring" element={<Scoring />} />
             <Route exact path="/blog" element={<Blog />} />
-            <Route exact path="/blog/:id" element={<BlogArticle />} />
+            <Route exact path="/blog/:id" element={<BlogArticlePage />} />
             <Route exact path="/featured-fights/:id" element={<FeaturedFights />} />
             <Route exact path="/live" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />

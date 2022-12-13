@@ -15,7 +15,6 @@ import {
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import { useScorecardStore } from '../../stores';
-import { isObjectLiteralExpression } from 'typescript';
 
 export const BlogPostForm = () => {
     const {
