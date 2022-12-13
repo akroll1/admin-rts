@@ -44,7 +44,7 @@ const Home = () => {
               fontSize="lg" 
               mt="1" 
               pr="4"
-              color={mode('gray.600', 'fsl-body-text')}
+              color='chakra-body-text'
             >
               Score fights and compete against other fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live and in real-time!
             </Text>
