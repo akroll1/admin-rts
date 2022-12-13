@@ -8,7 +8,7 @@
       name: 'Andrew Kroll',
       twitter: '#',
       linkedin: '#',
-      description: 'Habitant morbi tristique senectus et netus et malesuada fames. Vestibulum morbi',
+      // description: 'Habitant morbi tristique senectus et netus et malesuada fames. Vestibulum morbi',
     },
     // {
     //   role: 'CMO / Media Manager',
@@ -26,8 +26,7 @@
       name: 'Alex Higgins',
       twitter: '#',
       linkedin: '#',
-      description:
-        'Consectetur libero id faucibus nisl tincidunt eget nullam fringilla urna porttitor.',
+      // description: 'Consectetur libero id faucibus nisl tincidunt eget nullam fringilla urna porttitor.',
     },
     {
       role: 'UI/UX',
@@ -35,15 +34,24 @@
       name: 'Dallin Higgins',
       twitter: '#',
       linkedin: '#',
-      description: 'Mi eget mauris pharetra et ultrices neque ornare aenean massa eget egestas purus.',
+      // description: 'Mi eget mauris pharetra et ultrices neque ornare aenean massa eget egestas purus.',
     },
     {
-      role: 'Lead Architect',
+      role: 'Platform Architecture',
       image:
         'manny.png',
       name: 'Manny Diera',
       twitter: '#',
       linkedin: '#',
-      description: 'Diam maecenas sed enim ut sem viverra aliquet eget magna ac placerat vestibulum.',
+      // description: 'Diam maecenas sed enim ut sem viverra aliquet eget magna ac placerat vestibulum.',
+    },
+    {
+      role: 'VP of Public Relations',
+      image:
+        'harold_hunt.png',
+      name: 'Harold Hunt',
+      twitter: '#',
+      linkedin: '#',
+      // description: 'Diam maecenas sed enim ut sem viverra aliquet eget magna ac placerat vestibulum.',
     },
   ]

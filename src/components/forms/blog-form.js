@@ -65,7 +65,7 @@ export const BlogPostForm = () => {
         createBlogPost(form)
     }
     
-    const { author, authorId, body, imgs, published, subtitle, summary, title } = form
+    const { author, body, imgs, published, subtitle, summary, title } = form
     console.log('form: ', form)
     return (
         <Box 

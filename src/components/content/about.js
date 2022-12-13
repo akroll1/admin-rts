@@ -18,7 +18,14 @@ export const About = () => (
           maxW="2xl" 
           mx="auto"
         >
-          FightSync is a platform for boxers and boxing fans.
+          FightSync 
+        </Text>
+        <Text 
+          fontSize="xl" 
+          maxW="2xl" 
+          mx="auto"
+        >
+          The Official Platform of Fight Fans
         </Text>
         <Text 
           fontSize="xl" 
