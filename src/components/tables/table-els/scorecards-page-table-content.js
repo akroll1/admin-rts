@@ -14,19 +14,15 @@ import { capFirstLetters } from '../../../utils'
 
 export const ScorecardsPageTableContent = ({ 
   collatedScorecards,
-  groupType,
   handleScorecardSelect,
   selectedScorecard
 }) => {
 
-  const renderLink = (groupType, selectedScorecard, scorecard, fightQuickTitle) => {
-    if(groupType === 'FIGHT' && selectedScorecard?.scorecard?.fightId === scorecard.scorecard.fightId){
-      return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" ml="-2" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
-    } 
-    if(groupType === 'SEASON' && selectedScorecard?.scorecard?.targetId === scorecard.scorecard.targetId){
+  const renderLink = (length, fightQuickTitle) => {
+    if(length > 1){
       return <Flex alignItems="center" justifyContent="flex-start"><Icon color="gray" mx="2" h="3" w="3" ml="-2" as={LinkIcon} />&nbsp;{fightQuickTitle}</Flex>
     }
-    return fightQuickTitle
+    return <Flex alignItems="center" justifyContent="flex-start">{fightQuickTitle}</Flex>
   }
 
   return (
@@ -37,7 +33,6 @@ export const ScorecardsPageTableContent = ({
       fontSize="sm" 
       size={['sm', 'md']}
       overflow="scroll"
-      // m="auto"
       bg="#151515"
     >
       <Thead bg={mode('gray.50', '#262626')}>
@@ -77,7 +72,7 @@ export const ScorecardsPageTableContent = ({
           return (
             <Tr 
               id={fightId}
-              onClick={e => handleScorecardSelect(e, fightId, selectedScorecard.scorecardGroups[0].groupScorecardType)} 
+              onClick={e => handleScorecardSelect(e, fightId, selectedScorecard?.scorecardGroups[0]?.groupScorecardType)}
               key={index} 
               border="1px solid #383838"
               _hover={{
@@ -90,7 +85,7 @@ export const ScorecardsPageTableContent = ({
               }} 
               bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
             >
-              <Td whiteSpace="nowrap">{ renderLink(groupType, selectedScorecard, scorecard, fightQuickTitle) }</Td>
+              <Td whiteSpace="nowrap">{ renderLink(scorecard?.scorecard?.groups?.length, fightQuickTitle) }</Td>
               <Td whiteSpace="nowrap">{ setPrediction(prediction) }</Td>
               <Td whiteSpace="nowrap">{ renderScoreOrStatus() }</Td>
             </Tr>

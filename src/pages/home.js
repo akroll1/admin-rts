@@ -44,7 +44,7 @@ const Home = () => {
               fontSize="lg" 
               mt="1" 
               pr="4"
-              color='chakra-body-text'
+              color='fsl-body-text'
             >
               Score fights and compete against other fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live and in real-time!
             </Text>
@@ -94,11 +94,11 @@ const Home = () => {
           opacity={1} 
         />
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: '12', md: '8' }}>
-          <Feature title="Win Prizes" icon={<FaHandsHelping />}>
-            Win prizes for making correct pre-fight and in-fight predictions.
-          </Feature>
-          <Feature title="Score with Friends" icon={<FaHeadset />}>
+          <Feature title="Score Fights" icon={<FaHandsHelping />}>
             Create a group and score fights together- in real time!
+          </Feature>
+          <Feature title="Win Prizes" icon={<FaHeadset />}>
+            Win prizes for making correct pre-fight and in-fight predictions.
           </Feature>
           <Feature title="Contribute" icon={<FaFileSignature />}>
             Score fights and contribute to crowd-sourced boxing analytics. 

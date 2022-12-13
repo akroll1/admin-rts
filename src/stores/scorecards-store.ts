@@ -2,6 +2,7 @@ import create from "zustand"
 import { persist } from "zustand/middleware"
 import axios from 'axios'
 import { capFirstLetters } from '../utils'
+import { BlogPost } from './models/blog-post.model'
 import { Discussion } from './models/discussion.model'
 import { 
     RoundScores,
@@ -38,10 +39,12 @@ export interface ScorecardStore {
     acceptInvite(groupScorecardId: string, inviteId: string): void
     accessToken: TokenConfig
     activeGroupScorecard: GroupScorecardSummary
+    blogPosts: BlogPost[]
     chatKey: string | null
     chatToken: string
     checkForUserFightReview(): void
     collateTableData(): void
+    createBlogPost(blogPostObj: Partial<BlogPost>): void
     createDiscussion(discussionObj: Partial<Discussion>): void
     createFight(createFightObj: FightPostObj): void
     createFighter(createFighterObj: Fighter): void
@@ -63,6 +66,7 @@ export interface ScorecardStore {
     discussions: Discussion[]
     fetchAllDiscussions(): void
     fetchAllPanelists(): void
+    fetchBlogPost(blogPostId: string): void
     fetchDiscussion(discussionId: string): void
     fetchFighter(fighterId: string): void
     fetchFightSummary(fightId: string): void
@@ -104,6 +108,7 @@ export interface ScorecardStore {
     seasonsOptions: Record<string, string>[]
     scoringComplete: boolean
     scoringTransformedPrediction: string | null
+    selectedBlogPost: BlogPost
     selectedFightReview: Review
     selectedFightReviews: Review[]
     selectedSeasonFightSummary: FightSummary
@@ -157,6 +162,7 @@ export const initialScorecardsStoreState = {
     isSubmitting: false,
     accessToken: {} as TokenConfig,
     activeGroupScorecard: {} as GroupScorecardSummary,
+    blogPosts: [],
     chatKey: '',
     chatToken: '',
     lastScoredRound: 0,
@@ -184,6 +190,7 @@ export const initialScorecardsStoreState = {
     seasons: [] as Season[],
     seasonsOptions: [],
     seasonSummaries: [] as SeasonSummary[],
+    selectedBlogPost: {} as BlogPost,
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
     selectedSeasonFightSummary: {} as FightSummary,
@@ -286,6 +293,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                     tableData: [...stats],
                 })
             },
+            createBlogPost: async (blogPostObj: Partial<BlogPost>) => {
+                const res = await axios.post(`${url}/blog`, blogPostObj, get().accessToken)
+                console.log('CREATE-BLOGPOST: ', res.data)
+            },
             createDiscussion: async (discussionObj: Partial<Discussion>) => {
                 const res = await axios.post(`${url}/discussions`, discussionObj, get().accessToken)
                 console.log('DISCUSSION- create res.data: ', discussionObj)
@@ -361,6 +372,16 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const panelists = res.data as Panelist[]
                 set({ panelists })
             },
+            fetchBlogPost: async (blogPostId: string) => {
+                const res = await axios.get(`${url}/blog/${blogPostId}`, get().accessToken)
+                const selectedBlogPost = res.data as BlogPost
+                set({ selectedBlogPost })
+            },
+            fetchBlogPosts: async () => {
+                const res = await axios.get(`${url}/blog`, get().accessToken)
+                const blogPosts = res.data as BlogPost[]
+                set({ blogPosts })
+            },
             fetchDiscussion: async (discussionId: string) => {
                 const res = await axios.get(`${url}/discussions/${discussionId}`, get().accessToken)
                 const discussion = res.data as Discussion
@@ -431,7 +452,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 set({ panelSummaries })
             },
             fetchSeasonSummaries: async () => {
-                const res = await axios.get(`${url}/seasons`, get().accessToken)
+                const res = await axios.get(`${url}/seasons`)
                 const seasonSummaries = res.data as SeasonSummary[]
                 set({ 
                     seasonSummaries, 
@@ -629,6 +650,9 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             setTransformedResult: (officialResult: string) => {
                 if(officialResult){
+                    if(officialResult === 'CANCELED'){
+                        return set({ transformedResult: `Canceled`})
+                    }
                     const fightWinnerId = officialResult.slice(0, 36)
                     const [fighter] = get().selectedSeasonFightSummary.fighters.filter( fighter => fighter.fighterId === fightWinnerId)
                     const transformedResult = `${capFirstLetters(fighter.lastName)} - ${officialResult.split(',')[1]}`

@@ -112,6 +112,7 @@ export const ShowsSidebar = () => {
                         const active = fightId === selectedSeasonFightSummary?.fight?.fightId;
                         return (
                             <UpcomingNavItem 
+                                upcoming={true}
                                 active={active}
                                 name={REVIEW_TYPE.PREDICTION} 
                                 fightId={fightId} 

@@ -1,116 +1,59 @@
 import {
     Box,
-    Flex,
     Heading,
-    Img,
     Link,
-    LinkBox,
-    LinkOverlay,
     SimpleGrid,
-    Text,
     useColorModeValue as mode,
   } from '@chakra-ui/react'
-  import * as React from 'react'
   import { BsArrowRight, BsClockFill } from 'react-icons/bs'
-  
-  const BlogArticles = (props) => {
-    const { title, href, description, media, author, category } = props
-    return (
-      <LinkBox
-        as="article"
-        bg={{
-          sm: mode('white', 'gray.700'),
-        }}
-        shadow={{
-          sm: 'base',
-        }}
-        rounded={{
-          sm: 'md',
-        }}
-        overflow="hidden"
-        transition="all 0.2s"
-        _hover={{
-          shadow: {
-            sm: 'lg',
-          },
-        }}
-      >
-        <Flex direction="column">
-          <Img height="60" objectFit="cover" alt={title} src={media} />
-          <Flex
-            direction="column"
-            px={{
-              sm: '6',
-            }}
-            py="5"
-          >
-            <Text
-              casing="uppercase"
-              letterSpacing="wider"
-              fontSize="xs"
-              fontWeight="semibold"
-              mb="2"
-              color="gray.500"
-            >
-              {category}
-            </Text>
-            <Heading as="h3" size="sm" mb="2" lineHeight="base">
-              <LinkOverlay href={href}>{title}</LinkOverlay>
-            </Heading>
-            <Text noOfLines={2} mb="8" color={mode('gray.600', 'gray.400')}>
-              {description}
-            </Text>
-            <Flex
-              align="baseline"
-              justify="space-between"
-              fontSize="sm"
-              color={mode('gray.600', 'gray.400')}
-            >
-              <Text>
-                By{' '}
-                <Box as="a" textDecor="underline" href={author.href}>
-                  {author.name}
-                </Box>
-              </Text>
-              <Link href="#">
-                <Box as={BsClockFill} display="inline-block" me="2" opacity={0.4} />6 min read
-              </Link>
-            </Flex>
-          </Flex>
-        </Flex>
-      </LinkBox>
-    )
-  }
-  
+  import { BlogArticle } from './blog-article'
+
   export const Blog = () => {
     return (
-      <Box as="section" bg={mode('gray.50', 'inherit')} py={{base: '10', sm: '24'}}>
+      <Box as="section" bg={mode('gray.50', 'inherit')} py="4">
         <Box maxW={{base: 'xl', md: '7xl'}} mx="auto" px={{base: '6', md: '8'}}>
           <Heading size="xl" mb="8" fontWeight="extrabold">
             Featured Articles
           </Heading>
           <SimpleGrid columns={{base: 1, md: 3}} spacing="12" mb="10">
-            <BlogArticles
-              category="Upcoming Fights"
-              media="tyson-fury.png"
-              title="The Fights We Still Want to See"
-              description="We're over halfway through 2021... already. But we still have fights that we MUST see. Here they are."
+            {/* { blogPosts } */}
+            {/* <BlogArticles
+              // category="Teofimo Lopez"
+              media={imgs[0]}
+              title={title}
+              summary={summary}
+              to="/blog/{blogId}"
+              author={{name: {author}, href: '#'}}
+            /> */}
+            <BlogArticle
+              category="Teofimo Lopez"
+              media="teofimo.png"
+              title="Have I Lost It?"
+              summary="A young phenom with shattered confidence, with seemingly no one around him that can right the ship."
               href="/blog/123"
               author={{name: 'Andrew Kroll', href: '/writers/123'}}
             />
-            <BlogArticles
-              category="Spence vs Pacquiao"
-              media="pacman.png"
-              title="Manny Pacquiao vs Errol Spence, Jr., What to Watch For"
-              description="Does Manny Pacquiao still have it? Can he compete with the bigger Spence?"
+            <BlogArticle
+              category="2023 Wishlist"
+              media="tyson-fury.png"
+              title="The Fights We Need to See in 2023"
+              summary="As we approach 2023, boxing fans need Santa to deliver us some fights!"
+              href="/blog/123"
+              author={{name: 'Andrew Kroll', href: '/writers/123'}}
+            />
+            <BlogArticle
+              category="Spence vs Crawford"
+              media="spence-crawford.jpeg"
+              title="The Spence-Crawford Saga"
+              summary="When do boxing fans get to see this one? Will we ever get to see this? Fans are not happy."
               href="/blog/456"
               author={{name: 'Andrew Kroll', href: '/writers/456'}}
             />
-            <BlogArticles
+            <BlogArticle
               category="Pound-4-Pound List"
-              media="loma.png"
-              title="August 2021 Pound-4-Pound List: Who We Like"
-              description="After Loma's dominant victory, does he rank higher than Tiofimo? Where does Fury stand now?"
+              media="shakur.png"
+              title="The 2023 Pound-4-Pound List: Who We Like"
+              summary="Who's moved up and who's moved out. Here's our list to start 2023."
               href="/blog/789"
               author={{name: 'Andrew Kroll', href: '/writers/789'}}
             />

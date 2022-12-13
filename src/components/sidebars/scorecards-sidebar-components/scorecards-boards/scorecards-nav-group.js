@@ -17,7 +17,9 @@ export const ScorecardsNavGroup = props => {
 
     const selectSeason = e => {
         const { id } = e.currentTarget
-        // handleHideShow(id)
+        if(handleHideShow){
+            return handleHideShow(id)
+        }
         handleSelectSeason(id)
     }
 

@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
 import { DividerWithText } from '../../../chakra'
+import { useScorecardStore } from '../../../stores'
 
 export const ShowsCreateGroupScorecard = ({ 
     deleteInvite, 
@@ -18,8 +19,14 @@ export const ShowsCreateGroupScorecard = ({
     invites, 
     setDisplayNameModal,
 }) => {
-    
+    const {
+        user
+    } = useScorecardStore()
+
     const handleSubmit = () => {
+        if(!user.sub){
+            return alert('You must be signed in to create a scorecard.')
+        }
         setDisplayNameModal(true)
     }
 
@@ -51,7 +58,7 @@ export const ShowsCreateGroupScorecard = ({
                         return (
                             <InputGroup 
                                 mb="2"
-                                key={invite}
+                                key={_i}
                             >
                                 <Input 
                                     mb="1"
