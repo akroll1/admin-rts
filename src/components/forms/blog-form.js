@@ -65,8 +65,8 @@ export const BlogPostForm = () => {
         createBlogPost(form)
     }
     
-    const { author, body, imgs, published, subtitle, summary, title } = form
-    console.log('form: ', form)
+    const { author, body, imgs, published, subtitle, summary, title } = blogPost?.blogId ? blogPost : form
+    // console.log('form: ', form)
     return (
         <Box 
             px={{base: '4', md: '10'}} 
@@ -125,11 +125,11 @@ export const BlogPostForm = () => {
                                 <Input value={summary} onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
                             <FormControl id="body">
-                                <FormLabel>Discussion</FormLabel>
+                                <FormLabel>Body</FormLabel>
                                 <Textarea
                                     required
-                                    placeholder="Discussion..."
-                                    val={body}
+                                    placeholder="Body..."
+                                    value={body}
                                     onChange={handleFormChange}
                                     type="text"
                                     size='md'
