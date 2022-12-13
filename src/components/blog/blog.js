@@ -10,7 +10,6 @@ import {
     Text,
     useColorModeValue as mode,
   } from '@chakra-ui/react'
-  import * as React from 'react'
   import { BsArrowRight, BsClockFill } from 'react-icons/bs'
   
   const BlogArticles = (props) => {
@@ -18,22 +17,12 @@ import {
     return (
       <LinkBox
         as="article"
-        bg={{
-          sm: mode('white', 'gray.700'),
-        }}
-        shadow={{
-          sm: 'base',
-        }}
-        rounded={{
-          sm: 'md',
-        }}
+        bg={{sm: mode('white', 'gray.700')}}
+        shadow={{sm: 'base'}}
+        rounded={{sm: 'md'}}
         overflow="hidden"
         transition="all 0.2s"
-        _hover={{
-          shadow: {
-            sm: 'lg',
-          },
-        }}
+        _hover={{shadow: {sm: 'lg'}}}
       >
         <Flex direction="column">
           <Img height="60" objectFit="cover" alt={title} src={media} />
@@ -91,26 +80,34 @@ import {
           </Heading>
           <SimpleGrid columns={{base: 1, md: 3}} spacing="12" mb="10">
             <BlogArticles
-              category="Upcoming Fights"
-              media="tyson-fury.png"
-              title="The Fights We Still Want to See"
-              description="We're over halfway through 2021... already. But we still have fights that we MUST see. Here they are."
+              category="Teofimo Lopez"
+              media="teofimo.png"
+              title="Have I Lost It?"
+              description="A young phenom with shattered confidence, with seemingly no one around him that can right the ship."
               href="/blog/123"
               author={{name: 'Andrew Kroll', href: '/writers/123'}}
             />
             <BlogArticles
-              category="Spence vs Pacquiao"
-              media="pacman.png"
-              title="Manny Pacquiao vs Errol Spence, Jr., What to Watch For"
-              description="Does Manny Pacquiao still have it? Can he compete with the bigger Spence?"
+              category="2023 Wishlist"
+              media="tyson-fury.png"
+              title="The Fights We Need to See in 2023"
+              description="As we approach 2023, boxing fans need Santa to deliver us some fights!"
+              href="/blog/123"
+              author={{name: 'Andrew Kroll', href: '/writers/123'}}
+            />
+            <BlogArticles
+              category="Spence vs Crawford"
+              media="spence-crawford.jpeg"
+              title="The Spence-Crawford Saga Continues"
+              description="When do boxing fans get to see this one? Will we ever get to see this? Fans are not happy."
               href="/blog/456"
               author={{name: 'Andrew Kroll', href: '/writers/456'}}
             />
             <BlogArticles
               category="Pound-4-Pound List"
-              media="loma.png"
-              title="August 2021 Pound-4-Pound List: Who We Like"
-              description="After Loma's dominant victory, does he rank higher than Tiofimo? Where does Fury stand now?"
+              media="shakur.png"
+              title="The 2023 Pound-4-Pound List: Who We Like"
+              description="Who's moved up and who's moved out. Here's our list to start 2023."
               href="/blog/789"
               author={{name: 'Andrew Kroll', href: '/writers/789'}}
             />

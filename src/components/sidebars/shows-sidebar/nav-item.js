@@ -11,7 +11,16 @@ export const UpcomingNavItem = props => {
     isTitleFight, 
     label, 
     selectFight, 
+    upcoming,
   } = props; 
+
+  const renderColor = (active, isTitleFight, upcoming) => {
+    if(upcoming) return `gray.100`
+    if(isTitleFight) return `gray.400`
+    if(active) return `gray.100`
+    return `gray.600`
+  }
+
   return (
     <HStack
       p="1"
@@ -26,7 +35,7 @@ export const UpcomingNavItem = props => {
       border={active ? '1px solid #9a9a9a' : '1px solid transparent'}
     >
       <Box 
-        color={isTitleFight ? 'gray.200' : active ? 'white' : 'gray.400'}
+        color={renderColor(active, isTitleFight, upcoming)}
       >
         {icon}  
       </Box>
