@@ -39,7 +39,7 @@ export interface ScorecardStore {
     acceptInvite(groupScorecardId: string, inviteId: string): void
     accessToken: TokenConfig
     activeGroupScorecard: GroupScorecardSummary
-    blogPost: BlogPost
+    blogPosts: BlogPost[]
     chatKey: string | null
     chatToken: string
     checkForUserFightReview(): void
@@ -108,6 +108,7 @@ export interface ScorecardStore {
     seasonsOptions: Record<string, string>[]
     scoringComplete: boolean
     scoringTransformedPrediction: string | null
+    selectedBlogPost: BlogPost
     selectedFightReview: Review
     selectedFightReviews: Review[]
     selectedSeasonFightSummary: FightSummary
@@ -161,7 +162,7 @@ export const initialScorecardsStoreState = {
     isSubmitting: false,
     accessToken: {} as TokenConfig,
     activeGroupScorecard: {} as GroupScorecardSummary,
-    blogPost: {} as BlogPost,
+    blogPosts: [],
     chatKey: '',
     chatToken: '',
     lastScoredRound: 0,
@@ -189,6 +190,7 @@ export const initialScorecardsStoreState = {
     seasons: [] as Season[],
     seasonsOptions: [],
     seasonSummaries: [] as SeasonSummary[],
+    selectedBlogPost: {} as BlogPost,
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
     selectedSeasonFightSummary: {} as FightSummary,
@@ -372,8 +374,13 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchBlogPost: async (blogPostId: string) => {
                 const res = await axios.get(`${url}/blog/${blogPostId}`, get().accessToken)
-                const blogPost = res.data as BlogPost
-                set({ blogPost })
+                const selectedBlogPost = res.data as BlogPost
+                set({ selectedBlogPost })
+            },
+            fetchBlogPosts: async () => {
+                const res = await axios.get(`${url}/blog`, get().accessToken)
+                const blogPosts = res.data as BlogPost[]
+                set({ blogPosts })
             },
             fetchDiscussion: async (discussionId: string) => {
                 const res = await axios.get(`${url}/discussions/${discussionId}`, get().accessToken)
