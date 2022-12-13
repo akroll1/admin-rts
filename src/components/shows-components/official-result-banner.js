@@ -19,7 +19,7 @@ export const OfficialResultBanner = () => {
             color="white" 
             maxW="100%" 
             w="90%"
-            p={["0", "0", "2"]}
+            p="2"
             justifyContent="center"
             alignItems="center"
             borderRadius="5px"
@@ -35,15 +35,16 @@ export const OfficialResultBanner = () => {
                     px="4"
                     textAlign="center"
                     fontWeight="thin" 
-                    fontSize={["lg", "lg", "xl"]}
-                >
+                    fontSize={["md", "lg", "xl"]}
+                    >
                 Official Result
                 </Text>
                 <Heading 
                     px="4"
                     textAlign="center"
                     as="h3"
-                    size="lg"
+                    // fontSize={["lg", "lg", "xl"]}
+                    size={["md","md","lg"]}
                 >
                     {transformedResult}
                 </Heading>

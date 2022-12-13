@@ -63,7 +63,7 @@ export const ProfileButton = ({ onToggle }) => {
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
-                {isLoggedIn &&
+                {isLoggedIn && open && 
                     <MenuList>
                         <MenuItem value="/scorecards" onClick={handleNavigate}>Scorecards</MenuItem>
                         <MenuItem value="/dashboard/account" onClick={handleNavigate}>Profile</MenuItem>

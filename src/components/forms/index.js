@@ -1,4 +1,5 @@
 export * from './my-account-form'
+export * from './blog-form'
 export * from './broadcast-form'
 export * from './create-panel-form'
 export * from './discussions-form'

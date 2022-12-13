@@ -2,6 +2,7 @@ import create from "zustand"
 import { persist } from "zustand/middleware"
 import axios from 'axios'
 import { capFirstLetters } from '../utils'
+import { BlogPost } from './models/blog-post.model'
 import { Discussion } from './models/discussion.model'
 import { 
     RoundScores,
@@ -38,10 +39,12 @@ export interface ScorecardStore {
     acceptInvite(groupScorecardId: string, inviteId: string): void
     accessToken: TokenConfig
     activeGroupScorecard: GroupScorecardSummary
+    blogPost: BlogPost
     chatKey: string | null
     chatToken: string
     checkForUserFightReview(): void
     collateTableData(): void
+    createBlogPost(blogPostObj: Partial<BlogPost>): void
     createDiscussion(discussionObj: Partial<Discussion>): void
     createFight(createFightObj: FightPostObj): void
     createFighter(createFighterObj: Fighter): void
@@ -63,6 +66,7 @@ export interface ScorecardStore {
     discussions: Discussion[]
     fetchAllDiscussions(): void
     fetchAllPanelists(): void
+    fetchBlogPost(blogPostId: string): void
     fetchDiscussion(discussionId: string): void
     fetchFighter(fighterId: string): void
     fetchFightSummary(fightId: string): void
@@ -157,6 +161,7 @@ export const initialScorecardsStoreState = {
     isSubmitting: false,
     accessToken: {} as TokenConfig,
     activeGroupScorecard: {} as GroupScorecardSummary,
+    blogPost: {} as BlogPost,
     chatKey: '',
     chatToken: '',
     lastScoredRound: 0,
@@ -286,6 +291,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                     tableData: [...stats],
                 })
             },
+            createBlogPost: async (blogPostObj: Partial<BlogPost>) => {
+                const res = await axios.post(`${url}/blog`, blogPostObj, get().accessToken)
+                console.log('CREATE-BLOGPOST: ', res.data)
+            },
             createDiscussion: async (discussionObj: Partial<Discussion>) => {
                 const res = await axios.post(`${url}/discussions`, discussionObj, get().accessToken)
                 console.log('DISCUSSION- create res.data: ', discussionObj)
@@ -360,6 +369,11 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.get(`${url}/panelists`, get().accessToken)
                 const panelists = res.data as Panelist[]
                 set({ panelists })
+            },
+            fetchBlogPost: async (blogPostId: string) => {
+                const res = await axios.get(`${url}/blog/${blogPostId}`, get().accessToken)
+                const blogPost = res.data as BlogPost
+                set({ blogPost })
             },
             fetchDiscussion: async (discussionId: string) => {
                 const res = await axios.get(`${url}/discussions/${discussionId}`, get().accessToken)

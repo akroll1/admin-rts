@@ -15,16 +15,15 @@ export const FightReviews = ({
   fightReviewForm, 
   setFightReviewForm, 
 }) => {
-  const toast = useToast()
+
   const { 
     checkForUserFightReview,
     selectedFightReviews, 
     user 
   } = useScorecardStore()
-  const { sub } = user
   
-  const openForm = () => {
-    if(!sub){
+  const openReviewModal = () => {
+    if(!user.sub){
       return alert('You must be registered to leave a Review.');
     }
     setFightReviewForm(fightReviewForm => !fightReviewForm)
@@ -81,6 +80,7 @@ export const FightReviews = ({
                 m={["2", "0"]}
                 w="100%"
                 p="0"
+                disabled={true}
               >
                 See all Reviews
               </Button>
@@ -88,7 +88,7 @@ export const FightReviews = ({
                 w="100%"
                 m={["2", "0"]}
                 ml={["0", "2"]}
-                onClick={() => openForm(!fightReviewForm)} 
+                onClick={openReviewModal} 
                 colorScheme="solid"
                 leftIcon={<HiOutlinePencil />}
               >
@@ -110,7 +110,7 @@ export const FightReviews = ({
                   mt="4"
                 >
                   <Button 
-                    onClick={() => openForm(!fightReviewForm)} 
+                    onClick={openReviewModal} 
                     size="md" 
                     colorScheme="solid"
                   >

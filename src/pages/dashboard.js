@@ -7,6 +7,7 @@ import { UserInfo } from '../chakra'
 import { CreateGroupScorecard } from './create-scorecard'
 import { 
   MyAccountForm, 
+  BlogPostForm,
   BroadcastForm, 
   CreatePanelForm,
   DiscussionsForm, 
@@ -67,6 +68,7 @@ const Dashboard = () => {
   ];
   const isSuperAdminFormOptions = [
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
+    { value: "BLOG", label:"Blog Form", type: 'Blog Form', icon: FaEdit, link: '/dashboard/blog-form' },
     { value: "CREATE_PANEL", label:"Create Panel Form", type: 'Create Panel', icon: FaEdit, link: '/dashboard/create-panel' },
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
@@ -159,6 +161,7 @@ const Dashboard = () => {
         mt={0}
       >
         { form === 'ACCOUNT' && <MyAccountForm /> }
+        { form === 'BLOG' && <BlogPostForm /> }
         { form === 'BROADCAST' && <BroadcastForm /> }
         { form === 'CREATE_PANEL' && <CreatePanelForm /> }
         { form === 'CREATE-SCORECARD' && <CreateGroupScorecard /> }
