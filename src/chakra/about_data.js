@@ -48,7 +48,7 @@
     {
       role: 'VP of Public Relations',
       image:
-        'harold_hunt.png',
+        'Harold_Hunt.png',
       name: 'Harold Hunt',
       twitter: '#',
       linkedin: '#',
