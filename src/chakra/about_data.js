@@ -37,7 +37,7 @@
       // description: 'Mi eget mauris pharetra et ultrices neque ornare aenean massa eget egestas purus.',
     },
     {
-      role: 'Frontend Consultant',
+      role: 'Platform Architecture',
       image:
         'manny.png',
       name: 'Manny Diera',
@@ -46,7 +46,7 @@
       // description: 'Diam maecenas sed enim ut sem viverra aliquet eget magna ac placerat vestibulum.',
     },
     {
-      role: 'Public Relations',
+      role: 'VP of Public Relations',
       image:
         'harold_hunt.png',
       name: 'Harold Hunt',
