@@ -10,15 +10,7 @@
       linkedin: '#',
       // description: 'Habitant morbi tristique senectus et netus et malesuada fames. Vestibulum morbi',
     },
-    // {
-    //   role: 'CMO / Media Manager',
-    //   image:
-    //     'sgd.jpeg',
-    //   name: 'SarahGeorge Durham',
-    //   twitter: '#',
-    //   linkedin: '#',
-    //   description: 'Quis risus sed vulputate odio ut enim blandit volutpat. Amet cursus sit amet.',
-    // },
+
     {
       role: 'CTO',
       image:
@@ -46,7 +38,7 @@
       // description: 'Diam maecenas sed enim ut sem viverra aliquet eget magna ac placerat vestibulum.',
     },
     {
-      role: 'VP of Public Relations',
+      role: 'VP, Public Relations',
       image:
         'Harold_Hunt.png',
       name: 'Harold Hunt',
