@@ -10,32 +10,25 @@ export const About = () => (
       py={{ base: '12', md: '20' }}
     >
       <Box textAlign="center">
-        <Heading size="3xl" letterSpacing="wide" mb="5" fontWeight="bold">
+        <Heading size="3xl" letterSpacing="wide" mb="2" fontWeight="bold">
           About the team
         </Heading>
         <Text 
-          fontSize="xl" 
+          fontSize={["xl", "2xl"]} 
           maxW="2xl" 
           mx="auto"
         >
-          FightSync 
+          FightSync
         </Text>
         <Text 
-          fontSize="xl" 
+          fontSize={["xl", "2xl"]} 
           maxW="2xl" 
           mx="auto"
         >
           The Official Platform of Fight Fans
         </Text>
-        <Text 
-          fontSize="xl" 
-          maxW="2xl" 
-          mx="auto"
-        >
-          These guys make it happen.
-        </Text>
       </Box>
-      <SimpleGrid mt="20" columns={{ base: 1, md: 2, lg: 3 }} spacingX="6" spacingY="16">
+      <SimpleGrid mt={["4","6"]} columns={{ base: 1, md: 2, lg: 3 }} spacingX="6" spacingY="12">
         {about_data.map((member, idx) => (
           <Member
             key={idx}

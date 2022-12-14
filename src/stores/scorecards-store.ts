@@ -67,6 +67,7 @@ export interface ScorecardStore {
     fetchAllDiscussions(): void
     fetchAllPanelists(): void
     fetchBlogPost(blogPostId: string): void
+    fetchBlogPosts(): void
     fetchDiscussion(discussionId: string): void
     fetchFighter(fighterId: string): void
     fetchFightSummary(fightId: string): void
