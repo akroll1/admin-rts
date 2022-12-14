@@ -36,14 +36,9 @@ export const FighterSwipe = ({
 
     
     const { 
-        draws, 
         fighterId, 
         firstName, 
-        kos,
         lastName, 
-        losses, 
-        ringname, 
-        wins 
     } = fighter; 
     
     const setBottomBorderStyle = () => {
@@ -69,7 +64,6 @@ export const FighterSwipe = ({
             borderRadius="1px"
             w="100%"
             pt="4"
-            minH="40vh"
             _after={{
                 content: "''",
                 margin: "0 auto",
@@ -77,24 +71,6 @@ export const FighterSwipe = ({
                 borderBottom: borderBottomStyles,
             }}
         >
-            <Flex
-                    textAlign="center"
-                    w="100%"
-                    minH="2rem"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                    flexDir="column"
-                >
-                    <Heading 
-                        letterSpacing="1px"
-                        w="100%"
-                        zIndex={99}
-                        as="h2"
-                        size={["md", "lg"]}
-                    >
-                        {`${ringname}`}
-                    </Heading>
-                </Flex>
             <Flex
                 w="100%"
                 flexDir="column"
@@ -113,38 +89,13 @@ export const FighterSwipe = ({
                 w="100%"
             >   
                 <Heading
+                    pt="2"
                     letterSpacing="0.5px"
                     as="h3"
                     size="md"
                 >
-                    {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
+                    {`${capFirstLetters(lastName)}`} 
                 </Heading>
-
-                <Flex
-                    display="inline-flex"
-                    flexDir="row"
-                    w="100%"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-
-                    <Heading    
-                        textAlign="center" 
-                        as="h3" 
-                        size="sm"
-                        color="#cacaca"
-                    >
-                        {`${wins}-${losses}-${draws}`}&nbsp; 
-                    </Heading>
-                    <Heading
-                        textAlign="center" 
-                        as="h3"
-                        size="xs"
-                        color="#dadada"
-                    >
-                        {`${kos} KO`}
-                    </Heading>
-                </Flex>
                 <Flex
                     w="100%"
                     minH="1.5rem"

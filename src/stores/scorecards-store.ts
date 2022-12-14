@@ -400,6 +400,10 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchGroupScorecardSummary: async (fightId: string, groupScorecardId: string) => {
                 const res = await axios.get(`${url}/me/group-scorecards/${groupScorecardId}/${fightId}`, get().accessToken);
+                if(res.data === 'Token expired!'){
+                    get().setModals('expiredTokenModal', true)
+                    return
+                }
                 if(res.data === `Token expired!`){
                     get().setTokenExpired(true)
                     return
@@ -499,6 +503,10 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchUserScorecards: async () => {
                 const res = await axios.get(`${url}/me/scorecards/${get().user.sub}`, get().accessToken)
+                if(res.data === 'Token expired!'){
+                    get().setModals('expiredTokenModal', true)
+                    return
+                }
                 const userScorecardSummaries = res.data as ScorecardSummary[]
                 const userScorecards: Scorecard[] = userScorecardSummaries.map( scorecard => scorecard.scorecard)
                 set({ 
@@ -513,6 +521,10 @@ export const useScorecardStore = create<ScorecardStore>()(
             },
             fetchUserInvites: async () => {
                 const res = await axios.get(`${url}/me/invites`, get().idToken)
+                if(res.data === 'Token expired!'){
+                    get().setModals('expiredTokenModal', true)
+                    return
+                }
                 const userInvites = res.data;
                 set({ userInvites })
             },
@@ -549,9 +561,6 @@ export const useScorecardStore = create<ScorecardStore>()(
             setAccessToken: (accessToken: TokenConfig) => {
                 set({ accessToken })
             },
-            // setChatScore: (chatScore: Record<string, number | string>) => {
-            //     set({ chatScore })
-            // },
             setChatToken: (chatToken: string) => {
                 set({ chatToken })
             },

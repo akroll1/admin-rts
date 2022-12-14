@@ -12,6 +12,7 @@ export const ScorecardsPage = () => {
     fetchSeasonSummaries,
     fetchUserScorecards,
     seasonSummaries,
+    tokenExpired,
     userScorecardSummaries
   } = useScorecardStore();
 
@@ -24,6 +25,12 @@ export const ScorecardsPage = () => {
     fetchUserScorecards()
   },[])
 
+  useEffect(() => {
+    if(tokenExpired){
+
+    }
+  },[tokenExpired])
+  
   useEffect(() => {
     if(collatedScorecards.length){
       setSelectedScorecard(collatedScorecards[0].scorecard)

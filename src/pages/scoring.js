@@ -21,7 +21,6 @@ import { useParams } from 'react-router'
 
 const Scoring = props => {
 
-    const toast = useToast();
     let { fightId, groupScorecardId } = useParams()
     const { 
         activeGroupScorecard,
@@ -31,8 +30,6 @@ const Scoring = props => {
         fightComplete,
         fighterScores,
         modals,
-        setModals,
-        tokenExpired,
     } = useScorecardStore();
 
     const { 
@@ -53,12 +50,6 @@ const Scoring = props => {
     useEffect(() => {
         fetchGroupScorecardSummary(fightId, groupScorecardId)
     },[])
-    
-    useEffect(() => {
-        if(tokenExpired){
-            setModals('expiredTokenModal', true)
-        }
-    },[tokenExpired])
 
     useEffect(() => {
         // get window width size for scoring tabs.
