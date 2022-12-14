@@ -112,6 +112,7 @@ export const ScoringMain = ({
                 }}
             >
                 <Flex
+                    id="fighter_swipe"
                     flexDir="row"
                     w="100%"
                     textAlign="center"

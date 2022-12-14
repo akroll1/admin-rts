@@ -54,7 +54,7 @@ export const ScorecardsInvitationsBoard = () => {
             >
                 <InvitationsHeader
                     fontSize="xl"
-                    pendingInvites={userInvites.length > 0}
+                    pendingInvites={userInvites?.length > 0}
                 />
             </Flex>
             { userInvites.length === 0 &&
@@ -79,7 +79,7 @@ export const ScorecardsInvitationsBoard = () => {
                     flexDir="column"
                     mb="2"
                 >
-                    { userInvites.length > 0 && userInvites.map( invite => {
+                    { userInvites?.length > 0 && userInvites.map( invite => {
                         return (
                             <InviteListItem
                                 key={invite.inviteId}

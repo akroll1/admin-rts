@@ -17,6 +17,36 @@ export const FightStats = (props) => {
         }
     }, [stats])
     
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    const roundByRoundObj = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0
+    };
+    const getMappedScoresArr = stats.map( statObj => statObj.mappedScores)
+        .map( roundObj => {
+            
+        });
+    console.log('getMappedScoresArr: ' , getMappedScoresArr)
+
+
+
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+
     const [fighter1, fighter2] = fighters ? fighters : '';
     let totalObj = {
         even: 0, 
@@ -56,7 +86,9 @@ export const FightStats = (props) => {
     };
     
     const { fighter1Percentage, fighter2Percentage } = getPercentages(totalObj);
-    
+
+    console.log('stats: ' , stats)
+
     return (
         <Flex
             display={tabs.all || tabs.table ? 'flex' : 'none'}
