@@ -26,14 +26,13 @@ import {
 import { useScorecardStore } from '../../stores'
 
 export const FightResolutionForm = () => {
+
     const { 
         selectedSeasonFightSummary, 
         fetchFightSummary,
         submitFightResolution,
-        toast
     } = useScorecardStore()
 
-    const toaster = useToast()
     const [fightResolution, setFightResolution] = useState('')
     const [resolvedFightStatus, setResolvedFightStatus] = useState('')
     const [radio, setRadio] = useState('')
@@ -49,11 +48,6 @@ export const FightResolutionForm = () => {
         },
         fighters: []
     })  
-
-    // useEffect(() => {
-    //     toaster(toast)
-    //     // setTimeout
-    // },[toast])
 
     useEffect(() => {
         if(selectedSeasonFightSummary?.fighters?.length > 0 ){
@@ -106,10 +100,11 @@ export const FightResolutionForm = () => {
         // console.log('officialResult: ', officialResult)
         const fighterUpdates = resolveFighterUpdates(officialResult)
         const resolutionObj = {
+            fighterUpdates,
             fightId,
             fightStatus: radio === `DR` ? 'COMPLETE' : resolvedFightStatus,
             officialResult,
-            fighterUpdates
+            showId: selectedSeasonFightSummary.show.showId,
         }
         // console.log('resolutionObj: ', resolutionObj);
         submitFightResolution(resolutionObj, fightId)

@@ -55,11 +55,11 @@ export interface FightSummary {
 }
 
 export interface FightResolution {
+    fighterUpdates: Record<string, string[]>[]
     fightId: string
     fightStatus: string
 	officialResult: string
-    fighterUpdates: Record<string, string[]>[]
-
+	showId: string
 }
 
 export interface FightPostObj {

@@ -10,9 +10,7 @@ import { Scorecard } from './models'
 export interface ScoringStore { 
     lastScoredRound: number
     fetchGuestJudgeScorecards(): void
-    fetchPanelProps(): void
     guestJudgeScorecards: Scorecard[],
-    panelProps: any[]
 }
 
 const scorecardStore: any = useScorecardStore.getState();
@@ -21,7 +19,6 @@ const store: any = useStateStore.getState();
 export const initialScoringStoreState = {
     lastScoredRound: 1,
     guestJudgeScorecards: [],
-    panelProps: [],
     prediction: '',
 }
 
@@ -40,11 +37,4 @@ export const useScoringStore = create<ScoringStore>()((set,get) => ({
             set({ guestJudgeScorecards })
         }
     },
-    fetchPanelProps: async () => {
-        const url = process.env.REACT_APP_API + `/props/${scorecardStore.fight.fightId}`;
-        const res = await axios.get(url, store.tokenConfig)
-        const panelProps = res.data 
-        set({ panelProps })
-    },
-
 }))
