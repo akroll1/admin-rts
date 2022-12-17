@@ -27,7 +27,7 @@ export const BlogPost = ({ post }) => {
       >
         <Flex 
           direction="column"
-          onClick={() => navigate(`/blog/${blogId}`)}
+          // onClick={() => navigate(`/blog/${blogId}`)}
         >
           <Img height="60" objectFit="cover" alt={title} src={imgs?.length > 0 ? imgs[0] : ''} />
           <Flex
@@ -40,9 +40,11 @@ export const BlogPost = ({ post }) => {
               fontSize="xs"
               fontWeight="semibold"
               mb="2"
+              pt="1"
+              pl="0"
               color="gray.500"
             >
-              {'category'}
+              {'FSL'}
             </Text>
             <Heading as="h3" size="sm" mb="2" lineHeight="base">
               {title}
@@ -57,8 +59,9 @@ export const BlogPost = ({ post }) => {
               color={mode('gray.600', 'gray.400')}
             >
               <Text>
-                By {author}
+                By&nbsp; 
                 <Link 
+
                   as={RRLink} 
                   textDecor="underline" 
                   to={`/author/${authorId}`}

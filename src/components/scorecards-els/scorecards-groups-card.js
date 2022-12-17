@@ -54,8 +54,7 @@ export const ScorecardsGroupsCard = ({
                                     cursor="pointer"
                                     borderBottom={groupScorecard.groupScorecardId === active ? '1px solid gray' : "1px solid #252525"}
                                 >
-                                    <Flex
-                                        
+                                    <Flex  
                                         onClick={(e) => scorecardSelect(e, selectedScorecard.scorecard.fightId, groupScorecard.groupScorecardType, groupScorecard.groupScorecardId)}
                                         color={groupScorecard.groupScorecardId === active ? '#fff' : '#dadada'}
                                         mb="2"
@@ -75,7 +74,7 @@ export const ScorecardsGroupsCard = ({
                                         as={ExternalLinkIcon} 
                                         w="6"
                                         h="6"
-                                        color={groupScorecard.groupScorecardId === active ? '#fff' : 'transparent'}
+                                        color={groupScorecard.groupScorecardId === active ? '#fff' : '#888'}
                                     />
                                 </Flex>
                             )

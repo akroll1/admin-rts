@@ -8,12 +8,7 @@ import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
 import { filterFights } from '../../stores/store-utils'
-import { 
-    IoStarOutline, 
-    IoGameControllerOutline, 
-    IoFlashOutline, 
-    IoBookmarkOutline 
-} from "react-icons/io5";
+import { IoStarOutline } from "react-icons/io5";
 import { 
     InfoOutlineIcon,
     NotAllowedIcon,
@@ -36,11 +31,17 @@ export const ShowsSidebar = () => {
     const [upcoming, setUpcoming] = useState([])
 
     useEffect(() => {
+        console.log('selectedSeasonFightSumamries: ', selectedSeasonFightSummaries)
         if(selectedSeasonFightSummaries?.length > 0){
-            const { CANCELED, COMPLETE, PENDING } = filterFights(selectedSeasonSummary.fightSummaries)
+            const CANCELED = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'CANCELED')
+            const UPCOMING = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'UPCOMING')
+            const PENDING = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'PENDING')
+            const COMPLETE = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'COMPLETE')
+                
             setCanceled(CANCELED)
             setRecent(COMPLETE)
             setUpcoming(PENDING)
+            console.log('pending: ', PENDING)
             if(!PENDING.length && COMPLETE.length){
                 setSelectedSeasonFightSummary(COMPLETE[0].fight.fightId)
             }

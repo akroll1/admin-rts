@@ -1,9 +1,5 @@
-import {useEffect, useState} from 'react'
-import { 
-    Flex, 
-    useToast 
-} from '@chakra-ui/react'
-import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { Flex } from '@chakra-ui/react'
 import { ScoringTable } from '../components/tables'
 import { 
     AddGuestJudgeModal, 
@@ -14,7 +10,7 @@ import {
 } from '../components/modals'
 import { ChatSidebar, ScoringSidebarLeft } from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
-import { useScorecardStore, useScoringStore } from '../stores'
+import { useScorecardStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import { useParams } from 'react-router'
 
@@ -26,16 +22,13 @@ const Scoring = props => {
         activeGroupScorecard,
         chatScore,
         collateTableData,
+        fetchBettingProps,
         fetchGroupScorecardSummary,
+        fetchPanelProps,
         fightComplete,
         fighterScores,
         modals,
     } = useScorecardStore();
-
-    const { 
-        fetchGuestJudgeScorecards,
-        fetchPanelProps,
-    } = useScoringStore();
 
     const [tabs, setTabs] = useState({
         info: false,
@@ -49,6 +42,7 @@ const Scoring = props => {
 
     useEffect(() => {
         fetchGroupScorecardSummary(fightId, groupScorecardId)
+        fetchPanelProps()
     },[])
 
     useEffect(() => {
@@ -80,6 +74,7 @@ const Scoring = props => {
     useEffect(() => {
         if(modals.moneylineModal){
             fetchPanelProps()
+            fetchBettingProps()
         }
     }, [modals])
 
@@ -104,10 +99,7 @@ const Scoring = props => {
             boxSizing='border-box'
         >         
             <Flex>
-                
-                <AddGuestJudgeModal 
-                    fetchGuestJudgeScorecards={() => fetchGuestJudgeScorecards()}
-                />
+                <AddGuestJudgeModal />
                 <AddMemberModal />
                 <ExpiredTokenModal />
                 <MoneylineModal
