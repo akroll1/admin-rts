@@ -112,15 +112,35 @@ export const ScoringTable = ({
                         alignItems="center"
                         p="1"
                     >
-                        <FormLabel mb="0" htmlFor='realTime'>Real Time</FormLabel>
-                        <Switch id='realTime' isDisabled={!activeGroupScorecard?.groupScorecard?.chatKey} />
+                        <FormLabel 
+                            mb="0" 
+                            htmlFor='realTime'
+                        >
+                            Real Time
+                        </FormLabel>
+                        <Switch 
+                            size="md"
+                            colorScheme="gray"
+                            id='realTime' 
+                            isDisabled={!activeGroupScorecard?.groupScorecard?.chatKey} 
+                        />
                     </Flex>
                     <Flex
                         alignItems="center"
                         p="1"
                     >
-                        <FormLabel mb="0" htmlFor='currentRound'>Show to My Round</FormLabel>
-                        <Switch id='currentRound' defaultChecked />
+                        <FormLabel 
+                            mb="0" 
+                            htmlFor='currentRound'
+                        >
+                            Show to My Round
+                        </FormLabel>
+                        <Switch
+                            size="md" 
+                            colorScheme="gray"
+                            id='currentRound' 
+                            defaultChecked 
+                        />
                     </Flex>
                 </Flex>
                 <Table 

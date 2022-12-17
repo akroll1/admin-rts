@@ -38,7 +38,7 @@ export const FightStats = (props) => {
     };
     const getMappedScoresArr = stats.map( statObj => statObj.mappedScores)
         .map( roundObj => {
-            
+
         });
     console.log('getMappedScoresArr: ' , getMappedScoresArr)
 
@@ -100,27 +100,50 @@ export const FightStats = (props) => {
             {...boxProps}
             alignItems="center"
             justifyContent="space-evenly"
-            w={["100%", "70%", "50%"]}
+            w={["100%"]}
         >
-            <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-evenly">
-
-                <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="lg" color="muted">
+            <Flex 
+                w="100%" 
+                flexDirection={["column", "row"]} 
+                alignItems="center" 
+                justifyContent="space-evenly"
+            >
+                <Flex
+                    flexDir="column"
+                    alignItems="center"
+                    justifyContent="center"                
+                >
+                    <Heading 
+                        m="auto" 
+                        fontSize="md" 
+                        color="muted"
+                    >
                         {capFirstLetters(fighter1)}
-                    </Text>
-                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
+                    </Heading>
+                    <Heading size="md">
                         {fighter1Percentage ? fighter1Percentage : 0}&#37;	
                     </Heading>
-                </Stack>
-                <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="lg" color="muted">
+                </Flex>
+                <Flex
+                    flexDir="column"
+                    alignItems="center"
+                    justifyContent="center"                
+                >
+                    <Heading 
+                        m="auto" 
+                        fontSize="md" 
+                        color="muted"
+                    >
                         {capFirstLetters(fighter2)}
-                    </Text>
-                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
+                    </Heading>
+                    <Heading size="md">
                         {fighter2Percentage ? fighter2Percentage : 0}&#37;	
                     </Heading>
-                </Stack>
+                </Flex>
+            </Flex>
 
+            <Flex>
+                <p>stats</p>
             </Flex>
         </Flex>
     )
