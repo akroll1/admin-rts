@@ -113,7 +113,7 @@ export const ScoringTable = ({
                         p="1"
                     >
                         <FormLabel mb="0" htmlFor='realTime'>Real Time</FormLabel>
-                        <Switch id='realTime' isDisabled={!activeGroupScorecard.groupScorecard.chatKey} />
+                        <Switch id='realTime' isDisabled={!activeGroupScorecard?.groupScorecard?.chatKey} />
                     </Flex>
                     <Flex
                         alignItems="center"
