@@ -33,7 +33,7 @@ export const ScorecardsInvitationsBoard = () => {
     
     return (
         <Flex
-            bg="#111111"
+            bg="transparent"
             position="relative"
             w="100%"
             flexDir="column"
@@ -50,7 +50,7 @@ export const ScorecardsInvitationsBoard = () => {
                 flexDir="column"
                 alignItems="center"
                 justifyContent="flex-start"
-                bg="#111111"
+                bg="transparent"
                 borderRadius="md"
             >
                 <InvitationsHeader
