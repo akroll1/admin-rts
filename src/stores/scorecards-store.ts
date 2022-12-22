@@ -549,6 +549,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.patch(`${url}/scorecards/${get().userScorecard.scorecardId}`, { prediction }, get().accessToken)
                 if(res.status === 200){
                     get().setScoringTransformedPrediction(prediction)
+                    // refresh on 200
                     // get().fetchGroupScorecardSummary(get().activeGroupScorecard.groupScorecardId)
                     // get().setToast
                 }
