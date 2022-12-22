@@ -80,7 +80,7 @@ export const ScoringSidebarLeft = ({
             bg={tabs.info ? "inherit" : "fsl-sidebar-bg"}
             color={tabs.info ? "#dadada" : "#c8c8c8"}
             fontSize="sm"
-            minH={tabs.info ? "75vh" : "100%"}
+            minH={tabs.info ? "75vh" : ""}
             border={tabs.all ? "1px solid #252525" : 'none'}
         >
             <SidebarsDividerWithText 

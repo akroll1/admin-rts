@@ -14,12 +14,14 @@ export const ScorecardsPage = () => {
     const [selectedSummary, setSelectedSummary] = useState({})
     
     const { 
+        fetchUserInvites,
         fetchUserScorecards,
         userScorecardSummaries
     } = useScorecardStore();
 
     useEffect(() => {
         fetchUserScorecards()
+        fetchUserInvites()
     },[])
 
     useEffect(() => {
@@ -70,7 +72,7 @@ export const ScorecardsPage = () => {
                     mb="4"
                     mx="auto"
                 >
-                    {`${userScorecardSummaries.length} Scorecards`}
+                    {userScorecardSummaries.length === 0 ? `Create A Scorecard` : `${userScorecardSummaries.length} Scorecards`}
                 </Heading>
 
                 <Flex 

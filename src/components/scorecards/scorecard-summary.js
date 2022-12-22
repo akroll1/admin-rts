@@ -97,12 +97,13 @@ export const ScorecardSummary = ({ selectedSummary }) => {
           </Flex>
 
         </Stack>
-        <Button 
-            colorScheme="blue" 
-            size="lg" 
-            fontSize="md" 
-            rightIcon={<FaArrowRight />}
-            onClick={() => navigate(`/scoring/${group?.groupScorecardId}/${fight?.fightId}`)}
+        <Button
+          disabled={selectedSummary?.fight?.fightId ? false : true}
+          colorScheme="blue" 
+          size="lg" 
+          fontSize="md" 
+          rightIcon={<FaArrowRight />}
+          onClick={() => navigate(`/scoring/${group?.groupScorecardId}/${fight?.fightId}`)}
         >
           Group Scorecard
         </Button>
