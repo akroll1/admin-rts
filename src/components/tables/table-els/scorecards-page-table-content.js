@@ -1,3 +1,4 @@
+
 import { 
   Flex,
   Icon,
@@ -11,12 +12,13 @@ import {
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../../utils'
+import { useScorecardStore } from '../../../stores'
 
-export const ScorecardsPageTableContent = ({ 
-  collatedScorecards,
-  handleScorecardSelect,
-  selectedScorecard
-}) => {
+export const ScorecardsPageTableContent = () => {
+
+  const {
+    userScorecards
+  } = useScorecardStore()
 
   const renderLink = (length, fightQuickTitle) => {
     if(length > 1){
@@ -49,7 +51,7 @@ export const ScorecardsPageTableContent = ({
         </Tr>
       </Thead>
       <Tbody>
-        { collatedScorecards?.length > 0 && collatedScorecards?.map( (row, index) => {
+        {/* { userScorecards?.length > 0 && userScorecards?.map( (row, index) => {
           // console.log('row: ', row)
           const { fight, fighters, scorecard } = row
           const { fightId, fightQuickTitle, fightStatus } = fight;
@@ -72,7 +74,7 @@ export const ScorecardsPageTableContent = ({
           return (
             <Tr 
               id={fightId}
-              onClick={e => handleScorecardSelect(e, fightId, selectedScorecard?.scorecardGroups[0]?.groupScorecardType)}
+              // onClick={e => handleScorecardSelect(e, fightId, selectedScorecard?.scorecardGroups[0]?.groupScorecardType)}
               key={index} 
               border="1px solid #383838"
               _hover={{
@@ -83,13 +85,13 @@ export const ScorecardsPageTableContent = ({
                 borderBottom: '1px solid #262626',
                 borderRadius: '5px'
               }} 
-              bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
+              // bg={selectedScorecard?.scorecard?.fightId === fightId ? '#262626' : ''}
             >
               <Td whiteSpace="nowrap">{ renderLink(scorecard?.scorecard?.groups?.length, fightQuickTitle) }</Td>
               <Td whiteSpace="nowrap">{ setPrediction(prediction) }</Td>
               <Td whiteSpace="nowrap">{ renderScoreOrStatus() }</Td>
             </Tr>
-        )})}
+        )})} */}
       </Tbody>
     </Table>
   )

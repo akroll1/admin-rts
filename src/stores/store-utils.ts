@@ -1,36 +1,26 @@
-import { FightSummary } from './models'
+import { FightStatusesObj, FightSummary } from './models/fight.model'
 import { FightStatus } from './models/enums'
+import { SeasonSummary } from './models/season.model'
 
-type FightSummaryObj = {
-    ACTIVE: FightSummary[]
-    COMPLETE: FightSummary[]
-    CANCELED: FightSummary[]
-    FANTASY: FightSummary[]
-    PENDING: FightSummary[]
-}
-
-export const filterFights = (fightSummaries: FightSummary[]) => {
-    const obj: FightSummaryObj = {
-        ACTIVE: [],
+export const filterFights = (selectedSeasonSummary: SeasonSummary) => {
+    const obj: FightStatusesObj = {
+        PENDING: [],
         COMPLETE: [],
         CANCELED: [],
+        ACTIVE: [],
         FANTASY: [],
-        PENDING: [],
     }
    
-    const temp = fightSummaries.map( summary => {
-        
+    const temp = selectedSeasonSummary.fightSummaries.map( summary => {
+
         let fightStatus: FightStatus = summary.fight.fightStatus;
         if(obj[fightStatus]) {
-            console.log('obj[fightSTatus: ', fightStatus)
             obj[fightStatus].push(summary)
             return obj
         }
     })
 
-    console.log('OBJ: ', obj)
-    const arr = Object.entries(obj as FightSummaryObj).map( ([key, value]) => value)
+    const list = Object.entries(obj as FightStatusesObj).map( ([key, value]) => value)
         .reduce( (arr: any, curr: any) => arr.concat(curr),[])
-    console.log('arr: ' , arr)
-    return arr
+    return [list, obj]
 }

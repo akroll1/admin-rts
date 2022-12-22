@@ -14,6 +14,7 @@ import { ProfileButton } from './profile-button'
 import { useNavigate } from 'react-router'
 
 const MobileNavContext = props => {
+  
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const handleFightSyncButtonClick = () => {

@@ -7,10 +7,10 @@ import { IoScaleOutline } from 'react-icons/io5'
 import { ShowsNavItem } from './shows-nav-item'
 
 export const ShowsParticulars = ({
-    selectedSeasonFightSummary
+    selectedFightSummary
 }) => {
-    const { isTitleFight, rounds, weightclass } = selectedSeasonFightSummary?.fight ? selectedSeasonFightSummary.fight : '';
-    const { location, network, showTime } = selectedSeasonFightSummary?.show ? selectedSeasonFightSummary.show : '';
+    const { isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
+    const { location, network, showTime } = selectedFightSummary?.show ? selectedFightSummary.show : '';
     return (
         <Flex 
             as="section"

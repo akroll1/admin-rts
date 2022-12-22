@@ -5,38 +5,44 @@ import { useScorecardStore } from '../../stores'
 
 export const ShowsArrows = () => {
     const [currentFightId, setCurrentFightId] = useState('')
+    
     const { 
-        selectedSeasonFightSummary,
+        selectedSeasonFightSummaries,
         selectedSeasonSummary,
-        setSelectedSeasonFightSummary,
+        setSelectedFightSummary,
     } = useScorecardStore() 
-  
+
     useEffect(() => {
-      if(selectedSeasonFightSummary?.season?.seasonId){
-        setCurrentFightId(selectedSeasonFightSummary.fight.fightId)
-      }
-    },[selectedSeasonFightSummary])
+        if(selectedSeasonFightSummaries.length > 0){
+            setCurrentFightId(selectedSeasonFightSummaries[0].fight.fightId)
+        }
+    },[selectedSeasonFightSummaries])
+
     const rotateFighters = e => {
         const { id } = e.currentTarget;
-        const { fightIds } = selectedSeasonSummary.season;
-        const calculateNextIndex = (fightId, length, arrow) => {
+
+        const calculateNextIndex = (currentFightId, arrow) => {
             const direction = arrow === 'right' ? 1 : -1;
-            const currentIndex = fightIds.findIndex( id => id === fightId)
+            const length = selectedSeasonSummary.length;
+            const currentIndex = selectedSeasonFightSummaries.findIndex( summary => summary.fight.fightId === currentFightId)
+
             let nextIndex = currentIndex + direction;
             if(nextIndex < 0){
                 return length - 1
             }
-            if(nextIndex > (length-1)){
+            if(nextIndex > (length - 1)){
                 return 0
             }
+            
             return nextIndex
         }
-        const nextIndex = calculateNextIndex(currentFightId, selectedSeasonSummary.season.fightIds.length, id)
-        const nextFightId = fightIds[nextIndex]
-        const [nextFightSummary] = selectedSeasonSummary.fightSummaries.filter( fightSummary => fightSummary.fight.fightId === nextFightId)
-        setSelectedSeasonFightSummary(nextFightSummary.fight.fightId)
+        
+        const nextFightIndex = calculateNextIndex(currentFightId, id)
+        const nextFightSummary = selectedSeasonFightSummaries[nextFightIndex]
         setCurrentFightId(nextFightSummary.fight.fightId)
+        setSelectedFightSummary(nextFightSummary.fight.fightId)
     }
+
 
     return (
         <Flex

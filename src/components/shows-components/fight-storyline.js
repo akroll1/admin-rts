@@ -5,11 +5,11 @@ import {
 } from '@chakra-ui/react'
 
 export const FightStoryline = ({ 
-    selectedSeasonFightSummary 
+    selectedFightSummary 
 }) => {
     const [lines, setLines] = useState([4])
-    const fightStoryline = selectedSeasonFightSummary?.fight?.fightStoryline;
-    const showStoryline = selectedSeasonFightSummary?.show?.showStoryline;
+    const fightStoryline = selectedFightSummary?.fight?.fightStoryline;
+    const showStoryline = selectedFightSummary?.show?.showStoryline;
 
     const handleShowFullText = e => {
         if(lines.length){

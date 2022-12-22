@@ -68,5 +68,5 @@ export const colors = {
   
   const theme = extendTheme({ ...config, ...colors, ...shadow, ...transition });
 
-  export default theme;
+  // export default theme;
   

@@ -16,7 +16,7 @@ const Shows = () => {
     const navigate = useNavigate()
     const { 
         createGroupScorecard,
-        fetchSeasonSummaries,
+        fetchSeasonSummary,
         putUserFightReview,
         selectedFightSummary, 
         setModals,
@@ -55,7 +55,7 @@ const Shows = () => {
     },[tokenExpired])
 
     useEffect(() => {
-        fetchSeasonSummaries()
+        fetchSeasonSummary('active')
     },[])
 
     useEffect(() => {

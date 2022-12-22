@@ -1,15 +1,9 @@
 import { 
   Flex,
-  Heading 
 } from '@chakra-ui/react'
-import { useScorecardStore } from '../../stores'
 import { ScorecardsPageTableContent } from './table-els'
 
-export const ScorecardsPageTable = ({ 
-  collatedScorecards,
-  handleScorecardSelect,
-  selectedScorecard
-}) => {
+export const ScorecardsPageTable = () => {
   
   return (
     <Flex 
@@ -30,11 +24,7 @@ export const ScorecardsPageTable = ({
       mx="auto"
       mb="8"
     >
-      <ScorecardsPageTableContent 
-        collatedScorecards={collatedScorecards} 
-        handleScorecardSelect={handleScorecardSelect}
-        selectedScorecard={selectedScorecard}
-      />
+      <ScorecardsPageTableContent />
     </Flex>
   )
 }
