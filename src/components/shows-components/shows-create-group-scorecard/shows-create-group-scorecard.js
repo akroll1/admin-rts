@@ -19,6 +19,7 @@ export const ShowsCreateGroupScorecard = ({
     invites, 
     setDisplayNameModal,
 }) => {
+
     const {
         user
     } = useScorecardStore()
@@ -127,7 +128,7 @@ export const ShowsCreateGroupScorecard = ({
                             }}
                             bg="#252525"
                             onClick={handleEmailSubmit} 
-                            disabled={invites.length >= 4}
+                            disabled={!user.sub || invites.length >= 4}
                         >
                             {`${invites.length >= 4 ? '5 Member Limit' : 'Add Member'}`}
                         </Button>
@@ -141,6 +142,7 @@ export const ShowsCreateGroupScorecard = ({
                             mt={["4"]} 
                             onClick={handleSubmit} 
                             colorScheme="solid" 
+                            disabled={!user.sub}
                         >
                             Create Scorecard
                         </Button>

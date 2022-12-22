@@ -1,4 +1,5 @@
 import { GroupScorecard } from "./group-scorecard.model"
+import { Fight } from "./fight.model"
 
 export interface Scorecard {
 	scorecardId: string // sub + fightId
@@ -12,12 +13,12 @@ export interface Scorecard {
 	targetId: string // fightId or seasonId
 }
 
-
 export interface RoundScores {
     [index: string]: string | number
 }
 
 export interface ScorecardSummary {
+	fight: Fight
     scorecardGroups: GroupScorecard[]
     scorecard: Scorecard
 }

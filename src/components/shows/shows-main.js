@@ -26,11 +26,11 @@ export const ShowsMain = ({
     username
 }) => {
     const {
-        selectedSeasonFightSummary,
+        selectedFightSummary,
         selectedSeasonSummary,
     } = useScorecardStore()
 
-    const showTime = selectedSeasonFightSummary?.show?.showTime ? selectedSeasonFightSummary.show.showTime : Date.now();
+    const showTime = selectedFightSummary?.show?.showTime ? selectedFightSummary.show.showTime : Date.now();
     
     const UPCOMING = showTime > Date.now() ? true : false; 
     
@@ -63,11 +63,11 @@ export const ShowsMain = ({
             <ShowsArrows />
 
             <FightMetadata
-                selectedSeasonFightSummary={selectedSeasonFightSummary}
+                selectedFightSummary={selectedFightSummary}
             /> 
 
             <ShowsFighterFaceoff 
-                fighters={selectedSeasonFightSummary?.fighters} 
+                fighters={selectedFightSummary?.fighters} 
                 showTime={showTime}
             />
 
@@ -91,7 +91,7 @@ export const ShowsMain = ({
                     p="0" 
                 />
                 <FightStoryline 
-                    selectedSeasonFightSummary={selectedSeasonFightSummary} 
+                    selectedFightSummary={selectedFightSummary} 
                 /> 
             
                 <DividerWithText 
@@ -102,7 +102,7 @@ export const ShowsMain = ({
                 />
 
                 <ShowsParticulars 
-                    selectedSeasonFightSummary={selectedSeasonFightSummary}
+                    selectedFightSummary={selectedFightSummary}
                 />
                 {/* <Props /> */}
                 

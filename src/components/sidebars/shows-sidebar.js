@@ -7,7 +7,6 @@ import {
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
-import { filterFights } from '../../stores/store-utils'
 import { IoStarOutline } from "react-icons/io5";
 import { 
     InfoOutlineIcon,
@@ -15,45 +14,39 @@ import {
 } from '@chakra-ui/icons'
 import { SidebarsDividerWithText } from '../../chakra'
 import { useScorecardStore } from '../../stores'
+import { FightStatus } from '../../stores/models/enums'
 
 export const ShowsSidebar = () => { 
     const { 
+        fightStatusesObj,
         seasonsOptions,
-        selectedSeasonFightSummaries,
-        selectedSeasonFightSummary, 
-        selectedSeasonSummary,
-        setSelectedSeasonFightSummary,
+        selectedFightSummary, 
+        setSelectedFightSummary,
         setSelectedSeasonSummary,
     } = useScorecardStore()
     
     const [canceled, setCanceled] = useState([])
-    const [recent, setRecent] = useState([])
-    const [upcoming, setUpcoming] = useState([])
+    const [complete, setComplete] = useState([])
+    const [pending, setPending] = useState([])
 
     useEffect(() => {
-        console.log('selectedSeasonFightSumamries: ', selectedSeasonFightSummaries)
-        if(selectedSeasonFightSummaries?.length > 0){
-            const CANCELED = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'CANCELED')
-            const UPCOMING = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'UPCOMING')
-            const PENDING = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'PENDING')
-            const COMPLETE = selectedSeasonFightSummaries.filter( summary => summary.fight.fightStatus === 'COMPLETE')
-                
-            setCanceled(CANCELED)
-            setRecent(COMPLETE)
-            setUpcoming(PENDING)
-            console.log('pending: ', PENDING)
-            if(!PENDING.length && COMPLETE.length){
-                setSelectedSeasonFightSummary(COMPLETE[0].fight.fightId)
+        if(fightStatusesObj?.PENDING){
+            setPending(fightStatusesObj[FightStatus.PENDING])
+            setComplete(fightStatusesObj[FightStatus.COMPLETE])
+            setCanceled(fightStatusesObj[FightStatus.CANCELED])
+
+            if(!fightStatusesObj[FightStatus.PENDING].length && fightStatusesObj[FightStatus.COMPLETE].length){
+                setSelectedFightSummary(fightStatusesObj[FightStatus.COMPLETE][0].fight.fightId)
             }
-            if(PENDING.length){
-                setSelectedSeasonFightSummary(PENDING[0].fight.fightId)
+            if(fightStatusesObj[FightStatus.PENDING].length){
+                setSelectedFightSummary(fightStatusesObj[FightStatus.PENDING][0].fight.fightId)
             }
         }
-    }, [selectedSeasonFightSummaries])
+    }, [fightStatusesObj])
     
     const selectFight = e => {
         const { id } = e.currentTarget;
-        setSelectedSeasonFightSummary(id)
+        setSelectedFightSummary(id)
     }
 
     const historicalShows = [
@@ -108,9 +101,9 @@ export const ShowsSidebar = () => {
                 mt="4"
             >
                 <NavGroup label="Upcoming">
-                    { upcoming.length && upcoming.map( summary => {
+                    { pending.length && pending.map( summary => {
                         const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
-                        const active = fightId === selectedSeasonFightSummary?.fight?.fightId;
+                        const active = fightId === selectedFightSummary?.fight?.fightId;
                         return (
                             <UpcomingNavItem 
                                 upcoming={true}
@@ -137,9 +130,9 @@ export const ShowsSidebar = () => {
                     })}
                 </NavGroup>
                 <NavGroup label="Recent">
-                    {recent.length > 0 && recent.map( summary => {
+                    { complete.length > 0 && complete.map( summary => {
                         const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
-                        const active = fightId === selectedSeasonFightSummary?.fight?.fightId;
+                        const active = fightId === selectedFightSummary?.fight?.fightId;
                         return <UpcomingNavItem 
                             active={active}
                             name={REVIEW_TYPE.REVIEW} 
@@ -156,7 +149,7 @@ export const ShowsSidebar = () => {
                     <NavGroup label="Canceled">
                         { canceled.length > 0 && canceled.map( summary => {
                             const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
-                            const active = fightId === selectedSeasonFightSummary?.fight?.fightId;                            
+                            const active = fightId === selectedFightSummary?.fight?.fightId;                            
                             return (
                                 <UpcomingNavItem 
                                     active={active}

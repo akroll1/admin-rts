@@ -48,26 +48,3 @@ const ScorecardsHeading = ({
         </>
     )
 }
-
-export const ScorecardsInvitationsHeading = ({
-    label,
-    pendingInvites
-}) => {
-    return (
-        <Flex       
-            position="relative"
-            w="100%"
-            flexDir="column"
-            alignItems="center"
-            justifyContent="flex-start"
-            bg="#111111"
-            borderRadius="md"
-        >
-            <InvitationsHeader
-                fontSize="xl"
-                label={label}
-                pendingInvites={pendingInvites}
-            />
-        </Flex>
-    )
-}

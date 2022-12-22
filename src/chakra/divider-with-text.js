@@ -1,6 +1,4 @@
 import { 
-  Alert,
-  AlertIcon,
   Box, 
   Divider, 
   Flex, 
@@ -60,32 +58,38 @@ export const SidebarsDividerWithText = props => {
   );
 }
 
-export const InvitationsHeader = ({ 
-  fontSize,
-  pendingInvites
-}) => {
+
+export const CreateGroupDividerWithText = props => {
+  const { centered, color, fontSize, text, m, mb, mt, my, p } = props;
   return (
     <Flex 
-      display="inline-flex"
-      alignItems="center"
-      justifyContent="center"
-      p="2"
-    >
-      <Heading
-        fontSize={fontSize}
+      align="center" 
+      w="100%"
+      // pl={p ? p : "6"} 
+      m={my ? my : "auto"}
+      my={my ? my : "2"} 
+      mt={mt ? mt : "2"} 
+      mb={mb ? mb : "2"} 
+      // fontFamily="Koulen"
+      fontSize={fontSize ? fontSize : 'inherit'}
       >
-        Invitations
-      </Heading>
-      { pendingInvites && 
-        <Alert 
-          p="1"
-          status="error"
-          bg="transparent"
-          m="auto"
-        >
-          <AlertIcon w="3" p="0" mt="-2" ml="-1" />
-        </Alert>
+      {centered && 
+        <Box flex="1">
+          <Divider borderColor="currentcolor" />
+        </Box> 
       }
+      <Text 
+        as="span" 
+        px="3" 
+        color={color ? color : "gray.300"}
+        // color={useColorModeValue('gray.600', 'whiteAlpha.900')} 
+        fontWeight="medium"
+      >
+        {text}
+      </Text>
+      <Box flex="1">
+        <Divider borderColor="currentcolor" />
+      </Box>
     </Flex>
-  )
+  );
 }
