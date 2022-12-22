@@ -9,7 +9,7 @@ import {
   import { capFirstLetters } from '../../utils'
   import { FaArrowRight } from 'react-icons/fa'
 import { FightStatus } from '../../stores/models/enums'
-import { Navigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 const ScorecardItem = (props) => {
   const { label, value, children } = props
@@ -25,6 +25,7 @@ const ScorecardItem = (props) => {
 
 export const ScorecardSummary = ({ selectedSummary }) => {
 
+  const navigate = useNavigate()
   const { fight, fighters, group, scorecard } = selectedSummary?.fight?.fightId ? selectedSummary : {};
 
   const renderScoreOrStatus = (fightStatus, finalScore) => {
@@ -64,6 +65,11 @@ export const ScorecardSummary = ({ selectedSummary }) => {
 
         <Stack spacing="2">
           <ScorecardItem 
+            label="Display Name"
+            value={scorecard?.displayName ? scorecard?.displayName : ``}
+          />  
+
+          <ScorecardItem 
             label="Group Name"
             value={group?.groupScorecardName ? group?.groupScorecardName : ``}
           />
@@ -72,27 +78,31 @@ export const ScorecardSummary = ({ selectedSummary }) => {
             label="Fight Status"
             value={fight?.fightStatus ? fight?.fightStatus : ``}
           />
+
           <ScorecardItem 
             label="Prediction" 
             value={prediction ? prediction : ``} 
           />
+
           <ScorecardItem 
             label="Scorecard Type"
             value={group?.groupScorecardType ? group?.groupScorecardType : ''}
           />
+
           <Flex justify="space-between">
             <Heading fontSize="lg" fontWeight="semibold">
                 Final Score
             </Heading>
               {scoreOrStatus ? scoreOrStatus : ``}
           </Flex>
+
         </Stack>
         <Button 
             colorScheme="blue" 
             size="lg" 
             fontSize="md" 
             rightIcon={<FaArrowRight />}
-            onClick={() => Navigate(`/scoring/${group?.groupScorecardId}`)}
+            onClick={() => navigate(`/scoring/${group?.groupScorecardId}/${fight?.fightId}`)}
         >
           Group Scorecard
         </Button>
