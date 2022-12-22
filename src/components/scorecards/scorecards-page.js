@@ -22,6 +22,12 @@ export const ScorecardsPage = () => {
         fetchUserScorecards()
     },[])
 
+    useEffect(() => {
+        if(userScorecardSummaries?.length > 0){
+            handleSelectGroup(userScorecardSummaries[0].scorecardGroups[0].groupScorecardId)
+        }
+    },[userScorecardSummaries])
+
     const handleSelectGroup = value => {
         console.log('value: ', value)
         const scorecardGroups = userScorecardSummaries.filter( summary => {
@@ -38,6 +44,7 @@ export const ScorecardsPage = () => {
             })
         })
     }
+    console.log('selectedSummary: ', selectedSummary)
     
     return (
         <Flex
