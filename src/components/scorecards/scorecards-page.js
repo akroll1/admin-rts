@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
     Flex,
     Heading,
+    Text,
     useColorModeValue as mode,
 } from '@chakra-ui/react'
 import { useScorecardStore } from '../../stores'
@@ -12,7 +13,7 @@ import { ScorecardsInvitationsBoard } from '../sidebars'
 export const ScorecardsPage = () => {
     
     const [selectedSummary, setSelectedSummary] = useState({})
-    
+    const [showInvitations, setShowInvitations] = useState(true)
     const { 
         fetchUserInvites,
         fetchUserScorecards,
@@ -55,6 +56,7 @@ export const ScorecardsPage = () => {
             flexDir={["column", "column", "row"]}
             flexWrap="wrap-reverse"
             p="2"
+            minH="70vh"
         >
             <Flex 
                 flexDir="column"
@@ -102,10 +104,33 @@ export const ScorecardsPage = () => {
                 justifyContent="flex-start"
                 boxSizing="border-box"
             >   
-                <ScorecardSummary 
-                    selectedSummary={selectedSummary}
-                />
-                <ScorecardsInvitationsBoard />
+                <Flex 
+                    w="100%"
+                >
+
+                    <Text 
+                        onClick={() => setShowInvitations(prev => !prev)}
+                        _hover={{
+                            cursor: 'pointer',
+                            color: 'white'
+                        }} 
+                        ml="2" 
+                        color="gray.400"
+                        textAlign="center"
+                        mx="auto"
+                        textDecor="underline"
+                    >
+                        { showInvitations ? `Show Scorecard Summary` : `Show Invitations`}
+                    </Text>
+                </Flex>
+                { showInvitations
+                    ? 
+                        <ScorecardsInvitationsBoard />
+                    :
+                        <ScorecardSummary 
+                            selectedSummary={selectedSummary}
+                        />
+                }                
             </Flex>           
         </Flex>
     )

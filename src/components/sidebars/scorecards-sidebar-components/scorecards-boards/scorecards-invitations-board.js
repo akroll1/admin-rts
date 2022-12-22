@@ -29,8 +29,6 @@ export const ScorecardsInvitationsBoard = () => {
         return clickType === 'DELETE' ? deleteInvite(inviteId) : acceptInvite(groupScorecardId, inviteId);
     }
     
-    console.log('userInvites: ', userInvites)
-    
     return (
         <Flex
             bg="transparent"
