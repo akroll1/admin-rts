@@ -1,16 +1,19 @@
 import { 
+    Alert,
+    AlertIcon,
     Divider,
     Flex, 
     Heading,
-    Icon,
+    IconButton,
     ListItem,
     Text,
-    UnorderedList
+    UnorderedList,
+    useColorModeValue,
 } from '@chakra-ui/react'
-import { CheckIcon, DeleteIcon } from '@chakra-ui/icons'
 import { useScorecardStore } from '../../../../stores'
 import { parseEpoch } from '../../../../utils'
-import { InvitationsHeader } from '../../../../chakra'
+import { CheckIcon } from '@chakra-ui/icons'
+import { FiTrash2 } from 'react-icons/fi'
 
 export const ScorecardsInvitationsBoard = () => {
 
@@ -22,17 +25,13 @@ export const ScorecardsInvitationsBoard = () => {
 
     const handleIconClick = (e, clickType) => {
         const { id } = e.currentTarget;
-        if(clickType === 'DELETE'){
-            deleteInvite(id);
-            return 
-        }
         const [groupScorecardId, inviteId] = id.split(':')
-        acceptInvite(groupScorecardId, inviteId)
+        return clickType === 'DELETE' ? deleteInvite(inviteId) : acceptInvite(groupScorecardId, inviteId);
     }
-
+    
     return (
         <Flex
-            bg="#111111"
+            bg="transparent"
             position="relative"
             w="100%"
             flexDir="column"
@@ -40,8 +39,9 @@ export const ScorecardsInvitationsBoard = () => {
             justifyContent="flex-start"
             border="1px solid #383838"
             borderRadius="md"
-            p="2"
-            mb="2"
+            py="2"
+            px="4"
+            my="4"
         >
             <Flex       
                 position="relative"
@@ -49,204 +49,205 @@ export const ScorecardsInvitationsBoard = () => {
                 flexDir="column"
                 alignItems="center"
                 justifyContent="flex-start"
-                bg="#111111"
+                bg="transparent"
                 borderRadius="md"
+                p="2"
             >
                 <InvitationsHeader
                     fontSize="xl"
-                    pendingInvites={userInvites.length > 0}
+                    pendingInvites={userInvites?.length > 0}
                 />
             </Flex>
-            { userInvites.length === 0 &&
-                <Text
-                    color="#bababa"
-                    m="auto"
-                    as="h3"
-                    size="md"
-                >
-                    No Invitations
-                </Text>
-            }
             <Flex
                 w="100%"
-                flexDir="column"
-                alignItems="flex-start"
-                overflow="scroll"
-                // minH={['auto']}
+                bg="bg-surface"
+                boxShadow={useColorModeValue('sm', 'sm-dark')}
+                borderRadius="lg"
             >
-                <Flex
-                    w="100%"
-                    flexDir="column"
-                    mb="2"
-                >
-                    { userInvites.length > 0 && userInvites.map( invite => {
-                        return (
-                            <InviteListItem
-                                key={invite.inviteId}
-                                handleIconClick={handleIconClick}
-                                invite={invite}
-                            />
-                        )
-                    })}
-                </Flex>
+                { userInvites?.length > 0 && userInvites.map( (invite, _i) => {
+                    const { 
+                        accepted, 
+                        admin, 
+                        awaitingAcceptance, 
+                        createdAt,
+                        groupScorecardId, 
+                        groupScorecardName, 
+                        groupScorecardNotes, 
+                        groupScorecardType, 
+                        inviteId,
+                        members,
+                    } = invite
+                    
+                    return (
+                        <Flex
+                            key={inviteId}
+                            w="100%"
+                            flexDirection="column"
+                        >
+                            <Flex
+                                flexDir="column"
+                                w="100%"
+                                alignItems="space-between"
+                                justifyContent="flex-start"
+                            >
+                                <Heading
+                                    size="sm"
+                                    color="gray"
+                                >
+                                    {`${groupScorecardType}`}
+                                </Heading>
+                                <Flex
+                                    w="100%"
+                                    alignItems="center"
+                                    justifyContent="space-between"
+                                >
+
+                                    <Heading 
+                                        maxW="70%"
+                                        size={["sm","md"]} 
+                                        color="emphasized" 
+                                        fontWeight="medium"
+                                        wordBreak="break-word"
+                                    >
+                                        {groupScorecardName}
+                                    </Heading>
+                                    <InvitationsButtons 
+                                        handleIconClick={handleIconClick}
+                                        groupScorecardId={groupScorecardId}
+                                        inviteId={inviteId}
+                                    />
+                                </Flex>
+                            </Flex>
+                            
+                            <Flex
+                                w="100%"
+                                flexDir="row"
+                                justifyContent="space-between"
+                                mt="1"
+                            >
+                                <Text 
+                                    fontSize="0.7rem"
+                                    color="fsl-subdued-text"
+                                >
+                                    {`${accepted}/${awaitingAcceptance+accepted} accepted`}
+                                </Text>
+                                <Text
+                                    fontSize="0.7rem"
+                                    color="fsl-subdued-text"
+                                >
+                                    {`Sent ${parseEpoch(createdAt).slice(4,11)}`}
+                                </Text>
+                            </Flex>
+                           
+                            <UnorderedList
+                                pl="2"
+                                maxH="10rem"
+                            >
+                                { members.length > 0 && members.map( (member, _i) => {
+                                    return (
+                                        <ListItem 
+                                            key={_i}
+                                        >
+                                            {member === admin ? `${member}*` : `${member}`}
+                                        </ListItem>
+                                    )
+                                })}
+                            </UnorderedList>
+                            <Flex
+                                mt="1"
+                                w="100%"
+                                p="1"
+                                border="1px solid #333"
+                                borderRadius="3px"
+                            >
+                                <Text 
+                                    fontSize="0.9rem"
+                                    fontWeight="bold"
+                                    color="fsl-subdued-text"
+                                >
+                                    {`Notes:`}
+                                </Text>
+                                <Text 
+                                    pl="2"
+                                    fontSize="0.9rem"
+                                    fontWeight="bold"
+                                    color="fsl-subdued-text"
+                                >
+                                    {`${groupScorecardNotes ? groupScorecardNotes : ''}`}
+                                </Text>
+                            </Flex>
+                            
+                            { _i > 0 && <Divider mt="2" /> }
+                        </Flex>
+                    )
+                })}
             </Flex>
         </Flex>
     )
 }
 
-const InviteListItem = ({ handleIconClick, invite }) => {
-
-    const {
-        accepted,
-        admin,
-        awaitingAcceptance,
-        createdAt,
-        groupScorecardId,
-        groupScorecardName,
-        groupScorecardNotes,
-        groupScorecardType,
-        inviteId,
-        members,
-    } = invite
-
-    return (
-        <Flex 
-            mb="2"
-            w="100%"
-            fontSize="sm" 
-            px="4" 
-            spacing="0.5"
-            border="1px solid #353535"
-            borderRadius="md"
-            p="2"
-            flexDir="column"
-            position="relative"
-            alignItems="flex-start"
-        >
-            <InviteIcons 
-                groupScorecardId={groupScorecardId}
-                handleIconClick={handleIconClick} 
-                inviteId={inviteId}
-            />
-
-            <Flex
-                w="100%"
-                flexDir="column"
-            >
-                <Text 
-                    fontSize="0.5rem"
-                    color="fsl-subdued-text"
-                >
-                    {`${groupScorecardType}`}
-                </Text>
-                <Heading
-                    maxW="70%" 
-                    fontWeight="medium" 
-                    color="#fafafa"
-                    as="h4"
-                    size="md"
-                >
-                    {`${groupScorecardName}`}
-                </Heading>
-
-                <Divider mt="2" mb="1" />
-                <Flex
-                    w="100%"
-                    flexDir="row"
-                    justifyContent="space-between"
-                >
-                    <Text 
-                        fontSize="0.5rem"
-                        color="fsl-subdued-text"
-                    >
-                        {`${accepted}/${awaitingAcceptance+accepted} accepted`}
-                    </Text>
-                    <Text
-                        fontSize="0.7rem"
-                        color="fsl-subdued-text"
-                    >
-                        {`Sent ${parseEpoch(createdAt).slice(4,11)}`}
-                    </Text>
-                </Flex>
-                
-                <Text 
-                    fontSize="0.9rem"
-                    fontWeight="bold"
-                    color="fsl-subdued-text"
-                >
-                    {`Members`}
-                </Text>
-                <UnorderedList
-                    pl="2"
-                    maxH="10rem"
-                >
-                    { members.length > 0 && members.map( (member, _i) => {
-                        return (
-                            <ListItem key={_i}>
-                                {member === admin ? `${member}*` : `${member}`}
-                            </ListItem>
-                        )
-                    })}
-                </UnorderedList>
-                <Text 
-                    fontSize="0.9rem"
-                    fontWeight="bold"
-                    color="fsl-subdued-text"
-                >
-                    {`Notes`}
-                </Text>
-                <Text 
-                    pl="2"
-                    fontSize="0.9rem"
-                    fontWeight="bold"
-                    color="fsl-subdued-text"
-                >
-                    {`${groupScorecardNotes ? groupScorecardNotes : ''}`}
-                </Text>
-            </Flex>
-        </Flex>
-    )
-}
-
-const InviteIcons = ({ 
-    groupScorecardId,
+export const InvitationsButtons = ({
     handleIconClick,
+    groupScorecardId,
     inviteId
 }) => {
-
     return (
+
         <Flex
-            top="5"
-            right="1"
-            position="absolute"
+            display="inline-flex"
             flexDir="row"
-            maxW="25%"
-            alignItems="baseline"
         >
-            <Icon
+            <IconButton
                 onClick={e => handleIconClick(e, 'ACCEPT')}
                 id={`${groupScorecardId}:${inviteId}`}
-                borderRadius="md"
-                mx="1"
-                p="1"
-                fontSize="1.7rem"
-                color="green.400"
-                border="1px solid #353535"
-                as={CheckIcon}
-                cursor="pointer"
+                size="sm"
+                color="green"
+                border="1px solid #888"
+                icon={<CheckIcon fontSize="1rem" />}
+                variant="ghost"
+                aria-label="Accept Invite"
+                mr="2"
             />
-            <Icon
+            <IconButton
                 onClick={e => handleIconClick(e, 'DELETE')}
                 id={`${groupScorecardId}:${inviteId}`}
-                borderRadius="md"
-                mx="1"
-                p="1"
-                fontSize="1.7rem"
-                color="whiteAlpha.600"
-                border="1px solid #353535"
-                as={DeleteIcon}
-                cursor="pointer"
+                size="sm"
+                p="0"
+                border="1px solid #888"
+                icon={<FiTrash2 fontSize="1rem" />}
+                variant="ghost"
+                aria-label="Decline Invite"
             />
         </Flex>
     )
 }
+
+export const InvitationsHeader = ({ 
+    fontSize,
+    pendingInvites
+  }) => {
+    return (
+      <Flex 
+        display="inline-flex"
+        alignItems="center"
+        justifyContent="center"
+        pb="0"
+      >
+        <Heading
+          fontSize={fontSize}
+        >
+          Invitations
+        </Heading>
+        { pendingInvites && 
+          <Alert 
+            p="1"
+            status="error"
+            bg="transparent"
+            m="auto"
+          >
+            <AlertIcon w="3" p="0" mt="-2" ml="-1" />
+          </Alert>
+        }
+      </Flex>
+    )
+  }

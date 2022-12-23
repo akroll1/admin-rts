@@ -19,3 +19,10 @@ export interface Panelist {
 	createdAt?: number
 	updatedAt?: number
 }
+
+export interface PanelProps {
+	fightId: string
+	moneyline: Record<string, string> | null
+	createdAt: number
+	updatedAt: number
+}

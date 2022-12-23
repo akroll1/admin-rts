@@ -2,13 +2,13 @@ import { Flex, Heading } from '@chakra-ui/react'
 import { ScoringSidebarFighterSwipe } from './scoring-sidebar-fighter-swipe'
 import { capFirstLetters } from '../../../utils'
 import { useScorecardStore } from '../../../stores'
-import image from '../../../image/boxing-background.png'
+import backgroundImage from '../../../image/boxing-background.png'
 
 export const ScoringSidebarFightersFaceoff = ({
     tabs
 }) => {
     const { 
-        fighters
+        activeGroupScorecard
     } = useScorecardStore()
 
     return (
@@ -20,7 +20,7 @@ export const ScoringSidebarFightersFaceoff = ({
                 position="relative"
                 _before={{
                     content: "''",
-                    background: `url(${image})`,
+                    background: `url(${backgroundImage})`,
                     opacity: "0.3",
                     top: "0",
                     bottom: "0",
@@ -36,7 +36,7 @@ export const ScoringSidebarFightersFaceoff = ({
                     textAlign="center"
                 >
 
-                { fighters.length > 0 && fighters.map( (fighter, i) => (
+                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard.fighters.map( (fighter, i) => (
                     <ScoringSidebarFighterSwipe
                         fighter={fighter}
                         key={i}
@@ -45,9 +45,9 @@ export const ScoringSidebarFightersFaceoff = ({
 
                 </Flex>
             </Flex>
-            { fighters.length > 0 && fighters.map( fighter => {
+            { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard.fighters.map( fighter => {
                 <Flex
-                    key={fighter.fighterId}
+                    key={activeGroupScorecard?.fighter?.fighterId}
                     flexDir="row"
                 >
                     <Heading    

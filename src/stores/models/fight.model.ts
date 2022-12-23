@@ -18,6 +18,14 @@ export interface Fight {
 	updatedAt?: number;
 }
 
+export type FightStatusesObj = {
+    ACTIVE: FightSummary[]
+    COMPLETE: FightSummary[]
+    CANCELED: FightSummary[]
+    FANTASY: FightSummary[]
+    PENDING: FightSummary[]
+}
+
 export const fightSummaryStub = {
 	fight: {
 		fightId: '',
@@ -55,11 +63,11 @@ export interface FightSummary {
 }
 
 export interface FightResolution {
+    fighterUpdates: Record<string, string[]>[]
     fightId: string
     fightStatus: string
 	officialResult: string
-    fighterUpdates: Record<string, string[]>[]
-
+	showId: string
 }
 
 export interface FightPostObj {

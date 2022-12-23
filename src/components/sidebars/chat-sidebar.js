@@ -22,7 +22,7 @@ export const ChatSidebar = ({
 }) => {
     const { 
         chatKey,
-        chatScore,
+        sentChatScores,
         chatToken,
         requestChatToken,
         sendingChatScores,
@@ -65,11 +65,11 @@ export const ChatSidebar = ({
     },[chatToken])
     
     useEffect(() => {
-        if(chatScore?.scorecardId && socketActive()){
+        if(sentChatScores?.scorecardId && socketActive()){
             // console.log('handleSendMesage')
             handleSendMessage('UPDATE')
         }
-    },[chatScore])
+    },[sentChatScores])
 
     useEffect(() => {
         const scrollToBottom = () => {
@@ -143,7 +143,7 @@ export const ChatSidebar = ({
             action: 'SEND_MESSAGE',
             content: messageType,
             Attributes: {
-                [messageType]: JSON.stringify(messageType === 'UPDATE' ? chatScore : sanitizedMessage)
+                [messageType]: JSON.stringify(messageType === 'UPDATE' ? sentChatScores : sanitizedMessage)
             }
         });
         connection.send(data);

@@ -45,8 +45,9 @@ const Home = () => {
               mt="1" 
               pr="4"
               color='fsl-body-text'
+              maxW={["85%", "60%", "80%"]}
             >
-              Score fights and compete against other fans by making correct pre-fight and in-fight predictions. Play with a group and compare scores- live and in real-time!
+              Score fights and compete. Play with a group- live and in real-time!
             </Text>
             <Button
               onClick={() => navigate('/learn-more')}

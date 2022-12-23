@@ -2,10 +2,10 @@ import { Flex, Heading } from '@chakra-ui/react'
 import { parseEpoch } from '../../utils/utils'
 
 export const FightMetadata = ({ 
-    selectedSeasonFightSummary 
+    selectedFightSummary 
 }) => {
-    const { promoter, showTime } = selectedSeasonFightSummary?.show?.location ? selectedSeasonFightSummary.show : '';
-    const fightQuickTitle = selectedSeasonFightSummary?.fight?.fightQuickTitle ? selectedSeasonFightSummary.fight.fightQuickTitle : '';
+    const { promoter, showTime } = selectedFightSummary?.show?.location ? selectedFightSummary.show : '';
+    const fightQuickTitle = selectedFightSummary?.fight?.fightQuickTitle ? selectedFightSummary.fight.fightQuickTitle : '';
     return (
         <Flex 
             as="section" 

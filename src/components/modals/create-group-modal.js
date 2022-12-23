@@ -19,7 +19,7 @@ import {
     Textarea,
 } from '@chakra-ui/react'
 import { useScorecardStore } from '../../stores'
-import { DividerWithText } from '../../chakra';
+import { CreateGroupDividerWithText } from '../../chakra';
 
 export const CreateGroupModal = ({
     displayNameModal,
@@ -29,10 +29,12 @@ export const CreateGroupModal = ({
 }) => {
     
     const {
-        selectedSeasonFightSummary,
-        selectedSeasonSummary
+        selectedFightSummary,
+        selectedSeason
     } = useScorecardStore();
-
+    // console.log('selectedFightSummary: ', selectedFightSummary)
+    // console.log('selectedSeason: ', selectedSeason)
+    const [season, setSeason] = useState({})
     const [form, setForm] = useState({
         groupScorecardNotes: '',
         groupScorecardName: '',
@@ -41,18 +43,18 @@ export const CreateGroupModal = ({
     const [value, setValue] = useState('1')
 
     useEffect(() => {
-        setForm({ ...form, groupScorecardName: value === '1' ?  selectedSeasonSummary?.season?.seasonName : selectedSeasonFightSummary?.fight?.fightQuickTitle })
+        setForm({ ...form, groupScorecardName: value === '1' ? selectedFightSummary?.fight?.fightQuickTitle : selectedSeason?.seasonName })
     },[value])
 
     useEffect(() => {
-        if(selectedSeasonSummary?.season?.seasonName && selectedSeasonFightSummary?.fight?.fightId){
-            setForm({
-                groupScorecardNotes: '',
-                groupScorecardName: selectedSeasonSummary.season.seasonName,
+        if(selectedSeason?.seasonId){
+            setForm({ 
+                ...form, 
+                groupScorecardName: selectedFightSummary?.fight.fightQuickTitle,
                 displayName: username
             })
         }
-    },[selectedSeasonSummary, selectedSeasonFightSummary])
+    },[selectedSeason])
 
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
@@ -68,8 +70,8 @@ export const CreateGroupModal = ({
 
     const createScorecard = () => {
         Object.assign(form, {
-            groupScorecardType: value === '1' ? 'SEASON' : 'FIGHT',
-            targetId: value === '1' ? selectedSeasonSummary?.season?.seasonId : selectedSeasonFightSummary?.fight?.fightId,
+            groupScorecardType: value === '1' ? 'FIGHT' : 'SEASON',
+            targetId: value === '1' ? selectedFightSummary.fight.fightId : selectedSeason.seasonId,
         })
         handleCreateSeasonScorecard(form)
         closeModal()
@@ -77,7 +79,7 @@ export const CreateGroupModal = ({
 
     const closeModal = () => {
         setForm({ 
-            groupScorecardName: selectedSeasonSummary.season.seasonName, 
+            groupScorecardName: selectedSeason.seasonName, 
             displayName: username,
             groupScorecardNotes: '',
         })
@@ -110,49 +112,75 @@ export const CreateGroupModal = ({
                     px="4"
                     my="2"
                 >
-                    <Text as="h3">
+                    <Text 
+                        as="h2"
+                        fontSize="md"
+                        mb="-1"
+                        color="#CCC"
+                    >
                         Score
                     </Text>
-                    <Heading>
-                        {value === '1' ? selectedSeasonSummary?.season?.seasonName : selectedSeasonFightSummary?.fight?.fightQuickTitle}
-                    </Heading>
-                    <Flex
-                        px="4"
-                        py="2"
-                        alignSelf="center"
-                        flexDir="inline-flex"
+                    <Text 
+                        as="h2"
+                        fontSize="lg"
+                        color="white"
                     >
-                        <RadioGroup onChange={setValue} value={value}>
-                            <Radio 
-                                mx="2" 
-                                value={'1'}
-                            >
-                                {selectedSeasonSummary?.season?.seasonName}
-                            </Radio>
-                            <Radio 
-                                mx="2" 
-                                value={'2'}
-                            >
-                                {selectedSeasonFightSummary?.fight?.fightQuickTitle}
-                            </Radio>
-                        </RadioGroup>
+                        {selectedFightSummary?.fight?.fightQuickTitle}
+                    </Text>
+                    <CreateGroupDividerWithText 
+                        color="#bababa"
+                        text="Play a Season" 
+                    />
+
+
+                    <Flex
+                        p="1"
+                        w="100%"
+                        display="inline-flex"
+                        alignItems="center"
+                    >
+                        <Heading
+                            wordBreak="break-all"
+                            pl="6"
+                            flex="1 0 45%"
+                            as="h2"
+                            size="md"
+                        >
+                            {value === '1' ? 'Fight' : 'Season'}
+                        </Heading>
+                        <Flex
+                            flex="1 0 45%"
+                        >
+
+                            <RadioGroup onChange={setValue} value={value}>
+                                <Radio  
+                                    mr="2"
+                                    value={'1'}
+                                >
+                                    Fight
+                                </Radio>
+                                <Radio 
+                                    value={'2'}
+                                >
+                                    Season
+                                </Radio>
+                            </RadioGroup>
+                        </Flex>
                     </Flex>
-                    <DividerWithText 
+                    <CreateGroupDividerWithText 
                         color="#bababa"
                         text="Group Name" 
                     />
                     <Flex
-                        p="2"
+                        p="1"
                         w="100%"
                         display="inline-flex"
                         alignItems="center"
-                        justifyContent="space-between"
                     >
 
                         <Heading
                             pl="6"
                             flex="1 0 45%"
-                            minH="2rem"  
                             as="h2"
                             size="md"
                             wordBreak="break-all"
@@ -161,6 +189,7 @@ export const CreateGroupModal = ({
                         </Heading>
                         <FormControl isInvalid={groupScorecardNameError}>
                             <Input 
+                                placeholder={value === '1' ? selectedFightSummary?.fight?.fightQuickTitle : selectedSeason?.seasonName}
                                 id="groupScorecardName"
                                 flex="1 0 45%"
                                 alignSelf="start"
@@ -174,23 +203,20 @@ export const CreateGroupModal = ({
                             <FormErrorMessage>Too Long!</FormErrorMessage>
                         </FormControl>
                     </Flex>
-                    <DividerWithText 
+                    <CreateGroupDividerWithText 
                         color="#bababa"
-                        text="Your Display Name" 
+                        text="Your Name" 
                     />
                     <Flex
-                        p="2"
+                        p="1"
                         w="100%"
                         display="inline-flex"
                         alignItems="center"
-                        justifyContent="space-between"
-                        mb="4"
                     >
                         <Heading
                             wordBreak="break-all"
                             pl="6"
                             flex="1 0 45%"
-                            minH="2rem"  
                             as="h2"
                             size="md"
                         >
@@ -198,6 +224,7 @@ export const CreateGroupModal = ({
                         </Heading>
                         <FormControl isInvalid={displayNameError}>
                             <Input 
+                                placeholder={username}
                                 id="displayName"
                                 flex="1 0 45%"
                                 alignSelf="start"
@@ -211,13 +238,13 @@ export const CreateGroupModal = ({
                             <FormErrorMessage>Too Long!</FormErrorMessage>
                         </FormControl>
                     </Flex>
-                    <DividerWithText
+                    <CreateGroupDividerWithText
                         color="#bababa"
                         text="Notes" 
                     />
                     <Flex
                         maxW={["90%", "80%"]}
-                        p="2"
+                        p="1"
                         w="100%"
                         display="inline-flex"
                         alignItems="center"
@@ -275,7 +302,4 @@ export const CreateGroupModal = ({
             </ModalContent>
         </Modal>
     )
-
-
-
 }

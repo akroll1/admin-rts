@@ -4,17 +4,17 @@ import {
     Heading,
     Img,
     Link,
-    LinkBox,
-    LinkOverlay,
     Text,
     useColorModeValue as mode
 } from '@chakra-ui/react'
 import { BsClockFill } from 'react-icons/bs'
+import { Navigate, NavLink as RRLink, useNavigate } from 'react-router-dom'
 
-export const BlogArticle = (props) => {
-    const { title, href, summary, media, author, category = '' } = props
-    return (
-      <LinkBox
+export const BlogPost = ({ post }) => {
+  const navigate = useNavigate()
+  const { blogId, author, authorId, body, imgs = [], subtitle, summary, title } = post?.blogId ? post : '';
+  return (
+      <Flex
         as="article"
         bg={{sm: mode('white', 'gray.700')}}
         shadow={{sm: 'base'}}
@@ -22,15 +22,17 @@ export const BlogArticle = (props) => {
         overflow="hidden"
         transition="all 0.2s"
         _hover={{shadow: {sm: 'lg'}}}
+        cursor="pointer"
+        pb="2"
       >
-        <Flex direction="column">
-          <Img height="60" objectFit="cover" alt={title} src={media} />
+        <Flex 
+          direction="column"
+          // onClick={() => navigate(`/blog/${blogId}`)}
+        >
+          <Img height="60" objectFit="cover" alt={title} src={imgs?.length > 0 ? imgs[0] : ''} />
           <Flex
             direction="column"
-            px={{
-              sm: '6',
-            }}
-            py="5"
+            px="4"
           >
             <Text
               casing="uppercase"
@@ -38,12 +40,14 @@ export const BlogArticle = (props) => {
               fontSize="xs"
               fontWeight="semibold"
               mb="2"
+              pt="1"
+              pl="0"
               color="gray.500"
             >
-              {category}
+              {'FSL'}
             </Text>
             <Heading as="h3" size="sm" mb="2" lineHeight="base">
-              <LinkOverlay href={href}>{title}</LinkOverlay>
+              {title}
             </Heading>
             <Text noOfLines={2} mb="8" color={mode('gray.600', 'gray.400')}>
               {summary}
@@ -55,10 +59,15 @@ export const BlogArticle = (props) => {
               color={mode('gray.600', 'gray.400')}
             >
               <Text>
-                By{' '}
-                <Box as="a" textDecor="underline" href={author.href}>
-                  {author.name}
-                </Box>
+                By&nbsp; 
+                <Link 
+
+                  as={RRLink} 
+                  textDecor="underline" 
+                  to={`/author/${authorId}`}
+                >
+                  {author}
+                </Link>
               </Text>
               <Link href="#">
                 <Box as={BsClockFill} display="inline-block" me="2" opacity={0.4} />6 min read
@@ -66,6 +75,6 @@ export const BlogArticle = (props) => {
             </Flex>
           </Flex>
         </Flex>
-      </LinkBox>
+      </Flex>
     )
   }

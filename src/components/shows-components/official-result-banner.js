@@ -36,7 +36,7 @@ export const OfficialResultBanner = () => {
                     textAlign="center"
                     fontWeight="thin" 
                     fontSize={["md", "lg", "xl"]}
-                    >
+                >
                 Official Result
                 </Text>
                 <Heading 

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { 
     Flex, 
+    FormLabel,
     Heading, 
+    Switch,
     Table, 
     TableCaption, 
     Tbody, 
@@ -29,6 +31,9 @@ export const ScoringTable = ({
     const sortData = (a, b) => a.username - b.username
     const sortedTable = [...new Set(tableData?.sort(sortData))]
     // console.log('sortedTable: ', sortedTable)
+    const scoringStop = lastScoredRound => {
+        
+    }
 
     const columns = [
         {
@@ -95,7 +100,49 @@ export const ScoringTable = ({
                 my="auto"
                 h="auto"
                 mb={tabs.all ? "0rem" : "4rem"}
-            >      
+            >     
+                { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" mb="-2" size="md">FIGHT IS OFFICIAL</Heading> }
+                <Flex
+                    w="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    m="auto"
+                >
+                    <Flex
+                        alignItems="center"
+                        p="1"
+                    >
+                        <FormLabel 
+                            mb="0" 
+                            htmlFor='realTime'
+                        >
+                            Real Time
+                        </FormLabel>
+                        <Switch 
+                            size="md"
+                            colorScheme="gray"
+                            id='realTime' 
+                            isDisabled={!activeGroupScorecard?.groupScorecard?.chatKey} 
+                        />
+                    </Flex>
+                    <Flex
+                        alignItems="center"
+                        p="1"
+                    >
+                        <FormLabel 
+                            mb="0" 
+                            htmlFor='currentRound'
+                        >
+                            Show to My Round
+                        </FormLabel>
+                        <Switch
+                            size="md" 
+                            colorScheme="gray"
+                            id='currentRound' 
+                            defaultChecked 
+                        />
+                    </Flex>
+                </Flex>
                 <Table 
                     id="scoring_table"
                     style={{tableLayout:'auto', width: '100%'}} 
@@ -107,7 +154,6 @@ export const ScoringTable = ({
                     fontSize="sm"
                     bg="whiteAlpha.50"
                 >
-                    { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <TableCaption placement="top"><Heading size="md">FIGHT IS OFFICIAL</Heading></TableCaption> }
                     <Thead bg={mode('gray.50', '#111111')}>
                         <Tr>
                             {columns.map((column, index) => {
@@ -199,7 +245,8 @@ export const ScoringTable = ({
                                                     <Td key={_i} p="0px !important">
                                                         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                             <Flex 
-                                                                color={_i >= mappedScores.length ? 'transparent' : "white"}
+                                                                // lastScoreRound || mappedScores.length
+                                                                color={_i >= lastScoredRound ? 'transparent' : "white"}
                                                                 borderRadius="2px"
                                                                 w="100%"
                                                                 p="1"
@@ -214,7 +261,8 @@ export const ScoringTable = ({
                                                             <Flex 
                                                                 w="100%"
                                                                 style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2)}
-                                                                color={_i >= mappedScores.length ? 'transparent' : "white"}
+                                                                // lastScoreRound || mappedScores.length
+                                                                color={_i >= lastScoredRound ? 'transparent' : "white"}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 

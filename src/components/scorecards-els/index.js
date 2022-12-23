@@ -1,1 +1,1 @@
-export * from './scorecards-groups-card'
+export * from './invitations-list'

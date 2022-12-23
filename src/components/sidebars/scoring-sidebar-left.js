@@ -42,20 +42,6 @@ export const ScoringSidebarLeft = ({
     const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';
     const isLocked = Date.now() > showTime
 
-    const openMemberModal = () => {
-        const isAdmin = activeGroupScorecard.groupScorecard.ownerId === user.sub;
-        if(isAdmin){
-            setModals('addMemberModal', true)
-            return
-        }
-        toast({ 
-            title: `Only group admin can add members.`,
-            duration: 5000,
-            status: 'info',
-            isClosable: true
-        })
-    }
-
     const handleHideShow = id => {
         if(id === activeNavGroupItem){
             setActiveNavGroupItem('')
@@ -94,7 +80,7 @@ export const ScoringSidebarLeft = ({
             bg={tabs.info ? "inherit" : "fsl-sidebar-bg"}
             color={tabs.info ? "#dadada" : "#c8c8c8"}
             fontSize="sm"
-            minH={tabs.info ? "75vh" : "100%"}
+            minH={tabs.info ? "75vh" : ""}
             border={tabs.all ? "1px solid #252525" : 'none'}
         >
             <SidebarsDividerWithText 
@@ -103,9 +89,9 @@ export const ScoringSidebarLeft = ({
                 mx="1"
                 label="Fight Info" 
             />
-            {/* <ScoringSidebarFightersFaceoff 
+            <ScoringSidebarFightersFaceoff 
                 tabs={tabs}
-            /> */}
+            />
             <Flex 
                 flexDir="column"
                 h={"auto"}

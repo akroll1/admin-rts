@@ -1,18 +1,16 @@
 
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { FaMapMarkerAlt, FaRegClock, FaTrophy, FaTv } from 'react-icons/fa'
 import { BiChevronRightCircle } from 'react-icons/bi'
-import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../utils'
+import { parseEpoch, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { ShowsNavItem } from './shows-nav-item'
-import { useScorecardStore } from '../../stores'
-import { useBoundStore } from '../../stores/useBoundStore'
 
 export const ShowsParticulars = ({
-    selectedSeasonFightSummary
+    selectedFightSummary
 }) => {
-    const { isTitleFight, rounds, weightclass } = selectedSeasonFightSummary?.fight ? selectedSeasonFightSummary.fight : '';
-    const { location, network, showTime } = selectedSeasonFightSummary?.show ? selectedSeasonFightSummary.show : '';
+    const { isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
+    const { location, network, showTime } = selectedFightSummary?.show ? selectedFightSummary.show : '';
     return (
         <Flex 
             as="section"
@@ -47,7 +45,7 @@ export const ShowsParticulars = ({
                 >
                     <ShowsNavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
                     <ShowsNavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
-                    <ShowsNavItem icon={<FaTrophy />} color="fsl-text" label={ `Title Fight: ${isTitleFight ? `Yes` : `No`}`} />
+                    <ShowsNavItem icon={<FaTrophy />} color="fsl-text" label={ `${isTitleFight ? `Title Fight: Yes` : `Title Fight: No`}`} />
                 </Flex>
             </Flex>
         </Flex>

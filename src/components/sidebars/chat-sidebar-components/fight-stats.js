@@ -17,6 +17,36 @@ export const FightStats = (props) => {
         }
     }, [stats])
     
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    const roundByRoundObj = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0
+    };
+    const getMappedScoresArr = stats.map( statObj => statObj.mappedScores)
+        .map( roundObj => {
+
+        });
+    console.log('getMappedScoresArr: ' , getMappedScoresArr)
+
+
+
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+
     const [fighter1, fighter2] = fighters ? fighters : '';
     let totalObj = {
         even: 0, 
@@ -56,7 +86,9 @@ export const FightStats = (props) => {
     };
     
     const { fighter1Percentage, fighter2Percentage } = getPercentages(totalObj);
-    
+
+    console.log('stats: ' , stats)
+
     return (
         <Flex
             display={tabs.all || tabs.table ? 'flex' : 'none'}
@@ -68,27 +100,50 @@ export const FightStats = (props) => {
             {...boxProps}
             alignItems="center"
             justifyContent="space-evenly"
-            w={["100%", "70%", "50%"]}
+            w={["100%"]}
         >
-            <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-evenly">
-
-                <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="lg" color="muted">
+            <Flex 
+                w="100%" 
+                flexDirection={["column", "row"]} 
+                alignItems="center" 
+                justifyContent="space-evenly"
+            >
+                <Flex
+                    flexDir="column"
+                    alignItems="center"
+                    justifyContent="center"                
+                >
+                    <Heading 
+                        m="auto" 
+                        fontSize="md" 
+                        color="muted"
+                    >
                         {capFirstLetters(fighter1)}
-                    </Text>
-                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
+                    </Heading>
+                    <Heading size="md">
                         {fighter1Percentage ? fighter1Percentage : 0}&#37;	
                     </Heading>
-                </Stack>
-                <Stack alignItems="center" justifyContent="center">
-                    <Text m="auto" fontSize="lg" color="muted">
+                </Flex>
+                <Flex
+                    flexDir="column"
+                    alignItems="center"
+                    justifyContent="center"                
+                >
+                    <Heading 
+                        m="auto" 
+                        fontSize="md" 
+                        color="muted"
+                    >
                         {capFirstLetters(fighter2)}
-                    </Text>
-                    <Heading size={useBreakpointValue({base: 'lg', md: 'xl'})}>
+                    </Heading>
+                    <Heading size="md">
                         {fighter2Percentage ? fighter2Percentage : 0}&#37;	
                     </Heading>
-                </Stack>
+                </Flex>
+            </Flex>
 
+            <Flex>
+                <p>stats</p>
             </Flex>
         </Flex>
     )

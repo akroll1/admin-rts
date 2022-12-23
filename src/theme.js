@@ -262,9 +262,6 @@ const Button = {
   }
 }
 
-const headingTheme = {
-}
-
 const Heading = {
   baseStyle: {
     color: '#eaeaea',
@@ -328,6 +325,12 @@ const Table = {
   }
 }
 
+const Tag = {
+  defaultProps: {
+    margin: '10px',
+    padding: '1px'
+  }
+}
 const theme = extendTheme({ 
   config, 
   ...chakraTheme, 
@@ -338,7 +341,9 @@ const theme = extendTheme({
     Input,
     Link,
     Select,
-    Table
+    Table,
+    Tag
   }
 });
 export default theme;
+
