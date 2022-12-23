@@ -13,10 +13,11 @@ import { ScorecardsInvitationsBoard } from '../sidebars'
 export const ScorecardsPage = () => {
     
     const [selectedSummary, setSelectedSummary] = useState({})
-    const [showInvitations, setShowInvitations] = useState(true)
+    const [showInvitations, setShowInvitations] = useState(false)
     const { 
         fetchUserInvites,
         fetchUserScorecards,
+        userInvites,
         userScorecardSummaries
     } = useScorecardStore();
 
@@ -119,8 +120,9 @@ export const ScorecardsPage = () => {
                         textAlign="center"
                         mx="auto"
                         textDecor="underline"
+                        fontSize="lg"
                     >
-                        { showInvitations ? `Show Scorecard Summary` : `Show Invitations`}
+                        { showInvitations ? `Show Scorecard Summary` : userInvites.length > 0 ? `Show Invitations (${userInvites.length})` : `Show Invitations`}
                     </Text>
                 </Flex>
                 { showInvitations
