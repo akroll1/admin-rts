@@ -39,8 +39,9 @@ export const ScorecardsInvitationsBoard = () => {
             justifyContent="flex-start"
             border="1px solid #383838"
             borderRadius="md"
-            p="2"
-            my="2"
+            py="2"
+            px="4"
+            my="4"
         >
             <Flex       
                 position="relative"
@@ -50,6 +51,7 @@ export const ScorecardsInvitationsBoard = () => {
                 justifyContent="flex-start"
                 bg="transparent"
                 borderRadius="md"
+                p="2"
             >
                 <InvitationsHeader
                     fontSize="xl"
