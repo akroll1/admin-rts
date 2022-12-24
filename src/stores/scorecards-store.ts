@@ -142,6 +142,7 @@ export interface ScorecardStore {
     submitFightResolution(resolutionObj: FightResolution): void
     submitList(list: List): void
     submitRoundScores(roundScores: Record<string, number>): void
+    subscribeToNewsletter(email: string): void
     tableData: any[]
     toast: ToastOption
     totalRounds: number
@@ -705,6 +706,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.put(`${url}/panels`, predictionObj, get().accessToken)
                 const data = res.data
                 console.log('DATA: ', data)
+            },
+            subscribeToNewsletter: async (email: string) => {
+                const res = await axios.post(`${url}/subscribe`, { email }, get().accessToken)
+                console.log('SUBSCRIBE: res.status: ', res.status)
             },
             sendingChatScores: (roundScores: RoundScores) => {
                 set({ sentChatScores: roundScores })

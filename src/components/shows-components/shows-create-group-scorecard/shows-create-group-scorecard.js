@@ -4,9 +4,16 @@ import {
     FormControl, 
     Input, 
     InputGroup, 
-    InputRightElement
+    InputRightElement,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverCloseButton,
+    PopoverHeader,
+    FormErrorMessage
 } from '@chakra-ui/react'
-import { AddIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
+import { AddIcon, CloseIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
 import { DividerWithText } from '../../../chakra'
 import { useScorecardStore } from '../../../stores'
 
@@ -15,8 +22,11 @@ export const ShowsCreateGroupScorecard = ({
     emailValue, 
     handleEmailSubmit, 
     handleFormChange, 
+    isError,
+    isAdminError,
     isSubmitting,
     invites, 
+    resetInput,
     setDisplayNameModal,
 }) => {
 
@@ -25,9 +35,6 @@ export const ShowsCreateGroupScorecard = ({
     } = useScorecardStore()
 
     const handleSubmit = () => {
-        if(!user.sub){
-            return alert('You must be signed in to create a scorecard.')
-        }
         setDisplayNameModal(true)
     }
 
@@ -96,58 +103,98 @@ export const ShowsCreateGroupScorecard = ({
                             </InputGroup>
                         )
                     })}
-                    <Input 
-                        onChange={handleFormChange} 
-                        value={ emailValue } 
-                        id="emailValue" 
-                        // _focus={{color: 'black',background: 'lightgray'}} 
-                        mt="4" 
-                        placeholder="email@example.com" 
-                        type="email" maxLength={255} 
-                    />
-                    <Flex 
-                        m="auto" 
-                        alignItems="center" 
-                        justifyContent="center" 
-                        flexDir={['column', 'row']}
-                    >     
-                        <Button 
-                            minW={["90%", "40%"]}
-                            leftIcon={invites.length >= 4 ? '' : <AddIcon />} 
-                            m="2"
-                            mt={["4"]}
-                            type="submit"
-                            colorScheme="solid" 
-                            variant="outline"
-                            color="#CACACA"
-                            size={["lg", "md"]}
-                            _hover={{
-                                color: 'white',
-                                border: '1px solid #353535',
-                                bg: "#353535"
-                            }}
-                            bg="#252525"
-                            onClick={handleEmailSubmit} 
-                            disabled={!user.sub || invites.length >= 4}
-                        >
-                            {`${invites.length >= 4 ? '5 Member Limit' : 'Add Member'}`}
-                        </Button>
-                        <Button 
-                            minW={["90%", "40%"]}
-                            size={["lg", "md"]}
-                            isLoading={isSubmitting}
-                            loadingText="Submitting"
-                            m="2" 
-                            type="submit"
-                            mt={["4"]} 
-                            onClick={handleSubmit} 
-                            colorScheme="solid" 
-                            disabled={!user.sub}
-                        >
-                            Create Scorecard
-                        </Button>
-                    </Flex>
                 </FormControl>
+                <FormControl isInvalid={isError}>
+                    <InputGroup>
+                        <Input 
+                            errorBorderColor="red.700"
+                            onChange={handleFormChange} 
+                            value={ emailValue } 
+                            id="emailValue" 
+                            // _focus={{color: 'black',background: 'lightgray'}} 
+                            mt="4" 
+                            placeholder="email@example.com" 
+                            type="email" 
+                            maxLength={255} 
+                            autoComplete="nope"
+                        />
+                        { emailValue && 
+                            <InputRightElement children={<CloseIcon
+                                _hover={{cursor: 'pointer', color: 'white'}} 
+                                    color="#dadada" 
+                                    alignItems="center"
+                                    justifyContent="center" 
+                                    mt="8"
+                                    fontSize="0.9rem"
+                                    onClick={resetInput}
+                                />}
+                            />
+                        }
+                    </InputGroup>
+                    <FormErrorMessage>{isAdminError ? `You're already included.` : `Not a valid email.`}</FormErrorMessage>
+                </FormControl>
+                <Flex 
+                    m="auto" 
+                    alignItems="center" 
+                    justifyContent="center" 
+                    flexDir={['column', 'row']}
+                >     
+                    <Popover>
+                        <PopoverTrigger>
+                            <Button 
+                                minW={["90%", "40%"]}
+                                leftIcon={invites.length >= 4 ? '' : <AddIcon />} 
+                                m="2"
+                                mt={["4"]}
+                                type="submit"
+                                colorScheme="solid" 
+                                variant="outline"
+                                color="#CACACA"
+                                size={["lg", "md"]}
+                                _hover={{
+                                    color: 'white',
+                                    border: '1px solid #353535',
+                                    bg: "#353535"
+                                }}
+                                bg="#252525"
+                                onClick={user.sub ? handleEmailSubmit : null} 
+                            >
+                                {`${invites.length >= 4 ? '5 Member Limit' : 'Add Member'}`}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverHeader>
+                                You must be signed in.
+                            </PopoverHeader>
+                        </PopoverContent>
+                    </Popover>
+                    <Popover>
+                        <PopoverTrigger>
+                            <Button 
+                                minW={["90%", "40%"]}
+                                size={["lg", "md"]}
+                                isLoading={isSubmitting}
+                                loadingText="Submitting"
+                                m="2" 
+                                type="submit"
+                                mt={["4"]} 
+                                onClick={user.sub ? handleSubmit : null} 
+                                colorScheme="solid" 
+                            >
+                                Create Scorecard
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverHeader>
+                                You must be signed in.
+                            </PopoverHeader>
+                        </PopoverContent>
+                    </Popover>
+                </Flex>
             </Flex> 
         </Flex>
     )
