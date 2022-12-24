@@ -34,7 +34,7 @@ export const FighterInfoCard = props => {
           fontSize={["sm", "md", "lg"]}
           textAlign="center"
           noOfLines={1}
-          color={useColorModeValue('gray.600', 'gray.300')}
+          color={useColorModeValue('gray.400', 'gray.300')}
         >
           {`${capFirstLetters(ringname)}`}
         </Text>

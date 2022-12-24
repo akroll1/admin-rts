@@ -1,1 +1,1 @@
-export * from './scorecards-page'
+export * from '../../pages/scorecards-page'

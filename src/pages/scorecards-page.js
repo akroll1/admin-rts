@@ -5,10 +5,10 @@ import {
     Text,
     useColorModeValue as mode,
 } from '@chakra-ui/react'
-import { useScorecardStore } from '../../stores'
-import { ScorecardRow } from './scorecard-row'
-import { ScorecardSummary } from './scorecard-summary'
-import { ScorecardsInvitationsBoard } from '../sidebars'
+import { useScorecardStore } from '../stores'
+import { ScorecardRow } from '../components/scorecards/scorecard-row'
+import { ScorecardSummary } from '../components/scorecards/scorecard-summary'
+import { ScorecardsInvitationsBoard } from '../components/sidebars'
 
 export const ScorecardsPage = () => {
     

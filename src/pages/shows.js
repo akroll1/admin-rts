@@ -46,6 +46,8 @@ const Shows = () => {
         review: '',
         title: ''
     });
+    const [isError, setIsError] = useState(false)
+    const [isAdminError, setIsAdminError] = useState(false)
 
     useEffect(() => {
         if(tokenExpired){
@@ -100,12 +102,26 @@ const Shows = () => {
         setFightReviewForm(false);
     }
 
+    const resetInput = () => {
+        setEmailValue('')
+        setIsAdminError(false)
+        setIsError(false)
+    }
+
     const handleEmailSubmit = e => {
         e.preventDefault();
         // limit to 5 invites for now.
         const isValid = isValidEmail(emailValue);
-        if(!emailValue) return;
+        if(!emailValue){
+            setIsError(true)
+            return
+        }
         if(isValid){
+            if(emailValue === user.email){
+                setIsError(true)
+                setIsAdminError(true)
+                return
+            }
             const tempInvites = invites.concat(emailValue);
             const dedupedEmails = [...new Set(tempInvites)];    
             if(dedupedEmails.length >= 5){
@@ -114,6 +130,8 @@ const Shows = () => {
             } 
             setInvites(dedupedEmails)
             setEmailValue('');
+            setIsError(false)
+            setIsAdminError(false)
             toast({
                 title: `Added ${emailValue} to Group!`,
                 duration: 5000,
@@ -121,7 +139,9 @@ const Shows = () => {
                 isClosable: true
             })
         } else {
-            alert('Not a valid email.')
+            // alert('Not a valid email.')
+            setIsError(true)
+            return
         }
     }
 
@@ -195,8 +215,11 @@ const Shows = () => {
                 fightReviewForm={fightReviewForm}
                 handleEmailSubmit={handleEmailSubmit}
                 handleFormChange={handleFormChange}
+                isError={isError}
+                isAdminError={isAdminError}
                 isSubmitting={isSubmitting}
                 invites={invites}
+                resetInput={resetInput}
                 setDisplayNameModal={setDisplayNameModal}
                 setFightReviewForm={setFightReviewForm}
                 username={username}

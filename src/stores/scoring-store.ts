@@ -5,8 +5,6 @@ import { capFirstLetters } from '../utils'
 import axios from 'axios'
 import { Scorecard } from './models'
 
-
-
 export interface ScoringStore { 
     lastScoredRound: number
     fetchGuestJudgeScorecards(): void

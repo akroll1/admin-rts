@@ -1,23 +1,49 @@
-import React, { useState } from 'react'
-import { Button, chakra, HTMLChakraProps, Input, Stack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
+import { useEffect,  useState } from 'react'
+import { 
+  Button, 
+  chakra, 
+  FormControl,
+  FormErrorMessage,
+  Input, 
+  InputGroup,
+  InputRightElement,
+  Stack, 
+  Text, 
+  useColorModeValue, 
+  useToast 
+} from '@chakra-ui/react'
 import { FooterHeading } from './footer-heading'
-import { isValidEmail } from '../utils'
+import { isValidEmail as validateEmail } from '../utils'
+import { CloseIcon } from '@chakra-ui/icons'
+import { useScorecardStore } from '../stores'
 
 export const SubscribeForm = (props) => {
   const toast = useToast()
+
+  const {
+    subscribeToNewsletter
+  } = useScorecardStore()
+
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [email, setEmail] = useState('')
+  const [subscriberEmail, setSubscriberEmail] = useState('')
   const [isError, setIsError] = useState(null)
   const [disableButton, setDisableButton] = useState(false)
 
+  useEffect(() => {
+    if(!subscriberEmail){
+      setIsError(false)
+    }
+  },[subscriberEmail])
+
   const subscribe = () => {
     setIsSubmitting(true)
-    const isValid = isValidEmail(email);
-    if(isValid){
+    const validated = validateEmail(subscriberEmail);
+    if(validated){
       // check if already subscribed... somewhere.
       console.log('Submit email!');
       setDisableButton(true)
-
+      subscribeToNewsletter(subscriberEmail)
+      setSubscriberEmail('')
       toast({ 
         title: `Thanks for subscribing! ${'\n'} We just sent a verification link to your email.`,
         duration: 5000,
@@ -25,49 +51,61 @@ export const SubscribeForm = (props) => {
         isClosable: true
       })
     }
-    if(!isValid){
+    if(!validated){
       setIsError(true)
     }
     setIsSubmitting(false)
   }
 
+  const handleEmailChange = e => {
+    const { value } = e.currentTarget;
+    setSubscriberEmail(value)
+  }
+
   return (
-    <chakra.form {...props} onSubmit={(e) => e.preventDefault()} maxW="100%">
-      <Stack spacing="2">
-        <FooterHeading>Subscribe to our newsletter</FooterHeading>
-        <Text>Get the <span style={{fontWeight: 'bold',color: '#FFF'}}>FightSync newsletter</span> delivered directly to your inbox!</Text>
-        <Stack spacing="4" direction={{ base: 'column', md: 'row' }}>
-          <Input
-            value={email}
-            onChange={e => setEmail(e.currentTarget.value)}
-            id="email"
-            bg={useColorModeValue('white', 'inherit')}
-            placeholder="Enter your email"
-            type="email"
-            required
-            focusBorderColor={useColorModeValue('blue.500', 'blue.300')}
-            _placeholder={{
-              opacity: 1,
-              color: useColorModeValue('gray.500', 'whiteAlpha.700'),
-            }}
-            errorBorderColor='crimson'     
-          />
-          <Button
-            disabled={disableButton}
-            onClick={subscribe}
-            type="submit"
-            colorScheme="solid"
-            color="white"
-            size="md"
-            flexShrink={0}
-            width={{ base: 'full', md: 'auto' }}
-            isLoading={isSubmitting}
-            loadingText="Submitting"
-          >
-            Subscribe
-          </Button>
-        </Stack>
+    <Stack spacing="2">
+      <FooterHeading>Subscribe to our newsletter</FooterHeading>
+      <Text>Get the <span style={{fontWeight: 'bold',color: '#FFF'}}>FightSync newsletter</span> delivered directly to your inbox!</Text>
+      <Stack spacing="4" direction={{ base: 'column', md: 'row' }}>
+        <FormControl isInvalid={isError}>
+          <InputGroup>
+            <Input 
+              errorBorderColor="red.700"
+              onChange={handleEmailChange}
+              value={ subscriberEmail }
+              id="subscriberEmail"
+              placeholder="email@example.com"
+              type="email" 
+              maxLength={255} 
+            />
+            { subscriberEmail && 
+              <InputRightElement children={<CloseIcon
+                  _hover={{cursor: 'pointer', color: 'white'}} 
+                  color="#dadada" 
+                  alignItems="center"
+                  justifyContent="center" 
+                  fontSize="0.8rem"
+                  onClick={() => setSubscriberEmail('')}
+                />}
+              />
+            }
+          </InputGroup>
+          <FormErrorMessage>{isError ? `Not a valid email.` : ``}</FormErrorMessage>
+        </FormControl>
+        <Button
+          disabled={disableButton}
+          onClick={subscribe}
+          colorScheme="solid"
+          color="white"
+          size="md"
+          flexShrink={0}
+          width={{ base: 'full', md: 'auto' }}
+          isLoading={isSubmitting}
+          loadingText="Submitting"
+        >
+          {disableButton ? `Suscribed!` : `Subscribe`}
+        </Button>
       </Stack>
-    </chakra.form>
+    </Stack>
   )
 }

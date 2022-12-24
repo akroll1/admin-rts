@@ -19,8 +19,11 @@ export const ShowsMain = ({
     fightReviewForm, 
     handleEmailSubmit, 
     handleFormChange,
+    isError,
+    isAdminError,
     isSubmitting,
     invites,
+    resetInput,
     setDisplayNameModal,
     setFightReviewForm, 
     username
@@ -113,8 +116,11 @@ export const ShowsMain = ({
                             emailValue={emailValue} 
                             handleEmailSubmit={handleEmailSubmit} 
                             handleFormChange={handleFormChange} 
+                            isError={isError}
+                            isAdminError={isAdminError}
                             isSubmitting={isSubmitting}
                             invites={invites} 
+                            resetInput={resetInput}
                             setDisplayNameModal={setDisplayNameModal}
                             username={username}
                         />
