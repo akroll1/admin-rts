@@ -70,7 +70,7 @@ export const ScorecardRowItemLeft = ({ summary }) => {
               size="sm"
               colorScheme='yellow'
             >
-              Title Fight
+              Title
             </Tag>
           }
           <Tag
