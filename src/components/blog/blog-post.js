@@ -16,7 +16,7 @@ export const BlogPost = ({ post }) => {
   return (
       <Flex
         as="article"
-        bg={{sm: mode('white', 'gray.700')}}
+        bg={{sm: mode('fsl-heading-text', 'gray.700')}}
         shadow={{sm: 'base'}}
         rounded={{sm: 'md'}}
         overflow="hidden"
@@ -27,7 +27,7 @@ export const BlogPost = ({ post }) => {
       >
         <Flex 
           direction="column"
-          // onClick={() => navigate(`/blog/${blogId}`)}
+          onClick={() => navigate(`/blog/${blogId}`)}
         >
           <Img height="60" objectFit="cover" alt={title} src={imgs?.length > 0 ? imgs[0] : ''} />
           <Flex
@@ -46,10 +46,20 @@ export const BlogPost = ({ post }) => {
             >
               {'FSL'}
             </Text>
-            <Heading as="h3" size="sm" mb="2" lineHeight="base">
+            <Heading 
+              color={mode('blackAlpha.700','fsl-heading-text')}
+              as="h3" 
+              size="sm" 
+              mb="2" 
+              lineHeight="base"
+            >
               {title}
             </Heading>
-            <Text noOfLines={2} mb="8" color={mode('gray.600', 'gray.400')}>
+            <Text 
+              noOfLines={2} 
+              mb="8" 
+              color={mode('blackAlpha.600', 'blackAlpha.400')}
+            >
               {summary}
             </Text>
             <Flex

@@ -1,5 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Avatar, Box, Button, Flex, FormControl, FormLabel, Heading, HStack, Input, Stack, StackDivider, useToast, VStack } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { 
+  Box, 
+  Button, 
+  Flex, 
+  FormControl, 
+  FormLabel, 
+  Heading, 
+  HStack, 
+  Input, 
+  Stack, 
+  StackDivider, 
+  useToast, 
+  VStack 
+} from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import { FightersTable } from '../tables'
 import { useScorecardStore } from '../../stores'

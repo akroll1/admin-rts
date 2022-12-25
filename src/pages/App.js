@@ -33,7 +33,7 @@ const App = () => {
             <Route exact path="/scoring/:groupScorecardId/:fightId" element={<Scoring />} />
             <Route exact path="/scoring" element={<Scoring />} />
             <Route exact path="/blog" element={<Blog />} />
-            <Route exact path="/blog/:id" element={<BlogArticlePage />} />
+            <Route exact path="/blog/:blogId" element={<BlogArticlePage />} />
             <Route exact path="/featured-fights/:id" element={<FeaturedFights />} />
             <Route exact path="/live" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />

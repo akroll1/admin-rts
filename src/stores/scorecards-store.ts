@@ -447,7 +447,10 @@ export const useScorecardStore = create<ScorecardStore>()(
                 const res = await axios.get(`${url}/lists/${get().user.sub}/${listType}`, get().accessToken);
                 const data = res.data as any;
                 if(listType === "pound"){
-                    set({ poundListUser: data.userPoundList, poundListOfficial: data.officialPoundList })
+                    set({ 
+                        poundListUser: data.userPoundList, 
+                        poundListOfficial: data.officialPoundList 
+                    })
                 }
             },
             fetchPanel: async (panelId: string) => {
