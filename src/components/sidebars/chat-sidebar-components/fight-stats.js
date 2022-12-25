@@ -2,46 +2,58 @@ import { useEffect, useState } from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
 import { useScorecardStore } from '../../../stores'
+import { GiConsoleController } from 'react-icons/gi'
 
-export const FightStats = (props) => {
+export const FightStats = props => {
     const { label, tabs, value, ...boxProps } = props;
+
     const { 
+        activeGroupScorecard,
         stats
     } = useScorecardStore();
 
     const [fighters, setFighters] = useState(null);
-    
+    const totalRounds = activeGroupScorecard?.fight?.totalRounds ? activeGroupScorecard?.fight?.totalRounds : 12
+
     useEffect(() => {
         if(stats?.length > 0){
+            console.log('STATS: ', stats)
             setFighters(stats[0].fighters);
+            const obj = {
+                [stats[0].fighters[0]]: 0,
+                [stats[1].fighters[1]]: 0,
+            };
+            console.log('obj, 23: ', obj)
+            // divide by total scorers...
+
+            const getMappedScoresArr = stats?.map( (statObj, _i) => statObj.mappedScores)
+                .map( score => {
+                    return score.reduce( (acc, roundObj, _i) => {
+                        const fighter1 = stats[0].fighters[0];
+
+
+                        const fighter2 = stats[1].fighters[1];
+        
+                        if(roundObj.round == [_i+1]){
+
+                            const temp = {
+                                ['Round_'+roundObj.round]: {
+                                    [fighter1]: acc[fighter1] += roundObj[fighter1],
+                                    [fighter2]: acc[fighter2] += roundObj[fighter2],
+                                }
+                            }
+                            // console.log('acc: ', acc)
+                            return ({
+                                ...temp,
+                                ...acc,
+                            })
+
+                        }     
+                    },obj)
+                })
+            console.log('getMappedScoresArr: ' , getMappedScoresArr)
         }
     }, [stats])
-    
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    const roundByRoundObj = {
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-        11: 0,
-        12: 0,
-        13: 0,
-        14: 0,
-        15: 0
-    };
-    const getMappedScoresArr = stats.map( statObj => statObj.mappedScores)
-        .map( roundObj => {
-
-        });
-    console.log('getMappedScoresArr: ' , getMappedScoresArr)
-
 
 
     ///////////////////////////////////////////////
@@ -54,11 +66,44 @@ export const FightStats = (props) => {
         [fighter2]: 0, 
         total: 0
     };
-    const statisfied = stats?.length > 0 && stats.map( userStats => {
+    const stubTrendObj = totalRounds => {
+        if(!totalRounds) return
+        return Object.keys([...Array(totalRounds)]).map( (round, _i) => ({ [_i+1]: 0 }))
+    }
+    const trendAcc = stubTrendObj(totalRounds)
+    // console.log('trendAcc: ', trendAcc)
+
+    const statisfied = stats?.length > 0 && stats.map( (userStats, _i) => {
         const { fighters, mappedScores } = userStats;
         const [fighter1, fighter2] = fighters;
-       
-        return mappedScores.reduce( (obj, scores) => {
+
+
+        return mappedScores.reduce( (obj, scores, _i) => {
+
+            ///////////////////////////////////////
+            // console.log('OBJ 81: ', obj)
+            // console.log('SCORES 82: ', scores)
+            // console.log('trendAcc: ', trendAcc)
+            // USE THE MAPPED SCORES ARRAY FOR THIS!!!
+            const divisor = mappedScores.length;
+            if(_i+1 === scores.round){
+                // console.log('scores[fighter1]: ', scores[fighter1])
+                if(scores[fighter1] > scores[fighter2]){
+                    const t = trendAcc[_i+1]
+                    // console.log("T: ",t)
+                    trendAcc[_i+1] += t
+                }
+                if(scores[fighter2] > scores[fighter1]){
+                    trendAcc[_i+1] -= 1
+                }
+                // if(scores[fighter1] === scores[fighter2]){
+                //     trendAcc[_i+1] += 0
+                // }
+            }
+            // USE THE MAPPED SCORES ARRAY FOR THIS!!!
+            // console.log('trendAcc: ', trendAcc)
+            ///////////////////////////////////////
+
             if(scores[fighter1] > scores[fighter2]){
                 totalObj[fighter1] += 1;
             } 
@@ -87,8 +132,6 @@ export const FightStats = (props) => {
     
     const { fighter1Percentage, fighter2Percentage } = getPercentages(totalObj);
 
-    console.log('stats: ' , stats)
-
     return (
         <Flex
             display={tabs.all || tabs.table ? 'flex' : 'none'}
@@ -104,7 +147,7 @@ export const FightStats = (props) => {
         >
             <Flex 
                 w="100%" 
-                flexDirection={["column", "row"]} 
+                flexDirection={["row"]} 
                 alignItems="center" 
                 justifyContent="space-evenly"
             >

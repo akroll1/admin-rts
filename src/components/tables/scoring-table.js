@@ -5,13 +5,13 @@ import {
     Heading, 
     Switch,
     Table, 
-    TableCaption, 
     Tbody, 
     Td, 
     Th, 
     Thead, 
     Tr, 
-    useColorModeValue as mode 
+    useColorModeValue as mode,
+    useToast
 } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 import { useScorecardStore } from '../../stores'
@@ -21,18 +21,43 @@ import { ScoringDividerWithText } from './table-els/scoring-divider-with-text'
 export const ScoringTable = ({ 
     tabs, 
 }) => {
+
+    const toast = useToast();
+
     const {
         activeGroupScorecard,
         lastScoredRound,
         tableData, 
     } = useScorecardStore()
-    // console.log('tableData: ', tableData)
+
+    const [showToMyRound, setShowToMyRound] = useState(true)
+
     const totalRounds = activeGroupScorecard?.fight ? activeGroupScorecard.fight.rounds : 12;
     const sortData = (a, b) => a.username - b.username
     const sortedTable = [...new Set(tableData?.sort(sortData))]
-    // console.log('sortedTable: ', sortedTable)
-    const scoringStop = lastScoredRound => {
-        
+
+    const handleRealTimeSwitchClick = () => {
+        if(activeGroupScorecard?.groupScorecard?.chatKey){
+            toast({
+                title: 'Real-Time Updates Enabled',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+        if(!activeGroupScorecard?.groupScorecard?.chatKey){
+            toast({
+                title: 'Real-Time Updates Disabled',
+                description: 'Please upgrade to allow real-time updates.',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }
+
+    const handleShowToMyRound = () => {
+        setShowToMyRound(prev => !prev)
     }
 
     const columns = [
@@ -104,43 +129,48 @@ export const ScoringTable = ({
                 { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" mb="-2" size="md">FIGHT IS OFFICIAL</Heading> }
                 <Flex
                     w="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    m="auto"
+                    alignItems="flex-start"
+                    justifyContent="flex-start"
+                    flexDir="column"
+                    pl="2"
                 >
                     <Flex
-                        alignItems="center"
-                        p="1"
+                        display="inline-flex"
+                        pb="1"
                     >
+                        <Switch 
+                            onChange={handleRealTimeSwitchClick}
+                            size="md"
+                            colorScheme="gray"
+                            id='realTime'
+                            isChecked={activeGroupScorecard?.groupScorecard?.chatKey} 
+                        />
                         <FormLabel 
+                            ml="1"
                             mb="0" 
                             htmlFor='realTime'
                         >
                             Real Time
                         </FormLabel>
-                        <Switch 
-                            size="md"
-                            colorScheme="gray"
-                            id='realTime' 
-                            isDisabled={!activeGroupScorecard?.groupScorecard?.chatKey} 
-                        />
                     </Flex>
                     <Flex
-                        alignItems="center"
-                        p="1"
+                        display="inline-flex"
                     >
-                        <FormLabel 
-                            mb="0" 
-                            htmlFor='currentRound'
-                        >
-                            Show to My Round
-                        </FormLabel>
                         <Switch
                             size="md" 
                             colorScheme="gray"
                             id='currentRound' 
                             defaultChecked 
+                            onChange={handleShowToMyRound}
+                            isChecked={showToMyRound}
                         />
+                        <FormLabel 
+                            ml="1"
+                            mb="0" 
+                            htmlFor='currentRound'
+                        >
+                            Show to My Round
+                        </FormLabel>
                     </Flex>
                 </Flex>
                 <Table 
@@ -207,7 +237,7 @@ export const ScoringTable = ({
                                 prediction, 
                                 totals, 
                                 displayName 
-                            } = row;;
+                            } = row;
                             let filledMappedScores; 
 
                             if(mappedScores.length <= totalRounds){
@@ -240,13 +270,22 @@ export const ScoringTable = ({
                                         }
                                         if(i === 1){
                                             return filledMappedScores?.map( (roundScores, _i) => {
-                                                // console.log('roundScores: ', roundScores);
+                                                // const showToMyRoundSelected = showToMyRound ? lastScoredRound : mappedScores.length;
+                                                const showToMyRoundSelected = () => {
+                                                    // lastScoreRound || mappedScores.length
+                                                    if(showToMyRound){
+                                                        return _i >= lastScoredRound ? 'transparent' : 'white'
+                                                    }
+                                                    if(!showToMyRound){
+                                                        return _i >= mappedScores.length ? 'transparent' : 'white'
+                                                    }
+                                                }
+
                                                 return (
                                                     <Td key={_i} p="0px !important">
                                                         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                             <Flex 
-                                                                // lastScoreRound || mappedScores.length
-                                                                color={_i >= lastScoredRound ? 'transparent' : "white"}
+                                                                color={showToMyRoundSelected()}
                                                                 borderRadius="2px"
                                                                 w="100%"
                                                                 p="1"
@@ -261,8 +300,7 @@ export const ScoringTable = ({
                                                             <Flex 
                                                                 w="100%"
                                                                 style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2)}
-                                                                // lastScoreRound || mappedScores.length
-                                                                color={_i >= lastScoredRound ? 'transparent' : "white"}
+                                                                color={showToMyRoundSelected()}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 

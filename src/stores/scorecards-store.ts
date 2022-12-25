@@ -289,6 +289,7 @@ export const useScorecardStore = create<ScorecardStore>()(
                     })
                     .sort(sortRoundAscending);
 
+
                     return ({
                         fighters: [fighter1.lastName, fighter2.lastName],
                         finalScore,

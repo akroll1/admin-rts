@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { 
+    Button,
+    Collapse,
     Flex, 
     Text 
 } from '@chakra-ui/react'
@@ -7,17 +9,8 @@ import {
 export const FightStoryline = ({ 
     selectedFightSummary 
 }) => {
-    const [lines, setLines] = useState([4])
-    const fightStoryline = selectedFightSummary?.fight?.fightStoryline;
-    const showStoryline = selectedFightSummary?.show?.showStoryline;
-
-    const handleShowFullText = e => {
-        if(lines.length){
-            setLines([])
-            return
-        }
-        setLines([4])
-    }
+    const fightStoryline = selectedFightSummary?.fight?.fightStoryline.slice(0, 1200);
+    const [showFullStoryline, setShowFullStoryline] = useState(false)
 
     return (
         <Flex 
@@ -30,16 +23,19 @@ export const FightStoryline = ({
             color="fsl-text"
             w="100%"
         >
-            <Text 
-                p="2"
-                whiteSpace="pre-wrap"
-                onClick={handleShowFullText}
-                noOfLines={lines} 
-                _hover={{cursor: 'pointer'}} 
-                fontSize="sm"
+            <Collapse startingHeight={'4rem'} in={showFullStoryline} animateOpacity>
+                <Text>
+                    {fightStoryline}
+                </Text>
+            </Collapse>
+            <Button 
+                size='sm' 
+                onClick={() => setShowFullStoryline(prev => !prev)} 
+                mt='1rem'
+                variant="outline"
             >
-                { showStoryline || fightStoryline }
-            </Text>
+                Show {showFullStoryline ? 'Less' : 'More'}
+            </Button>
         </Flex>
     )
 }
