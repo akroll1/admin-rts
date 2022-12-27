@@ -14,7 +14,7 @@ import {
     useToast 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const FightersForm = () => {
     const { 
@@ -23,7 +23,7 @@ export const FightersForm = () => {
         fetchFighter,
         fighter,
         updateFighter,
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);

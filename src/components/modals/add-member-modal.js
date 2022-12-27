@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, ButtonGroup, Input, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { isValidEmail } from '../../utils';
 import { CustomOverlay } from '../custom-overlay';
-import { useScorecardStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 
 export const AddMemberModal = ({ 
     handleAddMemberSubmit, 
@@ -11,7 +11,7 @@ export const AddMemberModal = ({
     const { 
         modals,
         setModals
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const [overlay, setOverlay] = useState(<CustomOverlay />)
     const [email, setEmail] = useState('');

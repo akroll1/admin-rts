@@ -14,7 +14,7 @@ import {
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { useScorecardStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 
 export const BlogPostForm = () => {
     const {
@@ -22,7 +22,7 @@ export const BlogPostForm = () => {
         createBlogPost,
         fetchBlogPost,
         user,
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const [blogId, setBlogId] = useState(null)
 

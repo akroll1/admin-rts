@@ -1,9 +1,26 @@
-import React from 'react'
+import { useEffect } from 'react'
+import { 
+    Box, 
+    Flex, 
+    useColorModeValue as mode,
+    useToast,
+} from '@chakra-ui/react'
 import { Footer } from './footer'
 import { Navbar } from './navbar'
-import { Box, Flex, useColorModeValue as mode } from '@chakra-ui/react'
+import { ExpiredTokenModal } from '../modals'
+import { useGlobalStore } from '../../stores'
 
 export const Layout = ({ children }) => {
+    
+    const toaster = useToast()
+    const { toast } = useGlobalStore()
+
+    useEffect(() => {
+        if(toast.title){
+            toaster(toast)
+        }
+    },[toast])
+
     return (
         <Flex 
             minH="100vh" 
@@ -12,6 +29,8 @@ export const Layout = ({ children }) => {
             position="relative"
         >  
             <Navbar />
+            <ExpiredTokenModal />
+
             <Box as="main">{children}</Box>
             <Footer bg={mode('gray.800', 'fsl-body-bg')} />
         </Flex>

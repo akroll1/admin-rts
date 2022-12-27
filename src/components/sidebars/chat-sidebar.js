@@ -13,7 +13,7 @@ import {
     Input 
 } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { SidebarsDividerWithText } from '../../chakra'
 
 
@@ -29,7 +29,7 @@ export const ChatSidebar = ({
         setChatToken,
         updateScorecardsFromChat,
         user
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const { username } = user
     const [notificationTimeout, setNotificationTimeout] = useState(false);

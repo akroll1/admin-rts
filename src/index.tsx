@@ -9,9 +9,12 @@ import { ColorModeScript } from '@chakra-ui/react'
 const tagManagerArgs = {
     gtmId: 'GTM-T8WQNJH'
 }
+
 TagManager.initialize(tagManagerArgs)
+
 const root = createRoot(document.getElementById('root')!);
 localStorage.setItem('chakra-ui-color-mode', 'dark')
+
 root.render(
   <BrowserRouter>
     <ColorModeScript />

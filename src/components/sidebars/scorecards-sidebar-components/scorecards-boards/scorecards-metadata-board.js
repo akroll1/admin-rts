@@ -6,7 +6,7 @@ import {
     useEffect,
     useState
 } from 'react';
-import { useScorecardStore } from '../../../../stores';
+import { useGlobalStore } from '../../../../stores';
 import { 
     capFirstLetters, 
     transformedWeightclass 
@@ -16,7 +16,7 @@ import { ScorecardsBoard } from './scorecards-board';
 export const ScorecardsMetadataBoard = () => {
     const { 
         selectedSeasonFightSummary
-    } = useScorecardStore()
+    } = useGlobalStore()
     
     const [fightSummary, setFightSummary] = useState([])
 

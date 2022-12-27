@@ -9,7 +9,7 @@ import {
   ModalOverlay
 } from '@chakra-ui/react'
 import { ScoringMoneylineTable } from '../tables'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const MoneylineModal = ({
   props,
@@ -19,7 +19,7 @@ export const MoneylineModal = ({
     fighters,
     modals,
     setModals,
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   const closeModal = () => {
     setModals('moneylineModal', false)

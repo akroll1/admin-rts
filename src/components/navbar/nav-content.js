@@ -12,13 +12,14 @@ import { ToggleButton, Submenu } from '../../chakra'
 import { links } from './navbar_data'
 import { ProfileButton } from './profile-button'
 import { useNavigate } from 'react-router'
+import { useGlobalStore } from '../../stores'
 
 const MobileNavContext = props => {
-  
+  const { isLoggedIn } = useGlobalStore()
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
-  const handleFightSyncButtonClick = () => {
-    onToggle();
+  const handleFightSyncButtonClick = value => {
+      onToggle()
   }
 
   return (
@@ -44,7 +45,7 @@ const MobileNavContext = props => {
           textAlign="center"
           letterSpacing="1px"
           cursor="pointer"
-          onClick={() => navigate('/signin')}
+          onClick={() => navigate('/')}
         >
           FightSync
         </Heading>
@@ -68,8 +69,11 @@ const MobileNavContext = props => {
           ),
         )}
           <ProfileButton 
-            onToggle={onToggle}
+            isMobile={true}
+            isLoggedIn={isLoggedIn}
+            isOpen={isOpen}
             handleFightSyncButtonClick={handleFightSyncButtonClick} 
+            onToggle={onToggle}
           />
       </NavMenu>
     </>
@@ -77,6 +81,8 @@ const MobileNavContext = props => {
 }
 
 const DesktopNavContent = props => {
+
+  const { user } = useGlobalStore()
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure(); 
   return (
@@ -123,6 +129,7 @@ const DesktopNavContent = props => {
       </HStack>
       <HStack spacing="8" minW="200px" justify="space-between">
         <ProfileButton 
+          isMobile={false}
           onToggle={onToggle}
         />
       </HStack>

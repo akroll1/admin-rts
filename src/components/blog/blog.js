@@ -7,7 +7,7 @@ import {
 } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { BsArrowRight } from 'react-icons/bs'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { BlogPost } from './blog-post'
 
 export const Blog = () => {
@@ -15,7 +15,7 @@ export const Blog = () => {
   const {
     fetchBlogPosts,
     blogPosts
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   useEffect(() => {
     fetchBlogPosts()

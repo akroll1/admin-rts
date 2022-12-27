@@ -5,26 +5,23 @@ import { isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
 import { 
     CreateGroupModal,
-    ExpiredTokenModal, 
     ReviewFormModal 
 } from '../components/modals'
-import { useScorecardStore } from '../stores'
+import { useGlobalStore } from '../stores'
 import { useNavigate } from 'react-router'
 
 const Shows = () => {
-    const toast = useToast();
+
     const navigate = useNavigate()
     const { 
         createGroupScorecard,
         fetchSeasonSummary,
         putUserFightReview,
         selectedFightSummary, 
-        setModals,
-        setTokenExpired,
-        tokenExpired,
+        setToast,
         user,
         userFightReview,
-     } = useScorecardStore();
+     } = useGlobalStore();
     const { email, sub, username } = user;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,13 +47,6 @@ const Shows = () => {
     const [isAdminError, setIsAdminError] = useState(false)
 
     useEffect(() => {
-        if(tokenExpired){
-            setTokenExpired(true)
-            setModals('expiredTokenModal', true)
-        }
-    },[tokenExpired])
-
-    useEffect(() => {
         fetchSeasonSummary('active')
     },[])
 
@@ -75,15 +65,15 @@ const Shows = () => {
         });
 
         const success = await putUserFightReview(putObj);
-        if(success){
-            toast({ 
-                title: 'Review Submitted!',
-                duration: 5000,
-                status: 'success',
-                isClosable: true
-            });
-            handleReviewFormClose()
-        }
+        // if(success){
+        //     toast({ 
+        //         title: 'Review Submitted!',
+        //         duration: 5000,
+        //         status: 'success',
+        //         isClosable: true
+        //     });
+        //     handleReviewFormClose()
+        // }
     }
 
     const handleFormChange = e => {
@@ -132,8 +122,8 @@ const Shows = () => {
             setEmailValue('');
             setIsError(false)
             setIsAdminError(false)
-            toast({
-                title: `Added ${emailValue} to Group!`,
+            setToast({
+                title: `${emailValue} added to Group!`,
                 duration: 5000,
                 status: 'info',
                 isClosable: true
@@ -163,20 +153,10 @@ const Shows = () => {
             sub,
             targetId: createGroupOptions.targetId
         }
-        const res = await createGroupScorecard(scorecardObj);
+        await createGroupScorecard(scorecardObj);
         setIsSubmitting(false);     
         // need logic to add another member, if members < 5.   
-        toast({ 
-            title: res.message,
-            duration: 5000,
-            status: res.message.includes('Success!') ? 'success' : 'error',
-            isClosable: true
-        })
-        if(res.message.includes('Success!')){
-            setTimeout(() => {
-                navigate('/scorecards')
-            },3000)
-        }
+
     };
 
     return (
@@ -196,7 +176,6 @@ const Shows = () => {
                 setDisplayNameModal={setDisplayNameModal}
                 username={username}
             />
-            <ExpiredTokenModal />
 
             { fightReviewForm && 
                 <ReviewFormModal

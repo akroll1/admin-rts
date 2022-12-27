@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useScorecardStore } from '../../stores';
 import {
     Flex,
     Heading,
     Text,
 } from '@chakra-ui/react'
 import { useParams } from 'react-router';
+import { useGlobalStore } from '../../stores';
 
 export const BlogArticlePage = () => {
 
@@ -15,7 +15,7 @@ export const BlogArticlePage = () => {
     const { 
         fetchBlogPost,
         selectedBlogPost
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     useEffect(() => {
         if(blogId){

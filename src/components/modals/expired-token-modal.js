@@ -11,17 +11,20 @@ import {
   Text, 
   useDisclosure 
 } from '@chakra-ui/react'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const ExpiredTokenModal = () => {
+  
   const { 
     modals,
-    setTokenExpired 
-  } = useScorecardStore()
+    setModals,
+  } = useGlobalStore()
+
   const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  
   const signin = () => {
-    setTokenExpired(false)
+    setModals('expiredTokenModal', false)
     navigate('/signin')
   }
   return (

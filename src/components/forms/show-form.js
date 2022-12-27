@@ -21,7 +21,7 @@ import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
 // import { addDays } from 'date-fns/addDays'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const ShowForm = () => {
     const { 
@@ -30,7 +30,7 @@ export const ShowForm = () => {
         fetchShow,
         show,
         updateShow,
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);

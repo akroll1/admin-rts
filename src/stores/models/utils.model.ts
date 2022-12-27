@@ -15,9 +15,11 @@ export const resetModals = {
     predictionModal: false,
 }
 
-export interface ToastOption {
-    title: string
-    duration: number
-    status: string
-    isClosable: boolean
+export interface Toast {
+    title?: string
+    description?: string
+    duration?: number
+    isClosable?: boolean
+    status?: string
+    variant?: string
 }

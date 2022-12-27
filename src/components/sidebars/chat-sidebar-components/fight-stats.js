@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
-import { useScorecardStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 import { GiConsoleController } from 'react-icons/gi'
 
 export const FightStats = props => {
@@ -10,7 +10,7 @@ export const FightStats = props => {
     const { 
         activeGroupScorecard,
         stats
-    } = useScorecardStore();
+    } = useGlobalStore();
 
     const [fighters, setFighters] = useState(null);
     const totalRounds = activeGroupScorecard?.fight?.totalRounds ? activeGroupScorecard?.fight?.totalRounds : 12

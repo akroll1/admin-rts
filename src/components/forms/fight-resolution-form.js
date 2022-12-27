@@ -23,7 +23,7 @@ import {
     FIGHT_STATUS_SELECT_CONSTANTS, 
     OFFICIAL_RESULTS_ENUM 
 } from '../../utils'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const FightResolutionForm = () => {
 
@@ -31,7 +31,7 @@ export const FightResolutionForm = () => {
         selectedSeasonFightSummary, 
         fetchFightSummary,
         submitFightResolution,
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const [fightResolution, setFightResolution] = useState('')
     const [resolvedFightStatus, setResolvedFightStatus] = useState('')

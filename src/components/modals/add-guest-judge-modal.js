@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../utils'
-import { useScorecardStore, useStateStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { DividerWithText } from '../../chakra';
 
 // now in scoring.ts
@@ -25,15 +25,14 @@ export const AddGuestJudgeModal = ({
     fetchGuestJudgeScorecards 
 }) => {
     const toast = useToast();
-    const { myGuestJudges, setMyGuestJudges } = useStateStore()
+    const { myGuestJudges, setMyGuestJudges } = useGlobalStore()
     const {
         modals, 
         setModals
-    } = useScorecardStore()
+    } = useGlobalStore()
 
-    const availableGuestJudges = useStateStore( state => state.availableGuestJudges);
     const [myJudges, setMyJudges] = useState([]);
-
+    const availableGuestJudges = []
     useEffect(() => {
         if(modals.addGuestJudgeModal){
             const currentJudges = availableGuestJudges.length > 0 && availableGuestJudges.filter( judge => myGuestJudges.includes(judge.guestJudgeId))

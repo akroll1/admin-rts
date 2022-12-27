@@ -5,10 +5,10 @@ import {
     Text,
     useColorModeValue as mode,
 } from '@chakra-ui/react'
-import { useGlobalStore } from '../stores'
-import { ScorecardRow } from '../components/scorecards/scorecard-row'
-import { ScorecardSummary } from '../components/scorecards/scorecard-summary'
-import { ScorecardsInvitationsBoard } from '../components/sidebars'
+import { useGlobalStore } from '../../stores'
+import { ScorecardRow } from './scorecard-row'
+import { ScorecardSummary } from './scorecard-summary'
+import { ScorecardsInvitationsBoard } from '../sidebars/scorecards-sidebar-components/scorecards-boards'
 
 export const Scorecards = () => {
     
@@ -33,7 +33,7 @@ export const Scorecards = () => {
     },[userScorecardSummaries])
 
     const handleSelectGroup = value => {
-        console.log('value: ', value)
+        // console.log('value: ', value)
         const scorecardGroups = userScorecardSummaries.filter( summary => {
             return summary.scorecardGroups.filter( group => {
                 if(group.groupScorecardId === value){
@@ -48,7 +48,8 @@ export const Scorecards = () => {
             })
         })
     }
-    console.log('selectedSummary: ', selectedSummary)
+    
+    // console.log('selectedSummary: ', selectedSummary)
     
     return (
         <Flex
@@ -75,7 +76,7 @@ export const Scorecards = () => {
                     mb="4"
                     mx="auto"
                 >
-                    {userScorecardSummaries.length === 0 ? `Create A Scorecard` : `${userScorecardSummaries.length} Scorecards`}
+                    {userScorecardSummaries.length === 0 ? `Create A Scorecard` : `${userScorecardSummaries.length} Scorecard${userScorecardSummaries.length > 1 ? 's' : ''}`}
                 </Heading>
 
                 <Flex 

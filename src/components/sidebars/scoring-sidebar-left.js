@@ -19,25 +19,20 @@ import { IoScaleOutline } from 'react-icons/io5'
 import { MdOnlinePrediction } from 'react-icons/md'
 import { SidebarsDividerWithText } from '../../chakra'
 import { parseEpoch, transformedWeightclass } from '../../utils'
-import { useScorecardStore, useStateStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const ScoringSidebarLeft = ({ 
     tabs,
 }) => {
     const {
         activeGroupScorecard,
+        availableGuestJudges,
         setModals,
         scoringTransformedPrediction,
-        user
-    } = useScorecardStore()
-    
-    const { 
-        availableGuestJudges 
-    } = useStateStore()
+    } = useGlobalStore()
     
     const [activeNavGroupItem, setActiveNavGroupItem] = useState('officialJudges')
 
-    const toast = useToast()
     const { weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
     const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';
     const isLocked = Date.now() > showTime

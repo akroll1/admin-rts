@@ -12,11 +12,10 @@ const Home = () => {
       id="home"
       as="section" 
       bg="brand.base" 
-      p="4"
-      pt="2"
+      p="2"
     >
       <Box 
-        maxW={['xl','7xl']} 
+        maxW={['xl','5xl']} 
         mx="auto" 
       >
         <Stack 
@@ -47,7 +46,7 @@ const Home = () => {
               color='fsl-body-text'
               maxW={["85%", "60%", "80%"]}
             >
-              Score fights and compete. Play with a group- live and in real-time!
+              Score fights and compete with other boxing fans. Play with a group- live and in real-time!
             </Text>
             <Button
               onClick={() => navigate('/learn-more')}
@@ -91,18 +90,18 @@ const Home = () => {
             />
           </Center>
         </Stack>
-        <Divider my={["8", "10", "20"]} 
+        <Divider my={["8"]} 
           opacity={1} 
         />
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: '12', md: '8' }}>
           <Feature title="Score Fights" icon={<FaHandsHelping />}>
-            Create a group and score fights together- in real time!
+            Create a group and score fights together- live and in real time!
           </Feature>
           <Feature title="Win Prizes" icon={<FaHeadset />}>
             Win prizes for making correct pre-fight and in-fight predictions.
           </Feature>
           <Feature title="Contribute" icon={<FaFileSignature />}>
-            Score fights and contribute to crowd-sourced boxing analytics. 
+            Score fights and contribute to real-time, crowd-sourced boxing analytics. 
           </Feature>
         </SimpleGrid>
       </Box>

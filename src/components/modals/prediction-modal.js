@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { FaTrophy } from 'react-icons/fa'
 import { capFirstLetters } from '../../utils'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const PredictionModal = () => {
   const [form, setForm] = useState({
@@ -26,7 +26,7 @@ export const PredictionModal = () => {
     modals,
     patchPrediction,
     setModals,
-  } = useScorecardStore();
+  } = useGlobalStore();
 
   const totalRounds = activeGroupScorecard?.fight?.rounds ? new Array(activeGroupScorecard?.fight?.rounds).fill(0) : new Array().fill(12);
 

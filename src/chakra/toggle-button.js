@@ -61,7 +61,7 @@ export const ToggleButton = (props) => {
       _active={{
         color: 'white',
       }}
-      onClick={handleFightSyncButtonClick}
+      onClick={() => handleFightSyncButtonClick('signin')}
     >
       <ToggleIcon active={isOpen} />
       <VisuallyHidden>Toggle Menu</VisuallyHidden>

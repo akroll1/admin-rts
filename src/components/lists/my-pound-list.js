@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, UnorderedList, useToast } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 import { DragHandleIcon } from '@chakra-ui/icons'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -16,7 +16,7 @@ export const MyPoundList = () => {
     poundListUser,
     poundListOfficial,
     fetchList
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   const toast = useToast();  
   const [officialPoundList, setOfficialPoundList] = useState([]);

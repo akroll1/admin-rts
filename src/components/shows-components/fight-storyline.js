@@ -28,14 +28,24 @@ export const FightStoryline = ({
                     {fightStoryline}
                 </Text>
             </Collapse>
-            <Button 
-                size='sm' 
-                onClick={() => setShowFullStoryline(prev => !prev)} 
-                mt='1rem'
-                variant="outline"
-            >
-                Show {showFullStoryline ? 'Less' : 'More'}
-            </Button>
+                { fightStoryline && 
+                    <Button 
+                        size='sm' 
+                        onClick={() => setShowFullStoryline(prev => !prev)} 
+                        variant="outline"
+                        border="1px solid black"
+                        borderColor="#404040"
+                        color="#bababa"
+                        mt="2"
+                        _focus="1px solid black"
+                        _hover={{
+                            border: '1px solid black',
+                            color: 'white'
+                        }}
+                    >
+                        Show {showFullStoryline ? 'Less' : 'More'}
+                    </Button>
+                }
         </Flex>
     )
 }

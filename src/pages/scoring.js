@@ -4,13 +4,12 @@ import { ScoringTable } from '../components/tables'
 import { 
     AddGuestJudgeModal, 
     AddMemberModal, 
-    ExpiredTokenModal, 
     MoneylineModal, 
     PredictionModal 
 } from '../components/modals'
 import { ChatSidebar, ScoringSidebarLeft } from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
-import { useScorecardStore } from '../stores'
+import { useGlobalStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import { useParams } from 'react-router'
 
@@ -28,7 +27,7 @@ const Scoring = props => {
         fightComplete,
         fighterScores,
         modals,
-    } = useScorecardStore();
+    } = useGlobalStore();
 
     const [tabs, setTabs] = useState({
         info: false,
@@ -101,7 +100,6 @@ const Scoring = props => {
             <Flex>
                 <AddGuestJudgeModal />
                 <AddMemberModal />
-                <ExpiredTokenModal />
                 <MoneylineModal
                     props={props}
                 />

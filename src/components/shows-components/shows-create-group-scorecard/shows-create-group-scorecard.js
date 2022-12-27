@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
 import { DividerWithText } from '../../../chakra'
-import { useScorecardStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 
 export const ShowsCreateGroupScorecard = ({ 
     deleteInvite, 
@@ -32,7 +32,7 @@ export const ShowsCreateGroupScorecard = ({
 
     const {
         user
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const handleSubmit = () => {
         setDisplayNameModal(true)
@@ -116,7 +116,7 @@ export const ShowsCreateGroupScorecard = ({
                             placeholder="email@example.com" 
                             type="email" 
                             maxLength={255} 
-                            autoComplete="nope"
+                            // autoComplete="nope"
                         />
                         { emailValue && 
                             <InputRightElement children={<CloseIcon

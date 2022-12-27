@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Flex, Heading, Icon, ListItem, Text, OrderedList }
 import { DragHandleIcon } from '@chakra-ui/icons'
 import { capFirstLetters, PANELIST_PREDICTIONS_OPTIONS } from '../../utils'
 import { MyPanelsFormTable } from '../tables'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { FighterSelection } from './my-panels-form-els'
 
 const initialDnDState = {
@@ -19,7 +19,7 @@ export const MyPanelsForm = () => {
     panelSummaries,
     submitPanelPredictions,
     user,
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   const [selectedFighter, setSelectedFighter] = useState('')
   const [summaries, setSummaries] = useState([])

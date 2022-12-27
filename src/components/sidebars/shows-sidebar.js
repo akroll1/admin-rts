@@ -13,7 +13,7 @@ import {
     NotAllowedIcon,
 } from '@chakra-ui/icons'
 import { SidebarsDividerWithText } from '../../chakra'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { FightStatus } from '../../stores/models/enums'
 
 export const ShowsSidebar = () => { 
@@ -23,7 +23,7 @@ export const ShowsSidebar = () => {
         selectedFightSummary, 
         setSelectedFightSummary,
         setSelectedSeasonSummary,
-    } = useScorecardStore()
+    } = useGlobalStore()
     
     const [canceled, setCanceled] = useState([])
     const [complete, setComplete] = useState([])

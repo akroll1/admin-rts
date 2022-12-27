@@ -3,7 +3,7 @@ import { Collapse, Flex, useControllableState } from '@chakra-ui/react'
 import { ScorecardsBoard } from './scorecards-board'
 import { ScorecardsNavGroup } from './scorecards-nav-group'
 import { ScorecardsNavItem } from './scorecards-nav-item'
-import { useScorecardStore } from '../../../../stores'
+import { useGlobalStore } from '../../../../stores'
 import { 
     InfoOutlineIcon,
     NotAllowedIcon, 
@@ -17,7 +17,7 @@ export const ScorecardsSeasonsBoard = () => {
         selectedSeasonSummary,
         setSelectedSeasonFightSummary,
         setSelectedSeasonSummary,
-    } = useScorecardStore()
+    } = useGlobalStore()
     const [activeNavGroupItem, setActiveNavGroupItem] = useState(selectedSeasonSummary?.season?.seasonId)
     
     useEffect(() => {

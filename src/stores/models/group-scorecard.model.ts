@@ -37,9 +37,3 @@ export interface GroupScorecardSummary {
 	scorecards: Scorecard[]
 	show: Show
 }
-
-export interface CreateGroupScorecardReturn {
-	groupScorecard: GroupScorecard
-	message: string 
-	outstandingInvites: string[] | null
-}

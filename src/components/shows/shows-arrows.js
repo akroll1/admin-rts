@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Flex, IconButton } from '@chakra-ui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const ShowsArrows = () => {
     const [currentFightId, setCurrentFightId] = useState('')
@@ -10,7 +10,7 @@ export const ShowsArrows = () => {
         selectedSeasonFightSummaries,
         selectedSeasonSummary,
         setSelectedFightSummary,
-    } = useScorecardStore() 
+    } = useGlobalStore() 
 
     useEffect(() => {
         if(selectedSeasonFightSummaries.length > 0){

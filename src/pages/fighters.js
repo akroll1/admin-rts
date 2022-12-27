@@ -1,18 +1,18 @@
-import React, {useState, useEffect} from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Box, Flex, Heading } from '@chakra-ui/react'
+import {useState, useEffect} from 'react'
+import { useLocation } from 'react-router-dom'
+import { Flex } from '@chakra-ui/react'
 import axios from 'axios'
 import { useParams } from 'react-router'
 import { FightersSidebar } from '../components/sidebars'
 import { FightersPageFighterProfile } from '../components/sidebars'
 import { FightersPageFightersForm } from '../components/fighters-page'
-import { useStateStore } from '../stores'
+import { useGlobalStore } from '../stores'
 
 const Fighters = () => {
-    const location = useLocation();
+
     const { id } = useParams();
     const [fighterId, setFighterId] = useState(id);
-    const { tokenConfig } = useStateStore.getState();
+    const { tokenConfig } = useGlobalStore();
     const [fighters, setFighters] = useState([]);
     const [ selectedFighter, setSelectedFighter] = useState({});
     

@@ -3,8 +3,8 @@ import {
     Center, 
     Flex, 
     Heading, 
-    useToast 
 } from '@chakra-ui/react'
+import { useGlobalStore } from '../../stores'
 import { capFirstLetters } from '../../utils'
 
 export const FighterSwipe = ({ 
@@ -16,7 +16,10 @@ export const FighterSwipe = ({
     scoringComplete,
     selectedFighter,
 }) => {
-    const toast = useToast();
+
+    const { 
+        setToast
+    } = useGlobalStore()
 
     const handleSelect = e => {
         const { id } = e.currentTarget
@@ -24,14 +27,15 @@ export const FighterSwipe = ({
     }
 
     const handleScoringComplete = () => {
-        toast({
+        const toast = {
             title: 'Scoring Complete',
             // description: "",
             position: 'top',
             status: 'error',
             duration: 5000,
             isClosable: true,
-        })
+        }
+        setToast(toast)
     }
 
     

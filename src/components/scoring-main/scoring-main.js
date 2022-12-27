@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { FighterSwipe } from '../fighter-swipe'
 import { ScoringButtons } from './scoring-buttons'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import image from '../../image/boxing-background.png'
 
 export const ScoringMain = ({ 
@@ -23,7 +23,7 @@ export const ScoringMain = ({
         setScoringComplete,
         submitRoundScores,
         totalRounds,
-    } = useScorecardStore();
+    } = useGlobalStore();
 
     useEffect(() => {
         setUserScoringComplete(scoringComplete)

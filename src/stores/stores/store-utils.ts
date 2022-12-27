@@ -1,6 +1,6 @@
-import { FightStatusesObj, FightSummary } from './models/fight.model'
-import { FightStatus } from './models/enums'
-import { SeasonSummary } from './models/season.model'
+import { FightStatusesObj, FightSummary } from '../models/fight.model'
+import { FightStatus } from '../models/enums'
+import { SeasonSummary } from '../models/season.model'
 
 export const filterFights = (selectedSeasonSummary: SeasonSummary) => {
     const obj: FightStatusesObj = {
@@ -11,7 +11,7 @@ export const filterFights = (selectedSeasonSummary: SeasonSummary) => {
         FANTASY: [],
     }
    
-    const temp = selectedSeasonSummary.fightSummaries.map( summary => {
+    const temp = selectedSeasonSummary.fightSummaries.map( (summary: FightSummary) => {
 
         let fightStatus: FightStatus = summary.fight.fightStatus;
         if(obj[fightStatus]) {

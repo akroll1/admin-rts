@@ -4,7 +4,7 @@ import { FieldGroup } from '../../chakra'
 import { CreatePanelAllPanelsTable, PanelistsTable } from '../tables';
 import { PanelistFormCheckbox } from './my-panels-form-els';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { useScorecardStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 
 
 export const CreatePanelForm = () => {
@@ -13,7 +13,7 @@ export const CreatePanelForm = () => {
         createPanel,
         fetchPanelSummaries,
         panelSummaries,
-    } = useScorecardStore();
+    } = useGlobalStore();
 
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);

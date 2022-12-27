@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { useParams } from 'react-router'
 import { AnalyticsSidebar } from '../components/sidebars'
 import { AnalyticsMain } from '../components/analytics'
-import { ExpiredTokenModal, MoneylineModal } from '../components/modals'
+import { MoneylineModal } from '../components/modals'
 import { AnalyticsTable } from '../components/tables'
-import { useStateStore } from '../stores'
+import { useGlobalStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import axios from 'axios'
 
 const Analytics = () => {
     const { getShowId } = useParams(); // showId: /c8734c80-16e6-46d1-90f4-c103de4b8b92
     const windowWidth = useWindowResize();
-    const { tokenConfig } = useStateStore.getState();
+    const { tokenConfig } = useGlobalStore();
     const [tabs, setTabs] = useState({
         sidebar: false,
         scoring: true, 
@@ -56,9 +56,6 @@ const Analytics = () => {
             minH="80vh"
             mb="4"
         >         
-            <ExpiredTokenModal 
-                modals={modals}
-            />
              <MoneylineModal
                 modals={modals}
                 setModals={setModals} 

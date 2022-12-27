@@ -11,10 +11,9 @@ import {
     Thead, 
     Tr, 
     useColorModeValue as mode,
-    useToast
 } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
 import { ScoringDividerWithText } from './table-els/scoring-divider-with-text'
 
@@ -22,13 +21,12 @@ export const ScoringTable = ({
     tabs, 
 }) => {
 
-    const toast = useToast();
-
     const {
         activeGroupScorecard,
         lastScoredRound,
+        setToast,
         tableData, 
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const [showToMyRound, setShowToMyRound] = useState(true)
 
@@ -38,21 +36,23 @@ export const ScoringTable = ({
 
     const handleRealTimeSwitchClick = () => {
         if(activeGroupScorecard?.groupScorecard?.chatKey){
-            toast({
+            const toast = {
                 title: 'Real-Time Updates Enabled',
                 status: 'success',
                 duration: 5000,
                 isClosable: true,
-            })
+            }
+            setToast(toast)
         }
         if(!activeGroupScorecard?.groupScorecard?.chatKey){
-            toast({
+            const toast = {
                 title: 'Real-Time Updates Disabled',
                 description: 'Please upgrade to allow real-time updates.',
                 status: 'success',
                 duration: 5000,
                 isClosable: true,
-            })
+            }
+            setToast(toast)
         }
     }
 

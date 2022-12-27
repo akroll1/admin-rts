@@ -8,7 +8,7 @@ import {
   useToast 
 } from '@chakra-ui/react'
 import { ReviewItem } from './review-item'
-import { useScorecardStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 import { HiOutlinePencil } from 'react-icons/hi'
 
 export const FightReviews = ({ 
@@ -20,7 +20,7 @@ export const FightReviews = ({
     checkForUserFightReview,
     selectedFightReviews, 
     user 
-  } = useScorecardStore()
+  } = useGlobalStore()
   
   const openReviewModal = () => {
     if(!user.sub){
