@@ -23,3 +23,12 @@ export interface Toast {
     status?: string
     variant?: string
 }
+
+export const resetToast = {
+    title: '',
+    description: '',
+    duration: 5000,
+    isClosable: true,
+    status: '',
+    variant: '',
+}

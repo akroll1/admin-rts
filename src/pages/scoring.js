@@ -12,6 +12,7 @@ import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { useGlobalStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import { useParams } from 'react-router'
+import { ScoringDividerWithText } from '../components/tables/table-els/scoring-divider-with-text'
 
 
 const Scoring = props => {
@@ -26,7 +27,9 @@ const Scoring = props => {
         fetchPanelProps,
         fightComplete,
         fighterScores,
+        lastScoredRound,
         modals,
+        totalRounds,
     } = useGlobalStore();
 
     const [tabs, setTabs] = useState({
@@ -110,6 +113,12 @@ const Scoring = props => {
                 w="100%" 
                 minH="70vh"  
             >
+                <ScoringDividerWithText 
+                    text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
+                    tabs={tabs} 
+                    centered={tabs.all ? true : false}
+                />
+
                 <ScoringSidebarLeft
                     tabs={tabs}
                 />

@@ -1,5 +1,4 @@
 import { Container, Flex, Text } from '@chakra-ui/react'
-import * as React from 'react'
 import { RadioCard, MyPanelsRadioCardGroup } from './who-wins-radio-card'
 import { capFirstLetters } from '../../../utils'
 

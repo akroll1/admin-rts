@@ -32,7 +32,6 @@ export const ScorecardsNavGroup = props => {
             alignItems="flex-start"
             onClick={selectSeason}
             id={id}
-            mb="1"
         >
             <Flex
                 justifyContent="space-between"
@@ -47,7 +46,7 @@ export const ScorecardsNavGroup = props => {
             >
                 <Heading
                     w="100%"
-                    p="1"
+                    pt="1"
                     pl="2"
                     _hover={{ color:'#fcfcfc'}}
                     fontSize={id === 'fight' ? '2xl' : "lg"}

@@ -15,7 +15,6 @@ import {
 import { ScoringTableInfo } from './scoring-table-els'
 import { useGlobalStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
-import { ScoringDividerWithText } from './table-els/scoring-divider-with-text'
 
 export const ScoringTable = ({ 
     tabs, 
@@ -104,12 +103,6 @@ export const ScoringTable = ({
 
     return (      
         <>
-            <ScoringDividerWithText 
-                text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
-                tabs={tabs} 
-                centered={tabs.all ? true : false}
-            />
-
             <FightStats 
                 tabs={tabs} 
             />
@@ -141,7 +134,7 @@ export const ScoringTable = ({
                         <Switch 
                             onChange={handleRealTimeSwitchClick}
                             size="md"
-                            colorScheme="gray"
+                            colorScheme="blackAlpha.700"
                             id='realTime'
                             isChecked={activeGroupScorecard?.groupScorecard?.chatKey} 
                         />
@@ -158,7 +151,7 @@ export const ScoringTable = ({
                     >
                         <Switch
                             size="md" 
-                            colorScheme="gray"
+                            colorScheme="blackAlpha.700"
                             id='currentRound' 
                             defaultChecked 
                             onChange={handleShowToMyRound}

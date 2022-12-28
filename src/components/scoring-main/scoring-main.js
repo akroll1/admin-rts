@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { 
+    Button,
+    Flex,
+    Heading
+} from '@chakra-ui/react'
 import { FighterSwipe } from '../fighter-swipe'
-import { ScoringButtons } from './scoring-buttons'
+import { UserScorecard } from './user-scorecard'
 import { useGlobalStore } from '../../stores'
 import image from '../../image/boxing-background.png'
 
@@ -17,12 +21,14 @@ export const ScoringMain = ({
     
     const {
         activeGroupScorecard,
+        fightComplete,
         fighterScores,
         lastScoredRound,
         scoringComplete,
         setScoringComplete,
         submitRoundScores,
         totalRounds,
+        userScorecard,
     } = useGlobalStore();
 
     useEffect(() => {
@@ -80,7 +86,8 @@ export const ScoringMain = ({
         }
     }
 
-
+    console.log('userScorecard: ', userScorecard)
+    const { fighters } = activeGroupScorecard?.fighters ? activeGroupScorecard.fighters : [];
     return (
         <Flex 
             id="scoring_main"
@@ -117,33 +124,129 @@ export const ScoringMain = ({
                     w="100%"
                     textAlign="center"
                     alignItems="flex-end"
+                    justifyContent="space-around"
                 >
-                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, i) => (
-                        <FighterSwipe
-                            evenRound={evenRound}
-                            fighter={fighter}
-                            handleFighterSelect={handleFighterSelect}
-                            key={i}
-                            notSelectedScore={notSelectedScore}
-                            redCorner={activeGroupScorecard?.fighters[0]?.fighterId === selectedFighter}
-                            scoringComplete={userScoringComplete}
-                            selectedFighter={selectedFighter}
-                        />
-                    ))
+                    { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, _i) => (
+                            <FighterSwipe
+                                evenRound={evenRound}
+                                fighter={fighter}
+                                handleFighterSelect={handleFighterSelect}
+                                key={_i}
+                                notSelectedScore={notSelectedScore}
+                                redCorner={activeGroupScorecard?.fighters[0]?.fighterId === selectedFighter}
+                                scoringComplete={userScoringComplete}
+                                selectedFighter={selectedFighter}
+                            />
+                        ))
+                    }
+                </Flex>
+            </Flex>
+            <Flex     
+                flexDir={["row"]} 
+                w={["100%"]} 
+            >
+                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, _i) => (
+                    <UserScorecard
+                        fighter={fighter}
+                        id={fighter.fighterId}
+                        key={fighter.fighterId}
+                        selectedFighter={selectedFighter}
+                    />
+                    
+                ))}
+            </Flex>
+            <Flex
+                w="100%"
+                p="4"
+                pt="0"
+                maxW="100%"
+                m="auto"
+                flexDir="column"
+                alignItems="center"
+                justifyContent="center"
+            >
+                { userScorecard?.scores.length > 0 && userScorecard.scores.map( (roundObj, _i) => {
+                    // console.log('roundObj: ', roundObj)
+                    const score0 = roundObj[activeGroupScorecard.fighters[0].fighterId]
+                    const score1 = roundObj[activeGroupScorecard.fighters[1].fighterId]
+
+                    return (
+                        <Flex
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDir="row"
+                            w="100%"
+                            // py="1"
+                            p="1"
+                            pt="0"
+                            borderBottom="1px solid #202020"
+                        >
+                            <Flex
+                                flex="1 0 50%"
+                                m="auto"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <Heading
+                                    color={score0 > score1 ? 'yellow.300' : 'whiteAlpha.800'}
+                                    as="h3"
+                                    size="lg"
+                                >
+
+                                    {score0}
+                                </Heading>
+                            </Flex>
+                            <Flex
+                                flex="1 0 10%"
+                            >
+                                <Heading
+                                    color="gray.400"
+                                    as="h3"
+                                    size="sm"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    m="auto"
+                                >
+
+                                    {_i+1}
+                                </Heading>
+                            </Flex>
+                            <Flex
+                                flex="1 0 45%"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <Heading
+                                    as="h3"
+                                    size="lg"
+                                    color={score1 > score0 ? 'yellow.300' : 'whiteAlpha.800'}
+                                >
+
+                                    {score1}
+                                </Heading>
+                            </Flex>
+                            { _i === 0}
+                        </Flex>
+                    )
+                    })
                 }
-                </Flex>     
 
             </Flex>
-            <ScoringButtons
-                handleAdjustScore={handleAdjustScore}
-                isDisabled={isDisabled}
-                isSubmitting={isSubmitting}
-                lastScoredRound={lastScoredRound}
-                selectedFighter={selectedFighter}
-                setIsDisabled={setIsDisabled}
-                submitScores={submitScores}
-                totalRounds={totalRounds}
-            />
+            <Button
+                zIndex={100}
+                onClick={submitScores}
+                // disabled={isDisabled || fightComplete} 
+                // variant={isDisabled ? "outline" : "solid"} 
+                colorScheme="solid" 
+                mx="auto" 
+                mt="8"
+                minH="3rem"
+                fontSize="1.3rem"
+                fontWeight="bold"
+                w={["80%","70%"]}
+            >
+                { isDisabled && fightComplete ? `Scoring Complete` : `Round ${userScorecard?.scores.length + 1}` }
+            </Button>
         </Flex> 
     )
 }

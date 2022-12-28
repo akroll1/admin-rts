@@ -129,7 +129,6 @@ const Shows = () => {
                 isClosable: true
             })
         } else {
-            // alert('Not a valid email.')
             setIsError(true)
             return
         }

@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware"
 import { userAccountStoreSlice, UserAccountStoreState } from "./user-account-store"
 import { adminStoreSlice, AdminStoreState } from "./admin-store"
 import { authStoreSlice, AuthStoreState } from "./auth-store"
-import { globalUtilsStoreSlice, GlobalUtilsStoreState } from "./global-utils"
+import { initialStoreUtilsState, storeUtilsSlice, StoreUtilsState } from "./store-utils"
 import { scorecardStoreSlice, ScorecardStoreState } from './scorecards-store'
 import { scoringStoreSlice, ScoringStoreState } from "./scoring-store"
 import { showsStoreSlice, ShowsStoreState } from "./shows-store"
@@ -12,10 +12,10 @@ export type GlobalStoreState =
     & AdminStoreState
     & AuthStoreState 
     & UserAccountStoreState
-    & GlobalUtilsStoreState
+    & StoreUtilsState
     & ScorecardStoreState
     & ScoringStoreState
-    & ShowsStoreState
+    & ShowsStoreState;
 
 export const useGlobalStore = create<GlobalStoreState>()(
     persist(
@@ -23,7 +23,7 @@ export const useGlobalStore = create<GlobalStoreState>()(
             ...userAccountStoreSlice(set, get, api, []),
             ...adminStoreSlice(set, get, api, []),
             ...authStoreSlice(set, get, api, []),
-            ...globalUtilsStoreSlice(set, get, api, []),
+            ...storeUtilsSlice(set, get, api, []),
             ...scorecardStoreSlice(set, get, api, []),
             ...scoringStoreSlice(set, get, api, []),
             ...showsStoreSlice(set, get, api, [])
@@ -35,32 +35,36 @@ export const useGlobalStore = create<GlobalStoreState>()(
                     activeGroupScorecard,
                     fight,
                     fighters,
-                    groupScorecardSummary,
+                    fightsByStatus,
+                    groupScorecards,
                     isLoggedIn,
                     modals,
                     seasons,
                     seasonSummaries,
+                    selectedFightSummary,
+                    selectedSeasonFightSummaries,
                     selectedSeasonSummary,
                     show,
                     user,
                     userScorecard, 
-                    userScorecards 
                 } = state;
 
                 return ({ 
                     activeGroupScorecard,
                     fight,
                     fighters,
-                    groupScorecardSummary,
+                    fightsByStatus,
+                    groupScorecards,
                     isLoggedIn,
                     modals,
                     seasons,
                     seasonSummaries,
+                    selectedFightSummary,
+                    selectedSeasonFightSummaries,
                     selectedSeasonSummary,
                     show,
                     user,
                     userScorecard,
-                    userScorecards,
                 })
             },
             getStorage: () => sessionStorage,

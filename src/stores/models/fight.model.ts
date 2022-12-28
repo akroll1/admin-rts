@@ -18,7 +18,7 @@ export interface Fight {
 	updatedAt?: number;
 }
 
-export type FightStatusesObj = {
+export type FightByStatus = {
     ACTIVE: FightSummary[]
     COMPLETE: FightSummary[]
     CANCELED: FightSummary[]

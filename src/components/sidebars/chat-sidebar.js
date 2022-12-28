@@ -10,7 +10,13 @@ import {
     ButtonGroup, 
     Divider, 
     Flex, 
-    Input 
+    Input,
+    Tab,
+    Tabs,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Heading,
 } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid'
 import { useGlobalStore } from '../../stores'
@@ -223,7 +229,7 @@ export const ChatSidebar = ({
             id="chat-sidebar"
             p="1"
             w="100%"
-            flex={["1 0 25%"]} 
+            flex={["1 0 28%"]} 
             maxW="100%" 
             borderRadius="md" 
             ref={chatRef}
@@ -233,12 +239,24 @@ export const ChatSidebar = ({
             justifyContent="space-between"
             flexDir="column" 
         >
-            <SidebarsDividerWithText 
-                fontSize="xl" 
-                py="2"
-                mx="1"
-                label="Group Chat" 
-            />
+            <Tabs isFitted variant='enclosed'>
+                <TabList mb='1em'>
+                    <Tab>
+                        <Heading fontSize="sm">Group Chat</Heading>
+                    </Tab>
+                    <Tab>
+                        <Heading fontSize="sm">FSL</Heading>
+                    </Tab>
+                </TabList>
+                {/* <TabPanels>
+                    <TabPanel>
+                    <p>one!</p>
+                    </TabPanel>
+                    <TabPanel>
+                    <p>two!</p>
+                    </TabPanel>
+                </TabPanels> */}
+            </Tabs>
             <Flex 
                 w="100%"
                 overflow="scroll"

@@ -8,16 +8,11 @@ import {
 } from "../models/scorecard.model"
 import { 
     Fight, 
-    FightPostObj,
     FightResolution,
-    FightStatusesObj,
     FightSummary, 
     FightUpdateOptions
 } from '../models/fight.model' 
 import { Fighter, FighterScores } from '../models/fighter.model'
-import { 
-    GroupScorecardSummary 
-} from "../models/group-scorecard.model"
 import { AcceptInviteOptions } from '../models/invite.model'
 import { List } from '../models/lists.model'
 import { Panelist, PanelSummary } from "../models/panel.model"
@@ -25,7 +20,6 @@ import { Review, ReviewPut } from '../models/review.model'
 import { Season, SeasonSummary } from '../models/season.model'
 import { Show } from "../models/show.model"
 import { User } from '../models/user.model'
-import { filterFights } from "./store-utils"
 import { GlobalStoreState } from "./global-store"
 import { configureAccessToken, configureIDToken } from "./auth-store"
 
@@ -33,7 +27,6 @@ export interface ScorecardStoreState {
     acceptInvite(groupScorecardId: string, inviteId: string): void
     blogPosts: BlogPost[]
     deleteInvite(inviteId: string): void
-    
     discussion: Discussion
     discussions: Discussion[]
     fetchAllDiscussions(): void
@@ -48,7 +41,6 @@ export interface ScorecardStoreState {
     fetchPanelist(panelistId: string): void
     fetchPanelSummaries(): void
     // fetchSeasonSummaries(): void
-    fetchSeasonSummary(seasonId: string): void
     fetchSeasons(): void
     fetchSelectedFightReviews(fightId: string): void;
     fetchShow(showId: string): void
@@ -72,14 +64,8 @@ export interface ScorecardStoreState {
     selectedFighter: Fighter
     selectedFightReview: Review
     selectedFightReviews: Review[]
-    selectedFightSummary: FightSummary
-    selectedSeason: Season
-    selectedSeasonFightSummaries: FightSummary[]
-    selectedSeasonSummary: SeasonSummary
     setFighterScores(): void
     setSeasonsOptions(): void
-    setSelectedFightSummary(fightId: string): void
-    setSelectedSeasonSummary(seasonId: string): void
     stats: any[]
     submitFightResolution(resolutionObj: FightResolution): void
     submitList(list: List): void
@@ -117,10 +103,7 @@ export const initialScorecardsStoreState = {
     selectedFighter: {} as Fighter,
     selectedFightReviews: [],
     selectedFightReview: {} as Review,
-    selectedFightSummary: {} as FightSummary,
     selectedSeason: {} as Season,
-    selectedSeasonFightSummaries: [] as FightSummary[],
-    selectedSeasonSummary: {} as SeasonSummary,
     stats: [],
     userInvites: [],
     userScorecardSummary: {} as ScorecardSummary,
@@ -231,19 +214,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
     //     })d
     //     get().setSeasonsOptions()
     // },
-    fetchSeasonSummary: async (seasonId: string) => {
-
-        const res = await axios.get(`${url}/seasons/${seasonId}`)
-        const data = res.data as SeasonSummary
-        const [list, obj] = filterFights(data)
-        set({ 
-            fightStatusesObj: obj,
-            selectedSeason: data.season,
-            selectedSeasonSummary: list, 
-            selectedFightSummary: list[0],
-            selectedSeasonFightSummaries: list
-        })
-    },
+   
     fetchSeasons: async () => {
         const res = await axios.get(`${url}/seasons`,await configureAccessToken() )
         const seasons = res.data as Season[]
@@ -335,25 +306,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const [selected] = get().selectedFightReviews.filter( (review: Review) => review.reviewId === reviewId);
         set({ selectedFightReview: selected });
     },
-    setSelectedFightSummary: (fightId: string) => {
-        const [selectedFightSummary] = get().selectedSeasonFightSummaries.filter( (fightSummary: FightSummary) => fightSummary.fight.fightId === fightId)
-        set({ selectedFightSummary })
-        if(selectedFightSummary.fight.officialResult){
-            get().setTransformedResult(selectedFightSummary.fight.officialResult)
-        }
-        // clear out previous officialResult.
-    },
-    setSelectedSeasonSummary: (seasonId: string) => {
-        const [selectedSeasonSummary] = get().seasonSummaries.filter( (seasonSummary: SeasonSummary) => seasonSummary.season.seasonId === seasonId)
-        const { fightSummaries } = selectedSeasonSummary;
-        get().setSelectedFightSummary(fightSummaries[0].fight.fightId)
-        set({ 
-            selectedSeasonSummary,
-            selectedSeasonFightSummaries: fightSummaries,
-            selectedFightSummary: fightSummaries[0]
-        })
-    },
-    
+   
     submitFightResolution: async (resolutionObj: FightResolution) => {
         const res = await axios.put(`${url}/resolutions/${resolutionObj.fightId}`, resolutionObj, await configureAccessToken() )
         const data = res.data

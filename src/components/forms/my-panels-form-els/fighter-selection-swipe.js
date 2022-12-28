@@ -40,7 +40,7 @@ export const FighterSelectionSwipe = ({
             borderRadius="1px"
             w={fighterId === 'DRAW' ? '20%' : '40%'}
             pt="4"
-            minH="40vh"
+            // minH="40vh"
             cursor="pointer"
             _after={{
                 content: "''",
@@ -54,85 +54,79 @@ export const FighterSelectionSwipe = ({
                 minH="2rem"
                 flexDir="column"
             >
-                { fighterId === 'DRAW'
-                    ? 
-                        <Heading 
-                            size={["md", "lg", "xl"]}
-                            mt={fighter.fighterId === "DRAW" ? "8" : "0"}
-                            color={selectedFighter.fighterId === 'DRAW' ? '#fff' : 'gray'}
-                        >
-                            Draw
-                        </Heading>
-                    :
-                    <>
-                        <Heading 
-                            color={selectedFighter.fighterId === fighterId ? '#fff' : 'gray'}
+                <>
+                    <Heading 
+                        color={selectedFighter.fighterId === fighterId ? '#fff' : !selectedFighter.fighterId ? '#fafafa' : 'gray'}
+                        letterSpacing="2px"
+                        w="100%"
+                        zIndex={99}
+                        as="h2"
+                        size={["md", "lg"]}
+                    >
+                        {`${ringname}`}
+                    </Heading>
+                    <Flex
+                        w="100%"
+                        flexDir="column"
+                        alignItems="center"
+                        justifyContent="center"
+                    >
+                        <Center>
+                            <Avatar 
+                                size={["md","md","lg", "xl"]} 
+                                _hover={{cursor: 'pointer'}} 
+                            />
+                        </Center>
+                    </Flex>
+                    <Flex
+                        flexDir="column"
+                        w="100%"
+                        mt="2"
+                    >   
+                        <Heading
                             letterSpacing="1px"
-                            w="100%"
-                            zIndex={99}
-                            as="h2"
-                            size={["md", "lg"]}
-                        >
-                            {`${ringname}`}
-                        </Heading>
-                        <Flex
-                            w="100%"
-                            flexDir="column"
-                            alignItems="center"
-                            justifyContent="center"
-                        >
-                            <Center>
-                                <Avatar 
-                                    size={["md","md","lg", "xl"]} 
-                                    _hover={{cursor: 'pointer'}} 
-                                />
-                            </Center>
-                        </Flex>
-                        <Flex
-                            flexDir="column"
-                            w="100%"
-                        >   
-                            <Heading
-                                letterSpacing="0.5px"
-                                as="h3"
-                                size="md"
-                            >
-                                {`${capFirstLetters(lastName)}`} 
-                            </Heading>
+                            as="h3"
+                            size="md"
+                            color={selectedFighter.fighterId === fighterId ? '#dadada' : !selectedFighter.fighterId ? '#dadada' : 'gray'}
 
-                            <Flex
-                                display="inline-flex"
-                                flexDir="row"
-                                w="100%"
-                                justifyContent="center"
-                                alignItems="center"
+                        >
+                            {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
+                        </Heading>
+
+                        <Flex
+                            display="inline-flex"
+                            flexDir="row"
+                            w="100%"
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <Heading    
+                                textAlign="center" 
+                                as="h3" 
+                                size="sm"
+                                color={selectedFighter.fighterId === fighterId ? '#dadada' : !selectedFighter.fighterId ? '#dadada' : 'gray'}
+
                             >
-                                <Heading    
-                                    textAlign="center" 
-                                    as="h3" 
-                                    size="sm"
-                                    color="#cacaca"
-                                >
-                                    {`${wins}-${losses}-${draws}`}&nbsp; 
-                                </Heading>
-                                <Heading
-                                    textAlign="center" 
-                                    as="h3"
-                                    size="xs"
-                                    color="#dadada"
-                                >
-                                    {`${kos} KO`}
-                                </Heading>
-                            </Flex>
-                        <Flex 
-                            mt={["4"]}
-                            borderBottom={selectedFighter.fighterId === fighterId && selectedFighter.fighterId !== "DRAW" ? "5px solid white" : "5px solid transparent"}
-                            w="70%"
-                            mx="auto"
-                        />
+                                {`${wins}-${losses}-${draws}`}&nbsp; 
+                            </Heading>
+                            <Heading
+                                textAlign="center" 
+                                as="h3"
+                                size="xs"
+                                color={selectedFighter.fighterId === fighterId ? '#dadada' : !selectedFighter.fighterId ? '#dadada' : 'gray'}
+
+                            >
+                                {`${kos} KO`}
+                            </Heading>
                         </Flex>
-                    </>
-                }
+                    <Flex 
+                        mt={["4"]}
+                        borderBottom={selectedFighter.fighterId === fighterId ? "7px solid red" : "7px solid transparent"}
+                        w="70%"
+                        mx="auto"
+                    />
+                    </Flex>
+                </>
             </Flex>
         </Flex>
     )

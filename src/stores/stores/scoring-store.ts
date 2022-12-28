@@ -32,6 +32,7 @@ export interface ScoringStoreState {
     setScoringComplete(boolean: boolean): void
     submitRoundScores(roundScores: Record<string, number>): void
     tableData: any[]
+    totalRounds: number,
     updateScorecardsFromChat(roundScores: RoundScores): void
     userScorecard: Scorecard
 
@@ -51,6 +52,7 @@ export const initialScoringStoreState = {
     scoringComplete: false,
     sentChatScores: null,
     tableData: [],
+    totalRounds: 12,
     userScorecard: {} as Scorecard,
 
 }
