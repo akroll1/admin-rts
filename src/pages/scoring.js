@@ -4,15 +4,15 @@ import { ScoringTable } from '../components/tables'
 import { 
     AddGuestJudgeModal, 
     AddMemberModal, 
-    ExpiredTokenModal, 
     MoneylineModal, 
     PredictionModal 
 } from '../components/modals'
 import { ChatSidebar, ScoringSidebarLeft } from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
-import { useScorecardStore } from '../stores'
+import { useGlobalStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import { useParams } from 'react-router'
+import { ScoringDividerWithText } from '../components/tables/table-els/scoring-divider-with-text'
 
 
 const Scoring = props => {
@@ -27,8 +27,10 @@ const Scoring = props => {
         fetchPanelProps,
         fightComplete,
         fighterScores,
+        lastScoredRound,
         modals,
-    } = useScorecardStore();
+        totalRounds,
+    } = useGlobalStore();
 
     const [tabs, setTabs] = useState({
         info: false,
@@ -97,21 +99,24 @@ const Scoring = props => {
             bg="transparent"
             maxW="100%"
             boxSizing='border-box'
-        >         
-            <Flex>
+        >       <ScoringDividerWithText 
+                    text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
+                    tabs={tabs} 
+                    centered={tabs.all ? true : false}
+                />
                 <AddGuestJudgeModal />
                 <AddMemberModal />
-                <ExpiredTokenModal />
                 <MoneylineModal
                     props={props}
                 />
                 <PredictionModal />
-            </Flex>
             <Flex 
                 display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
                 w="100%" 
                 minH="70vh"  
             >
+                
+
                 <ScoringSidebarLeft
                     tabs={tabs}
                 />

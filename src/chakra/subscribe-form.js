@@ -15,14 +15,14 @@ import {
 import { FooterHeading } from './footer-heading'
 import { isValidEmail as validateEmail } from '../utils'
 import { CloseIcon } from '@chakra-ui/icons'
-import { useScorecardStore } from '../stores'
+import { useGlobalStore } from '../stores'
 
 export const SubscribeForm = (props) => {
   const toast = useToast()
 
   const {
     subscribeToNewsletter
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [subscriberEmail, setSubscriberEmail] = useState('')

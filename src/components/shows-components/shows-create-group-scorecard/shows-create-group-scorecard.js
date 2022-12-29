@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
 import { DividerWithText } from '../../../chakra'
-import { useScorecardStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 
 export const ShowsCreateGroupScorecard = ({ 
     deleteInvite, 
@@ -32,7 +32,7 @@ export const ShowsCreateGroupScorecard = ({
 
     const {
         user
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const handleSubmit = () => {
         setDisplayNameModal(true)
@@ -116,7 +116,7 @@ export const ShowsCreateGroupScorecard = ({
                             placeholder="email@example.com" 
                             type="email" 
                             maxLength={255} 
-                            autoComplete="nope"
+                            // autoComplete="nope"
                         />
                         { emailValue && 
                             <InputRightElement children={<CloseIcon
@@ -157,7 +157,7 @@ export const ShowsCreateGroupScorecard = ({
                                     bg: "#353535"
                                 }}
                                 bg="#252525"
-                                onClick={user.sub ? handleEmailSubmit : null} 
+                                onClick={user?.attributes?.sub ? handleEmailSubmit : null} 
                             >
                                 {`${invites.length >= 4 ? '5 Member Limit' : 'Add Member'}`}
                             </Button>
@@ -180,7 +180,7 @@ export const ShowsCreateGroupScorecard = ({
                                 m="2" 
                                 type="submit"
                                 mt={["4"]} 
-                                onClick={user.sub ? handleSubmit : null} 
+                                onClick={user?.attributes?.sub ? handleSubmit : null} 
                                 colorScheme="solid" 
                             >
                                 Create Scorecard

@@ -1,5 +1,4 @@
 import { Flex } from '@chakra-ui/react'
-import { useScorecardStore } from '../../../stores';
 
 export const ScoringSidebarNavItem = props => {
     const { 
@@ -9,10 +8,6 @@ export const ScoringSidebarNavItem = props => {
         label,
         onclickOption 
     } = props; 
-
-    const {
-        setModals
-    } = useScorecardStore()
 
     const handleClickOption = e => {
         if(onclickOption){
@@ -60,7 +55,7 @@ export const ScoringSidebarNavItem = props => {
                 w="100%"
                 fontSize="1rem" 
                 flex="1" 
-                fontWeight="inherit" 
+                fontWeight="inherit"                
                 color={active ? 'gray.300' : undefined}
             >
                 {label}

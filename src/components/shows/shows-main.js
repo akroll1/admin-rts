@@ -9,7 +9,7 @@ import {
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { ShowsCountdownTimer } from '../timers'
 import { DividerWithText } from '../../chakra'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { ShowsArrows } from './shows-arrows'
 import { OfficialResultBanner } from '../shows-components'
 
@@ -31,7 +31,7 @@ export const ShowsMain = ({
     const {
         selectedFightSummary,
         selectedSeasonSummary,
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const showTime = selectedFightSummary?.show?.showTime ? selectedFightSummary.show.showTime : Date.now();
     

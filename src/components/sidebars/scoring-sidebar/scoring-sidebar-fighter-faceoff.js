@@ -1,7 +1,7 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { ScoringSidebarFighterSwipe } from './scoring-sidebar-fighter-swipe'
 import { capFirstLetters } from '../../../utils'
-import { useScorecardStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 import backgroundImage from '../../../image/boxing-background.png'
 
 export const ScoringSidebarFightersFaceoff = ({
@@ -9,7 +9,7 @@ export const ScoringSidebarFightersFaceoff = ({
 }) => {
     const { 
         activeGroupScorecard
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     return (
         <>

@@ -1,11 +1,11 @@
 import { Flex, FormControl, FormLabel, Input, InputGroup, InputLeftElement, Select, } from '@chakra-ui/react'
 import { BsSearch } from 'react-icons/bs'
-import { useScorecardStore } from '../../../stores';
+import { useGlobalStore } from '../../../stores';
 
 export const TableActions = () => {
   const { 
     seasonsOptions,
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   return (
     <Flex 

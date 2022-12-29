@@ -18,7 +18,7 @@ import {
     Text,
     Textarea,
 } from '@chakra-ui/react'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { CreateGroupDividerWithText } from '../../chakra';
 
 export const CreateGroupModal = ({
@@ -31,7 +31,7 @@ export const CreateGroupModal = ({
     const {
         selectedFightSummary,
         selectedSeason
-    } = useScorecardStore();
+    } = useGlobalStore();
     // console.log('selectedFightSummary: ', selectedFightSummary)
     // console.log('selectedSeason: ', selectedSeason)
     const [season, setSeason] = useState({})

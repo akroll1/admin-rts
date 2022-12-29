@@ -9,14 +9,14 @@ import {
 } from '@chakra-ui/react'
 import { ScorecardsBoard } from '../sidebars/scorecards-sidebar-components/scorecards-boards/scorecards-board'
 import { FiTrash2 } from 'react-icons/fi'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { CheckIcon } from '@chakra-ui/icons'
 
 export const InvitationsList = () => {
 
     const {
         invites
-    } = useScorecardStore()
+    } = useGlobalStore()
     return (
         <ScorecardsBoard
             label={`Groups`}

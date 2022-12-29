@@ -12,13 +12,13 @@ import {
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { capFirstLetters } from '../../../utils'
-import { useScorecardStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 
 export const ScorecardsPageTableContent = () => {
 
   const {
     userScorecards
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   const renderLink = (length, fightQuickTitle) => {
     if(length > 1){

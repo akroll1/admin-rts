@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { 
+    Button,
+    Flex,
+} from '@chakra-ui/react'
 import { FighterSwipe } from '../fighter-swipe'
-import { ScoringButtons } from './scoring-buttons'
-import { useScorecardStore } from '../../stores'
+import { FighterNamesHeading } from './fighter-name-heading'
+import { useGlobalStore } from '../../stores'
+import { UserScores } from './user-scores'
 import image from '../../image/boxing-background.png'
 
 export const ScoringMain = ({ 
@@ -17,13 +21,15 @@ export const ScoringMain = ({
     
     const {
         activeGroupScorecard,
+        fightComplete,
         fighterScores,
         lastScoredRound,
         scoringComplete,
         setScoringComplete,
         submitRoundScores,
         totalRounds,
-    } = useScorecardStore();
+        userScorecard,
+    } = useGlobalStore();
 
     useEffect(() => {
         setUserScoringComplete(scoringComplete)
@@ -46,20 +52,20 @@ export const ScoringMain = ({
         } 
     },[notSelectedScore])
 
-    const handleFighterSelect = id => {
-        setSelectedFighter(id)
+    const handleFighterSelect = fighter => {
+        setSelectedFighter(fighter)
         setNotSelectedScore(9)
     }
 
     const submitScores = () => {
         const [fighter1, fighter2] = activeGroupScorecard?.fighters;
-        const notSelected = selectedFighter === fighter1.fighterId ? fighter2.fighterId : fighter1.fighterId;
+        const notSelected = selectedFighter.fighterId === fighter1.fighterId ? fighter2.fighterId : fighter1.fighterId;
         const { scorecardId } = fighterScores
         const roundScores = {
             round: lastScoredRound+ 1,
             scorecardId,
+            [selectedFighter.fighterId]: 10,
             [notSelected]: notSelectedScore,
-            [selectedFighter]: 10
         };
         const scoringIsComplete = (lastScoredRound + 1)  > totalRounds;
         submitRoundScores(roundScores);
@@ -79,14 +85,13 @@ export const ScoringMain = ({
             setNotSelectedScore(prev => prev -1)
         }
     }
-
-
+    
     return (
         <Flex 
             id="scoring_main"
             display={tabs.scoring || tabs.all ? 'flex' : 'none'}
             p={["0", "0"]} 
-            flex="1 0 50%"
+            flex="1 0 40%"
             m="auto"
             mt="0"
             flexDir="column" 
@@ -117,33 +122,57 @@ export const ScoringMain = ({
                     w="100%"
                     textAlign="center"
                     alignItems="flex-end"
+                    justifyContent="space-around"
                 >
-                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, i) => (
+                    { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, _i) => (
                         <FighterSwipe
                             evenRound={evenRound}
                             fighter={fighter}
                             handleFighterSelect={handleFighterSelect}
-                            key={i}
+                            key={_i}
                             notSelectedScore={notSelectedScore}
                             redCorner={activeGroupScorecard?.fighters[0]?.fighterId === selectedFighter}
                             scoringComplete={userScoringComplete}
                             selectedFighter={selectedFighter}
                         />
-                    ))
-                }
-                </Flex>     
-
+                    ))}
+                </Flex>
             </Flex>
-            <ScoringButtons
+            <Flex     
+                flexDir={["row"]} 
+                w={["100%"]} 
+            >
+                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, _i) => (
+                    <FighterNamesHeading
+                        evenRound={evenRound}
+                        fighter={fighter}
+                        id={fighter.fighterId}
+                        key={fighter.fighterId}
+                        selectedFighter={selectedFighter}
+                    />
+                    
+                ))}
+            </Flex>
+            <UserScores
+                evenRound={evenRound}
                 handleAdjustScore={handleAdjustScore}
-                isDisabled={isDisabled}
-                isSubmitting={isSubmitting}
-                lastScoredRound={lastScoredRound}
+                notSelectedScore={notSelectedScore}
                 selectedFighter={selectedFighter}
-                setIsDisabled={setIsDisabled}
-                submitScores={submitScores}
-                totalRounds={totalRounds}
             />
+            <Button
+                zIndex={100}
+                onClick={submitScores}
+                disabled={isDisabled || fightComplete} 
+                variant={isDisabled ? "outline" : "solid"} 
+                colorScheme="solid" 
+                mx="auto" 
+                mt="4"
+                fontSize="1.2rem"
+                fontWeight="bold"
+                w={["80%", "70%", "60%", "50%"]}
+            >
+                {isDisabled && fightComplete ? `Scoring Complete` : selectedFighter ? `Score Round ${userScorecard?.scores.length + 1}` : `Select Fighter` }
+            </Button>
         </Flex> 
     )
 }

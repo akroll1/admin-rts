@@ -8,41 +8,27 @@ import {
     MenuList 
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
-export const ProfileButton = ({ onToggle }) => {
+export const ProfileButton = ({ 
+    handleFightSyncButtonClick,
+    onToggle
+}) => {
+    
     const navigate = useNavigate();
     const {
-        reset,
-        user
-    } = useScorecardStore();
-    const { isLoggedIn } = user
-    const [open, setOpen] = useState(false)
+        isLoggedIn,
+        signOut,
+    } = useGlobalStore();
 
-    const openProfile = () => {
-        if(isLoggedIn) return setOpen(true)
-        if(!isLoggedIn) {
-            navigate('/signin')
+    const handleClick = () => {
+        if(isLoggedIn){
+            navigate('/dashboard/account')
             onToggle()
-            if(open){
-                setOpen(false)
-            } else {
-                setOpen(true)
-            }
+            return
         }
-    }
-
-    const handleSignOutClick = () => {
-        setOpen(false)
-        reset()
-        navigate('/')
-    }
-
-    const handleNavigate = e => {
-        const { value } = e.currentTarget
-        setOpen(false)
         onToggle()
-        navigate(value)
+        navigate('/signin')
     }
 
     return (
@@ -59,18 +45,18 @@ export const ProfileButton = ({ onToggle }) => {
                     _hover={{color: 'white'}}
                     fontSize="1.1rem"
                     fontWeight="600"
-                    onClick={openProfile}
+                    onClick={handleClick}
                 >
                     {isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
-                {isLoggedIn && open && 
+                {/* {!isMobile && isLoggedIn &&
                     <MenuList>
                         <MenuItem value="/scorecards" onClick={handleNavigate}>Scorecards</MenuItem>
                         <MenuItem value="/dashboard/account" onClick={handleNavigate}>Profile</MenuItem>
                         <MenuDivider />
                         <MenuItem onClick={() => handleSignOutClick()}>Sign Out</MenuItem>
                     </MenuList>
-                }
+                } */}
             </Menu>
         </Flex>
     )

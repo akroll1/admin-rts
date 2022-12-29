@@ -2,11 +2,11 @@ import * as React from 'react'
 import { Flex, Menu, MenuDivider, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Text, useColorModeValue } from '@chakra-ui/react'
 import { AccountSwitcherButton } from './account-switcher-button'
 import { useNavigate } from 'react-router'
-import { useScorecardStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 
 export const AccountSwitcher = () => {
   const navigate = useNavigate();
-  const { userScorecards } = useScorecardStore();
+  const { userScorecards } = useGlobalStore();
   return (
     <Menu>
       <AccountSwitcherButton mb="2" />

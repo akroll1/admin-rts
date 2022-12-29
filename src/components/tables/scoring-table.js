@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { 
     Flex, 
-    FormLabel,
     Heading, 
-    Switch,
     Table, 
     Tbody, 
     Td, 
@@ -11,24 +9,22 @@ import {
     Thead, 
     Tr, 
     useColorModeValue as mode,
-    useToast
 } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
-import { ScoringDividerWithText } from './table-els/scoring-divider-with-text'
+import { ScoringTableSwitches } from './table-els'
 
 export const ScoringTable = ({ 
     tabs, 
 }) => {
 
-    const toast = useToast();
-
     const {
         activeGroupScorecard,
         lastScoredRound,
+        setToast,
         tableData, 
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const [showToMyRound, setShowToMyRound] = useState(true)
 
@@ -38,21 +34,23 @@ export const ScoringTable = ({
 
     const handleRealTimeSwitchClick = () => {
         if(activeGroupScorecard?.groupScorecard?.chatKey){
-            toast({
+            const toast = {
                 title: 'Real-Time Updates Enabled',
                 status: 'success',
                 duration: 5000,
                 isClosable: true,
-            })
+            }
+            setToast(toast)
         }
         if(!activeGroupScorecard?.groupScorecard?.chatKey){
-            toast({
+            const toast = {
                 title: 'Real-Time Updates Disabled',
                 description: 'Please upgrade to allow real-time updates.',
                 status: 'success',
                 duration: 5000,
                 isClosable: true,
-            })
+            }
+            setToast(toast)
         }
     }
 
@@ -103,17 +101,20 @@ export const ScoringTable = ({
     }
 
     return (      
-        <>
-            <ScoringDividerWithText 
-                text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
-                tabs={tabs} 
-                centered={tabs.all ? true : false}
+        <Flex
+            w="100%"
+            flexDir="column"
+        >
+            <ScoringTableSwitches 
+                activeGroupScorecard={activeGroupScorecard}
+                handleRealTimeSwitchClick={handleRealTimeSwitchClick}
+                handleShowToMyRound={handleShowToMyRound}
+                showToMyRound={showToMyRound}
+                tabs={tabs}
             />
-
             <FightStats 
                 tabs={tabs} 
             />
-
             <Flex 
                 overflow="scroll"
                 display={tabs.all || tabs.table ? 'flex' : 'none'}
@@ -127,52 +128,7 @@ export const ScoringTable = ({
                 mb={tabs.all ? "0rem" : "4rem"}
             >     
                 { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" mb="-2" size="md">FIGHT IS OFFICIAL</Heading> }
-                <Flex
-                    w="100%"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                    flexDir="column"
-                    pl="2"
-                >
-                    <Flex
-                        display="inline-flex"
-                        pb="1"
-                    >
-                        <Switch 
-                            onChange={handleRealTimeSwitchClick}
-                            size="md"
-                            colorScheme="gray"
-                            id='realTime'
-                            isChecked={activeGroupScorecard?.groupScorecard?.chatKey} 
-                        />
-                        <FormLabel 
-                            ml="1"
-                            mb="0" 
-                            htmlFor='realTime'
-                        >
-                            Real Time
-                        </FormLabel>
-                    </Flex>
-                    <Flex
-                        display="inline-flex"
-                    >
-                        <Switch
-                            size="md" 
-                            colorScheme="gray"
-                            id='currentRound' 
-                            defaultChecked 
-                            onChange={handleShowToMyRound}
-                            isChecked={showToMyRound}
-                        />
-                        <FormLabel 
-                            ml="1"
-                            mb="0" 
-                            htmlFor='currentRound'
-                        >
-                            Show to My Round
-                        </FormLabel>
-                    </Flex>
-                </Flex>
+                
                 <Table 
                     id="scoring_table"
                     style={{tableLayout:'auto', width: '100%'}} 
@@ -367,6 +323,6 @@ export const ScoringTable = ({
                     </Tbody>
                 </Table>
             </Flex>
-        </> 
+        </Flex> 
     )
 }

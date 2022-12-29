@@ -1,125 +1,65 @@
-import { 
-    Avatar, 
-    Center, 
+import {  
+    Avatar,
+    AvatarBadge,
+    Center,
     Flex, 
-    Heading, 
-    useToast 
 } from '@chakra-ui/react'
-import { capFirstLetters } from '../../utils'
 
 export const FighterSwipe = ({ 
     evenRound,
-    fighter, 
+    fighter,
     handleFighterSelect,
-    notSelectedScore,
-    redCorner,
-    scoringComplete,
     selectedFighter,
 }) => {
-    const toast = useToast();
 
     const handleSelect = e => {
-        const { id } = e.currentTarget
-        handleFighterSelect(id)
+        handleFighterSelect(fighter)
     }
 
-    const handleScoringComplete = () => {
-        toast({
-            title: 'Scoring Complete',
-            // description: "",
-            position: 'top',
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-        })
-    }
-
-    
     const { 
         fighterId, 
-        firstName, 
-        lastName, 
     } = fighter; 
-    
-    const setBottomBorderStyle = () => {
-        if(evenRound) return '0.5rem solid white'
-        if(selectedFighter && selectedFighter === fighterId){
-            if(redCorner) return '0.5rem solid #e62b2b'
-            if(!redCorner) return '0.5rem solid #1d5d90'
-        }
-        return '0.5rem solid transparent'
-    }
-    
-    const borderBottomStyles = setBottomBorderStyle();
 
     return (
         <Flex   
-            zIndex={100}      
+            p="4"
+            zIndex={100}  
             flexDir="column"
             justifyContent="space-between"
             alignItems="center"
-            onClick={scoringComplete ? handleScoringComplete : handleSelect} 
+            onClick={handleSelect} 
             id={fighterId}
             boxSizing="border-box" 
             borderRadius="1px"
-            w="100%"
+            w={fighterId === 'DRAW' ? '20%' : '40%'}
             pt="4"
+            // minH="40vh"
+            cursor="pointer"
             _after={{
                 content: "''",
                 margin: "0 auto",
-                width: '70%',
-                borderBottom: borderBottomStyles,
+                width: '100%',
             }}
         >
             <Flex
+                textAlign="center"
                 w="100%"
                 flexDir="column"
-                alignItems="center"
-                justifyContent="center"
             >
-                <Center>
-                    <Avatar 
-                        size="xl" 
-                        _hover={{cursor: 'pointer'}} 
-                    />
-                </Center>
-            </Flex>    
-            <Flex
-                flexDir="column"
-                w="100%"
-            >   
-                <Heading
-                    pt="2"
-                    letterSpacing="0.5px"
-                    as="h3"
-                    size="md"
-                >
-                    {`${capFirstLetters(lastName)}`} 
-                </Heading>
                 <Flex
                     w="100%"
-                    minH="1.5rem"
-                    justifyContent="center"
+                    flexDir="column"
                     alignItems="center"
+                    justifyContent="center"
                 >
-                { selectedFighter && selectedFighter === fighterId &&
-                    <Heading    
-                        textAlign="center" 
-                        as="h2" 
-                        size="lg"
-                    >
-                        {`10`} 
-                    </Heading>
-                }
-                { selectedFighter && selectedFighter !== fighterId &&
-                    <Heading    
-                        textAlign="center" 
-                        as="h2" 
-                        size="lg"
-                    >
-                        {notSelectedScore} 
-                    </Heading>
-                }
+                    <Center>
+                        <Avatar 
+                            size={["md","md","lg", "xl"]} 
+                            _hover={{cursor: 'pointer'}} 
+                        >
+                            {(!evenRound && selectedFighter.fighterId === fighter.fighterId) && <AvatarBadge borderColor='papayawhip' bg='red.300' boxSize='1.25em' /> }
+                        </Avatar>
+                    </Center>
                 </Flex>
             </Flex>
         </Flex>

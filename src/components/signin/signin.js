@@ -8,10 +8,19 @@ import { ForcedPasswordChange } from './forced-password-change'
 import { WaitingForCode } from './waiting-for-code-form'
 import { Amplify, Auth } from 'aws-amplify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const SignIn = () => {
+  
   const navigate = useNavigate();
+  
+  Amplify.configure({
+    Auth: {
+        region: process.env.REACT_APP_REGION,
+        userPoolId: process.env.REACT_APP_USER_POOL_ID,
+        userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID,
+    }
+})
 
   let [searchParams, setSearchParams] = useSearchParams();
   const name = searchParams.get('name');
@@ -37,18 +46,9 @@ export const SignIn = () => {
   })
 
   const { 
-    setAccessToken, 
-    setIdToken, 
     setUser, 
-  } = useScorecardStore();
+  } = useGlobalStore();
 
-  Amplify.configure({
-    Auth: {
-      region: process.env.REACT_APP_REGION,
-      userPoolId: process.env.REACT_APP_USER_POOL_ID,
-      userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID,
-    }
-  })
   useEffect(() => {
     if(nonce && nonce === 'u49kei4'){
       setForm({ ...form, password: pw, username: name })
@@ -69,7 +69,6 @@ export const SignIn = () => {
       password
     })
     .then((user) => {
-      const { attributes } = user;
       setForm({ ...form, user})
       setForm({ ...form, password: '', user });
       if(user?.challengeName === "NEW_PASSWORD_REQUIRED"){
@@ -83,20 +82,7 @@ export const SignIn = () => {
           isWaitingForNewPasswordCode: false
         })
       } else {
-        const groups = user.signInUserSession.accessToken.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
-        setUser({ ...attributes, username, isLoggedIn: true, groups });
-        const token = user.signInUserSession.accessToken.jwtToken;
-        const idToken = user.signInUserSession.idToken.jwtToken;
-        setIdToken({
-          headers: {
-            Authorization: `Bearer ${idToken}`
-          }
-        });
-        setAccessToken({
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+        setUser()
         return navigate('/scorecards', { username });
       }
     })
@@ -148,20 +134,6 @@ export const SignIn = () => {
     Auth.completeNewPassword( user, password )
       .then( user => { 
         const { username, challengeParam: {  userAttributes } } = user;
-        setUser({ 
-          username, 
-          ...userAttributes, 
-          groups: [], 
-          sub: user.signInUserSession.idToken.payload.sub 
-        })
-          const accessToken = user.signInUserSession.accessToken.jwtToken;
-          const idToken = user.signInUserSession.idToken.jwtToken;
-        setAccessToken({headers: {
-          Authorization: `Bearer ${accessToken}`
-        }})
-        setIdToken({headers: {
-          Authorization: `Bearer ${idToken}`
-        }})
       })
       .then(() => handleSignIn(form.username, form.password))
       .catch( err => {

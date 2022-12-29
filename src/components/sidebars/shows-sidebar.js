@@ -13,48 +13,34 @@ import {
     NotAllowedIcon,
 } from '@chakra-ui/icons'
 import { SidebarsDividerWithText } from '../../chakra'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 import { FightStatus } from '../../stores/models/enums'
 
 export const ShowsSidebar = () => { 
     const { 
-        fightStatusesObj,
+        fightsByStatus,
         seasonsOptions,
         selectedFightSummary, 
         setSelectedFightSummary,
         setSelectedSeasonSummary,
-    } = useScorecardStore()
+    } = useGlobalStore()
     
     const [canceled, setCanceled] = useState([])
     const [complete, setComplete] = useState([])
     const [pending, setPending] = useState([])
 
     useEffect(() => {
-        if(fightStatusesObj?.PENDING){
-            setPending(fightStatusesObj[FightStatus.PENDING])
-            setComplete(fightStatusesObj[FightStatus.COMPLETE])
-            setCanceled(fightStatusesObj[FightStatus.CANCELED])
-
-            if(!fightStatusesObj[FightStatus.PENDING].length && fightStatusesObj[FightStatus.COMPLETE].length){
-                setSelectedFightSummary(fightStatusesObj[FightStatus.COMPLETE][0].fight.fightId)
-            }
-            if(fightStatusesObj[FightStatus.PENDING].length){
-                setSelectedFightSummary(fightStatusesObj[FightStatus.PENDING][0].fight.fightId)
-            }
+        if(fightsByStatus && (fightsByStatus[FightStatus.PENDING] || fightsByStatus[FightStatus.COMPLETE])){
+            setPending(fightsByStatus[FightStatus.PENDING])
+            setComplete(fightsByStatus[FightStatus.COMPLETE])
+            setCanceled(fightsByStatus[FightStatus.CANCELED])
         }
-    }, [fightStatusesObj])
+    }, [fightsByStatus])
     
     const selectFight = e => {
         const { id } = e.currentTarget;
         setSelectedFightSummary(id)
     }
-
-    const historicalShows = [
-        'Ali vs Frazier I', 'Hagler vs Hearns'
-    ];
-    const fantasyFights = [
-        'Floyd Mayweather vs Willie Pep', 'Mike Tyson vs Muhammad Ali'
-    ];
 
     const handleSeasonSelect = e => {
         const { value } = e.currentTarget;

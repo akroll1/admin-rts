@@ -10,7 +10,7 @@ import {
     UnorderedList,
     useColorModeValue,
 } from '@chakra-ui/react'
-import { useScorecardStore } from '../../../../stores'
+import { useGlobalStore } from '../../../../stores'
 import { parseEpoch } from '../../../../utils'
 import { CheckIcon } from '@chakra-ui/icons'
 import { FiTrash2 } from 'react-icons/fi'
@@ -21,7 +21,7 @@ export const ScorecardsInvitationsBoard = () => {
         acceptInvite,
         deleteInvite,
         userInvites
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const handleIconClick = (e, clickType) => {
         const { id } = e.currentTarget;

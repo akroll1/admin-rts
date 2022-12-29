@@ -3,13 +3,13 @@ import {
     Flex, 
     Text 
 } from '@chakra-ui/react'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const OfficialResultBanner = () => {
 
     const {
         transformedResult
-    } = useScorecardStore()
+    } = useGlobalStore()
         
     return (
         <Flex 

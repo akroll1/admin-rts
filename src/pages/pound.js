@@ -3,7 +3,7 @@ import { Flex, Heading, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { useLocation } from 'react-router'
 import { PagePoundList } from '../components/lists'
-import { useStateStore } from '../stores'
+import { useGlobalStore } from '../stores'
 
 const initialDnDState = {
   draggedFrom: null,
@@ -21,7 +21,7 @@ export const PoundPage = () => {
   const [dragAndDrop, setDragAndDrop] = useState(initialDnDState);
   const baseUrl = `${process.env.REACT_APP_API}/pound`;
   
-  const { user, tokenConfig } = useStateStore.getState();
+  const { user, tokenConfig } = useGlobalStore();
   ////////////////////////////////////////////////////////
   useEffect(() => {
       const getLists = async () => {

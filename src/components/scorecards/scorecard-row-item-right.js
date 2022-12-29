@@ -1,5 +1,6 @@
 import {
     Button,
+    ButtonGroup,
     Flex,
     Select,
     useColorModeValue as mode
@@ -41,18 +42,38 @@ export const ScorecardRowItemRight = ({
                     )
                 })}
             </Select>
-            <Button 
-                color="gray.300"
-                _hover={{color: "#fff"}}
-                bg="transparent"
-                variant="ghost"
-                size="sm" 
-                fontSize="sm" 
-                rightIcon={<FaArrowRight />}
-                onClick={() => navigate(`/leaderboard/${fightId}`)}
+            <ButtonGroup
+                flexDir="column"
+                alignItems="flex-end"
             >
-                Leaderboard
-            </Button>
+
+                <Button 
+                    p="0"
+                    color="gray.300"
+                    _hover={{color: "#fff"}}
+                    bg="transparent"
+                    variant="ghost"
+                    size="sm" 
+                    fontSize="sm" 
+                    rightIcon={<FaArrowRight />}
+                    onClick={() => navigate(`/leaderboard/${fightId}`)}
+                >
+                    Leaderboard
+                </Button>
+                <Button 
+                    p="0"
+                    color="gray.300"
+                    _hover={{color: "#fff"}}
+                    bg="transparent"
+                    variant="ghost"
+                    size="sm" 
+                    fontSize="sm" 
+                    rightIcon={<FaArrowRight />}
+                    onClick={() => navigate(`/leaderboard/${fightId}`)}
+                >
+                    Share Scorecard
+                </Button>
+            </ButtonGroup>
 
         </Flex>
     )

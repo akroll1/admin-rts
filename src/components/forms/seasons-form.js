@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import { SelectedSeasonTable, SeasonsTable } from '../tables';
-import { SeasonStatus, useScorecardStore } from '../../stores';
+import { SeasonStatus, useGlobalStore } from '../../stores';
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 
@@ -26,7 +26,7 @@ export const SeasonsForm = () => {
         fetchSeasonSummaries,
         seasons,
         updateSeason,
-    } = useScorecardStore()
+    } = useGlobalStore()
     const resetForm = {
         seasonId: '',
         ends: 0,

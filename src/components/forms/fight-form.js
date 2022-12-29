@@ -3,16 +3,16 @@ import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLa
 import { FieldGroup } from '../../chakra'
 import { DeleteIcon } from '@chakra-ui/icons'
 import { FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM, ROUND_LENGTH_ENUMS, WEIGHTCLASS_ENUMS } from '../../utils'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const FightForm = () => {
     const { 
         createFight,
         deleteFight,
-        fetchFight,
-        fight,
+        fetchFightSummary,
+        selectedFightSummary,
         updateFight,
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const toast = useToast();
     const [fighterAId, setFighterAId] = useState('');
@@ -31,12 +31,12 @@ export const FightForm = () => {
     });
 
     useEffect(() => {
-        if(fight.fighterIds?.length === 2){
-            setForm(fight)
-            setFighterAId(fight.fighterIds[0])
-            setFighterBId(fight.fighterIds[1])
+        if(selectedFightSummary?.fight?.fighterIds?.length === 2){
+            setForm(selectedFightSummary.fight)
+            setFighterAId(selectedFightSummary.fight.fighterIds[0])
+            setFighterBId(selectedFightSummary.fight.fighterIds[1])
         }
-    },[fight])
+    },[selectedFightSummary])
     
     const handleFormChange = e => {
         const { name, id, value, checked } = e.currentTarget;
@@ -70,7 +70,7 @@ export const FightForm = () => {
     
     const searchForFight = () => {
         if(fightId){
-            fetchFight(fightId)
+            fetchFightSummary(fightId)
         }
     }
 

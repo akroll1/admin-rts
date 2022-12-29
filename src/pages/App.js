@@ -15,7 +15,7 @@ import Fighters from './fighters'
 import Discussion from './discussions'
 import Analytics from './analytics'
 import Shows from './shows'
-import { ScorecardsPage } from '../components/scorecards'
+import { Scorecards } from '../components/scorecards'
 import theme from '../theme'
 import { PoundPage } from './pound'
 import { ScorecardsSearch } from './scorecards-search'
@@ -33,14 +33,14 @@ const App = () => {
             <Route exact path="/scoring/:groupScorecardId/:fightId" element={<Scoring />} />
             <Route exact path="/scoring" element={<Scoring />} />
             <Route exact path="/blog" element={<Blog />} />
-            <Route exact path="/blog/:id" element={<BlogArticlePage />} />
+            <Route exact path="/blog/:blogId" element={<BlogArticlePage />} />
             <Route exact path="/featured-fights/:id" element={<FeaturedFights />} />
             <Route exact path="/live" element={<CounterPunch />} />
             <Route exact path="/discussions" element={<Discussion />} />
             <Route exact path="/discussions/:id" element={<Discussion />} />
             <Route exact path="/scorecards" element={
               <PrivateRoute>
-                <ScorecardsPage /> 
+                <Scorecards /> 
               </PrivateRoute>
             }/>
             <Route exact path="/fighters" element={

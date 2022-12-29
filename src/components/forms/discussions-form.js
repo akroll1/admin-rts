@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Box, Button, Flex, FormControl, FormLabel, Heading, HStack, Input, Stack, StackDivider, Text, Textarea, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import { DiscussionsFormTable } from '../tables';
-import { useScorecardStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 
 export const DiscussionsForm = () => {
     const {
@@ -14,7 +14,7 @@ export const DiscussionsForm = () => {
         fetchDiscussion,
         updateDiscussion,
         user,
-    } = useScorecardStore()
+    } = useGlobalStore()
     const { sub } = user
     const toast = useToast();
     const [discussionId, setDiscussionId] = useState(null)

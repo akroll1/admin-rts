@@ -20,14 +20,14 @@ import {
 } from '@chakra-ui/react'
 import { HiCloudUpload } from 'react-icons/hi'
 import { LanguageSelect, FieldGroup } from '../../chakra'
-import { useScorecardStore } from '../../stores'
+import { useGlobalStore } from '../../stores'
 
 export const MyAccountForm = () => {
   const { 
     user,
     fetchUser,
     updateUser
-  } = useScorecardStore()
+  } = useGlobalStore()
 
   const [form, setForm] = useState({
     bio: '',

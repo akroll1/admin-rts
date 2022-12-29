@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import { useParams } from 'react-router'
-import { useStateStore } from '../stores'
 import axios from 'axios'
 import { ScorecardsPageScoringTable } from '../components/tables'
 import { ScorecardsSearchBar } from '../components/search'
-import { ExpiredTokenModal } from '../components/modals'
 import { capFirstLetters } from '../utils'
 import { ScorecardsSearchTable } from '../components/tables/scorecards-search-table'
-import { useScorecardStore, useScoringStore } from '../stores'
+import { useGlobalStore } from '../stores'
 import { ScoringTable } from '../components/tables'
 
 export const ScorecardsSearch = () => {
-    const { tokenConfig } = useStateStore.getState();
+    const { tokenConfig } = useGlobalStore();
     const { initialScorecardId, userId } = useParams();
     const [scorecardId, setScorecardId] = useState(initialScorecardId)
     const [search, setSearch] = useState('');
@@ -25,13 +23,10 @@ export const ScorecardsSearch = () => {
         expiredTokenModal: false
     });
     const {
-        collateTableData
-    } = useScoringStore();
-    
-    const {
+        collateTableData,
         userScorecard,
         userScorecards,
-    } = useScorecardStore();
+    } = useGlobalStore();
 
     useEffect(() => {
         if(userScorecard?.scorecardId){
@@ -105,10 +100,6 @@ export const ScorecardsSearch = () => {
             flexDir="column" 
             wordBreak="break-word"
         >
-            <ExpiredTokenModal 
-                modals={modals} 
-                setModals={setModals} 
-            />
             <Flex 
                 p="4" 
                 flexDir="column" 

@@ -1,3 +1,4 @@
+export * from './props.model'
 export * from './blog-post.model'
 export * from './discussion.model'
 export * from './fight.model'

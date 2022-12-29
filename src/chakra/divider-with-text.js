@@ -42,7 +42,7 @@ export const DividerWithText = props => {
 }
 
 export const SidebarsDividerWithText = props => {
-  const { fontSize, mx, my, pendingInvites, px, py, label } = props;
+  const { fontSize, mb, mx, mt, my, pendingInvites, px, py, label } = props;
   return (
     <Heading
       textAlign={['left', 'center']}
@@ -51,7 +51,8 @@ export const SidebarsDividerWithText = props => {
       my={my ? my : ''}
       py={py ? py : ''}
       px={px ? px : ''}
-      mb="2"
+      mt={mt ? mt : ''}
+      mb={mb ? mb : "2"}
     >
       {label}
     </Heading>

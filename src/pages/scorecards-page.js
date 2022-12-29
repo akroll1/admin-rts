@@ -5,12 +5,12 @@ import {
     Text,
     useColorModeValue as mode,
 } from '@chakra-ui/react'
-import { useScorecardStore } from '../stores'
+import { useGlobalStore } from '../stores'
 import { ScorecardRow } from '../components/scorecards/scorecard-row'
 import { ScorecardSummary } from '../components/scorecards/scorecard-summary'
 import { ScorecardsInvitationsBoard } from '../components/sidebars'
 
-export const ScorecardsPage = () => {
+export const Scorecards = () => {
     
     const [selectedSummary, setSelectedSummary] = useState({})
     const [showInvitations, setShowInvitations] = useState(false)
@@ -19,7 +19,7 @@ export const ScorecardsPage = () => {
         fetchUserScorecards,
         userInvites,
         userScorecardSummaries
-    } = useScorecardStore();
+    } = useGlobalStore();
 
     useEffect(() => {
         fetchUserScorecards()

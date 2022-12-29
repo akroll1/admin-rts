@@ -55,8 +55,8 @@ export const FighterSelection = ({
                 alignItems="center"
                 justifyContent="center"
             >
-                { optionsArr.length > 0 && 
-                    optionsArr.map( (fighter, _i) => <FighterSelectionSwipe 
+                { fighters.length > 0 && 
+                    fighters.map( (fighter, _i) => <FighterSelectionSwipe 
                         key={_i}
                         fighter={fighter} 
                         handleFighterSelect={handleFighterSelect} 

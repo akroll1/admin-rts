@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import { PanelistsTable } from '../tables';
-import { useScorecardStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 
 export const PanelistForm = () => {
     const {
@@ -25,7 +25,7 @@ export const PanelistForm = () => {
         panelist,
         panelists,
         updatePanelist,
-    } = useScorecardStore()
+    } = useGlobalStore()
 
     const [panelistId, setPanelistId] = useState(null)
     const [allPanelists, setAllPanelists] = useState([]);

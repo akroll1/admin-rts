@@ -32,7 +32,7 @@ export const ScorecardsNavGroup = props => {
             alignItems="flex-start"
             onClick={selectSeason}
             id={id}
-            mb="1"
+            mt="2px"
         >
             <Flex
                 justifyContent="space-between"

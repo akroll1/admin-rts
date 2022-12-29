@@ -23,15 +23,20 @@ import {
 } from '../components/forms'
 import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
-import { ExpiredTokenModal } from '../components/modals'
-import { useScorecardStore } from '../stores'
+import { useGlobalStore } from '../stores'
+import { IoLogOutOutline } from 'react-icons/io5'
+import { signOut } from '../components/partials'
 
 const Dashboard = () => {
-  const { type, showId } = useParams();
+  const { type } = useParams();
   const { 
-    setUser, 
+    signOut,
     user, 
-  } = useScorecardStore()
+  } = useGlobalStore()
+  const groups = user?.signInUserSession?.accessToken?.payload['cognito:groups'];
+
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false)
+  const [isPanelist, setIsPanelist] = useState(false)
 
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
@@ -41,23 +46,22 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    const setAuth = () => {
-      const isSuperAdmin = user.groups.some( group => group.includes('rts-admins'));
-      const isPanelist = user.groups.some( group => group.includes('panelist'));
-      if(isSuperAdmin && isPanelist){
-        setUser({ ...user, isSuperAdmin, isPanelist })
-        setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
-        return;
-      } else if(isPanelist){
-        setUser({ ...user, isPanelist })
-        setFormLinks([...formLinks, ...panelistOptions]);
-      } else if(isSuperAdmin){
-        setUser({ ...user, isSuperAdmin })
-        setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-      }
+    if(user?.username){
+      const isSuperAdmin = groups.some( group => group.includes('rts-admins')) ? setIsSuperAdmin(true) : null;
+      const isPanelist = groups.some( group => group.includes('panelist')) ? setIsPanelist(true) : null;
     }
-    setAuth()
-  },[])
+  },[user])
+
+  useEffect(() => {
+    if(isSuperAdmin && isPanelist){
+      setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
+      return;
+    } else if(isPanelist){
+      setFormLinks([...formLinks, ...panelistOptions]);
+    } else if(isSuperAdmin){
+      setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
+    }
+  },[isSuperAdmin, isPanelist])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
@@ -106,7 +110,6 @@ const Dashboard = () => {
       px={6} 
       py={8}
     >
-      <ExpiredTokenModal />
       <Box flex="1 0 25%">
         <Stack spacing={6}>
           <Box fontSize="sm" lineHeight="tall">
@@ -146,6 +149,12 @@ const Dashboard = () => {
               link="#" 
               label="Help Center" 
               icon={FaRegQuestionCircle} 
+            />
+            <NavLinkDashboard 
+              onClick={signOut}
+              link="#" 
+              label="Logout" 
+              icon={IoLogOutOutline} 
             />
           </Stack>
         <Spacer />
