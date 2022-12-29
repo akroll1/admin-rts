@@ -23,7 +23,8 @@ const Shows = () => {
         userFightReview,
     } = useGlobalStore();
     const { attributes, username } = user;
-    const { email, sub } = attributes
+    const email = user?.attributes?.email ? user.attributes.email : ''
+    const sub = user?.attributes?.sub ? user.attributes.sub : ''
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightReviewForm, setFightReviewForm] = useState(false);
