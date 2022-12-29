@@ -99,25 +99,23 @@ const Scoring = props => {
             bg="transparent"
             maxW="100%"
             boxSizing='border-box'
-        >         
-            <Flex>
+        >       <ScoringDividerWithText 
+                    text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
+                    tabs={tabs} 
+                    centered={tabs.all ? true : false}
+                />
                 <AddGuestJudgeModal />
                 <AddMemberModal />
                 <MoneylineModal
                     props={props}
                 />
                 <PredictionModal />
-            </Flex>
             <Flex 
                 display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
                 w="100%" 
                 minH="70vh"  
             >
-                <ScoringDividerWithText 
-                    text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
-                    tabs={tabs} 
-                    centered={tabs.all ? true : false}
-                />
+                
 
                 <ScoringSidebarLeft
                     tabs={tabs}

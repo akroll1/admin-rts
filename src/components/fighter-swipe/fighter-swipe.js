@@ -1,12 +1,15 @@
 import {  
     Avatar,
+    AvatarBadge,
     Center,
     Flex, 
 } from '@chakra-ui/react'
 
 export const FighterSwipe = ({ 
+    evenRound,
     fighter,
     handleFighterSelect,
+    selectedFighter,
 }) => {
 
     const handleSelect = e => {
@@ -53,7 +56,9 @@ export const FighterSwipe = ({
                         <Avatar 
                             size={["md","md","lg", "xl"]} 
                             _hover={{cursor: 'pointer'}} 
-                        />
+                        >
+                            {(!evenRound && selectedFighter.fighterId === fighter.fighterId) && <AvatarBadge borderColor='papayawhip' bg='red.300' boxSize='1.25em' /> }
+                        </Avatar>
                     </Center>
                 </Flex>
             </Flex>

@@ -21,8 +21,9 @@ const Shows = () => {
         setToast,
         user,
         userFightReview,
-     } = useGlobalStore();
-    const { email, sub, username } = user;
+    } = useGlobalStore();
+    const { attributes, username } = user;
+    const { email, sub } = attributes
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightReviewForm, setFightReviewForm] = useState(false);

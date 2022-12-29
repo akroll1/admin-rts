@@ -31,7 +31,6 @@ export const FightStats = props => {
                     return score.reduce( (acc, roundObj, _i) => {
                         const fighter1 = stats[0].fighters[0];
 
-
                         const fighter2 = stats[1].fighters[1];
         
                         if(roundObj.round == [_i+1]){
@@ -134,6 +133,7 @@ export const FightStats = props => {
 
     return (
         <Flex
+            mt="4"
             display={tabs.all || tabs.table ? 'flex' : 'none'}
             flexDirection="column"
             px="2"

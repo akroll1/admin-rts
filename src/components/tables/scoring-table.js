@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { 
     Flex, 
-    FormLabel,
     Heading, 
-    Switch,
     Table, 
     Tbody, 
     Td, 
@@ -15,6 +13,7 @@ import {
 import { ScoringTableInfo } from './scoring-table-els'
 import { useGlobalStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
+import { ScoringTableSwitches } from './table-els'
 
 export const ScoringTable = ({ 
     tabs, 
@@ -102,11 +101,20 @@ export const ScoringTable = ({
     }
 
     return (      
-        <>
+        <Flex
+            w="100%"
+            flexDir="column"
+        >
+            <ScoringTableSwitches 
+                activeGroupScorecard={activeGroupScorecard}
+                handleRealTimeSwitchClick={handleRealTimeSwitchClick}
+                handleShowToMyRound={handleShowToMyRound}
+                showToMyRound={showToMyRound}
+                tabs={tabs}
+            />
             <FightStats 
                 tabs={tabs} 
             />
-
             <Flex 
                 overflow="scroll"
                 display={tabs.all || tabs.table ? 'flex' : 'none'}
@@ -120,52 +128,7 @@ export const ScoringTable = ({
                 mb={tabs.all ? "0rem" : "4rem"}
             >     
                 { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" mb="-2" size="md">FIGHT IS OFFICIAL</Heading> }
-                <Flex
-                    w="100%"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                    flexDir="column"
-                    pl="2"
-                >
-                    <Flex
-                        display="inline-flex"
-                        pb="1"
-                    >
-                        <Switch 
-                            onChange={handleRealTimeSwitchClick}
-                            size="md"
-                            colorScheme="blackAlpha.700"
-                            id='realTime'
-                            isChecked={activeGroupScorecard?.groupScorecard?.chatKey} 
-                        />
-                        <FormLabel 
-                            ml="1"
-                            mb="0" 
-                            htmlFor='realTime'
-                        >
-                            Real Time
-                        </FormLabel>
-                    </Flex>
-                    <Flex
-                        display="inline-flex"
-                    >
-                        <Switch
-                            size="md" 
-                            colorScheme="blackAlpha.700"
-                            id='currentRound' 
-                            defaultChecked 
-                            onChange={handleShowToMyRound}
-                            isChecked={showToMyRound}
-                        />
-                        <FormLabel 
-                            ml="1"
-                            mb="0" 
-                            htmlFor='currentRound'
-                        >
-                            Show to My Round
-                        </FormLabel>
-                    </Flex>
-                </Flex>
+                
                 <Table 
                     id="scoring_table"
                     style={{tableLayout:'auto', width: '100%'}} 
@@ -360,6 +323,6 @@ export const ScoringTable = ({
                     </Tbody>
                 </Table>
             </Flex>
-        </> 
+        </Flex> 
     )
 }

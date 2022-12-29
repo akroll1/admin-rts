@@ -2,14 +2,14 @@ import {
     Avatar, 
     Center, 
     Flex, 
-    Heading, 
-    useToast 
+    Heading, s
 } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
-
+import backgroundImage from '../../../image/boxing-background.png'
 export const FighterSelectionSwipe = ({ 
     fighter,
     handleFighterSelect,
+    isScoringSidebar = false,
     selectedFighter,
 }) => {
 
@@ -26,10 +26,12 @@ export const FighterSelectionSwipe = ({
         losses, 
         ringname, 
         wins 
-    } = fighter; 
+    } = fighter ? fighter : ''; 
 
     return (
-        <Flex   
+     
+        <Flex  
+            p="2" 
             zIndex={100}  
             flexDir="column"
             justifyContent="space-between"
@@ -38,33 +40,35 @@ export const FighterSelectionSwipe = ({
             id={fighterId}
             boxSizing="border-box" 
             borderRadius="1px"
-            w={fighterId === 'DRAW' ? '20%' : '40%'}
-            pt="4"
+            w={fighterId === 'DRAW' ? '20%' : '50%'}
+            // w={["100%"]} 
             // minH="40vh"
+            h="auto"
             cursor="pointer"
             _after={{
                 content: "''",
                 margin: "0 auto",
                 width: '100%',
             }}
+            position="relative"
+            _before={{
+                content: "''",
+                background: `url(${backgroundImage})`,
+                opacity: "0.3",
+                top: "0",
+                bottom: "0",
+                left: "0",
+                right: "0",
+                position: "absolute",
+                zIndex: "1"
+            }}
         >
             <Flex
                 textAlign="center"
                 w="100%"
-                minH="2rem"
                 flexDir="column"
             >
                 <>
-                    <Heading 
-                        color={selectedFighter.fighterId === fighterId ? '#fff' : !selectedFighter.fighterId ? '#fafafa' : 'gray'}
-                        letterSpacing="2px"
-                        w="100%"
-                        zIndex={99}
-                        as="h2"
-                        size={["md", "lg"]}
-                    >
-                        {`${ringname}`}
-                    </Heading>
                     <Flex
                         w="100%"
                         flexDir="column"
@@ -83,6 +87,16 @@ export const FighterSelectionSwipe = ({
                         w="100%"
                         mt="2"
                     >   
+                        <Heading 
+                            color={selectedFighter.fighterId === fighterId ? '#fff' : !selectedFighter.fighterId ? '#fafafa' : 'gray'}
+                            letterSpacing="px"
+                            w="100%"
+                            zIndex={99}
+                            as="h2"
+                            size={["sm", "md"]}
+                        >
+                            {`${ringname}`}
+                        </Heading>
                         <Heading
                             letterSpacing="1px"
                             as="h3"
@@ -119,12 +133,14 @@ export const FighterSelectionSwipe = ({
                                 {`${kos} KO`}
                             </Heading>
                         </Flex>
-                    <Flex 
-                        mt={["4"]}
-                        borderBottom={selectedFighter.fighterId === fighterId ? "7px solid red" : "7px solid transparent"}
-                        w="70%"
-                        mx="auto"
-                    />
+                    {!isScoringSidebar &&
+                        <Flex 
+                            mt={["4"]}
+                            borderBottom={selectedFighter.fighterId === fighterId ? "7px solid red" : "7px solid transparent"}
+                            w="70%"
+                            mx="auto"
+                        />
+                    }
                     </Flex>
                 </>
             </Flex>

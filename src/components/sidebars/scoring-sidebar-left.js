@@ -6,7 +6,6 @@ import {
 } from '@chakra-ui/react'
 import { ScoringSidebarNavItem } from './scoring-sidebar/scoring-sidebar-nav-item'
 import { ScorecardsNavGroup } from './scorecards-sidebar-components/scorecards-boards/scorecards-nav-group'
-import { ScoringSidebarFightersFaceoff } from './scoring-sidebar/scoring-sidebar-fighter-faceoff'
 import { 
     FaGavel,
     FaLock, 
@@ -20,6 +19,7 @@ import { MdOnlinePrediction } from 'react-icons/md'
 import { SidebarsDividerWithText } from '../../chakra'
 import { parseEpoch, transformedWeightclass } from '../../utils'
 import { useGlobalStore } from '../../stores'
+import { FighterSelectionSwipe } from '../forms/my-panels-form-els/fighter-selection-swipe'
 
 export const ScoringSidebarLeft = ({ 
     tabs,
@@ -31,18 +31,21 @@ export const ScoringSidebarLeft = ({
         scoringTransformedPrediction,
     } = useGlobalStore()
     
-    const [activeNavGroupItem, setActiveNavGroupItem] = useState('officialJudges')
+    const navGroups = {
+        officialJudges: false,
+        predictions: false,
+        props: false
+    };
+    
+    const [activeNavGroups, setActiveNavGroups] = useState(navGroups);
 
     const { weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
     const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';
     const isLocked = Date.now() > showTime
 
     const handleHideShow = id => {
-        if(id === activeNavGroupItem){
-            setActiveNavGroupItem('')
-            return
-        }
-        setActiveNavGroupItem(id)
+        setActiveNavGroups({ ...activeNavGroups, [id]: !activeNavGroups[id] })
+
     }
 
     const handleOpenGuestJudgeModal = () => {
@@ -78,15 +81,33 @@ export const ScoringSidebarLeft = ({
             minH={tabs.info ? "75vh" : ""}
             border={tabs.all ? "1px solid #252525" : 'none'}
         >
-            <SidebarsDividerWithText 
-                fontSize="xl" 
-                py="2"
-                mx="1"
-                label="Fight Info" 
-            />
-            <ScoringSidebarFightersFaceoff 
-                tabs={tabs}
-            />
+            { tabs.info && 
+                <SidebarsDividerWithText 
+                    fontSize="3xl" 
+                    mt="2"
+                    mx="1"
+                    mb="2"
+                    label={`Fight Info`} 
+                />
+            }
+            <Flex
+                display={tabs.info ? 'flex' : 'none'}
+                flexDir="row"
+                w="100%"
+                textAlign="center"
+                alignItems="center"
+                justifyContent="center"
+            >
+                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard.fighters.map( (fighter, _i) => (
+                    <FighterSelectionSwipe 
+                        key={_i}
+                        fighter={fighter} 
+                        handleFighterSelect={null} 
+                        isScoringSidebar={true}
+                        selectedFighter={{}}
+                    /> 
+                ))}
+            </Flex>
             <Flex 
                 flexDir="column"
                 h={"auto"}
@@ -94,12 +115,22 @@ export const ScoringSidebarLeft = ({
                 overflowY="scroll" 
                 w="100%"
             >
+                { tabs.all && 
+                    <SidebarsDividerWithText 
+                        fontSize="xl" 
+                        mt="2"
+                        mx="1"
+                        mb="0"
+                        label={`Fight Info`} 
+                    />
+                }
+
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
                     id="fight"
-                    label={activeGroupScorecard?.fight?.fightQuickTitle}
-                    active={activeNavGroupItem === 'fight'}
+                    label={''}
+                    active={true}
                 >
                     <Flex 
                         w="100%"
@@ -128,14 +159,14 @@ export const ScoringSidebarLeft = ({
                     tabs={tabs} 
                     id="officialJudges"
                     label="FightSync Judges"
-                    active={activeNavGroupItem === 'officialJudges'}
+                    active={activeNavGroups.officialJudges}
                 >
                     <Flex 
                         w="100%"
                         flexDir="column"
                     >
                         <Collapse 
-                            in={activeNavGroupItem === 'officialJudges'} 
+                            in={activeNavGroups.officialJudges} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 
@@ -149,9 +180,9 @@ export const ScoringSidebarLeft = ({
                 <ScorecardsNavGroup
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
-                    id="prediction"
+                    id="predictions"
                     label="Predictions"
-                    active={activeNavGroupItem ==='prediction'}
+                    active={activeNavGroups.predictions}
                 >
                     <Flex 
                         w="100%"
@@ -159,7 +190,7 @@ export const ScoringSidebarLeft = ({
                     >
                         <Collapse 
                             w="100%"
-                            in={activeNavGroupItem === 'prediction'} 
+                            in={activeNavGroups.predictions} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 
@@ -182,14 +213,14 @@ export const ScoringSidebarLeft = ({
                     tabs={tabs} 
                     id="props"
                     label="Props"
-                    active={activeNavGroupItem === 'props'}
+                    active={activeNavGroups.props}
                 >
                     <Flex 
                         w="100%"
                         flexDir="column"
                     >
                         <Collapse 
-                            in={activeNavGroupItem === 'props'} 
+                            in={activeNavGroups.props} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 

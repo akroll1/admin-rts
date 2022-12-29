@@ -157,7 +157,7 @@ export const ShowsCreateGroupScorecard = ({
                                     bg: "#353535"
                                 }}
                                 bg="#252525"
-                                onClick={user.sub ? handleEmailSubmit : null} 
+                                onClick={user?.attributes?.sub ? handleEmailSubmit : null} 
                             >
                                 {`${invites.length >= 4 ? '5 Member Limit' : 'Add Member'}`}
                             </Button>
@@ -180,7 +180,7 @@ export const ShowsCreateGroupScorecard = ({
                                 m="2" 
                                 type="submit"
                                 mt={["4"]} 
-                                onClick={user.sub ? handleSubmit : null} 
+                                onClick={user?.attributes?.sub ? handleSubmit : null} 
                                 colorScheme="solid" 
                             >
                                 Create Scorecard

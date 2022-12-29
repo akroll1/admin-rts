@@ -2,7 +2,6 @@ import {
     Avatar, 
     Center, 
     Flex, 
-    Heading 
 } from '@chakra-ui/react'
 
 export const ScoringSidebarFighterSwipe = () => {

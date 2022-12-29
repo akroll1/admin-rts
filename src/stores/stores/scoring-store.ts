@@ -195,11 +195,11 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             get().sendingChatScores(roundScores)
         }
 
-        const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, update, )
+        const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, update, await configureAccessToken() )
         let [userScorecard] = get().groupScorecards.filter( (scorecard: Scorecard) => scorecard.scorecardId === roundScores.scorecardId);
         const otherScorecards = get().groupScorecards.filter( (scorecard: Scorecard) => scorecard.scorecardId !== roundScores.scorecardId) 
-        let tempScores: RoundScores[] = userScorecard.scores.slice();
-        tempScores.concat(update);
+        let tempScores = userScorecard.scores.slice();
+        tempScores.concat(update)
         const updatedScorecard = {
             ...userScorecard, 
             scores: tempScores
