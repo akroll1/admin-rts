@@ -10,6 +10,7 @@ import {
   import { FaArrowRight } from 'react-icons/fa'
 import { FightStatus } from '../../stores/models/enums'
 import { useNavigate } from 'react-router'
+import { GoToArrowButton } from '../buttons'
 
 const ScorecardItem = (props) => {
   const { label, value, children } = props
@@ -29,7 +30,6 @@ const ScorecardItem = (props) => {
 
 export const ScorecardSummary = ({ selectedSummary }) => {
 
-  const navigate = useNavigate()
   const { fight, fighters, group, scorecard } = selectedSummary?.fight?.fightId ? selectedSummary : {};
 
   const renderScoreOrStatus = (fightStatus, finalScore) => {
@@ -53,73 +53,65 @@ export const ScorecardSummary = ({ selectedSummary }) => {
   const scoreOrStatus = renderScoreOrStatus(fight?.fightStatus, fight?.finalScore);
   const prediction = setPrediction(fight?.prediction)
 
-  // console.log('selectedSummary: ', selectedSummary)
-
   return (
     
-      <Stack 
-        mt="4"
-        spacing="8" 
-        borderWidth="1px" 
-        rounded="lg" 
-        px="8" 
-        py="4"
-        width="full"
+    <Stack 
+      mt="4"
+      spacing="8" 
+      borderWidth="1px" 
+      rounded="lg" 
+      px="8" 
+      py="4"
+      width="full"
+    >
+      <Heading 
+        textAlign="center" 
+        size="md"
+        mb="-4"
       >
-        <Heading 
-          textAlign="center" 
-          size="md"
-          mb="-4"
-        >
-          {fight?.fightQuickTitle}
-        </Heading>
+        {fight?.fightQuickTitle}
+      </Heading>
 
-        <Flex 
-          flexDir="column"
-        >
-          <ScorecardItem 
-            label="Display Name"
-            value={scorecard?.displayName ? scorecard?.displayName : ``}
-          />  
+      <Flex 
+        flexDir="column"
+      >
+        <ScorecardItem 
+          label="Display Name"
+          value={scorecard?.displayName ? scorecard?.displayName : ``}
+        />  
 
-          <ScorecardItem 
-            label="Group Name"
-            value={group?.groupScorecardName ? group?.groupScorecardName : ``}
-          />
+        <ScorecardItem 
+          label="Group Name"
+          value={group?.groupScorecardName ? group?.groupScorecardName : ``}
+        />
 
-          <ScorecardItem 
-            label="Fight Status"
-            value={fight?.fightStatus ? fight?.fightStatus : ``}
-          />
+        <ScorecardItem 
+          label="Fight Status"
+          value={fight?.fightStatus ? fight?.fightStatus : ``}
+        />
 
-          <ScorecardItem 
-            label="Prediction" 
-            value={prediction ? prediction : ``} 
-          />
+        <ScorecardItem 
+          label="Prediction" 
+          value={prediction ? prediction : ``} 
+        />
 
-          <ScorecardItem 
-            label="Scorecard Type"
-            value={group?.groupScorecardType ? group?.groupScorecardType : ''}
-          />
+        <ScorecardItem 
+          label="Scorecard Type"
+          value={group?.groupScorecardType ? group?.groupScorecardType : ''}
+        />
 
-          <Flex justify="space-between">
-            <Heading fontSize="lg" fontWeight="semibold">
-                Final Score
-            </Heading>
-              {scoreOrStatus ? scoreOrStatus : ``}
-          </Flex>
-
+        <Flex justify="space-between">
+          <Heading fontSize="lg" fontWeight="semibold">
+              Final Score
+          </Heading>
+            {scoreOrStatus ? scoreOrStatus : ``}
         </Flex>
-        <Button
-          disabled={selectedSummary?.fight?.fightId ? false : true}
-          colorScheme="blue" 
-          size="lg" 
-          fontSize="md" 
-          rightIcon={<FaArrowRight />}
-          onClick={() => navigate(`/scoring/${group?.groupScorecardId}/${fight?.fightId}`)}
-        >
-          Group Scorecard
-        </Button>
-      </Stack>
+
+      </Flex>
+      <GoToArrowButton
+        label="Group Scorecard"
+        navigateTo={`/scoring/${group?.groupScorecardId}/${fight?.fightId}`}
+      />
+    </Stack>
   )
 }

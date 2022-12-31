@@ -19,7 +19,6 @@ export interface AdminStoreState {
     createDiscussion(discussionObj: Partial<Discussion>): void
     createFight(createFightObj: FightPostObj): void
     createFighter(createFighterObj: Fighter): void
-    createGroupScorecard(scorecardObj: CreateScorecard): void
     createPanel(panelId: string): void
     createPanelist(panelistObj: Partial<Panelist>): void
     createSeason(createObj: Partial<Season>): void
@@ -55,19 +54,6 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
     createFighter: async (createFighterObj: Fighter) => {
         const res = await axios.post(`${url}/fighters`, createFighterObj, await configureAccessToken() )
         console.log('FIGHTER- create res.data: ', res.data);
-    },
-    createGroupScorecard: async (scorecardObj: CreateScorecard) => {
-        const res = await axios.post(`${url}/group-scorecards`, scorecardObj, await configureAccessToken() );
-        if(res.status === 200){
-            // need to handle a redirect to /scorecards here???
-            get().setToast({ 
-                title: res.data.message,
-                duration: 5000,
-                status: res.data.message.includes('Success!') ? 'success' : 'error',
-                isClosable: true
-            })
-            
-        }
     },
     createPanel: async (panelId: string) => {
         const res = await axios.post(`${url}/panels`, { panelId }, await configureAccessToken() )

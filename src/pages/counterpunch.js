@@ -46,9 +46,9 @@ const CounterPunch = () => {
             sendUserData();
         }
     }
-    websocket.onclose = (closeEvent) => {
-        setTimeout(() => setReopenSocket(true),2000);
-    };
+    // websocket.onclose = (closeEvent) => {
+    //     setTimeout(() => setReopenSocket(true),2000);
+    // };
     websocket.onmessage = ({data}) => {
         console.log('data 98: ',data);
     }

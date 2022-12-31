@@ -6,6 +6,7 @@ import {
     useColorModeValue as mode
 } from '@chakra-ui/react'
 import { FaArrowRight } from 'react-icons/fa'
+import { CopyIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router'
 
 export const ScorecardRowItemRight = ({
@@ -68,7 +69,7 @@ export const ScorecardRowItemRight = ({
                     variant="ghost"
                     size="sm" 
                     fontSize="sm" 
-                    rightIcon={<FaArrowRight />}
+                    rightIcon={<CopyIcon />}
                     onClick={() => navigate(`/leaderboard/${fightId}`)}
                 >
                     Share Scorecard

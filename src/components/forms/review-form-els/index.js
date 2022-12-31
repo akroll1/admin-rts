@@ -1,1 +1,1 @@
-export * from './review-form'
+export * from './fight-review-form'

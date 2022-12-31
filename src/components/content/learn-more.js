@@ -14,6 +14,7 @@ import {
   import { useNavigate } from 'react-router'
   import { BiRightArrowAlt } from 'react-icons/bi'
   import { Testimonial } from '../../chakra'
+  import { GoToArrowButton } from '../buttons'
   import JWPlayer from '@jwplayer/jwplayer-react';
 
   const Feature = props => {
@@ -45,16 +46,10 @@ import {
               <Text mt="2" mb="4" fontSize="lg" fontWeight="medium" lineHeight="1.4rem">
                 Score fights in real-time, all scorecards saved in the cloud.
               </Text>
-              <Button 
-                size="lg" 
-                colorScheme="solid" 
-                minH="14" 
-                rightIcon={<BiRightArrowAlt />}
-                onClick={() => navigate('/signin')}
-              >
-              {/* <Button onClick={() => navigate('/dashboard/create-scorecard')} size="lg" colorScheme="blue" minH="14" rightIcon={<BiRightArrowAlt />}> */}
-                Get Started now
-              </Button>
+              <GoToArrowButton
+                label="Get Started Now"
+                navigateTo={'/signin'}
+              />
               <Testimonial
                 // logo={<LearnMoreLogo />}
                 author="Rocky Marciano"

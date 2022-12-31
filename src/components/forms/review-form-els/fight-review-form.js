@@ -1,23 +1,40 @@
-import React, {useState, useEffect} from 'react'
-import { Button, ButtonGroup, Flex, FormControl, FormLabel, Input, Stack, Textarea, useColorModeValue } from '@chakra-ui/react'
+import {useState, useEffect} from 'react'
+import { 
+  Button, 
+  ButtonGroup, 
+  Flex, 
+  FormControl, 
+  FormLabel, 
+  Input, 
+  Stack, 
+  Textarea, 
+  useColorModeValue 
+} from '@chakra-ui/react'
 import { ReviewFormStars } from '../../stars';
-import { REVIEW_TYPE } from '../../../utils';
+import { useGlobalStore } from '../../../stores';
 
-export const ReviewForm = ({ 
-  reviewForm, 
-  setReviewForm, 
-  handleReviewFormSubmit,
-  handleReviewFormClose 
+export const FightReviewForm = ({ 
+  closeModal
 }) => {
+
+  const { 
+    submitUserFightReview
+  } = useGlobalStore()
+  
   const [value, setValue] = useState(null);
+  const [form, setForm] = useState({})
 
   useEffect(() => {
-    setValue(reviewForm.rating)
+    setValue(form.rating)
   },[])
   
   const handleStarsClick = rating => {
-    setReviewForm({ ...reviewForm, rating})
+    setForm({ ...form, rating})
   };
+
+  const handleReviewFormSubmit = () => {
+    submitUserFightReview(form)
+  }
 
   return (
     <form>
@@ -26,8 +43,8 @@ export const ReviewForm = ({
           <FormLabel htmlFor="title" color={useColorModeValue('gray.700', 'gray.200')}>Title</FormLabel>
           <Input
             maxLength={50}
-            onChange={e => setReviewForm({ ...reviewForm, title: e.currentTarget.value})}
-            value={reviewForm.title}
+            onChange={e => setForm({ ...form, title: e.currentTarget.value})}
+            value={form.title}
             name="title"
             placeholder="Review title"
             focusBorderColor={useColorModeValue('blue.500', 'blue.200')}
@@ -46,8 +63,8 @@ export const ReviewForm = ({
             Why?
           </FormLabel>
           <Textarea
-            onChange={e => setReviewForm({ ...reviewForm, review: e.currentTarget.value})}
-            value={reviewForm.review}
+            onChange={e => setForm({ ...form, review: e.currentTarget.value})}
+            value={form.review}
             name="review"
             placeholder="Review..."
             rows={4}
@@ -66,7 +83,7 @@ export const ReviewForm = ({
             </Button>
             <Button 
               ml="2" 
-              onClick={handleReviewFormClose} 
+              onClick={closeModal} 
               type="button" 
               variant="outline" 
               colorScheme="solid" 

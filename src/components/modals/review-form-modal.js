@@ -5,19 +5,23 @@ import {
     ModalContent, 
     Stack 
 } from '@chakra-ui/react'
-import { ReviewForm } from '../forms'
+import { useGlobalStore } from '../../stores'
+import { FightReviewForm } from '../forms'
 
-export const ReviewFormModal = ({ 
-    reviewForm, 
-    setReviewForm, 
-    handleReviewFormClose, 
-    handleReviewFormSubmit, 
-}) => {
+export const ReviewFormModal = () => {
+
+    const {
+        modals, 
+        setModals,
+    } = useGlobalStore()
     
+    const closeModal = () => {
+        setModals('fightReviewFormModal', false)
+    }
     return (
         <Modal
             closeOnOverlayClick={true}
-            isOpen={true}
+            isOpen={modals.fightReviewFormModal}
             onClose={() => console.log('closed')}
             size="md"
             isCentered
@@ -27,7 +31,7 @@ export const ReviewFormModal = ({
         >
         <ModalContent borderRadius="xl" mx={{ base: '2.5', lg: '16' }} overflow="scroll">
             <ModalCloseButton
-                onClick={handleReviewFormClose}
+                onClick={closeModal}
                 top="0"
                 right="0"
                 size="lg"
@@ -35,16 +39,12 @@ export const ReviewFormModal = ({
                 borderBottomLeftRadius="md"
             />
             <ModalBody
-                px={{ base: '5', md: '8', lg: '12' }}
-                py={{ base: '10', md: '8', lg: '12' }}
-                pb={{ base: '6' }}
+                px={['5', '8', '12' ]}
+                py={['10', '8', '12' ]}
             >
             <Stack spacing="6">
-                <ReviewForm 
-                    reviewForm={reviewForm} 
-                    setReviewForm={setReviewForm} 
-                    handleReviewFormClose={handleReviewFormClose}
-                    handleReviewFormSubmit={handleReviewFormSubmit} 
+                <FightReviewForm 
+                    closeModal={closeModal}
                 />
             </Stack>
             </ModalBody>

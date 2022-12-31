@@ -15,7 +15,6 @@ import {
   Text, 
   Textarea, 
   useColorModeValue as mode, 
-  useToast, 
   VStack 
 } from '@chakra-ui/react'
 import { HiCloudUpload } from 'react-icons/hi'
@@ -71,7 +70,7 @@ export const MyAccountForm = () => {
   // console.log('form: ', form)
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
-      <form id="settings-form" onSubmit={e => e.preventDefault()}>
+      <form id="account_settings_form" onSubmit={e => e.preventDefault()}>
         <Stack spacing="4" divider={<StackDivider />}>
           <Heading size="lg" as="h1" paddingBottom="4">
             Account Settings

@@ -69,7 +69,7 @@ export const ShowsArrows = () => {
                             variant="ghost"
                             id={el}
                             key={el}
-                            zIndex={10000}
+                            zIndex={1000}
                             onClick={rotateFighters}
                             w="100%"
                             h="20%"

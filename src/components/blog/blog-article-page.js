@@ -41,16 +41,15 @@ export const BlogArticlePage = () => {
         updatedAt 
     } = blogPost
 
-    // console.log('body: ', 
-    const t = body.split( el => el == '\\')
-    console.log('t: ', t)
     return (
         <Flex
             alignItems="flex-start"
             w="100%"
             flexDir="column"
-            maxW={["90%", "90%", "80%"]}
-            p={["2","4","8"]}
+            maxW={["90%", "90%", "60%"]}
+            p={["4","4","8"]}
+            mb="8"
+
             mx="auto"
         >
             <Heading
@@ -62,8 +61,7 @@ export const BlogArticlePage = () => {
             </Heading>
 
             <Text>
-                {body.split('\n').map(e => <p>{ e }</p>)}
-
+                {body}
             </Text>
         </Flex>
     )

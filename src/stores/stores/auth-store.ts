@@ -31,6 +31,8 @@ export const configureIDToken = async () => {
 
 export interface AuthStoreState {
     isLoggedIn: boolean
+    isPanelist: boolean
+    isSuperAdmin: boolean
     setUser(): void
     signOut(): void
     user: any
@@ -38,6 +40,8 @@ export interface AuthStoreState {
 
 export const initialAuthStoreState = {
     isLoggedIn: false,
+    isPanelist: false,
+    isSuperAdmin: false,
     user: {} as any,
 
 }
@@ -53,8 +57,13 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
     },     
     setUser: async () => {
         const user = await Auth.currentAuthenticatedUser();
+        const groups = user?.signInUserSession?.accessToken?.payload['cognito:groups'];
+        const isSuperAdmin = groups.some( (group: string) => group.includes('rts-admins')) ? true : false;
+        const isPanelist = groups.some( (group: string) => group.includes('panelist')) ? true : false;
         set({ 
             isLoggedIn: true,
+            isPanelist,
+            isSuperAdmin,
             user 
         })
     },

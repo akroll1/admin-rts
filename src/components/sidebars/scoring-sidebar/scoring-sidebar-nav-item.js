@@ -21,6 +21,7 @@ export const ScoringSidebarNavItem = props => {
         <Flex
             flex="1"
             pl="3"
+            ml="1"
             justifyContent="space-between"
             alignItems="space-between"
             minW="100%"
@@ -30,10 +31,10 @@ export const ScoringSidebarNavItem = props => {
             cursor="pointer"
             userSelect="none"
             rounded="md"
-            transition="all 0.2s"
+            transition="all 0.1s"
             // bg={active ? 'gray.700' : ''}
             _hover={{
-                bg: 'gray.700',
+                color: 'white',
             }}
             _active={{
                 bg: 'gray.600',

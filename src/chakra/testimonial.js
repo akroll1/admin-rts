@@ -6,28 +6,34 @@ export const Testimonial = (props) => {
   return (
     <Box
       rounded="lg"
-      mt={{
-        base: '16',
-        md: '24',
-        lg: '16',
-      }}
+      mt={['8','12']}
       as="blockquote"
-      bg={{
-        lg: mode('white', 'gray.700'),
-      }}
-      p={{
-        lg: '8',
-      }}
+      bg={[mode('white', 'gray.700')]}
+      p={['8']}
       {...rest}
     >
       {logo}
-      <Text mt="4" fontSize="lg" lineHeight="tall">
+      <Text 
+        fontSize="lg" 
+        lineHeight="tall"
+      >
         {children}
       </Text>
       <HStack spacing="4" mt="8">
-        <Img alt={author} w="12" h="12" rounded="full" objectFit="cover" src={image} />
+        <Img 
+          alt={author} 
+          w="12" 
+          h="12" 
+          rounded="full" 
+          objectFit="cover" 
+          src={image} 
+        />
         <Box>
-          <Text as="cite" fontStyle="normal" fontWeight="bold">
+          <Text 
+            as="cite" 
+            fontStyle="normal" 
+            fontWeight="bold"
+          >
             {author}
           </Text>
           <Text color={mode('gray.600', 'gray.400')}>{company}</Text>

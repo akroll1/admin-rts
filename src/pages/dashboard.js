@@ -25,18 +25,15 @@ import { MyPoundList } from '../components/lists'
 import { useParams } from 'react-router-dom'
 import { useGlobalStore } from '../stores'
 import { IoLogOutOutline } from 'react-icons/io5'
-import { signOut } from '../components/partials'
 
 const Dashboard = () => {
   const { type } = useParams();
   const { 
     signOut,
+    isPanelist,
+    isSuperAdmin,
     user, 
   } = useGlobalStore()
-  const groups = user?.signInUserSession?.accessToken?.payload['cognito:groups'];
-
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false)
-  const [isPanelist, setIsPanelist] = useState(false)
 
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
@@ -46,13 +43,7 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    if(user?.username){
-      const isSuperAdmin = groups.some( group => group.includes('rts-admins')) ? setIsSuperAdmin(true) : null;
-      const isPanelist = groups.some( group => group.includes('panelist')) ? setIsPanelist(true) : null;
-    }
-  },[user])
-
-  useEffect(() => {
+    console.log('here: ', isPanelist)
     if(isSuperAdmin && isPanelist){
       setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
       return;
@@ -67,9 +58,11 @@ const Dashboard = () => {
     setForm(e.currentTarget.id);
     setActive(e.currentTarget.id);
   };
+
   const panelistOptions = [
     { value: "PANELS_MEMBER", label:"Panel Member", type: 'User', icon: FaUserFriends, link: '/dashboard/panels' },
   ];
+
   const isSuperAdminFormOptions = [
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
     { value: "BLOG", label:"Blog Form", type: 'Blog Form', icon: FaEdit, link: '/dashboard/blog-form' },
@@ -100,6 +93,7 @@ const Dashboard = () => {
         />)
     })
   }
+  
   return (
     <Flex 
       height="auto" 

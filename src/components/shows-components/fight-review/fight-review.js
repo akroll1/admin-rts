@@ -10,24 +10,21 @@ import {
 import { ReviewItem } from './review-item'
 import { useGlobalStore } from '../../../stores'
 import { HiOutlinePencil } from 'react-icons/hi'
+import { MustBeSignedInButton } from '../../buttons'
 
-export const FightReviews = ({ 
-  fightReviewForm, 
-  setFightReviewForm, 
-}) => {
+export const FightReviews = () => {
 
   const { 
     checkForUserFightReview,
-    selectedFightReviews, 
+    fightReviews,
+    setModals,
     user 
   } = useGlobalStore()
   
-  const openReviewModal = () => {
-    if(!user.sub){
-      return alert('You must be registered to leave a Review.');
-    }
-    setFightReviewForm(fightReviewForm => !fightReviewForm)
-    checkForUserFightReview();
+  const openFightReviewModal = () => {
+    // checkForUserFightReview()
+    if(!user?.attributes?.sub) return
+    setModals('fightReviewFormModal', true)
   }
   
   return (
@@ -39,7 +36,7 @@ export const FightReviews = ({
       as="section"
       p="2" 
     >
-        { selectedFightReviews.length > 0 && 
+        { fightReviews.length > 0 && 
           <Flex 
             flexDir={["column", "row"]}
             justifyContent="space-between"
@@ -88,7 +85,7 @@ export const FightReviews = ({
                 w="100%"
                 m={["2", "0"]}
                 ml={["0", "2"]}
-                onClick={openReviewModal} 
+                onClick={openFightReviewModal} 
                 colorScheme="solid"
                 leftIcon={<HiOutlinePencil />}
               >
@@ -97,10 +94,19 @@ export const FightReviews = ({
             </ButtonGroup>
           </Flex>
         }
-          <Flex m="auto" flexDirection="column" alignItems="center" justifyContent="center">
-            { selectedFightReviews.length === 0 && 
+          <Flex 
+            m="auto" 
+            flexDirection="column" 
+            alignItems="center" 
+            justifyContent="center"
+          >
+            { fightReviews?.length === 0 && 
               <>
-                <Heading fontSize={{base: '1.25rem', md: '1.5rem'}} fontWeight="semibold" color={'white'}>
+                <Heading 
+                  fontSize={['1.25rem', '1.5rem']} 
+                  fontWeight="semibold" 
+                  color={'white'}
+                >
                   Be the first to write a Review!
                 </Heading>
                 <ButtonGroup 
@@ -109,13 +115,10 @@ export const FightReviews = ({
                   size={["sm", "md", "lg"]} 
                   mt="4"
                 >
-                  <Button 
-                    onClick={openReviewModal} 
-                    size="md" 
-                    colorScheme="solid"
-                  >
-                    Write a Review
-                  </Button>
+                <MustBeSignedInButton 
+                  label={`Write a Review`}
+                  onClickHandler={openFightReviewModal} 
+                />
                 </ButtonGroup>
               </>
             }
@@ -130,7 +133,7 @@ export const FightReviews = ({
         justifyContent="center"
         alignItems="flex-start"
       >
-        { selectedFightReviews?.length > 0 && selectedFightReviews.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
+        { fightReviews?.length > 0 && fightReviews.map( (reviewItem, i) => <ReviewItem key={i} reviewItem={reviewItem} />)}
       </Flex>
     </Flex>
   )

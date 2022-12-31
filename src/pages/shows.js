@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import { Flex, useToast } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { ShowsSidebar } from '../components/sidebars'
 import { isValidEmail } from '../utils'
 import { ShowsMain } from '../components/shows'
@@ -7,6 +7,7 @@ import {
     CreateGroupModal,
     ReviewFormModal 
 } from '../components/modals'
+import { SpinnerMain } from '../components/spinner'
 import { useGlobalStore } from '../stores'
 import { useNavigate } from 'react-router'
 
@@ -16,18 +17,17 @@ const Shows = () => {
     const { 
         createGroupScorecard,
         fetchSeasonSummary,
+        isSubmitting,
         putUserFightReview,
         selectedFightSummary, 
         setToast,
         user,
         userFightReview,
     } = useGlobalStore();
-    const { attributes, username } = user;
+    const { username } = user;
     const email = user?.attributes?.email ? user.attributes.email : ''
     const sub = user?.attributes?.sub ? user.attributes.sub : ''
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [fightReviewForm, setFightReviewForm] = useState(false);
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
         fightId: '',
@@ -52,6 +52,7 @@ const Shows = () => {
         fetchSeasonSummary('active')
     },[])
 
+
     useEffect(() => {
         if(userFightReview){
             setReviewForm(userFightReview)
@@ -66,16 +67,7 @@ const Shows = () => {
             username
         });
 
-        const success = await putUserFightReview(putObj);
-        // if(success){
-        //     toast({ 
-        //         title: 'Review Submitted!',
-        //         duration: 5000,
-        //         status: 'success',
-        //         isClosable: true
-        //     });
-        //     handleReviewFormClose()
-        // }
+        await putUserFightReview(putObj);
     }
 
     const handleFormChange = e => {
@@ -83,16 +75,6 @@ const Shows = () => {
         if(id === 'reminders') return setGroupScorecard({...groupScorecard, reminders: checked})
         if(id === 'emailValue') return setEmailValue(value);
     };
-
-    const handleReviewFormClose = () => {
-        setReviewForm({
-            reviewId: null,
-            title: '',
-            rating: 0,
-            review: ''
-        });
-        setFightReviewForm(false);
-    }
 
     const resetInput = () => {
         setEmailValue('')
@@ -144,7 +126,6 @@ const Shows = () => {
 
     const handleCreateSeasonScorecard = async createGroupOptions => {
 
-        setIsSubmitting(true);
         const scorecardObj = {
             displayName: createGroupOptions.displayName,
             groupScorecardName: createGroupOptions.groupScorecardName,
@@ -154,8 +135,7 @@ const Shows = () => {
             sub,
             targetId: createGroupOptions.targetId
         }
-        await createGroupScorecard(scorecardObj);
-        setIsSubmitting(false);     
+        createGroupScorecard(scorecardObj);  
         // need logic to add another member, if members < 5.   
 
     };
@@ -171,40 +151,33 @@ const Shows = () => {
             alignItems="flex-start" 
             justifyContent="center" 
         >    
+            <ReviewFormModal />
             <CreateGroupModal 
                 displayNameModal={displayNameModal}
                 handleCreateSeasonScorecard={handleCreateSeasonScorecard}
                 setDisplayNameModal={setDisplayNameModal}
                 username={username}
             />
-
-            { fightReviewForm && 
-                <ReviewFormModal
-                    reviewForm={reviewForm}
-                    setReviewForm={setReviewForm}
-                    handleReviewFormSubmit={handleReviewFormSubmit}
-                    handleReviewFormClose={handleReviewFormClose}
-                />
-            }
-
-            <ShowsSidebar />  
-            
-            <ShowsMain 
-                deleteInvite={deleteInvite}
-                emailValue={emailValue}
-                fightReviewForm={fightReviewForm}
-                handleEmailSubmit={handleEmailSubmit}
-                handleFormChange={handleFormChange}
-                isError={isError}
-                isAdminError={isAdminError}
-                isSubmitting={isSubmitting}
-                invites={invites}
-                resetInput={resetInput}
-                setDisplayNameModal={setDisplayNameModal}
-                setFightReviewForm={setFightReviewForm}
-                username={username}
-            />
-           
+                {isSubmitting && !selectedFightSummary?.fight?.fightId
+                    ?
+                        <SpinnerMain />
+                    :
+                        <>
+                            <ShowsSidebar />  
+                            <ShowsMain 
+                                deleteInvite={deleteInvite}
+                                emailValue={emailValue}
+                                handleEmailSubmit={handleEmailSubmit}
+                                handleFormChange={handleFormChange}
+                                isError={isError}
+                                isAdminError={isAdminError}
+                                invites={invites}
+                                resetInput={resetInput}
+                                setDisplayNameModal={setDisplayNameModal}
+                                username={username}
+                            />
+                        </>
+                }   
         </Flex>
     )
 }

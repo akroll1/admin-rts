@@ -26,7 +26,7 @@ export const ScoringTable = ({
         tableData, 
     } = useGlobalStore()
 
-    const [showToMyRound, setShowToMyRound] = useState(true)
+    const [toCurrentRound, setToCurrentRound] = useState(true)
 
     const totalRounds = activeGroupScorecard?.fight ? activeGroupScorecard.fight.rounds : 12;
     const sortData = (a, b) => a.username - b.username
@@ -54,8 +54,8 @@ export const ScoringTable = ({
         }
     }
 
-    const handleShowToMyRound = () => {
-        setShowToMyRound(prev => !prev)
+    const handleShowToCurrentRound = () => {
+        setToCurrentRound(prev => !prev)
     }
 
     const columns = [
@@ -108,8 +108,8 @@ export const ScoringTable = ({
             <ScoringTableSwitches 
                 activeGroupScorecard={activeGroupScorecard}
                 handleRealTimeSwitchClick={handleRealTimeSwitchClick}
-                handleShowToMyRound={handleShowToMyRound}
-                showToMyRound={showToMyRound}
+                handleShowToCurrentRound={handleShowToCurrentRound}
+                toCurrentRound={toCurrentRound}
                 tabs={tabs}
             />
             <FightStats 
@@ -143,7 +143,6 @@ export const ScoringTable = ({
                     <Thead bg={mode('gray.50', '#111111')}>
                         <Tr>
                             {columns.map((column, index) => {
-
                                 if(index === 0){
                                     return (    
                                         <Th 
@@ -227,12 +226,12 @@ export const ScoringTable = ({
                                         if(i === 1){
                                             return filledMappedScores?.map( (roundScores, _i) => {
                                                 // const showToMyRoundSelected = showToMyRound ? lastScoredRound : mappedScores.length;
-                                                const showToMyRoundSelected = () => {
+                                                const showToCurrentRoundSelected = () => {
                                                     // lastScoreRound || mappedScores.length
-                                                    if(showToMyRound){
+                                                    if(toCurrentRound){
                                                         return _i >= lastScoredRound ? 'transparent' : 'white'
                                                     }
-                                                    if(!showToMyRound){
+                                                    if(!toCurrentRound){
                                                         return _i >= mappedScores.length ? 'transparent' : 'white'
                                                     }
                                                 }
@@ -241,7 +240,7 @@ export const ScoringTable = ({
                                                     <Td key={_i} p="0px !important">
                                                         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                             <Flex 
-                                                                color={showToMyRoundSelected()}
+                                                                color={showToCurrentRoundSelected()}
                                                                 borderRadius="2px"
                                                                 w="100%"
                                                                 p="1"
@@ -256,7 +255,7 @@ export const ScoringTable = ({
                                                             <Flex 
                                                                 w="100%"
                                                                 style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2)}
-                                                                color={showToMyRoundSelected()}
+                                                                color={showToCurrentRoundSelected()}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 

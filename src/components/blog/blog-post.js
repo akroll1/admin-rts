@@ -8,7 +8,7 @@ import {
     useColorModeValue as mode
 } from '@chakra-ui/react'
 import { BsClockFill } from 'react-icons/bs'
-import { Navigate, NavLink as RRLink, useNavigate } from 'react-router-dom'
+import { NavLink as RRLink, useNavigate } from 'react-router-dom'
 
 export const BlogPost = ({ post }) => {
   const navigate = useNavigate()
@@ -58,7 +58,7 @@ export const BlogPost = ({ post }) => {
             <Text 
               noOfLines={2} 
               mb="8" 
-              color={mode('blackAlpha.600', 'blackAlpha.400')}
+              color={mode('blackAlpha.600', 'fsl-text')}
             >
               {summary}
             </Text>

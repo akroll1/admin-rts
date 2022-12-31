@@ -1,9 +1,11 @@
-import React from 'react'
-import { Box, Button, Center, Divider, Heading, Img, SimpleGrid, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
+import { Box, Button, Center, Divider, Flex, Heading, Img, SimpleGrid, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
 import { useNavigate } from 'react-router'
-import { FaArrowRight, FaFileSignature, FaHandsHelping, FaHeadset } from 'react-icons/fa'
 import { Feature } from '../chakra'
-// import { ColorModeSwitcher } from '../components/color-mode-switcher/color-mode-switcher'
+import { GoToArrowButton } from '../components/buttons'
+import { FaHandsHelping } from 'react-icons/fa'
+import { GiTrophy } from 'react-icons/gi'
+import { EditIcon } from '@chakra-ui/icons'
+
 const Home = () => {
   const navigate = useNavigate();
   return (
@@ -37,41 +39,37 @@ const Home = () => {
             <Heading>
               Here you go.
             </Heading>
+            <Flex
+              display="inline"
+            >
 
             <Text 
-              lineHeight="1.4rem"
-              fontSize="lg" 
+              lineHeight="1.5"
+              fontSize="xl" 
               mt="1" 
               pr="4"
               color='fsl-body-text'
               maxW={["85%", "60%", "80%"]}
             >
-              Score fights and compete with other boxing fans. Play with a group- live and in real-time!
+              Score fights and compete against other boxing fans. Play with a group - 
+                <Text
+                  as="span"
+                  lineHeight="1.5"
+                  fontSize="xl" 
+                  mt="1" 
+                  pr="4"
+                  color='fsl-body-text'
+                  maxW={["85%", "60%", "80%"]} 
+                  fontWeight="bold"
+                >
+                &nbsp;in real-time!
+              </Text>
             </Text>
-            <Button
-              onClick={() => navigate('/learn-more')}
-              className="group"
-              mt={["4"]}
-              mb="2"
-              size={["lg", "lg"]}
-              px="8"
-              fontSize="1.2rem"
-              fontWeight="bold"
-              h="14"
-              // bg="brand.100"
-              iconSpacing="3"
-              colorScheme="solid"
-              rightIcon={
-                <Box
-                  as={FaArrowRight}
-                  fontSize="1.2rem"
-                  transition="transform 0.2s"
-                  _groupHover={{ transform: 'translateX(2px)' }}
-                />
-              }
-            >
-              Learn more
-            </Button>
+            </Flex>
+            <GoToArrowButton
+              label="Learn More"
+              navigateTo={'/learn-more'}
+            />
           </Box>
           <Center 
             flex="1 0 60%" 
@@ -94,14 +92,14 @@ const Home = () => {
           opacity={1} 
         />
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: '12', md: '8' }}>
-          <Feature title="Score Fights" icon={<FaHandsHelping />}>
+          <Feature title="Score Fights" icon={<EditIcon fontSize="1.5rem" />}>
             Create a group and score fights together- live and in real time!
           </Feature>
-          <Feature title="Win Prizes" icon={<FaHeadset />}>
+          <Feature title="Win Prizes" icon={<GiTrophy fontSize="1.5rem" />}>
             Win prizes for making correct pre-fight and in-fight predictions.
           </Feature>
-          <Feature title="Contribute" icon={<FaFileSignature />}>
-            Score fights and contribute to real-time, crowd-sourced boxing analytics. 
+          <Feature title="Contribute" icon={<FaHandsHelping fontSize="2rem" />}>
+            Score fights to contribute to real-time, crowd-sourced boxing analytics. 
           </Feature>
         </SimpleGrid>
       </Box>

@@ -12,7 +12,7 @@ export const ScorecardsNavGroup = props => {
         id, 
         label, 
         handleHideShow, 
-        handleSelectSeason,
+        handleSelectSeason = () => '',
     } = props
 
     const selectSeason = e => {
@@ -32,7 +32,7 @@ export const ScorecardsNavGroup = props => {
             alignItems="flex-start"
             onClick={selectSeason}
             id={id}
-            mt="2px"
+            mb="2"
         >
             <Flex
                 justifyContent="space-between"
@@ -42,7 +42,6 @@ export const ScorecardsNavGroup = props => {
                 _hover={{
                     color:'#fcfcfc',
                     cursor: 'pointer',
-                    background: '#535353'
                 }}
             >
                 <Heading
@@ -50,9 +49,9 @@ export const ScorecardsNavGroup = props => {
                     p="1"
                     pl="2"
                     _hover={{ color:'#fcfcfc'}}
-                    fontSize={id === 'fight' ? '2xl' : "lg"}
+                    fontSize={id === 'title' ? "3xl" : "2xl"}
                     as="h3" 
-                    color="fsl-highlight-heading-text"
+                    color={id === 'title' ? "fsl-highlight-heading-text" : '#dadada'}
                 >
                     {label}
                 </Heading>
@@ -65,11 +64,11 @@ export const ScorecardsNavGroup = props => {
                         ? 
                             <TriangleUpIcon
                                 transition="all 2.8s"
-                                color="#cacaca" 
+                                color={id !== 'title' ? "#cacaca" : "transparent"}
                             /> 
                         : 
                             <TriangleDownIcon 
-                                color="#cacaca" 
+                                color={id !== 'title' ? "#cacaca" : "transparent"}
                             /> 
                     }
                 </Flex>

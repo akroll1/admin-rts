@@ -34,7 +34,6 @@ export const ScoringSidebarLeft = ({
     const navGroups = {
         officialJudges: false,
         predictions: false,
-        props: false
     };
     
     const [activeNavGroups, setActiveNavGroups] = useState(navGroups);
@@ -42,6 +41,11 @@ export const ScoringSidebarLeft = ({
     const { weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
     const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';
     const isLocked = Date.now() > showTime
+
+    const transformNetwork = networkValue => {
+        if(networkValue === 'SHOWTIMEPPV') return 'Showtime PPV'
+        return networkValue
+    }
 
     const handleHideShow = id => {
         setActiveNavGroups({ ...activeNavGroups, [id]: !activeNavGroups[id] })
@@ -81,15 +85,6 @@ export const ScoringSidebarLeft = ({
             minH={tabs.info ? "75vh" : ""}
             border={tabs.all ? "1px solid #252525" : 'none'}
         >
-            { tabs.info && 
-                <SidebarsDividerWithText 
-                    fontSize="3xl" 
-                    mt="2"
-                    mx="1"
-                    mb="2"
-                    label={`Fight Info`} 
-                />
-            }
             <Flex
                 display={tabs.info ? 'flex' : 'none'}
                 flexDir="row"
@@ -115,15 +110,12 @@ export const ScoringSidebarLeft = ({
                 overflowY="scroll" 
                 w="100%"
             >
-                { tabs.all && 
-                    <SidebarsDividerWithText 
-                        fontSize="xl" 
-                        mt="2"
-                        mx="1"
-                        mb="0"
-                        label={`Fight Info`} 
-                    />
-                }
+                
+                <ScorecardsNavGroup 
+                    tabs={tabs} 
+                    id="title"
+                    label={activeGroupScorecard?.fight?.fightQuickTitle ? activeGroupScorecard?.fight?.fightQuickTitle : ''}
+                />
 
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
@@ -135,6 +127,8 @@ export const ScoringSidebarLeft = ({
                     <Flex 
                         w="100%"
                         flexDir="column"
+                        mt="-4"
+                        h="auto"
                     >
                         <ScoringSidebarNavItem 
                             id="weightclass"
@@ -144,39 +138,21 @@ export const ScoringSidebarLeft = ({
                         <ScoringSidebarNavItem 
                             id="network"
                             icon={<FaTv />} 
-                            label={ network ? network : '' }
+                            label={ network ? transformNetwork(network) : '' }
                         /> 
                         <ScoringSidebarNavItem 
                             id="time"
                             icon={<FaRegClock />} 
                             label={ showTime ? parseEpoch(showTime) : '' }
                         /> 
+                        <ScoringSidebarNavItem 
+                            onclickOption={handleMoneylineModal}
+                            icon={<FaRegMoneyBillAlt />} 
+                            label="Moneyline"
+                        />
                     </Flex>
                 </ScorecardsNavGroup>
                 
-                <ScorecardsNavGroup 
-                    handleHideShow={handleHideShow} 
-                    tabs={tabs} 
-                    id="officialJudges"
-                    label="FightSync Judges"
-                    active={activeNavGroups.officialJudges}
-                >
-                    <Flex 
-                        w="100%"
-                        flexDir="column"
-                    >
-                        <Collapse 
-                            in={activeNavGroups.officialJudges} 
-                            animateOpacity
-                        >
-                            <ScoringSidebarNavItem 
-                                onclickOption={handleOpenGuestJudgeModal}
-                                icon={<FaGavel />} 
-                                label="FSL Judges"
-                            />
-                        </Collapse>
-                    </Flex>
-                </ScorecardsNavGroup>
                 <ScorecardsNavGroup
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
@@ -211,22 +187,22 @@ export const ScoringSidebarLeft = ({
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
                     tabs={tabs} 
-                    id="props"
-                    label="Props"
-                    active={activeNavGroups.props}
+                    id="officialJudges"
+                    label="Panelists"
+                    active={activeNavGroups.officialJudges}
                 >
                     <Flex 
                         w="100%"
                         flexDir="column"
                     >
                         <Collapse 
-                            in={activeNavGroups.props} 
+                            in={activeNavGroups.officialJudges} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 
-                                onclickOption={handleMoneylineModal}
-                                icon={<FaRegMoneyBillAlt />} 
-                                label="Moneyline"
+                                onclickOption={handleOpenGuestJudgeModal}
+                                icon={<FaGavel />} 
+                                label="Panelist Name"
                             />
                         </Collapse>
                     </Flex>

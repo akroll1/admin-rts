@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     BettingProps,
+    ContentType,
     GroupScorecardSummary, 
     PanelProps,
     resetModals,
@@ -9,6 +10,7 @@ import {
     Scorecard 
 } from "../models";
 import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 import { configureAccessToken } from "./auth-store";
 
 export interface ScoringStoreState {
@@ -27,8 +29,6 @@ export interface ScoringStoreState {
     requestChatToken(chatKey: string): void
     roundScores: RoundScores
     scoringComplete: boolean
-    sendingChatScores(roundScores: RoundScores): void
-    sentChatScores: RoundScores | null
     setScoringComplete(boolean: boolean): void
     submitRoundScores(roundScores: Record<string, number>): void
     tableData: any[]
@@ -47,10 +47,10 @@ export const initialScoringStoreState = {
     groupScorecards: [],
     groupScorecardSummary: {} as GroupScorecardSummary,
     lastScoredRound: 0,
+    chatMessage: null,
     panelProps: {} as PanelProps,
     roundScores: {} as RoundScores,
     scoringComplete: false,
-    sentChatScores: null,
     tableData: [],
     totalRounds: 12,
     userScorecard: {} as Scorecard,
@@ -173,12 +173,6 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         const chatToken = res.data 
         set({ chatToken })
     },
-    sendingChatScores: (roundScores: RoundScores) => {
-        set({ sentChatScores: roundScores })
-        setTimeout(() => {
-            set({ sentChatScores: null })
-        },3000)
-    },
     setScoringComplete: (boolean: boolean) => {
         set({ scoringComplete: boolean })
     },
@@ -190,9 +184,16 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             return acc
         },{})
         // needs better logic here.
+        // where am I setting if fightComplete??
+
         set({ lastScoredRound: get().lastScoredRound + 1 })
+
         if(get().activeGroupScorecard.groupScorecard.chatKey){
-            get().sendingChatScores(roundScores)
+            // get().sendMessageViaChat({
+            //     id: uuidv4(),
+            //     Attributes: {
+            //         [ContentType.ROUND_SCORES]: JSON.stringify(roundScores)
+            // })
         }
 
         const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, update, await configureAccessToken() )

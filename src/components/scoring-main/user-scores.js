@@ -4,14 +4,16 @@ import { useGlobalStore } from "../../stores"
 import { 
     ChevronLeftIcon, 
     ChevronRightIcon, 
-    StarIcon 
+    RepeatIcon,
+    ViewIcon 
 } from '@chakra-ui/icons'
 
 export const UserScores = ({
     evenRound,
     handleAdjustScore,
     notSelectedScore,
-    selectedFighter
+    selectedFighter,
+    setSelectedFighter
 }) => {
 
     const { 
@@ -22,12 +24,16 @@ export const UserScores = ({
     const [scores, setScores] = useState([])
 
     useEffect(() => {
-        if(userScorecard?.scores.length > 0){
+        if(userScorecard?.scores?.length > 0){
             const roundToAdd = userScorecard.scores[0]
             const tempScores = userScorecard.scores.concat(roundToAdd)
             setScores(tempScores)
         }
     },[userScorecard])
+
+    const clearSelectedFighter = () => {
+        setSelectedFighter('')
+    }
 
     return (
         <Flex
@@ -43,6 +49,7 @@ export const UserScores = ({
                 const score0 = roundObj[activeGroupScorecard.fighters[0].fighterId]
                 const score1 = roundObj[activeGroupScorecard.fighters[1].fighterId]
                 const RenderLastRow = (score, fighterId) => {
+
                     if(evenRound){
                         return (
                             <Flex
@@ -98,8 +105,9 @@ export const UserScores = ({
                                     w="100%"
                                     as="h3"
                                     size="xl"
+                                    color="whiteAlpha.300"
                                 >
-                                    {''}
+                                    {'10'}
                                 </Heading>
                                 <ChevronRightIcon
                                     onClick={handleAdjustScore}
@@ -146,7 +154,7 @@ export const UserScores = ({
                             </Flex>
                         )
                     }
-
+                    // if selectedFighter.fighterId === fighterId, below.
                     return (
                         <Flex
                             w="100%"
@@ -182,6 +190,7 @@ export const UserScores = ({
                 }
                 return (
                     <Flex
+                        key={_i}
                         alignItems="center"
                         justifyContent="center"
                         flexDir="row"
@@ -190,44 +199,57 @@ export const UserScores = ({
                         borderBottom="1px solid #202020"
                     >
                         <Flex
-                            flex="1 0 50%"
+                            flex="1 0450%"
                             m="auto"
                             alignItems="center"
                             justifyContent="center"
                         >
                             <Heading
-                                color={score0 > score1 ? 'yellow.300' : 'whiteAlpha.800'}
+                                color={score0 > score1 ? 'yellow.400' : 'whiteAlpha.800'}
                                 as="h3"
                                 size="lg"
                             >
-
                                 {(_i+1) === scores.length ? RenderLastRow(score0, activeGroupScorecard.fighters[0].fighterId) : score0}
                             </Heading>
                         </Flex>
                         <Flex
-                            flex="1 0 10%"
+                            flex="1 0 20%"
                         >
-                            <Heading
-                                color={_i+1 == scores.length ? 'yellow.400' : "gray.400"}
-                                as="h3"
-                                size={_i+1 === scores.length ? "md" : "sm"}
-                                alignItems="center"
-                                justifyContent="center"
-                                mx="auto"
-                            >
-
-                                {_i+1 == scores.length ? <StarIcon /> : _i+1}
-                            </Heading>
+                            { _i+1 == scores.length 
+                                ? 
+                                    <Heading 
+                                        as="h4" 
+                                        size="lg"
+                                        color={selectedFighter ? "red.500" : 'red.900'}
+                                        m="auto"
+                                        cursor="pointer"
+                                        _hover={{color: 'red.600'}}
+                                        onClick={clearSelectedFighter}
+                                    >
+                                        {<RepeatIcon />}
+                                    </Heading>
+                                :  
+                                    <Heading
+                                        color={_i+1 == scores.length ? 'red.500' : "gray.400"}
+                                        as="h3"
+                                        size={_i+1 === scores.length ? "md" : "sm"}
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        mx="auto"
+                                    >
+                                        {_i+1}
+                                    </Heading>
+                            }
                         </Flex>
                         <Flex
-                            flex="1 0 45%"
+                            flex="1 0 40%"
                             alignItems="center"
                             justifyContent="center"
                         >
                             <Heading
                                 as="h3"
                                 size="lg"
-                                color={score1 > score0 ? 'yellow.300' : 'whiteAlpha.800'}
+                                color={score1 > score0 ? 'yellow.400' : 'whiteAlpha.800'}
                             >
 
                                 {(_i+1) === scores.length ? RenderLastRow(score1, activeGroupScorecard.fighters[1].fighterId) : score1}         
