@@ -10,8 +10,8 @@ import {
   Textarea, 
   useColorModeValue 
 } from '@chakra-ui/react'
-import { ReviewFormStars } from '../../stars';
-import { useGlobalStore } from '../../../stores';
+import { ReviewFormStars } from '../stars';
+import { useGlobalStore } from '../../stores';
 
 export const FightReviewForm = ({ 
   closeModal
