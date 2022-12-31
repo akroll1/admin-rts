@@ -7,13 +7,14 @@ import {
 export const ScoringTableSwitches = ({
     activeGroupScorecard,
     handleRealTimeSwitchClick,
-    handleShowToMyRound,
-    showToMyRound,
+    handleShowToCurrentRound,
+    currentRound,
     tabs
 }) => {
 
     return (
         <Flex
+            id="scoring_switches"
             w="100%"
             alignItems="flex-start"
             justifyContent="flex-start"
@@ -51,15 +52,36 @@ export const ScoringTableSwitches = ({
                     colorScheme="blackAlpha.700"
                     id='currentRound' 
                     defaultChecked 
-                    onChange={handleShowToMyRound}
-                    isChecked={showToMyRound}
+                    onChange={handleShowToCurrentRound}
+                    isChecked={currentRound}
                 />
                 <FormLabel 
                     m="0"
                     ml="2" 
                     htmlFor='currentRound'
                 >
-                    Show to My Round
+                    Current Round
+                </FormLabel>
+            </Flex>
+            <Flex
+                alignItems="center"
+                justifyContent="center"
+                mb="1"
+            >
+                <Switch
+                    size="sm" 
+                    colorScheme="blackAlpha.700"
+                    id='currentRound' 
+                    defaultChecked 
+                    // onChange={handleShowToMyRound}
+                    isChecked={currentRound}
+                />
+                <FormLabel 
+                    m="0"
+                    ml="2" 
+                    htmlFor='currentRound'
+                >
+                    Show Panelists
                 </FormLabel>
             </Flex>
         </Flex>

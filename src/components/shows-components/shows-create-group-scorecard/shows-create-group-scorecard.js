@@ -22,15 +22,15 @@ export const ShowsCreateGroupScorecard = ({
     emailValue, 
     handleEmailSubmit, 
     handleFormChange, 
-    isError,
     isAdminError,
-    isSubmitting,
+    isError,
     invites, 
     resetInput,
     setDisplayNameModal,
 }) => {
 
     const {
+        isSubmittingForm,
         user
     } = useGlobalStore()
 
@@ -173,14 +173,15 @@ export const ShowsCreateGroupScorecard = ({
                     <Popover>
                         <PopoverTrigger>
                             <Button 
+                                isLoading={isSubmittingForm}
+                                disabled={isSubmittingForm}
+                                loadingText="Submitting"
                                 minW={["90%", "40%"]}
                                 size={["lg", "md"]}
-                                isLoading={isSubmitting}
-                                loadingText="Submitting"
                                 m="2" 
                                 type="submit"
                                 mt={["4"]} 
-                                onClick={user?.attributes?.sub ? handleSubmit : null} 
+                                onClick={user?.attributes?.sub ? handleSubmit : () => ''} 
                                 colorScheme="solid" 
                             >
                                 Create Scorecard

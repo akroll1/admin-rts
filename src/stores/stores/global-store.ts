@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware"
 import { userAccountStoreSlice, UserAccountStoreState } from "./user-account-store"
 import { adminStoreSlice, AdminStoreState } from "./admin-store"
 import { authStoreSlice, AuthStoreState } from "./auth-store"
-import { initialStoreUtilsState, storeUtilsSlice, StoreUtilsState } from "./store-utils"
+import { utilsStoreSlice, UtilsStoreState } from "./utils-store"
 import { scorecardStoreSlice, ScorecardStoreState } from './scorecards-store'
 import { scoringStoreSlice, ScoringStoreState } from "./scoring-store"
 import { showsStoreSlice, ShowsStoreState } from "./shows-store"
@@ -12,7 +12,7 @@ export type GlobalStoreState =
     & AdminStoreState
     & AuthStoreState 
     & UserAccountStoreState
-    & StoreUtilsState
+    & UtilsStoreState
     & ScorecardStoreState
     & ScoringStoreState
     & ShowsStoreState;
@@ -23,7 +23,7 @@ export const useGlobalStore = create<GlobalStoreState>()(
             ...userAccountStoreSlice(set, get, api, []),
             ...adminStoreSlice(set, get, api, []),
             ...authStoreSlice(set, get, api, []),
-            ...storeUtilsSlice(set, get, api, []),
+            ...utilsStoreSlice(set, get, api, []),
             ...scorecardStoreSlice(set, get, api, []),
             ...scoringStoreSlice(set, get, api, []),
             ...showsStoreSlice(set, get, api, [])
@@ -33,11 +33,14 @@ export const useGlobalStore = create<GlobalStoreState>()(
             partialize: state => {
                 const { 
                     activeGroupScorecard,
+                    blogPosts,
                     fight,
                     fighters,
                     fightsByStatus,
                     groupScorecards,
                     isLoggedIn,
+                    isPanelist,
+                    isSuperAdmin,
                     modals,
                     seasons,
                     seasonSummaries,
@@ -51,11 +54,14 @@ export const useGlobalStore = create<GlobalStoreState>()(
 
                 return ({ 
                     activeGroupScorecard,
+                    blogPosts,
                     fight,
                     fighters,
                     fightsByStatus,
                     groupScorecards,
                     isLoggedIn,
+                    isPanelist,
+                    isSuperAdmin,
                     modals,
                     seasons,
                     seasonSummaries,

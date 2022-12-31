@@ -16,16 +16,13 @@ import { OfficialResultBanner } from '../shows-components'
 export const ShowsMain = ({
     deleteInvite,
     emailValue,
-    fightReviewForm, 
     handleEmailSubmit, 
     handleFormChange,
     isError,
     isAdminError,
-    isSubmitting,
     invites,
     resetInput,
     setDisplayNameModal,
-    setFightReviewForm, 
     username
 }) => {
     const {
@@ -118,7 +115,6 @@ export const ShowsMain = ({
                             handleFormChange={handleFormChange} 
                             isError={isError}
                             isAdminError={isAdminError}
-                            isSubmitting={isSubmitting}
                             invites={invites} 
                             resetInput={resetInput}
                             setDisplayNameModal={setDisplayNameModal}
@@ -132,10 +128,7 @@ export const ShowsMain = ({
                                 mb="2"
                                 mt="4"
                             />
-                            <FightReviews 
-                                fightReviewForm={fightReviewForm} 
-                                setFightReviewForm={setFightReviewForm} 
-                            />
+                            <FightReviews />
                         </>
                 } 
             </Flex>

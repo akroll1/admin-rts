@@ -2,20 +2,24 @@ import { StateCreator } from "zustand"
 import { GlobalStoreState } from "./global-store"
 import { 
     Fighter,
+    ChatMessage,
     Modals,
     resetModals,
-    resetToast,
     Toast,
 } from '../models'
 import axios from 'axios'
 import { capFirstLetters } from "../../utils"
 
-export interface StoreUtilsState {
-    isSubmitting: boolean,
+export interface UtilsStoreState {
+    isSubmitting: boolean
+    isSubmittingForm: boolean,
+    chatMessage: ChatMessage | null
     modals: Modals
     scoringTransformedPrediction: string | null
+    setGlobalNotification(chatMessage: ChatMessage): void
     setScoringTransformedPrediction(rawPrediction: string | null): void
     setIsSubmitting(submittingState: boolean): void
+    setIsSubmittingForm(submittingState: boolean): void
     setModals(modal: string, setOpen: boolean): void
     setToast(toast: Toast): void
     setTokenExpired(state: boolean): void
@@ -28,8 +32,10 @@ export interface StoreUtilsState {
     transformedResult: string
 }
 
-export const initialStoreUtilsState = {
+export const initialUtilsStoreState = {
+    chatMessage: {} as ChatMessage,
     isSubmitting: false,
+    isSubmittingForm: false,
     modals: {} as Modals,
     scoringTransformedPrediction: null,
     toast: {} as Toast,
@@ -40,10 +46,18 @@ export const initialStoreUtilsState = {
 
 const url = process.env.REACT_APP_API;
 
-export const storeUtilsSlice: StateCreator<GlobalStoreState, [], [], StoreUtilsState> = (set, get) => ({
-    ...initialStoreUtilsState,
+export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreState> = (set, get) => ({
+    ...initialUtilsStoreState,
+    setGlobalNotification: (chatMessage: ChatMessage) => {
+        set({
+            chatMessage
+        })
+    },
     setIsSubmitting: (submittingState: boolean) => {
         set({ isSubmitting: submittingState })
+    },
+    setIsSubmittingForm: (submittingState: boolean) => {
+        set({ isSubmittingForm: submittingState })
     },
     setModals: (modal: string, setOpen: boolean) => {
         const modals = Object.assign({ 
@@ -65,9 +79,6 @@ export const storeUtilsSlice: StateCreator<GlobalStoreState, [], [], StoreUtilsS
     },
     setToast: (toast: Toast) => {
         set({ toast })
-        setTimeout(() => {
-            get().setToast(resetToast)
-        },5000)
     },
     setTokenExpired: (tokenExpired: boolean) => {
         set({ tokenExpired })

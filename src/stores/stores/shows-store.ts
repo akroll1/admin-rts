@@ -1,34 +1,44 @@
 import { StateCreator } from "zustand"
 import { GlobalStoreState } from "./global-store"
 import { 
+    CreateScorecard,
     FightByStatus,
     FightSummary,
     Review,
+    ReviewPut,
     Season,
     SeasonSummary,
     Show
 } from '../models'
 import { FightStatus } from "../models/enums"
+import { configureAccessToken } from "./auth-store"
 import axios from 'axios'
 
 export interface ShowsStoreState {
     checkForUserFightReview(): void
+    createGroupScorecard(scorecardObj: CreateScorecard): void
     fetchSeasonSummary(seasonId: string): void
+    fetchFightReviews(fightId: string): void;
+    fightReviews: Review[]
     fightsByStatus: FightByStatus
     filterFights(selectedSeasonSummary: SeasonSummary): void
+    selectedFightReview: Review
     selectedFightSummary: FightSummary
     selectedSeason: Season
     selectedSeasonFightSummaries: FightSummary[]
     selectedSeasonSummary: SeasonSummary
+    setSelectedFightReview(reviewId: string): void
     setSelectedFightSummary(fightId: string): void
     setSelectedSeasonSummary(seasonId: string): void
     show: Show
+    submitUserFightReview(reviewObj: ReviewPut): void
     userFightReview: Review
-
 }
 
 export const initialShowsStoreState = {
     fightsByStatus: {} as FightByStatus,
+    fightReviews: [],
+    selectedFightReview: {} as Review,
     selectedFightSummary: {} as FightSummary,
     selectedSeason: {} as Season,
     selectedSeasonFightSummaries: [] as FightSummary[],
@@ -49,11 +59,32 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
             set({ userFightReview: data })
         };
     },
+    createGroupScorecard: async (scorecardObj: CreateScorecard) => {
+        get().setIsSubmittingForm(true)
+        const res = await axios.post(`${url}/group-scorecards`, scorecardObj, await configureAccessToken() );
+        get().setIsSubmittingForm(false)
+        if(res.status === 200){
+            // need to handle a redirect to /scorecards here???
+            get().setToast({ 
+                title: res.data.message,
+                duration: 5000,
+                status: res.data.message.includes('Success!') ? 'success' : 'error',
+                isClosable: true
+            })
+        }
+    },
+    fetchFightReviews: async (fightId: string) => {
+        const res = await axios.get(`${url}/reviews/${fightId}/fight`,await configureAccessToken() );
+        const fightReviews = res.data as Review[];
+        set({ fightReviews })
+    }, 
     fetchSeasonSummary: async (seasonId: string) => {
+        get().setIsSubmitting(true)
         const res = await axios.get(`${url}/seasons/${seasonId}`)
         const data = res.data as SeasonSummary
         get().filterFights(data)
         set({ selectedSeason: data.season })
+        get().setIsSubmitting(false)
     },   
     filterFights: async (selectedSeasonSummary: SeasonSummary) => {
         const obj: FightByStatus = {
@@ -82,6 +113,10 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
             selectedSeasonFightSummaries: list
         })
     },
+    setSelectedFightReview: (reviewId: string) => {
+        const [selected] = get().fightReviews.filter( (review: Review) => review.reviewId === reviewId);
+        set({ selectedFightReview: selected });
+    },
     setSelectedFightSummary: (fightId: string) => {
         const [selectedFightSummary] = get().selectedSeasonFightSummaries.filter( (fightSummary: FightSummary) => fightSummary.fight.fightId === fightId)
         set({ selectedFightSummary })
@@ -100,4 +135,12 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
             selectedFightSummary: fightSummaries[0]
         })
     }, 
+    submitUserFightReview: async (reviewObj: ReviewPut) => {
+        const res = await axios.put(`${url}/reviews`, reviewObj, );
+        if(res.status === 200) {
+            get().fetchFightReviews(reviewObj.fightId);
+            return true;
+        }
+    },
+    
 })

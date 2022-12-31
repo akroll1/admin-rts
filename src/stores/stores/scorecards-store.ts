@@ -40,9 +40,8 @@ export interface ScorecardStoreState {
     fetchPanel(panelId: string): void
     fetchPanelist(panelistId: string): void
     fetchPanelSummaries(): void
-    // fetchSeasonSummaries(): void
+
     fetchSeasons(): void
-    fetchSelectedFightReviews(fightId: string): void;
     fetchShow(showId: string): void
     fetchUserInvites(): void
     fetchUserScorecards(): void
@@ -56,14 +55,11 @@ export interface ScorecardStoreState {
     patchPrediction(prediction: string): void
     poundListOfficial: List
     poundListUser: List
-    putUserFightReview(reviewObj: ReviewPut): void
     seasons: Season[]
     seasonSummaries: SeasonSummary[]
     seasonsOptions: Record<string, string>[]
     selectedBlogPost: BlogPost
     selectedFighter: Fighter
-    selectedFightReview: Review
-    selectedFightReviews: Review[]
     setFighterScores(): void
     setSeasonsOptions(): void
     stats: any[]
@@ -101,8 +97,6 @@ export const initialScorecardsStoreState = {
     seasonSummaries: [] as SeasonSummary[],
     selectedBlogPost: {} as BlogPost,
     selectedFighter: {} as Fighter,
-    selectedFightReviews: [],
-    selectedFightReview: {} as Review,
     selectedSeason: {} as Season,
     stats: [],
     userInvites: [],
@@ -149,12 +143,16 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         set({ panelists })
     },
     fetchBlogPost: async (blogPostId: string) => {
+        get().setIsSubmitting(true)
         const res = await axios.get(`${url}/blog/${blogPostId}`)
+        get().setIsSubmitting(false)
         const selectedBlogPost = res.data as BlogPost
         set({ selectedBlogPost })
     },
     fetchBlogPosts: async () => {
+        get().setIsSubmitting(true)
         const res = await axios.get(`${url}/blog`)
+        get().setIsSubmitting(false)
         const blogPosts = res.data as BlogPost[]
         set({ blogPosts })
     },
@@ -220,11 +218,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const seasons = res.data as Season[]
         set({ seasons })
     },
-    fetchSelectedFightReviews: async (fightId: string) => {
-        const res = await axios.get(`${url}/reviews/${fightId}/fight`,await configureAccessToken() );
-        const selectedFightReviews = res.data as Review[];
-        set({ selectedFightReviews })
-    }, 
+    
     fetchShow: async (showId: string) => {
         const res = await axios.get(`${url}/shows/${showId}`,await configureAccessToken() )
         const show = res.data as Show
@@ -232,8 +226,9 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
     },
     
     fetchUserScorecards: async () => {
-
+        get().setIsSubmitting(true)
         const res = await axios.get(`${url}/me/scorecards/${get().user.attributes.sub}`, await configureAccessToken() )
+        get().setIsSubmitting(false)
         if(res.data === 'Token expired!'){
             get().setModals('expiredTokenModal', true)
             return
@@ -267,13 +262,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
             // get().fetchGroupScorecardSummary(get().activeGroupScorecard.groupScorecardId)
         }
     },
-    putUserFightReview: async (reviewObj: ReviewPut) => {
-        const res = await axios.put(`${url}/reviews`, reviewObj, );
-        if(res.status === 200) {
-            get().fetchSelectedFightReviews(reviewObj.fightId);
-            return true;
-        }
-    },
+    
     setChatToken: (chatToken: string) => {
         set({ chatToken })
     },
@@ -288,8 +277,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         set({ fighterScores: { round, scorecardId, scores } });
 
     },
-    
-    
     setSeasonsOptions: () => {
         const seasonSummaries = get().seasonSummaries;
         if(seasonSummaries.length){
@@ -302,11 +289,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
             set({ seasonsOptions })
         }
     },
-    setSelectedFightReview: (reviewId: string) => {
-        const [selected] = get().selectedFightReviews.filter( (review: Review) => review.reviewId === reviewId);
-        set({ selectedFightReview: selected });
-    },
-   
     submitFightResolution: async (resolutionObj: FightResolution) => {
         const res = await axios.put(`${url}/resolutions/${resolutionObj.fightId}`, resolutionObj, await configureAccessToken() )
         const data = res.data

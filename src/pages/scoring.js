@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { ScoringTable } from '../components/tables'
 import { 
     AddGuestJudgeModal, 
@@ -12,8 +12,6 @@ import { ScoringMain, ScoringTabs } from '../components/scoring-main'
 import { useGlobalStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import { useParams } from 'react-router'
-import { ScoringDividerWithText } from '../components/tables/table-els/scoring-divider-with-text'
-
 
 const Scoring = props => {
 
@@ -32,6 +30,8 @@ const Scoring = props => {
         totalRounds,
     } = useGlobalStore();
 
+    const [notification, setNotification] = useState(true)
+
     const [tabs, setTabs] = useState({
         info: false,
         scoring: true, 
@@ -40,11 +40,10 @@ const Scoring = props => {
         analytics: false
     });
     const windowWidth = useWindowResize();
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         fetchGroupScorecardSummary(fightId, groupScorecardId)
-        fetchPanelProps()
+        // fetchPanelProps()
     },[])
 
     useEffect(() => {
@@ -86,6 +85,11 @@ const Scoring = props => {
         }
     },[chatScore])
 
+    const postNotification = () => {
+        setNotification(true)
+
+    }
+    
     return (
         <Flex 
             id="scoring"
@@ -97,25 +101,29 @@ const Scoring = props => {
             margin="auto" 
             p="2"
             bg="transparent"
+            position="relative"
             maxW="100%"
             boxSizing='border-box'
-        >       <ScoringDividerWithText 
-                    text={`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
-                    tabs={tabs} 
-                    centered={tabs.all ? true : false}
-                />
-                <AddGuestJudgeModal />
-                <AddMemberModal />
-                <MoneylineModal
-                    props={props}
-                />
-                <PredictionModal />
+        >       
+            <Heading
+                tabs={tabs} 
+                centered={tabs.all ? true : false}
+                mb={["2","2","4"]}
+            >
+                {`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
+            </Heading>
+            <AddGuestJudgeModal />
+            <AddMemberModal />
+            <MoneylineModal
+                props={props}
+            />
+            <PredictionModal />
             <Flex 
                 display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
                 w="100%" 
                 minH="70vh"  
+                maxH="70vh"
             >
-                
 
                 <ScoringSidebarLeft
                     tabs={tabs}
@@ -124,7 +132,7 @@ const Scoring = props => {
                     fightComplete={fightComplete}
                     fighters={activeGroupScorecard?.fighters}
                     fighterScores={fighterScores} 
-                    isSubmitting={isSubmitting}
+                    postNotification={postNotification}
                     tabs={tabs}
                     totalRounds={activeGroupScorecard?.fight?.totalRounds}
                 />

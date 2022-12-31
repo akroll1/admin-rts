@@ -8,6 +8,7 @@ import { FighterNamesHeading } from './fighter-name-heading'
 import { useGlobalStore } from '../../stores'
 import { UserScores } from './user-scores'
 import image from '../../image/boxing-background.png'
+import { GlobalNotification } from '../global-notification.js'
 
 export const ScoringMain = ({ 
     isSubmitting,
@@ -85,6 +86,7 @@ export const ScoringMain = ({
             setNotSelectedScore(prev => prev -1)
         }
     }
+
     
     return (
         <Flex 
@@ -158,6 +160,7 @@ export const ScoringMain = ({
                 handleAdjustScore={handleAdjustScore}
                 notSelectedScore={notSelectedScore}
                 selectedFighter={selectedFighter}
+                setSelectedFighter={setSelectedFighter}
             />
             <Button
                 zIndex={100}

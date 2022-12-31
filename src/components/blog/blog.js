@@ -8,13 +8,15 @@ import {
 import { useEffect } from 'react'
 import { BsArrowRight } from 'react-icons/bs'
 import { useGlobalStore } from '../../stores'
+import { SpinnerMain } from '../spinner'
 import { BlogPost } from './blog-post'
 
 export const Blog = () => {
 
   const {
+    blogPosts,
     fetchBlogPosts,
-    blogPosts
+    isSubmitting,
   } = useGlobalStore()
 
   useEffect(() => {
@@ -32,16 +34,21 @@ export const Blog = () => {
         >
           Featured Articles
         </Heading>
-        <SimpleGrid columns={{base: 1, md: 3}} spacing="12" mb="10">
-          { blogPosts?.length > 0 && blogPosts.map( post => {
-            return (
-              <BlogPost
-                key={post.blogId}
-                post={post}
-              />
-            )
-          })}
-        </SimpleGrid>
+        { isSubmitting && blogPosts.length === 0
+          ?
+            <SpinnerMain />
+          :
+            <SimpleGrid columns={{base: 1, md: 3}} spacing="12" mb="10">
+              { blogPosts?.length > 0 && blogPosts.map( post => {
+                return (
+                  <BlogPost
+                    key={post.blogId}
+                    post={post}
+                  />
+                )
+              })}
+            </SimpleGrid>
+          }
         <Link 
           fontSize="xl" 
           fontWeight="bold" 

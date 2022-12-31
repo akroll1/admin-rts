@@ -83,17 +83,19 @@ export const FighterSelectionSwipe = ({
                         </Center>
                     </Flex>
                     <Flex
+                        zIndex={1000}
                         flexDir="column"
                         w="100%"
                         mt="2"
                     >   
                         <Heading 
-                            color={selectedFighter.fighterId === fighterId ? '#fff' : !selectedFighter.fighterId ? '#fafafa' : 'gray'}
+                            // color={selectedFighter.fighterId === fighterId ? '#fff' : !selectedFighter.fighterId ? '#fafafa' : 'gray'}
                             letterSpacing="px"
                             w="100%"
                             zIndex={99}
                             as="h2"
                             size={["sm", "md"]}
+                            color="#BBB"
                         >
                             {`${ringname}`}
                         </Heading>
@@ -101,7 +103,8 @@ export const FighterSelectionSwipe = ({
                             letterSpacing="1px"
                             as="h3"
                             size="md"
-                            color={selectedFighter.fighterId === fighterId ? '#dadada' : !selectedFighter.fighterId ? '#dadada' : 'gray'}
+                            // color={selectedFighter.fighterId === fighterId ? 'whiteAlpha.200' : !selectedFighter.fighterId ? 'white' : 'whiteAlpha.400'}
+                            color="#FAFAFA"
 
                         >
                             {`${capFirstLetters(firstName)} ${capFirstLetters(lastName)}`} 
