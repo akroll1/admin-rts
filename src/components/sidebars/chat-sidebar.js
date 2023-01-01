@@ -13,16 +13,13 @@ import {
     Tab,
     Tabs,
     TabList,
-    TabPanel,
     TabPanels,
     Heading,
 } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid'
-import { ContentType, useGlobalStore } from '../../stores'
+import { ContentType, TabsEnum, useGlobalStore } from '../../stores'
 
-export const ChatSidebar = ({
-    tabs,
-}) => {
+export const ChatSidebar = () => {
     const { 
         chatKey,
         chatMessage,
@@ -31,6 +28,7 @@ export const ChatSidebar = ({
         requestChatToken,
         setChatToken,
         setGlobalNotification,
+        tabs,
         user
     } = useGlobalStore()
 
@@ -176,7 +174,7 @@ export const ChatSidebar = ({
 
     return (
         <Flex 
-            display={(tabs.all || tabs.chat) ? 'flex' : 'none'}
+            display={tabs[TabsEnum.ALL] || tabs[TabsEnum.CHAT] ? 'flex' : 'none'}
             bg="fsl-sidebar-bg"
             border="1px solid #252525"
             id="chat-sidebar"

@@ -5,7 +5,10 @@ import {
     ChatMessage,
     Modals,
     resetModals,
+    resetTabs,
+    Tabs,
     Toast,
+    TabsEnum,
 } from '../models'
 import axios from 'axios'
 import { capFirstLetters } from "../../utils"
@@ -21,11 +24,13 @@ export interface UtilsStoreState {
     setIsSubmitting(submittingState: boolean): void
     setIsSubmittingForm(submittingState: boolean): void
     setModals(modal: string, setOpen: boolean): void
+    setTabs(tab: TabsEnum): void
     setToast(toast: Toast): void
     setTokenExpired(state: boolean): void
     setTransformedPrediction(rawPrediction: string | null): void
     setTransformedResult(officialResult: string): void
     subscribeToNewsletter(email: string): void
+    tabs: Tabs
     toast: Toast
     tokenExpired: boolean,
     transformedPrediction: string
@@ -38,6 +43,7 @@ export const initialUtilsStoreState = {
     isSubmittingForm: false,
     modals: {} as Modals,
     scoringTransformedPrediction: null,
+    tabs: { ...resetTabs, [TabsEnum.ALL]: true } as Tabs,
     toast: {} as Toast,
     tokenExpired: false,
     transformedPrediction: '',
@@ -76,6 +82,11 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
         if(!rawPrediction){
             set({ scoringTransformedPrediction: 'Not Set' })
         }
+    },
+    setTabs: (tab: TabsEnum) => {
+        console.log('tab: ', tab)
+        const tabs = { ...resetTabs, [tab]: true }
+        set({ tabs })
     },
     setToast: (toast: Toast) => {
         set({ toast })

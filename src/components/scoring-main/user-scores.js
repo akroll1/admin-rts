@@ -5,14 +5,14 @@ import {
     ChevronLeftIcon, 
     ChevronRightIcon, 
     RepeatIcon,
-    ViewIcon 
 } from '@chakra-ui/icons'
+import { createImportSpecifier } from 'typescript'
 
 export const UserScores = ({
     evenRound,
-    handleAdjustScore,
     notSelectedScore,
     selectedFighter,
+    setNotSelectedScore,
     setSelectedFighter
 }) => {
 
@@ -39,13 +39,28 @@ export const UserScores = ({
     useEffect(() => {
         if(selectedFighter?.fighterId){
             setSelectedFighterId(selectedFighter.fighterId)
+            return
         }
+        setSelectedFighterId('')
     },[selectedFighter])
 
     const clearSelectedFighter = () => {
-        setSelectedFighter({})
+        setSelectedFighter('')
+        setNotSelectedScore('9')
     }
-    console.log('notSelectedScore: ', notSelectedScore)
+
+    const handleAdjustScore = (e,fighterId) => {
+        const { id } = e.currentTarget;
+        if(!selectedFighterId || fighterId == selectedFighterId || notSelectedScore == 10) return
+        if(id === 'increment'){
+            if(notSelectedScore >= 10) return;
+            setNotSelectedScore(prev => prev + 1)
+        }
+        if(id === 'decrement'){
+            if(notSelectedScore <= 6) return;
+            setNotSelectedScore(prev => prev -1)
+        }
+    }
 
     return (
         <Flex
@@ -58,49 +73,55 @@ export const UserScores = ({
             { scores.length > 0 && scores.map( (roundObj, _i) => {
                 
                 const lastRow = (_i+1 ) === scores.length;
-                const score1 = roundObj[fighter1Id];
-                const score2 = roundObj[fighter2Id];
+                const setScores = currentFighterId => {
+                    if(currentFighterId == selectedFighterId){
+                        return currentFighterId === fighter1Id ? roundObj[fighter1Id] : roundObj[fighter2Id]
+                    }
+                    if(currentFighterId != selectedFighterId){
+                        return currentFighterId === fighter2Id ? roundObj[fighter2Id] : roundObj[fighter1Id]
+                    }
+                }
 
-                const renderData = () => {
-                    
-                    const evenRoundScore = score1 === score2;
+                const score1 = setScores(fighter1Id)
+                const score2 = setScores(fighter2Id)
+
+                const renderData = currentFighterId => {
 
                     let fighterData = {
                         score1,
                         score2,
-                        score1Color: evenRoundScore ? 'whiteAlpha.700' : score1 > score2 ? 'whiteAlpha.800' : 'yellow.300',
-                        score2Color: evenRoundScore ? 'whiteAlpha.700' : score2 > score1 ? 'whiteAlpha.800' : 'yellow.300',
-                        iconLeft: 'transparent',
-                        iconRight: 'transparent',
+                        score1Color: score1 >= score2 ? 'whiteAlpha.800' : 'yellow.300',
+                        score2Color: score2 >= score1 ? 'whiteAlpha.800' : 'yellow.300',
                     }
 
-                    if(lastRow && selectedFighterId){
+                    if(lastRow){
 
-                        const getLastRowScore = selectedFighterId => {
-                            if(selectedFighterId === fighter1Id){
-                                if(score1 >= score2){
-                                    return '10'
-                                }
-                                return notSelectedScore
+                        const setLastRow = currentFighterId => {
+                            if(!selectedFighterId){
+                                return "10"
                             }
-                            if(selectedFighterId === fighter2Id){
-                                if(score2 >= score1){
-                                    return '10'
-                                }
-                                return notSelectedScore
+                            if(selectedFighterId == currentFighterId){
+                                return "10";
+                            } 
+                            return notSelectedScore;    
+                        } 
+                        const score = setLastRow(currentFighterId)
+                        const setColors = currentFighterId => {
+                            if(!selectedFighterId){
+                                return 'gray.300'
                             }
+                            return score >= 10 ? 'whiteAlpha.700' : 'yellow.300'
                         }
-                        const scoreA = getLastRowScore(selectedFighterId);
-                        const scoreB = getLastRowScore(selectedFighterId);
 
-                        Object.assign(fighterData,{
-                            score1: scoreA >= scoreB ? "10" : notSelectedScore,
-                            score2: scoreB >= scoreA ? "10" : notSelectedScore,
-                            score1Color: scoreA >= scoreB ? 'whiteAlpha.800' : 'yellow.300',
-                            score2Color: scoreB >= scoreA ? 'whiteAlpha.800' : 'yellow.300'
+                        Object.assign(fighterData, {
+                            score1: score,
+                            score2: score,
+                            score1Color: setColors(currentFighterId),
+                            score2Color: setColors(currentFighterId),
                         })
                         return fighterData
                     }
+
                     return fighterData
                 }
 
@@ -110,42 +131,42 @@ export const UserScores = ({
                         alignItems="center"
                         justifyContent="center"
                         flexDir="row"
-                        w="100%"
-                        borderBottom="1px solid #202020"
+                        w={lastRow ? "100%" : "100%"}
+                        m="auto"
+                        borderBottom={lastRow ? "1px solid #555555" : "1px solid #202020"}
                     >
                         <Flex
-                            w="100%"
                             flex="1 0 40%"
-                            m="auto"
                             alignItems="center"
                             justifyContent="center"
                         >
                             { lastRow &&
                                 <ChevronLeftIcon
-                                    onClick={handleAdjustScore}
+                                    onClick={e => handleAdjustScore(e, fighter1Id)}
                                     id="decrement"
                                     cursor="pointer"
                                     px="2"
-                                    fontSize="3.5rem"
-                                    color="gray.500"
+                                    fontSize="3rem"
+                                    color={evenRound  || !selectedFighterId || selectedFighterId === fighter1Id ? "#303030" :  "gray.500"}
                                 />
                             }
                             <Heading
-                                m="auto"
-                                color={lastRow ? "whiteAlpha.800" : renderData().score1Color}
+                                textAlign="center"
+                                color={renderData(fighter1Id).score1Color}
                                 as="h3"
+                                w="100%"
                                 size={lastRow ? "xl" : "lg"}
                             >
                                 {renderData(fighter1Id).score1}
                             </Heading>
                             { lastRow && 
                                 <ChevronRightIcon
-                                    onClick={handleAdjustScore}
+                                    onClick={e => handleAdjustScore(e, fighter1Id)}
                                     id="increment"
                                     cursor="pointer"
                                     px="2"
-                                    fontSize="3.5rem"
-                                    color="gray.500"
+                                    fontSize="3rem"
+                                    color={evenRound || !selectedFighterId || selectedFighterId === fighter1Id ? "#303030" : "gray.500"}
                                 />
                             }
                         </Flex>
@@ -157,13 +178,12 @@ export const UserScores = ({
                             { lastRow
                                 ? 
                                     <Heading 
-                                        as="h4" 
-                                        size="lg"
+                                        as="h3" 
+                                        size="xl"
                                         color={selectedFighter ? "red.500" : 'red.900'}
                                         cursor="pointer"
                                         _hover={{color: 'red.600'}}
                                         onClick={clearSelectedFighter}
-                                        m="auto"
                                     >
                                         {<RepeatIcon />}
                                     </Heading>
@@ -172,8 +192,8 @@ export const UserScores = ({
                                         color={lastRow ? 'red.500' : "gray.400"}
                                         as="h3"
                                         size={lastRow ? "md" : "sm"}
-                                        alignItems="center"
-                                        justifyContent="center"
+                                        // alignItems="center"
+                                        // justifyContent="center"
                                     >
                                         {_i+1}
                                     </Heading>
@@ -183,35 +203,36 @@ export const UserScores = ({
                             flex="1 0 40%"
                             alignItems="center"
                             justifyContent="center"
-                            w="100%"
                         >
-                            { lastRow &&
+                            { lastRow && 
                                 <ChevronLeftIcon
-                                    onClick={handleAdjustScore}
+                                    onClick={e => handleAdjustScore(e, fighter2Id)}
                                     id="decrement"
                                     cursor="pointer"
                                     px="2"
-                                    fontSize="3.5rem"
-                                    color="gray.500"
+                                    fontSize="3rem"
+                                    color={evenRound || !selectedFighterId || selectedFighterId === fighter2Id ? "#303030" : "gray.500"}
+
                                 />
                             }
                             <Heading
+                                textAlign="center"
                                 as="h3"
+                                w="100%"
                                 size={lastRow ? "xl" : "lg"}
-                                color={lastRow ? "whiteAlpha.800" : renderData().score2Color}
-                                m="auto"
+                                color={renderData(fighter2Id).score2Color}
                             >
 
                                 {renderData(fighter2Id).score2}
                             </Heading>
                             { lastRow && 
                                 <ChevronRightIcon
-                                    onClick={handleAdjustScore}
+                                    onClick={e => handleAdjustScore(e, fighter2Id)}
                                     id="increment"
                                     cursor="pointer"
                                     px="2"
-                                    fontSize="3.5rem"
-                                    color="gray.500"
+                                    fontSize="3rem"
+                                    color={evenRound  || !selectedFighterId || selectedFighterId === fighter2Id ? "#303030" : "gray.500"}
                                 />
                             }
                         </Flex>

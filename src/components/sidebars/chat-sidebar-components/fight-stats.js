@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
+import { Flex, Heading, useColorModeValue } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
-import { useGlobalStore } from '../../../stores'
-import { GiConsoleController } from 'react-icons/gi'
+import { TabsEnum, useGlobalStore } from '../../../stores'
 
 export const FightStats = props => {
-    const { label, tabs, value, ...boxProps } = props;
+    const { label, value, ...boxProps } = props;
 
     const { 
         activeGroupScorecard,
-        stats
+        stats,
+        tabs,
     } = useGlobalStore();
 
     const [fighters, setFighters] = useState(null);
@@ -134,7 +134,7 @@ export const FightStats = props => {
     return (
         <Flex
             mt="4"
-            display={tabs.all || tabs.table ? 'flex' : 'none'}
+            display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}
             flexDirection="column"
             px="2"
             bg="bg-surface"

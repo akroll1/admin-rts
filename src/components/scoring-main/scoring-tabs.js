@@ -1,39 +1,35 @@
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Flex, Icon, Text, VStack } from '@chakra-ui/react'
 import { FaUsers } from 'react-icons/fa'
 import { GiBoxingRing } from 'react-icons/gi'
 import { ChatIcon } from '@chakra-ui/icons'
 import { HiOutlinePencil } from 'react-icons/hi'
+import { TabsEnum, useGlobalStore } from '../../stores'
 
-export const ScoringTabs = ({ 
-    setTabs,
-    tabs
-}) => {
-    const [activeTab, setActiveTab] = useState('scoring')
- 
-    const resetTabs = {
-        info: false,
-        scoring: false, 
-        table: false,
-        chat: false,
-        analytics: false,
-        all: false
-    }
+export const ScoringTabs = () => {
+    
+    const [activeTab, setActiveTab] = useState(TabsEnum.SCORING)
+    
+    const {
+        setTabs,
+        tabs,
+    } = useGlobalStore()
+
     const tab_data = [
         {
             label: 'Info',
-            value: 'info',
+            value: TabsEnum.INFO,
             icon: GiBoxingRing
         },
         {
             label: 'Scoring',
-            value: 'scoring',
+            value: TabsEnum.SCORING,
             icon: HiOutlinePencil
         },
         {
             label: 'Chat',
-            value: 'chat',
+            value: TabsEnum.CHAT,
             icon: ChatIcon
         },
         // {
@@ -43,7 +39,7 @@ export const ScoringTabs = ({
         // },
         {
             label: 'Group',
-            value: 'table',
+            value: TabsEnum.TABLE,
             icon: FaUsers
         },
     ];
@@ -51,13 +47,13 @@ export const ScoringTabs = ({
     const handleTabClick = e => {
         const { id } = e.currentTarget;
         setActiveTab(id)
-        setTabs({ ...resetTabs, [id]: true })
+        setTabs(id)
     }
 
     return (
         <Flex 
             id="scoring_tabs"
-            display={tabs.all ? "none" : "flex"} 
+            display={tabs[TabsEnum.ALL] ? "none" : "flex"} 
             as="section" 
             bg="#121212" 
             flexDirection="row" 
@@ -81,10 +77,10 @@ export const ScoringTabs = ({
                         <VStack>
                             <Icon 
                                 as={tab.icon} 
-                                color={tab.value === activeTab ? '#C01616' : 'white'}
+                                color={tab.value === activeTab ? '#e62b2b' : 'whiteAlpha.900'}
                             />
                             <Text 
-                                color={tab.value === activeTab ? '#C01616' : 'white'}
+                                color={tab.value === activeTab ? '#e62b2b' : 'whiteAlpha.900'}
                                 fontSize={["xs", "md"]} 
                                 textAlign="center"
                             >
