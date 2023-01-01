@@ -106,24 +106,37 @@ export const UserScores = ({
                             return notSelectedScore;    
                         } 
                         const score = setLastRow(currentFighterId)
-                        const setColors = currentFighterId => {
-                            if(!selectedFighterId){
-                                return 'gray.300'
-                            }
-                            return score >= 10 ? 'whiteAlpha.700' : 'yellow.300'
+
+                        const setLastRowColor = currentFighterId => {
+                            if(!selectedFighterId) return 'whiteAlpha.700'
+                            if(score == "10") return 'whiteAlpha.800'
+                            return currentFighterId === selectedFighterId ? 'whiteAlpha.900' : 'yellow.300'
                         }
+                        const color = setLastRowColor(currentFighterId);
 
                         Object.assign(fighterData, {
                             score1: score,
                             score2: score,
-                            score1Color: setColors(currentFighterId),
-                            score2Color: setColors(currentFighterId),
+                            score1Color: color,
+                            score2Color: color,
                         })
                         return fighterData
                     }
-
                     return fighterData
                 }
+                const fighter1Data = renderData(fighter1Id)
+                const fighter2Data = renderData(fighter2Id)
+                const fighter1ChevronColor = evenRound  
+                        || !selectedFighterId 
+                        || selectedFighterId === fighter1Id
+                    ? "#303030" 
+                    :  "gray.500";
+                
+                const fighter2ChevronColor = evenRound  
+                        || !selectedFighterId 
+                        || selectedFighterId === fighter2Id
+                    ? "#303030" 
+                    :  "gray.500";
 
                 return (
                     <Flex
@@ -147,17 +160,17 @@ export const UserScores = ({
                                     cursor="pointer"
                                     px="2"
                                     fontSize="3rem"
-                                    color={evenRound  || !selectedFighterId || selectedFighterId === fighter1Id ? "#303030" :  "gray.500"}
+                                    color={fighter1ChevronColor}
                                 />
                             }
                             <Heading
                                 textAlign="center"
-                                color={renderData(fighter1Id).score1Color}
+                                color={fighter1Data.score1Color}
                                 as="h3"
                                 w="100%"
                                 size={lastRow ? "xl" : "lg"}
                             >
-                                {renderData(fighter1Id).score1}
+                                {fighter1Data.score1}
                             </Heading>
                             { lastRow && 
                                 <ChevronRightIcon
@@ -192,8 +205,8 @@ export const UserScores = ({
                                         color={lastRow ? 'red.500' : "gray.400"}
                                         as="h3"
                                         size={lastRow ? "md" : "sm"}
-                                        // alignItems="center"
-                                        // justifyContent="center"
+                                        alignItems="center"
+                                        justifyContent="center"
                                     >
                                         {_i+1}
                                     </Heading>
@@ -220,10 +233,10 @@ export const UserScores = ({
                                 as="h3"
                                 w="100%"
                                 size={lastRow ? "xl" : "lg"}
-                                color={renderData(fighter2Id).score2Color}
+                                color={fighter2Data.score2Color}
                             >
 
-                                {renderData(fighter2Id).score2}
+                                {fighter2Data.score2}
                             </Heading>
                             { lastRow && 
                                 <ChevronRightIcon
@@ -232,7 +245,7 @@ export const UserScores = ({
                                     cursor="pointer"
                                     px="2"
                                     fontSize="3rem"
-                                    color={evenRound  || !selectedFighterId || selectedFighterId === fighter2Id ? "#303030" : "gray.500"}
+                                    color={fighter2ChevronColor}
                                 />
                             }
                         </Flex>
