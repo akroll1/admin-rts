@@ -43,7 +43,6 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    console.log('here: ', isPanelist)
     if(isSuperAdmin && isPanelist){
       setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
       return;

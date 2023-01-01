@@ -8,7 +8,6 @@ import { FighterNamesHeading } from './fighter-name-heading'
 import { useGlobalStore } from '../../stores'
 import { UserScores } from './user-scores'
 import image from '../../image/boxing-background.png'
-import { GlobalNotification } from '../global-notification.js'
 
 export const ScoringMain = ({ 
     isSubmitting,
@@ -163,7 +162,7 @@ export const ScoringMain = ({
                 setSelectedFighter={setSelectedFighter}
             />
             <Button
-                zIndex={100}
+                zIndex={1000}
                 onClick={submitScores}
                 disabled={isDisabled || fightComplete} 
                 variant={isDisabled ? "outline" : "solid"} 
@@ -172,6 +171,7 @@ export const ScoringMain = ({
                 mt="4"
                 fontSize="1.2rem"
                 fontWeight="bold"
+                // color={selectedFighter.fighterId ? "inherit" : "#FAFAFA"}
                 w={["80%", "70%", "60%", "50%"]}
             >
                 {isDisabled && fightComplete ? `Scoring Complete` : selectedFighter ? `Score Round ${userScorecard?.scores.length + 1}` : `Select Fighter` }

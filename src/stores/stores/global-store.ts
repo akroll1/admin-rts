@@ -34,7 +34,6 @@ export const useGlobalStore = create<GlobalStoreState>()(
                 const { 
                     activeGroupScorecard,
                     blogPosts,
-                    fight,
                     fighters,
                     fightsByStatus,
                     groupScorecards,
@@ -55,7 +54,6 @@ export const useGlobalStore = create<GlobalStoreState>()(
                 return ({ 
                     activeGroupScorecard,
                     blogPosts,
-                    fight,
                     fighters,
                     fightsByStatus,
                     groupScorecards,

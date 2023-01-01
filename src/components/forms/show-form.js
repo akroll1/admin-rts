@@ -13,7 +13,6 @@ import {
     Stack, 
     StackDivider, 
     Textarea, 
-    useToast, 
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
@@ -32,7 +31,6 @@ export const ShowForm = () => {
         updateShow,
     } = useGlobalStore()
 
-    const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     // showId is kept out of the form for put/post logic.
     const [showId, setShowId] = useState(null);
@@ -86,18 +84,23 @@ export const ShowForm = () => {
 
     const handleFormChange = (e, type) => {
         const { name, id, value } = e.currentTarget;
+        if(id === 'network'){
+            console.log('network')
+        }
         if(name) return setForm({ ...form, fightIds: [value]});
-        return setForm({...form, [id]: value});
+        setForm({...form, [id]: value});
     };
 
     const { 
         fightIds, 
         location, 
+        network,
         promoter, 
         showName, 
         showStoryline, 
         showTime 
     } = form;
+
     const fightId = fightIds[0];
 
     return (

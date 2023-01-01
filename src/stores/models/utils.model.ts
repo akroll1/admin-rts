@@ -4,7 +4,7 @@ export interface ChatMessage {
     body?: string
     Content: ContentType
     heading?: string
-    id?: string
+    Id?: string
     requestId?: string
     state?: boolean
 }
