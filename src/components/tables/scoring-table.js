@@ -11,19 +11,18 @@ import {
     useColorModeValue as mode,
 } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
-import { useGlobalStore } from '../../stores'
+import { TabsEnum, useGlobalStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
 import { ScoringTableSwitches } from './table-els'
 
-export const ScoringTable = ({ 
-    tabs, 
-}) => {
+export const ScoringTable = () => {
 
     const {
         activeGroupScorecard,
         lastScoredRound,
         setToast,
-        tableData, 
+        tableData,
+        tabs, 
     } = useGlobalStore()
 
     const [toCurrentRound, setToCurrentRound] = useState(true)
@@ -110,14 +109,11 @@ export const ScoringTable = ({
                 handleRealTimeSwitchClick={handleRealTimeSwitchClick}
                 handleShowToCurrentRound={handleShowToCurrentRound}
                 toCurrentRound={toCurrentRound}
-                tabs={tabs}
             />
-            <FightStats 
-                tabs={tabs} 
-            />
+            <FightStats />
             <Flex 
                 overflow="scroll"
-                display={tabs.all || tabs.table ? 'flex' : 'none'}
+                display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}
                 flexDirection="column"
                 id="score_table" 
                 w="100%" 
@@ -125,7 +121,7 @@ export const ScoringTable = ({
                 pt="2"
                 my="auto"
                 h="auto"
-                mb={tabs.all ? "0rem" : "4rem"}
+                mb={tabs[TabsEnum.ALL] ? "0rem" : "4rem"}
             >     
                 { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" mb="-2" size="md">FIGHT IS OFFICIAL</Heading> }
                 

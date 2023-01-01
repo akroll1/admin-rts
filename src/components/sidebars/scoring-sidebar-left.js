@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { 
     Collapse, 
     Flex, 
-    useToast 
 } from '@chakra-ui/react'
 import { ScoringSidebarNavItem } from './scoring-sidebar/scoring-sidebar-nav-item'
 import { ScorecardsNavGroup } from './scorecards-sidebar-components/scorecards-boards/scorecards-nav-group'
@@ -16,19 +15,17 @@ import {
 } from 'react-icons/fa'
 import { IoScaleOutline } from 'react-icons/io5'
 import { MdOnlinePrediction } from 'react-icons/md'
-import { SidebarsDividerWithText } from '../../chakra'
 import { parseEpoch, transformedWeightclass } from '../../utils'
-import { useGlobalStore } from '../../stores'
+import { TabsEnum, useGlobalStore } from '../../stores'
 import { FighterSelectionSwipe } from '../forms/my-panels-form-els/fighter-selection-swipe'
 
-export const ScoringSidebarLeft = ({ 
-    tabs,
-}) => {
+export const ScoringSidebarLeft = () => {
     const {
         activeGroupScorecard,
         availableGuestJudges,
         setModals,
         scoringTransformedPrediction,
+        tabs,
     } = useGlobalStore()
     
     const navGroups = {
@@ -69,7 +66,7 @@ export const ScoringSidebarLeft = ({
 
     return (
         <Flex 
-            display={tabs.info || tabs.all ? 'flex' : 'none'}
+            display={tabs[TabsEnum.INFO] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             id="scoring_sidebar_left" 
             w="100%" 
             flex={["1 0 30%"]} 
@@ -79,14 +76,14 @@ export const ScoringSidebarLeft = ({
             borderRadius="md"
             direction="column" 
             p="1" 
-            bg={tabs.info ? "inherit" : "fsl-sidebar-bg"}
-            color={tabs.info ? "#dadada" : "#c8c8c8"}
+            bg={tabs[TabsEnum.INFO] ? "inherit" : "fsl-sidebar-bg"}
+            color={tabs[TabsEnum.INFO] ? "#dadada" : "#c8c8c8"}
             fontSize="sm"
-            minH={tabs.info ? "75vh" : ""}
-            border={tabs.all ? "1px solid #252525" : 'none'}
+            minH={tabs[TabsEnum.INFO] ? "75vh" : ""}
+            border={tabs[TabsEnum.ALL] ? "1px solid #252525" : 'none'}
         >
             <Flex
-                display={tabs.info ? 'flex' : 'none'}
+                display={tabs[TabsEnum.INFO] ? 'flex' : 'none'}
                 flexDir="row"
                 w="100%"
                 textAlign="center"
@@ -112,14 +109,12 @@ export const ScoringSidebarLeft = ({
             >
                 
                 <ScorecardsNavGroup 
-                    tabs={tabs} 
                     id="title"
                     label={activeGroupScorecard?.fight?.fightQuickTitle ? activeGroupScorecard?.fight?.fightQuickTitle : ''}
                 />
 
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
-                    tabs={tabs} 
                     id="fight"
                     label={''}
                     active={true}
@@ -155,7 +150,6 @@ export const ScoringSidebarLeft = ({
                 
                 <ScorecardsNavGroup
                     handleHideShow={handleHideShow} 
-                    tabs={tabs} 
                     id="predictions"
                     label="Predictions"
                     active={activeNavGroups.predictions}
@@ -186,7 +180,6 @@ export const ScoringSidebarLeft = ({
                 </ScorecardsNavGroup>
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
-                    tabs={tabs} 
                     id="officialJudges"
                     label="Panelists"
                     active={activeNavGroups.officialJudges}

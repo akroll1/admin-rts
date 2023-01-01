@@ -1,3 +1,23 @@
+export enum TabsEnum {
+    ALL = "ALL",
+    ANALYTICS = "ANALYTICS",
+    CHAT = "CHAT",
+    INFO = "INFO",
+    SCORING = "SCORING",
+    TABLE = "TABLE",
+}
+
+export interface Tabs extends Record<TabsEnum, boolean>{}
+
+export const resetTabs = {
+    ALL: false,
+    ANALYTICS: false,
+    CHAT: false,
+    INFO: false,
+    SCORING: false,
+    TABLE: false,
+}
+
 export interface ChatMessage {
     action?: 'SEND_MESSAGE'
     Attributes?: Record<keyof ContentType, string>

@@ -5,14 +5,11 @@ import {
 } from '@chakra-ui/react'
 import { FighterSwipe } from '../fighter-swipe'
 import { FighterNamesHeading } from './fighter-name-heading'
-import { useGlobalStore } from '../../stores'
+import { TabsEnum, useGlobalStore } from '../../stores'
 import { UserScores } from './user-scores'
 import image from '../../image/boxing-background.png'
 
-export const ScoringMain = ({ 
-    isSubmitting,
-    tabs,
-}) => {
+export const ScoringMain = () => {
     const [userScoringComplete, setUserScoringComplete] = useState(false);
     const [evenRound, setEvenRound] = useState(false)
     const [isDisabled, setIsDisabled] = useState(false);
@@ -23,10 +20,12 @@ export const ScoringMain = ({
         activeGroupScorecard,
         fightComplete,
         fighterScores,
+        isSubmitting,
         lastScoredRound,
         scoringComplete,
         setScoringComplete,
         submitRoundScores,
+        tabs,
         totalRounds,
         userScorecard,
     } = useGlobalStore();
@@ -74,23 +73,11 @@ export const ScoringMain = ({
         setScoringComplete(scoringIsComplete)
     }
 
-    const handleAdjustScore = e => {
-        const { id } = e.currentTarget;
-        if(id === 'increment'){
-            if(notSelectedScore >= 10) return;
-            setNotSelectedScore(prev => prev + 1)
-        }
-        if(id === 'decrement'){
-            if(notSelectedScore <= 6) return;
-            setNotSelectedScore(prev => prev -1)
-        }
-    }
-
     
     return (
         <Flex 
             id="scoring_main"
-            display={tabs.scoring || tabs.all ? 'flex' : 'none'}
+            display={tabs[TabsEnum.SCORING] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             p={["0", "0"]} 
             flex="1 0 40%"
             m="auto"
@@ -99,7 +86,7 @@ export const ScoringMain = ({
             justifyContent="flex-start"
             w="100%"  
             position="relative"  
-            minH={tabs.info ? "75vh" : "100%"}
+            minH={tabs[TabsEnum.INFO] ? "75vh" : "100%"}
         >
             <Flex     
                 flexDir={["column"]} 
@@ -156,9 +143,9 @@ export const ScoringMain = ({
             </Flex>
             <UserScores
                 evenRound={evenRound}
-                handleAdjustScore={handleAdjustScore}
                 notSelectedScore={notSelectedScore}
                 selectedFighter={selectedFighter}
+                setNotSelectedScore={setNotSelectedScore}
                 setSelectedFighter={setSelectedFighter}
             />
             <Button

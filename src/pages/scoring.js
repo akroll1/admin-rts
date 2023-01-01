@@ -9,7 +9,7 @@ import {
 } from '../components/modals'
 import { ChatSidebar, ScoringSidebarLeft } from '../components/sidebars'
 import { ScoringMain, ScoringTabs } from '../components/scoring-main'
-import { useGlobalStore } from '../stores'
+import { TabsEnum, useGlobalStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import { useParams } from 'react-router'
 
@@ -17,28 +17,18 @@ const Scoring = props => {
 
     let { fightId, groupScorecardId } = useParams()
     const { 
-        activeGroupScorecard,
         chatScore,
         collateTableData,
         fetchBettingProps,
         fetchGroupScorecardSummary,
         fetchPanelProps,
-        fightComplete,
-        fighterScores,
         lastScoredRound,
         modals,
+        setTabs,
+        tabs,
         totalRounds,
     } = useGlobalStore();
 
-    const [notification, setNotification] = useState(true)
-
-    const [tabs, setTabs] = useState({
-        info: false,
-        scoring: true, 
-        table: false,
-        chat: false,
-        analytics: false
-    });
     const windowWidth = useWindowResize();
 
     useEffect(() => {
@@ -50,23 +40,9 @@ const Scoring = props => {
         // get window width size for scoring tabs.
         const getWindowWidth = () => {
             if(windowWidth >= 768){
-                setTabs({
-                    info: false,
-                    scoring: false, 
-                    table: false,
-                    chat: false,
-                    analytics: false,
-                    all: true
-                })
+                setTabs(TabsEnum.ALL)
             } else {
-                setTabs({
-                    info: false,
-                    scoring: true, 
-                    table: false,
-                    chat: false,
-                    analytics: false,
-                    all: false
-                })
+                setTabs(TabsEnum.SCORING)
             }
         }
         getWindowWidth();
@@ -85,11 +61,6 @@ const Scoring = props => {
         }
     },[chatScore])
 
-    const postNotification = () => {
-        setNotification(true)
-
-    }
-    
     return (
         <Flex 
             id="scoring"
@@ -106,9 +77,8 @@ const Scoring = props => {
             boxSizing='border-box'
         >       
             <Heading
-                tabs={tabs} 
-                centered={tabs.all ? true : false}
                 mb={["2","2","4"]}
+                display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}
             >
                 {`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
             </Heading>
@@ -119,35 +89,18 @@ const Scoring = props => {
             />
             <PredictionModal />
             <Flex 
-                display={windowWidth < 768 ? tabs.table ? 'none' : 'flex' : 'flex'} 
+                display={windowWidth < 768 ? tabs[TabsEnum.TABLE] ? 'none' : 'flex' : 'flex'} 
                 w="100%" 
                 minH="70vh"  
                 maxH="70vh"
             >
 
-                <ScoringSidebarLeft
-                    tabs={tabs}
-                />
-                <ScoringMain
-                    fightComplete={fightComplete}
-                    fighters={activeGroupScorecard?.fighters}
-                    fighterScores={fighterScores} 
-                    postNotification={postNotification}
-                    tabs={tabs}
-                    totalRounds={activeGroupScorecard?.fight?.totalRounds}
-                />
-                <ChatSidebar
-                    tabs={tabs}
-                />
+                <ScoringSidebarLeft />
+                <ScoringMain />
+                <ChatSidebar />
             </Flex>
-            <ScoringTable 
-                tabs={tabs} 
-            />
-
-            <ScoringTabs 
-                tabs={tabs} 
-                setTabs={setTabs} 
-            />
+            <ScoringTable />
+            <ScoringTabs />
         </Flex>
     )
 

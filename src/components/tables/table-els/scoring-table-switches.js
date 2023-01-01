@@ -3,14 +3,16 @@ import {
     FormLabel,
     Switch,
 } from '@chakra-ui/react'
+import { TabsEnum, useGlobalStore } from '../../../stores'
 
 export const ScoringTableSwitches = ({
     activeGroupScorecard,
     handleRealTimeSwitchClick,
     handleShowToCurrentRound,
     currentRound,
-    tabs
 }) => {
+
+    const { tabs } = useGlobalStore()
 
     return (
         <Flex
@@ -20,7 +22,7 @@ export const ScoringTableSwitches = ({
             justifyContent="flex-start"
             flexDir="column"
             pl="2"
-            display={tabs.all || tabs.table ? 'flex' : 'none'}
+            display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}
         >
             <Flex
                 alignItems="center"

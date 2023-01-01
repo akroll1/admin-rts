@@ -54,7 +54,7 @@ export const FighterSwipe = ({
                 >
                     <Center>
                         <Avatar 
-                            size={["md","md","lg", "xl"]} 
+                            size={["md","md","lg"]} 
                             _hover={{cursor: 'pointer'}} 
                         >
                             {(!evenRound && selectedFighter.fighterId === fighter.fighterId) && <AvatarBadge borderColor='papayawhip' bg='red.300' boxSize='1.25em' /> }
