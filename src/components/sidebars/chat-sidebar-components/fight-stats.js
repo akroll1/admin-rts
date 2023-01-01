@@ -20,8 +20,8 @@ export const FightStats = props => {
             console.log('STATS: ', stats)
             setFighters(stats[0].fighters);
             const obj = {
-                [stats[0].fighters[0]]: 0,
-                [stats[1].fighters[1]]: 0,
+                [stats[0]?.fighters[0]]: 0,
+                [stats[1]?.fighters[1]]: 0,
             };
             console.log('obj, 23: ', obj)
             // divide by total scorers...
