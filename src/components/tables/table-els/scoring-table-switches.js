@@ -71,8 +71,7 @@ export const ScoringTableSwitches = ({
                 <Switch
                     size="sm" 
                     colorScheme="blackAlpha.700"
-                    id='currentRound' 
-                    defaultChecked 
+                    id='showPanelists' 
                     // onChange={handleShowToMyRound}
                     isChecked={currentRound}
                 />

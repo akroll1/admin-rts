@@ -65,6 +65,7 @@ export const FightForm = () => {
             fighterIds: [fighterAId, fighterBId], 
             rounds: parseInt(form.rounds)
         })
+        // console.log('postObj: ', postObj)
         createFight(postObj)
     };
     

@@ -31,6 +31,7 @@ export const ScorecardsInvitationsBoard = () => {
     
     return (
         <Flex
+            id="scorecards_invitations"
             bg="transparent"
             position="relative"
             w="100%"
@@ -55,7 +56,7 @@ export const ScorecardsInvitationsBoard = () => {
             >
                 <InvitationsHeader
                     fontSize="xl"
-                    pendingInvites={userInvites?.length > 0}
+                    userInvites={userInvites}
                 />
             </Flex>
             <Flex
@@ -63,6 +64,8 @@ export const ScorecardsInvitationsBoard = () => {
                 bg="bg-surface"
                 boxShadow={useColorModeValue('sm', 'sm-dark')}
                 borderRadius="lg"
+                flexDir="column"
+                mb="4"
             >
                 { userInvites?.length > 0 && userInvites.map( (invite, _i) => {
                     const { 
@@ -83,6 +86,9 @@ export const ScorecardsInvitationsBoard = () => {
                             key={inviteId}
                             w="100%"
                             flexDirection="column"
+                            mb={["4"]}
+                            pb="8"
+                            borderBottom="1px solid lightgray"
                         >
                             <Flex
                                 flexDir="column"
@@ -224,28 +230,34 @@ export const InvitationsButtons = ({
 
 export const InvitationsHeader = ({ 
     fontSize,
-    pendingInvites
+    userInvites
   }) => {
+    const title = userInvites.length > 0 ? `${userInvites.length} Invitations` : `No Invitations`;
     return (
       <Flex 
         display="inline-flex"
         alignItems="center"
         justifyContent="center"
+        w="100%"
         pb="0"
+        m="auto"
       >
         <Heading
-          fontSize={fontSize}
+            w="auto"
+            fontSize={fontSize}
         >
-          Invitations
+          {title}
         </Heading>
-        { pendingInvites && 
+        { userInvites.length && 
           <Alert 
-            p="1"
+            p="2"
             status="error"
             bg="transparent"
-            m="auto"
+            w="auto"
+            size="lg"
+            
           >
-            <AlertIcon w="3" p="0" mt="-2" ml="-1" />
+            <AlertIcon w="4" mt="-2" ml="-2" />
           </Alert>
         }
       </Flex>

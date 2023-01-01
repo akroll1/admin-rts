@@ -17,6 +17,7 @@ export const GlobalNotification = () => {
     } = useGlobalStore()
 
     const [displayNotification, setDisplayNotification] = useState(true)
+    const [notications, setNotifications] = useState([])
 
     useEffect(() => {
         if(chatMessage?.body){

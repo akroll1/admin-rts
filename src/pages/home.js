@@ -51,7 +51,7 @@ const Home = () => {
               color='fsl-body-text'
               maxW={["85%", "60%", "80%"]}
             >
-              Score fights and compete against other boxing fans. Play with a group - 
+              Make predictions, score fights and compete against other boxing fans. Play with a group - 
                 <Text
                   as="span"
                   lineHeight="1.5"
@@ -91,7 +91,7 @@ const Home = () => {
         <Divider my={["8"]} 
           opacity={1} 
         />
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: '12', md: '8' }}>
+        <SimpleGrid columns={[ "1","1","3" ]} spacing={{ base: '8', md: '4' }} maxW={["100%","70%", "100%" ]}>
           <Feature title="Score Fights" icon={<EditIcon fontSize="1.5rem" />}>
             Create a group and score fights together- live and in real time!
           </Feature>

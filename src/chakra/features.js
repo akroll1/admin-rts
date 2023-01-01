@@ -23,7 +23,7 @@ export const Feature = (props) => {
         rounded="md" 
         color="white" 
         bg="#525252"
-        mt="1"
+        mt={["1px"]}
       >
         {icon}
       </Center>
@@ -33,7 +33,7 @@ export const Feature = (props) => {
           // fontSize={["2xl", "2xl", "xl"]} 
           fontSize={["2xl", "2xl"]} 
           letterSpacing="2px"
-          // mb="-2"
+          mb={["-2", "-1", "-1"]}
         >
           {title}
         </Heading>
@@ -41,7 +41,8 @@ export const Feature = (props) => {
           pr="6" 
           color={mode('gray.600', 'gray.400')} 
           lineHeight="tall"
-          fontSize="xl"
+          fontSize="lg"
+          mt={["0","-0.1rem"]}
         >
           {children}
         </Text>

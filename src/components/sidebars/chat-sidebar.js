@@ -85,6 +85,7 @@ export const ChatSidebar = ({
     };
 
     const handleSendMessageViaChat = (e, contentType) => {
+        if(!message) return
         // const sanitizedMessage = message.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
         let data = {
             requestId: uuidv4(),
@@ -106,16 +107,16 @@ export const ChatSidebar = ({
 
     const handleReceiveMessage = data => {
         console.log('data- 111: ', data)
-        const { Attributes, Content, Sender, Type } = data;
+        const { Attributes, Content, Id, Sender, Type } = data;
 
         if(Content === ContentType.CALLING_IT){
             const message = Attributes[ContentType.CALLING_IT]
             setGlobalNotification({ heading: Sender.Attributes.username, body: message })
-            setChatMessages(prev => [{ message, username: Sender.Attributes.username, type: Type }, ...prev ]);
+            setChatMessages(prev => [{ Id, message, type: Type, username: Sender.Attributes.username }, ...prev ]);
         }
         if(Content === ContentType.GROUP){
             const message = Attributes[ContentType.GROUP]
-            setChatMessages(prev => [{ message, username: Sender.Attributes.username, type: Type }, ...prev ]);            
+            setChatMessages(prev => [{ Id, message, type: Type, username: Sender.Attributes.username }, ...prev ]);
         }
     };
     
@@ -228,202 +229,162 @@ export const ChatSidebar = ({
                     minH="100%"
                     maxH="100%"
                 >
-                    <TabPanel
-                        p="0"
+                    <Flex
+                        id="group_chat"
                         minH="100%"
                         maxH="100%"
-                        justifyContent="space-between"
-                        alignItems="center"
+                        flexDir="column"
                         w="100%"
-                        flexDirection="column"
-                    >        
+                        overflow="scroll"
+                        alignItems="center"
+                        justifyContent="flex-end"
+                    >
                         <Flex
-                            id="group_chat"
-                            minH="100%"
-                            maxH="100%"
-                            flexDir="column"
+                            minH="70%"
+                            maxH="70%"
+                            id="scroll-top"
+                            overflowY="scroll"
+                            maxW="100%"
+                            flexDir="column-reverse"
+                            justifyContent="flex-start"
+                            borderRadius="md"
+                            p="4"
+                            color="white" 
+                            fontSize="sm"
                             w="100%"
-                            overflow="scroll"
-                            alignItems="center"
-                            justifyContent="flex-end"
-                        >
-                            <Flex
-                                minH="70%"
-                                maxH="70%"
-                                id="scroll-top"
-                                overflowY="scroll"
-                                maxW="100%"
-                                flexDir="column-reverse"
-                                justifyContent="flex-start"
-                                borderRadius="md"
-                                p="4"
-                                color="white" 
-                                fontSize="sm"
-                                w="100%"
-                            >    
-                                {renderMessages()}
-                            </Flex>
-                            <Flex ref={messagesEndRef} />
-                            <Flex
-                                h="auto"
-                                w="100%"
-                                flexDir="column"
-                                alignItems="center"
-                                justifyContent="flex-end"
-                                pb="4"
-                            >
-                                <Input
-                                    id="group_input"
-                                    w="90%"
-                                    bg="#202020"
-                                    m="auto"
-                                    mb="1"
-                                    as="input"
-                                    size="sm"
-                                    type="text"
-                                    color="whiteAlpha.900"
-                                    _placeholder={{ color: 'whiteAlpha.700' }}
-                                    placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
-                                    isDisabled={!socketActive()}
-                                    value={message}
-                                    maxLength={150}
-                                    onChange={handleChatChange}
-                                    onKeyDown={handleChatKeydown}
-                                />
-                                <ButtonGroup 
-                                    px="4" 
-                                    w="100%"
-                                    mt="2"
-                                >
-                                    <Button     
-                                        w="100%"
-                                        m="1"
-                                        size="sm"
-                                        isLoading={isSubmitting} 
-                                        loadingText="Joining..." 
-                                        onClick={socketActive() ? e => handleSendMessageViaChat(e, ContentType.GROUP) : handleRequestToken} 
-                                        variant="solid"
-                                    >
-                                        {socketActive() ? `Send` : `Join Chat`}
-                                    </Button>
-                                    <Button     
-                                        w="100%"
-                                        minH="1.5rem"
-                                        m="1"
-                                        p="1"
-                                        size="sm"
-                                        // disabled={!socketActive() || callingItDisabled}
-                                        loadingText="Joining..." 
-                                        onClick={e => handleSendMessageViaChat(e, ContentType.CALLING_IT)} 
-                                        variant="outline"
-                                        colorScheme="red"
-                                        color='#dadada'
-                                    >
-                                        Calling It
-                                    </Button>
-                                </ButtonGroup>
-                            </Flex>
+                        >    
+                            {renderMessages()}
                         </Flex>
-                    </TabPanel>
-                    <TabPanel
-                        p="0"
-                        minH="100%"
-                        maxH="100%"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        w="100%"
-                        flexDirection="column"
-                    >        
-                        <p>hey</p>
-                        {/* <Flex
-                            id="panelist_chat"
-                            minH="100%"
-                            maxH="100%"
-                            flexDir="column"
+                        <Flex ref={messagesEndRef} />
+                        <Flex
+                            h="auto"
                             w="100%"
-                            overflow="scroll"
+                            flexDir="column"
                             alignItems="center"
                             justifyContent="flex-end"
+                            pb="4"
                         >
-                            <Flex
-                                minH="70%"
-                                maxH="70%"
-                                id="scroll-top"
-                                overflowY="scroll"
-                                maxW="100%"
-                                flexDir="column-reverse"
-                                justifyContent="flex-start"
-                                borderRadius="md"
-                                p="4"
-                                color="white" 
-                                fontSize="sm"
-                                w="100%"
-                            >    
-                                {renderMessages()}  
+                            { tabIndex == "0" &&
+                                <>
+                                    <Input
+                                        id="group_input"
+                                        w="90%"
+                                        bg="#202020"
+                                        m="auto"
+                                        mb="1"
+                                        as="input"
+                                        size="sm"
+                                        type="text"
+                                        color="whiteAlpha.900"
+                                        _placeholder={{ color: 'whiteAlpha.700' }}
+                                        placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
+                                        isDisabled={!socketActive()}
+                                        value={message}
+                                        maxLength={150}
+                                        onChange={handleChatChange}
+                                        onKeyDown={handleChatKeydown}
+                                    />
+                                    <ButtonGroup 
+                                        px="4" 
+                                        w="100%"
+                                        mt="2"
+                                    >
+                                        <Button     
+                                            w="100%"
+                                            m="1"
+                                            size="sm"
+                                            isLoading={isSubmitting} 
+                                            loadingText="Joining..." 
+                                            onClick={socketActive() ? e => handleSendMessageViaChat(e, ContentType.GROUP) : handleRequestToken} 
+                                            variant="solid"
+                                        >
+                                            {socketActive() ? `Send` : `Join Chat`}
+                                        </Button>
+                                        <Button     
+                                            w="100%"
+                                            minH="1.5rem"
+                                            m="1"
+                                            p="1"
+                                            size="sm"
+                                            // disabled={!socketActive() || callingItDisabled}
+                                            loadingText="Joining..." 
+                                            onClick={e => handleSendMessageViaChat(e, ContentType.CALLING_IT)} 
+                                            variant="outline"
+                                            colorScheme="red"
+                                            color='#dadada'
+                                        >
+                                            Calling It
+                                        </Button>
+                                    </ButtonGroup>
+                                </>
+                            }
 
-                            </Flex>
-                            <Flex ref={messagesEndRef} />
-                            <Flex
-                                h="auto"
-                                w="100%"
-                                flexDir="column"
-                                alignItems="center"
-                                justifyContent="flex-end"
-                                pb="4"
-                            >
-                                <Input
-                                    id="group_input"
-                                    w="90%"
-                                    bg="#202020"
-                                    m="auto"
-                                    mb="1"
-                                    as="input"
+                            { isPanelist && tabIndex == "1" &&
+                                <>
+                                    <Input
+                                        id="group_input"
+                                        w="90%"
+                                        bg="#202020"
+                                        m="auto"
+                                        mb="1"
+                                        as="input"
+                                        size="sm"
+                                        type="text"
+                                        color="whiteAlpha.900"
+                                        _placeholder={{ color: 'whiteAlpha.700' }}
+                                        placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
+                                        isDisabled={!socketActive()}
+                                        value={message}
+                                        maxLength={150}
+                                        onChange={handleChatChange}
+                                        onKeyDown={handleChatKeydown}
+                                    />
+                                    <ButtonGroup 
+                                        px="4" 
+                                        w="100%"
+                                        mt="2"
+                                    >
+                                        <Button     
+                                            w="100%"
+                                            m="1"
+                                            size="sm"
+                                            isLoading={isSubmitting} 
+                                            loadingText="Joining..." 
+                                            onClick={socketActive() ? e => handleSendMessageViaChat(e, ContentType.GROUP) : handleRequestToken} 
+                                            variant="solid"
+                                        >
+                                            {socketActive() ? `Panelist Chat` : `Join Chat`}
+                                        </Button>
+                                        <Button     
+                                            w="100%"
+                                            minH="1.5rem"
+                                            m="1"
+                                            p="1"
+                                            size="sm"
+                                            // disabled={!socketActive() || callingItDisabled}
+                                            loadingText="Joining..." 
+                                            onClick={e => handleSendMessageViaChat(e, ContentType.CALLING_IT)} 
+                                            variant="outline"
+                                            colorScheme="red"
+                                            color='#dadada'
+                                        >
+                                            Calling It
+                                        </Button>
+                                    </ButtonGroup>
+                                </>
+                            }
+
+                            { tabIndex == "1" && !isPanelist &&
+                                <Heading 
+                                    as="h4" 
                                     size="sm"
-                                    type="text"
-                                    color="whiteAlpha.900"
-                                    _placeholder={{color: 'whiteAlpha.700'}}
-                                    placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
-                                    isDisabled={!socketActive()}
-                                    value={chatMessage}
-                                    maxLength={150}
-                                    onChange={handleChatChange}
-                                    onKeyDown={handleChatKeydown}
-                                />
-                                <ButtonGroup 
-                                    px="4" 
-                                    w="100%"
-                                    mt="2"
                                 >
-                                    <Button     
-                                        w="100%"
-                                        m="1"
-                                        size="sm"
-                                        isLoading={isSubmitting} 
-                                        loadingText="Joining..." 
-                                        // onClick={socketActive() ? () => handleSendMessage('CHAT') : handleRequestToken} 
-                                        variant="solid"
-                                    >
-                                        {socketActive() ? `Send` : `Join Chat`}
-                                    </Button>
-                                    <Button     
-                                        w="100%"
-                                        minH="1.5rem"
-                                        m="1"
-                                        p="1"
-                                        size="sm"
-                                        // disabled={!socketActive() || callingItDisabled}
-                                        loadingText="Joining..." 
-                                        // onClick={() => handleSendMessage('PREDICTION')} 
-                                        variant="outline"
-                                        colorScheme="red"
-                                        color='#dadada'
-                                    >
-                                        Calling It
-                                    </Button>
-                                </ButtonGroup>
-                            </Flex>
-                        </Flex> */}
-                    </TabPanel>
+                                    Panelists Chat
+                                </Heading>
+                            }
+
+                        </Flex>
+                    </Flex>
                 </TabPanels>
             </Tabs>
         </Flex>
