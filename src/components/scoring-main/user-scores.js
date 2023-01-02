@@ -131,7 +131,7 @@ export const UserScores = ({
                         const setLastRowColor = fighterId => {
                             if(!selectedFighterId) return 'whiteAlpha.600'
                             if(score == "10") return 'whiteAlpha.800'
-                            return fighterId === selectedFighterId ? 'whiteAlpha.900' : 'gray.500'
+                            return fighterId === selectedFighterId ? 'whiteAlpha.900' : 'whiteAlpha.600'
                         }
                         const color = setLastRowColor(fighterId);
 
