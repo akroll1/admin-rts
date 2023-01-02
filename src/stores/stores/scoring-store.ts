@@ -121,12 +121,14 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         set({ bettingProps })
     },
     fetchGroupScorecardSummary: async (fightId: string, groupScorecardId: string) => {
+        get().setIsSubmitting(true)
         const res = await axios.get(`${url}/me/group-scorecards/${groupScorecardId}/${fightId}`, await configureAccessToken() );
         if(res.data === 'Token expired!'){
             get().setModals('expiredTokenModal', true)
             return
         }
         const data = res.data as GroupScorecardSummary;
+        get().setIsSubmitting(false)
         console.log('DATA- groupScorecardSummary: ', data);
         
         const [userScorecard] = data.scorecards.filter( scorecard => scorecard.scorecardId === `${get().user.attributes.sub}-${fightId}`)

@@ -179,7 +179,7 @@ export const ChatSidebar = () => {
             border="1px solid #252525"
             id="chat-sidebar"
             w="100%"
-            flex={["1 0 28%"]} 
+            flex={["1 0 30%"]} 
             maxW="100%" 
             borderRadius="md" 
             ref={chatRef}
@@ -188,6 +188,7 @@ export const ChatSidebar = () => {
             justifyContent="space-between"
             flexDir="column" 
             minH="100%"
+            pb="4"
         >
             <Tabs 
                 w="100%"

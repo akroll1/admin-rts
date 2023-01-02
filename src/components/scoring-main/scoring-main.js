@@ -79,7 +79,7 @@ export const ScoringMain = () => {
             id="scoring_main"
             display={tabs[TabsEnum.SCORING] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             p={["0", "0"]} 
-            flex="1 0 40%"
+            flex="1 0 37%"
             m="auto"
             mt="0"
             flexDir="column" 

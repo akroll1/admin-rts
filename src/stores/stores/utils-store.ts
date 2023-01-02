@@ -84,7 +84,6 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
         }
     },
     setTabs: (tab: TabsEnum) => {
-        console.log('tab: ', tab)
         const tabs = { ...resetTabs, [tab]: true }
         set({ tabs })
     },
