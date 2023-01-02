@@ -91,7 +91,7 @@ const Home = () => {
         <Divider my={["8"]} 
           opacity={1} 
         />
-        <SimpleGrid columns={[ "1","1","3" ]} spacing={{ base: '8', md: '4' }} maxW={["100%","70%", "100%" ]}>
+        <SimpleGrid columns={[ "1","2","3" ]} spacing={['8','2']} maxW={["100%"]}>
           <Feature title="Score Fights" icon={<EditIcon fontSize="1.5rem" />}>
             Create a group and score fights together- live and in real time!
           </Feature>

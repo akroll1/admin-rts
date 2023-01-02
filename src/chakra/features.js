@@ -14,6 +14,7 @@ export const Feature = (props) => {
       w="100%" 
       spacing="6" 
       pl="2"
+      mb={["0", "8"]}
     >
       <Center 
         aria-hidden 
@@ -40,7 +41,7 @@ export const Feature = (props) => {
         <Text 
           pr="6" 
           color={mode('gray.600', 'gray.400')} 
-          lineHeight="tall"
+          lineHeight="short"
           fontSize="lg"
           mt={["0","-0.1rem"]}
         >
