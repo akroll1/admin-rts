@@ -4,7 +4,7 @@ export interface TokenConfig {
 
 interface Token extends Record<string, string>{}
 
-export interface User {
+export interface MyAccountFormUser {
     email?: string
     email_verified?: boolean
     groups?: string[]
@@ -18,4 +18,14 @@ export interface User {
     isPublic?: boolean
     isSuperAdmin?: boolean
     lastName?: string
+}
+export interface User {
+    email?: string
+    groups?: string[]
+    isLoggedIn: boolean
+    sub?: string
+    username?: string
+    isPanelist?: boolean
+    isPublic?: boolean
+    isSuperAdmin?: boolean
 }

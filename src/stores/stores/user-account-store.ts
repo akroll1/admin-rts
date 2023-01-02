@@ -19,7 +19,7 @@ export const userAccountStoreSlice: StateCreator<GlobalStoreState, [], [], UserA
         const res = await axios.get(`${url}/users/${get().user.attributes.sub}`,await configureAccessToken() )
         if(res.data === 'No user found.'){
             const user = get().user
-            get().createUser({ sub: user.sub, email: user.email, username: user.username })
+            // get().createUser({ sub: user.sub, email: user.email, username: user.username })
             return
         }
         const user = res.data as User

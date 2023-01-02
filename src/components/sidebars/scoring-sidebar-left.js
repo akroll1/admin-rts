@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { 
     Collapse, 
     Flex, 
+    Text,
 } from '@chakra-ui/react'
 import { ScoringSidebarNavItem } from './scoring-sidebar/scoring-sidebar-nav-item'
 import { ScorecardsNavGroup } from './scorecards-sidebar-components/scorecards-boards/scorecards-nav-group'
@@ -18,6 +19,7 @@ import { MdOnlinePrediction } from 'react-icons/md'
 import { parseEpoch, transformedWeightclass } from '../../utils'
 import { TabsEnum, useGlobalStore } from '../../stores'
 import { FighterSelectionSwipe } from '../forms/my-panels-form-els/fighter-selection-swipe'
+import { FaRegQuestionCircle } from 'react-icons/fa'
 
 export const ScoringSidebarLeft = () => {
     const {
@@ -200,7 +202,34 @@ export const ScoringSidebarLeft = () => {
                         </Collapse>
                     </Flex>
                 </ScorecardsNavGroup>
+                <Flex
+                    mt="2"
+                    p="2"
+                    pt="0"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    color={'active' ? 'white' : 'whiteAlpha.800'}
+                    cursor="pointer"
+                    userSelect="none"
+                    rounded="md"
+                    transition="all 0.1s"
+                    // bg={active ? 'gray.700' : ''}
+                    _hover={{
+                        color: 'white',
+                    }}
+                    _active={{
+                        bg: 'gray.600',
+                    }}
+                >
+                    <FaRegQuestionCircle />
+                    <Text
+                        ml="2"
+                    >
+                        Help Center
+                    </Text>
+                </Flex>
             </Flex>
         </Flex>
+
     )
 }
