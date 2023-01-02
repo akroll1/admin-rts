@@ -27,21 +27,35 @@ export const UserScores = ({
     const [selectedFighterId, setSelectedFighterId] = useState('')
 
     useEffect(() => {
-        if(activeGroupScorecard?.fighters?.length > 0 && userScorecard?.scores?.length > 0){
-            const roundToAdd = userScorecard.scores[0]
-            const tempScores = userScorecard.scores.concat(roundToAdd)
-            setScores(tempScores)
+        if(activeGroupScorecard?.fighters?.length > 0){
+            if(userScorecard?.scores?.length > 0){
+                const roundToAdd = userScorecard.scores[0]
+                const tempScores = userScorecard.scores.concat(roundToAdd)
+                setScores(tempScores)
+            }
+            
+            if(userScorecard?.scores?.length === 0){
+                
+                const [fighter1, fighter2] = activeGroupScorecard.fighters;
+                const createScoreRow = {
+                    [fighter1.fighterId]: 10,
+                    [fighter2.fighterId]: 10,
+                }
+                setScores([createScoreRow])
+            }
             setFighter1Id(activeGroupScorecard.fighters[0].fighterId);
             setFighter2Id(activeGroupScorecard.fighters[1].fighterId);
         }
     },[activeGroupScorecard, userScorecard])
 
     useEffect(() => {
+
         if(selectedFighter?.fighterId){
             setSelectedFighterId(selectedFighter.fighterId)
             return
         }
         setSelectedFighterId('')
+
     },[selectedFighter])
 
     const clearSelectedFighter = () => {
@@ -70,8 +84,9 @@ export const UserScores = ({
             alignItems="center"
             justifyContent="center"
         >
-            { scores.length > 0 && scores.map( (roundObj, _i) => {
-                
+
+            { scores?.map( (roundObj, _i) => {
+
                 const lastRow = (_i+1 ) === scores.length;
                 const setScores = currentFighterId => {
                     if(currentFighterId == selectedFighterId){
@@ -84,35 +99,41 @@ export const UserScores = ({
 
                 const score1 = setScores(fighter1Id)
                 const score2 = setScores(fighter2Id)
+                
+                const renderData = fighterId => {
+                    const setColor = fighterId => {
+                        if(!selectedFighterId){
+                            if(score1 > score2){      
+                                return !selectedFighterId ? 'whiteAlpha.300' : 'yellow.600';
+                            }
 
-                const renderData = currentFighterId => {
-
+                        }
+                    }
                     let fighterData = {
                         score1,
                         score2,
-                        score1Color: score1 >= score2 ? 'whiteAlpha.800' : 'yellow.300',
-                        score2Color: score2 >= score1 ? 'whiteAlpha.800' : 'yellow.300',
+                        score1Color: score1 >= score2 ? selectedFighter ? 'whiteAlpha.700' : 'whiteAlpha.800' : 'yellow.300',
+                        score2Color: score2 >= score1 ? selectedFighter ? 'whiteAlpha.700' : 'whiteAlpha.800' : 'yellow.300',
                     }
 
                     if(lastRow){
-
-                        const setLastRow = currentFighterId => {
+                        const setLastRow = fighterId => {
                             if(!selectedFighterId){
                                 return "10"
                             }
-                            if(selectedFighterId == currentFighterId){
+                            if(selectedFighterId == fighterId){
                                 return "10";
                             } 
                             return notSelectedScore;    
                         } 
-                        const score = setLastRow(currentFighterId)
+                        const score = setLastRow(fighterId)
 
-                        const setLastRowColor = currentFighterId => {
-                            if(!selectedFighterId) return 'whiteAlpha.700'
+                        const setLastRowColor = fighterId => {
+                            if(!selectedFighterId) return 'whiteAlpha.600'
                             if(score == "10") return 'whiteAlpha.800'
-                            return currentFighterId === selectedFighterId ? 'whiteAlpha.900' : 'yellow.300'
+                            return fighterId === selectedFighterId ? 'whiteAlpha.900' : 'gray.500'
                         }
-                        const color = setLastRowColor(currentFighterId);
+                        const color = setLastRowColor(fighterId);
 
                         Object.assign(fighterData, {
                             score1: score,
@@ -124,6 +145,7 @@ export const UserScores = ({
                     }
                     return fighterData
                 }
+
                 const fighter1Data = renderData(fighter1Id)
                 const fighter2Data = renderData(fighter2Id)
                 const fighter1ChevronColor = evenRound  

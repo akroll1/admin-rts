@@ -76,6 +76,7 @@ export const ScoringSidebarLeft = () => {
             borderRadius="md"
             direction="column" 
             p="1" 
+            pb="4"
             bg={tabs[TabsEnum.INFO] ? "inherit" : "fsl-sidebar-bg"}
             color={tabs[TabsEnum.INFO] ? "#dadada" : "#c8c8c8"}
             fontSize="sm"
@@ -107,7 +108,6 @@ export const ScoringSidebarLeft = () => {
                 overflowY="scroll" 
                 w="100%"
             >
-                
                 <ScorecardsNavGroup 
                     id="title"
                     label={activeGroupScorecard?.fight?.fightQuickTitle ? activeGroupScorecard?.fight?.fightQuickTitle : ''}

@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Flex, Heading } from '@chakra-ui/react'
+import { 
+    Flex, 
+    Heading,
+    Skeleton,
+    Stack
+} from '@chakra-ui/react'
 import { ScoringTable } from '../components/tables'
 import { 
     AddGuestJudgeModal, 
@@ -22,6 +27,7 @@ const Scoring = props => {
         fetchBettingProps,
         fetchGroupScorecardSummary,
         fetchPanelProps,
+        isSubmitting,
         lastScoredRound,
         modals,
         setTabs,
@@ -91,12 +97,32 @@ const Scoring = props => {
             <Flex 
                 display={windowWidth < 768 ? tabs[TabsEnum.TABLE] ? 'none' : 'flex' : 'flex'} 
                 w="100%" 
-                minH="70vh"  
+                h="auto"
                 maxH="70vh"
+                mb="4"
             >
 
                 <ScoringSidebarLeft />
-                <ScoringMain />
+                { isSubmitting 
+                    ?
+                        <Stack 
+                            w="100%"
+                            p="1"
+                            borderRadius="3px"
+                        >
+                            <Skeleton height='20%' />
+                            <Skeleton height='50%' />
+                            <Skeleton height='30%' />
+                            {/* <Skeleton height='10%' />
+                            <Skeleton height='10%' />
+                            <Skeleton height='10%' />
+                            <Skeleton height='10%' />
+                            <Skeleton height='10%' />
+                            <Skeleton height='10%' /> */}
+                        </Stack> 
+                    :
+                        <ScoringMain />
+                }
                 <ChatSidebar />
             </Flex>
             <ScoringTable />

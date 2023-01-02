@@ -19,22 +19,19 @@ export const FightStats = props => {
         if(stats?.length > 0){
             console.log('STATS: ', stats)
             setFighters(stats[0].fighters);
+            const [fighter1, fighter2] = stats[0].fighters;
             const obj = {
-                [stats[0]?.fighters[0]]: 0,
-                [stats[1]?.fighters[1]]: 0,
+                [fighter1]: 0,
+                [fighter2]: 0,
             };
-            console.log('obj, 23: ', obj)
+            console.log('obj, 26 ', obj)
             // divide by total scorers...
 
             const getMappedScoresArr = stats?.map( (statObj, _i) => statObj.mappedScores)
                 .map( score => {
                     return score.reduce( (acc, roundObj, _i) => {
-                        const fighter1 = stats[0].fighters[0];
-
-                        const fighter2 = stats[1].fighters[1];
-        
+                    
                         if(roundObj.round == [_i+1]){
-
                             const temp = {
                                 ['Round_'+roundObj.round]: {
                                     [fighter1]: acc[fighter1] += roundObj[fighter1],
