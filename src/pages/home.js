@@ -90,7 +90,7 @@ const Home = () => {
         </Stack>
         <Divider 
           opacity={1} 
-          my={["8", "12", "16"]}
+          my={["8", "12", "16", "12"]}
         />
         <SimpleGrid columns={[ "1","2","3" ]} spacing={['8','2']} maxW={["100%"]}>
           <Feature title="Score Fights" icon={<EditIcon fontSize="1.5rem" />}>
