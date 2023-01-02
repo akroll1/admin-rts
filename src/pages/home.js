@@ -44,7 +44,7 @@ const Home = () => {
             >
 
             <Text 
-              lineHeight="1.5"
+              lineHeight="1.2"
               fontSize="xl" 
               mt="1" 
               pr="4"
@@ -74,7 +74,7 @@ const Home = () => {
           <Center 
             flex="1 0 60%" 
             shadow="lg" 
-            maxW={{ lg: 'xl' }}
+            maxW={['xl']}
           >
             <Img
               borderRadius="5"
@@ -88,8 +88,9 @@ const Home = () => {
             />
           </Center>
         </Stack>
-        <Divider my={["8"]} 
+        <Divider 
           opacity={1} 
+          my={["8", "12", "16"]}
         />
         <SimpleGrid columns={[ "1","2","3" ]} spacing={['8','2']} maxW={["100%"]}>
           <Feature title="Score Fights" icon={<EditIcon fontSize="1.5rem" />}>
