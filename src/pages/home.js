@@ -89,6 +89,8 @@ const Home = () => {
           </Center>
         </Stack>
         <Divider 
+          w={["90%","90%","90%","90%"]}
+          m="auto"
           opacity={1} 
           my={["8", "12", "16", "12"]}
         />
