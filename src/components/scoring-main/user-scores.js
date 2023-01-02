@@ -214,7 +214,7 @@ export const UserScores = ({
                                 ? 
                                     <Heading 
                                         as="h3" 
-                                        size="xl"
+                                        size="lg"
                                         color={selectedFighter ? "red.500" : 'red.900'}
                                         cursor="pointer"
                                         _hover={{color: 'red.600'}}

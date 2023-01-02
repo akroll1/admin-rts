@@ -113,12 +113,6 @@ const Scoring = props => {
                             <Skeleton height='20%' />
                             <Skeleton height='50%' />
                             <Skeleton height='30%' />
-                            {/* <Skeleton height='10%' />
-                            <Skeleton height='10%' />
-                            <Skeleton height='10%' />
-                            <Skeleton height='10%' />
-                            <Skeleton height='10%' />
-                            <Skeleton height='10%' /> */}
                         </Stack> 
                     :
                         <ScoringMain />

@@ -51,7 +51,7 @@ export const ScoringSidebarNavItem = props => {
                 {icon}
             </Flex>
             <Flex 
-                p="1"
+                pl="1"
                 pb="0"
                 w="100%"
                 fontSize="1rem" 

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useInsertionEffect} from 'react'
 import { Box, Divider, Flex, Link, Spacer, Stack } from '@chakra-ui/react'
 import { SettingsIcon } from '@chakra-ui/icons'
-import { FaListOl, FaEdit, FaRegBell, FaRegChartBar, FaRegQuestionCircle, FaUser, FaUserFriends } from 'react-icons/fa'
+import { FaListOl, FaEdit, FaRegBell, FaUser, FaUserFriends } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
 import { CreateGroupScorecard } from './create-scorecard'
@@ -39,7 +39,7 @@ const Dashboard = () => {
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
     { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound-list' },
-    { value: "ACCOUNT", label:"Account Settings", type: 'User', icon: SettingsIcon, link: '/dashboard/account' },
+    { value: "ACCOUNT", label:"Account", type: 'User', icon: SettingsIcon, link: '/dashboard/account' },
   ]);
 
   useEffect(() => {
@@ -137,11 +137,6 @@ const Dashboard = () => {
               link="#" 
               label="Notifications" 
               icon={FaRegBell} 
-            />
-            <NavLinkDashboard 
-              link="#" 
-              label="Help Center" 
-              icon={FaRegQuestionCircle} 
             />
             <NavLinkDashboard 
               onClick={signOut}
