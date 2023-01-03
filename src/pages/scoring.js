@@ -43,7 +43,6 @@ const Scoring = props => {
     },[])
 
     useEffect(() => {
-        // get window width size for scoring tabs.
         const getWindowWidth = () => {
             if(windowWidth >= 768){
                 setTabs(TabsEnum.ALL)
@@ -76,15 +75,18 @@ const Scoring = props => {
             alignItems="center" 
             justifyContent="center" 
             margin="auto" 
-            p="2"
+            p={["1", "2", "4"]}
+            pt={["2", "4", "8", "12"]}
             bg="transparent"
             position="relative"
             maxW="100%"
             boxSizing='border-box'
+            overflow="hidden"
+            flex="1"
         >       
             <Heading
                 mb={["2","2","4"]}
-                display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}
+                display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE]  || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             >
                 {`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
             </Heading>
@@ -95,28 +97,16 @@ const Scoring = props => {
             />
             <PredictionModal />
             <Flex 
+                boxSizing="border-box"
                 display={windowWidth < 768 ? tabs[TabsEnum.TABLE] ? 'none' : 'flex' : 'flex'} 
+                flexWrap="wrap"
                 w="100%" 
-                h="auto"
-                maxH="70vh"
+                maxW="100%"
+                maxH={["100vh", "60vh", "70vh"]}
                 mb="4"
             >
-
                 <ScoringSidebarLeft />
-                { isSubmitting 
-                    ?
-                        <Stack 
-                            w="100%"
-                            p="1"
-                            borderRadius="3px"
-                        >
-                            <Skeleton height='20%' />
-                            <Skeleton height='50%' />
-                            <Skeleton height='30%' />
-                        </Stack> 
-                    :
-                        <ScoringMain />
-                }
+                <ScoringMain />
                 <ChatSidebar />
             </Flex>
             <ScoringTable />

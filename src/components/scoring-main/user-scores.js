@@ -1,147 +1,91 @@
 import { useEffect, useState } from 'react'
-import { Flex, Heading } from '@chakra-ui/react'
+import {
+    Flex, 
+    Heading 
+} from '@chakra-ui/react'
 import { useGlobalStore } from "../../stores"
 import { 
     ChevronLeftIcon, 
     ChevronRightIcon, 
     RepeatIcon,
 } from '@chakra-ui/icons'
-import { createImportSpecifier } from 'typescript'
+import { GiConsoleController } from 'react-icons/gi'
 
 export const UserScores = ({
+    clearSelectedFighter,
     evenRound,
-    notSelectedScore,
+    fighter1Id,
+    fighter2Id,
+    handleAdjustScore,
     selectedFighter,
-    setNotSelectedScore,
-    setSelectedFighter
 }) => {
 
     const { 
-        activeGroupScorecard,
         userScorecard,
     } = useGlobalStore()
 
-    const [scores, setScores] = useState([])
-    const [fighter1Id, setFighter1Id] = useState('')
-    const [fighter2Id, setFighter2Id] = useState('')
     const [selectedFighterId, setSelectedFighterId] = useState('')
 
     useEffect(() => {
-        if(activeGroupScorecard?.fighters?.length > 0){
-            if(userScorecard?.scores?.length > 0){
-                const roundToAdd = userScorecard.scores[0]
-                const tempScores = userScorecard.scores.concat(roundToAdd)
-                setScores(tempScores)
-            }
-            
-            if(userScorecard?.scores?.length === 0){
-                
-                const [fighter1, fighter2] = activeGroupScorecard.fighters;
-                const createScoreRow = {
-                    [fighter1.fighterId]: 10,
-                    [fighter2.fighterId]: 10,
-                }
-                setScores([createScoreRow])
-            }
-            setFighter1Id(activeGroupScorecard.fighters[0].fighterId);
-            setFighter2Id(activeGroupScorecard.fighters[1].fighterId);
-        }
-    },[activeGroupScorecard, userScorecard])
-
-    useEffect(() => {
-
         if(selectedFighter?.fighterId){
             setSelectedFighterId(selectedFighter.fighterId)
             return
         }
         setSelectedFighterId('')
-
     },[selectedFighter])
-
-    const clearSelectedFighter = () => {
-        setSelectedFighter('')
-        setNotSelectedScore('9')
-    }
-
-    const handleAdjustScore = (e,fighterId) => {
-        const { id } = e.currentTarget;
-        if(!selectedFighterId || fighterId == selectedFighterId || notSelectedScore == 10) return
-        if(id === 'increment'){
-            if(notSelectedScore >= 10) return;
-            setNotSelectedScore(prev => prev + 1)
-        }
-        if(id === 'decrement'){
-            if(notSelectedScore <= 6) return;
-            setNotSelectedScore(prev => prev -1)
-        }
-    }
 
     return (
         <Flex
+            id="user_scores"
             w="100%"
-            p="1"
+            maxW="100%"
+            px="1"
             flexDir="column"
             alignItems="center"
-            justifyContent="center"
+            justifyContent="flex-start"
+            boxSizing="border-box"
+            h="auto"
+            maxH="60%"
+            overflow="scroll"
         >
+            { userScorecard?.scores?.map( (roundObj, _i) => {
 
-            { scores?.map( (roundObj, _i) => {
-
-                const lastRow = (_i+1 ) === scores.length;
+                let lastRow;
                 const setScores = currentFighterId => {
-                    if(currentFighterId == selectedFighterId){
-                        return currentFighterId === fighter1Id ? roundObj[fighter1Id] : roundObj[fighter2Id]
+                    if(!selectedFighterId){
+                        return roundObj[currentFighterId]
                     }
+                    if(currentFighterId == selectedFighterId){
+                        return currentFighterId === fighter1Id 
+                            ? roundObj[fighter1Id] 
+                            : roundObj[fighter2Id];
+                    }
+                    
                     if(currentFighterId != selectedFighterId){
-                        return currentFighterId === fighter2Id ? roundObj[fighter2Id] : roundObj[fighter1Id]
+                        return currentFighterId === fighter2Id 
+                            ? roundObj[fighter2Id] 
+                            : roundObj[fighter1Id];
                     }
                 }
 
                 const score1 = setScores(fighter1Id)
                 const score2 = setScores(fighter2Id)
-                
-                const renderData = fighterId => {
-                    const setColor = fighterId => {
-                        if(!selectedFighterId){
-                            if(score1 > score2){      
-                                return !selectedFighterId ? 'whiteAlpha.300' : 'yellow.600';
-                            }
 
-                        }
-                    }
+                const renderData = () => {
+                    
                     let fighterData = {
                         score1,
                         score2,
-                        score1Color: score1 >= score2 ? selectedFighter ? 'whiteAlpha.700' : 'whiteAlpha.800' : 'yellow.300',
-                        score2Color: score2 >= score1 ? selectedFighter ? 'whiteAlpha.700' : 'whiteAlpha.800' : 'yellow.300',
-                    }
-
-                    if(lastRow){
-                        const setLastRow = fighterId => {
-                            if(!selectedFighterId){
-                                return "10"
-                            }
-                            if(selectedFighterId == fighterId){
-                                return "10";
-                            } 
-                            return notSelectedScore;    
-                        } 
-                        const score = setLastRow(fighterId)
-
-                        const setLastRowColor = fighterId => {
-                            if(!selectedFighterId) return 'whiteAlpha.600'
-                            if(score == "10") return 'whiteAlpha.800'
-                            return fighterId === selectedFighterId ? 'whiteAlpha.900' : 'whiteAlpha.600'
-                        }
-                        const color = setLastRowColor(fighterId);
-
-                        Object.assign(fighterData, {
-                            score1: score,
-                            score2: score,
-                            score1Color: color,
-                            score2Color: color,
-                        })
-                        return fighterData
+                        score1Color: score1 >= score2 
+                            ? selectedFighter 
+                                ? 'gray.500' : 'whiteAlpha.800' 
+                            : selectedFighterId
+                                ? 'yellow.500' : 'yellow.400',
+                        score2Color: score2 >= score1 
+                            ? selectedFighter 
+                                ? 'gray.500' : 'whiteAlpha.800' 
+                            : selectedFighterId 
+                                ? 'yellow.500' : 'yellow.400',                   
                     }
                     return fighterData
                 }
@@ -162,13 +106,18 @@ export const UserScores = ({
 
                 return (
                     <Flex
+                        boxSizing="border-box"
                         key={_i}
                         alignItems="center"
                         justifyContent="center"
                         flexDir="row"
-                        w={lastRow ? "100%" : "100%"}
-                        m="auto"
-                        borderBottom={lastRow ? "1px solid #555555" : "1px solid #202020"}
+                        w="100%"
+                        borderTop={lastRow ? "1px solid #303030" : "1px solid #202020"}
+                        borderBottom={lastRow ? "1px solid #303030" : "1px solid transparent"}
+                        _hover={{
+                            bg: "#151515",
+                            cursor: "pointer"
+                        }}
                     >
                         <Flex
                             flex="1 0 40%"
@@ -190,7 +139,7 @@ export const UserScores = ({
                                 color={fighter1Data.score1Color}
                                 as="h3"
                                 w="100%"
-                                size={lastRow ? "xl" : "lg"}
+                                size="lg"
                             >
                                 {fighter1Data.score1}
                             </Heading>
@@ -206,6 +155,7 @@ export const UserScores = ({
                             }
                         </Flex>
                         <Flex
+                            my={lastRow ? '4' : '0'}
                             flex="1 0 20%"
                             alignItems="center"
                             justifyContent="center"
@@ -214,11 +164,12 @@ export const UserScores = ({
                                 ? 
                                     <Heading 
                                         as="h3" 
-                                        size="lg"
+                                        size={["lg", "md"]}
                                         color={selectedFighter ? "red.500" : 'red.900'}
                                         cursor="pointer"
                                         _hover={{color: 'red.600'}}
                                         onClick={clearSelectedFighter}
+                                        alignSelf="center"
                                     >
                                         {<RepeatIcon />}
                                     </Heading>
@@ -226,9 +177,11 @@ export const UserScores = ({
                                     <Heading
                                         color={lastRow ? 'red.500' : "gray.400"}
                                         as="h3"
-                                        size={lastRow ? "md" : "sm"}
+                                        size={"sm"}
                                         alignItems="center"
                                         justifyContent="center"
+                                        // borderY="1px solid #303030"
+                                        p="1"
                                     >
                                         {_i+1}
                                     </Heading>
@@ -254,7 +207,7 @@ export const UserScores = ({
                                 textAlign="center"
                                 as="h3"
                                 w="100%"
-                                size={lastRow ? "xl" : "lg"}
+                                size="lg"
                                 color={fighter2Data.score2Color}
                             >
 
@@ -272,9 +225,7 @@ export const UserScores = ({
                             }
                         </Flex>
                     </Flex>
-                )
-            })
-        }
+                )})}
         </Flex>
     )
 }

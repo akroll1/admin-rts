@@ -4,9 +4,9 @@ import { useGlobalStore } from '../../stores';
 export const PrivateRoute = ({ children }) => {
     
     const {
-        isLoggedIn
+        user
     } = useGlobalStore()
 
-    return isLoggedIn ? children : <Navigate to="/signin" />;
+    return user.isLoggedIn ? children : <Navigate to="/signin" />;
 }
 

@@ -53,10 +53,10 @@ export const ToggleButton = (props) => {
   const { isOpen, handleFightSyncButtonClick } = props
   return (
     <Center
-      marginStart="-6"
-      px="4"
+      // marginStart="-6"
+      px="2"
       py="4"
-      as="button"
+      // as="button"
       color="white"
       _active={{
         color: 'white',

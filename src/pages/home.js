@@ -15,28 +15,33 @@ const Home = () => {
       as="section" 
       bg="brand.base" 
       p="2"
-    >
+      >
       <Box 
-        maxW={['xl','5xl']} 
+        maxW={["100%", "100%", "90%", "90%"]} 
         mx="auto" 
       >
         <Stack 
-          p={["2", "4"]} 
+          p={["4"]} 
           m="auto" 
           spacing={['2', '4', '4']} 
           direction={['column', 'column', 'row']}
         >
-          <Box maxW={{ lg: 'lg' }}>
+          <Box maxW={{ lg: 'xl' }}>
             <Heading
               size="xl"
               mt={["2", "2", "4"]}
               fontWeight="extrabold"
               letterSpacing="normal"
               lineHeight="2rem"
+              color="#eaeaea"
             >
               Can't get enough boxing?
             </Heading>
-            <Heading>
+            <Heading
+              mt="3px"
+              size="lg"
+              color="#bababa"
+            >
               Here you go.
             </Heading>
             <Flex
@@ -44,17 +49,18 @@ const Home = () => {
             >
 
             <Text 
-              lineHeight="1.2"
+              lineHeight="1.3"
               fontSize="xl" 
-              mt="1" 
-              pr="4"
+              mt="1"
+              p="1" 
+              pl="0"
               color='fsl-body-text'
               maxW={["85%", "60%", "80%"]}
             >
-              Make predictions, score fights and compete against other boxing fans. Play with a group - 
+              Make predictions, score fights and play with a group - 
                 <Text
                   as="span"
-                  lineHeight="1.5"
+                  lineHeight="1.3"
                   fontSize="xl" 
                   mt="1" 
                   pr="4"
@@ -75,9 +81,10 @@ const Home = () => {
             flex="1 0 60%" 
             shadow="lg" 
             maxW={['xl']}
-          >
+            >
             <Img
               borderRadius="5"
+              mt="2"
               objectFit="cover"
               w="full"
               h="full"
@@ -89,7 +96,7 @@ const Home = () => {
           </Center>
         </Stack>
         <Divider 
-          w={["90%","90%","90%","90%"]}
+          w={["100%"]}
           m="auto"
           opacity={1} 
           my={["8", "12", "16", "12"]}

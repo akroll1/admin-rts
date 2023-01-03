@@ -1,3 +1,17 @@
+export enum ScoringSidebarNavGroupsEnum {
+    FIGHT = "FIGHT",
+    PANELISTS = "PANELISTS",
+    PREDICTIONS = "PREDICTIONS",
+    TITLE = "TITLE"
+}
+
+export const resetScoringSidebarNavGroups = {
+    FIGHT: false,
+    PANELISTS: false,
+    PREDICTIONS: false,
+    TITLE: false,
+}
+
 export enum TabsEnum {
     ALL = "ALL",
     ANALYTICS = "ANALYTICS",
@@ -8,6 +22,27 @@ export enum TabsEnum {
 }
 
 export interface Tabs extends Record<TabsEnum, boolean>{}
+export interface Modals extends Record<ModalsEnum, boolean>{}
+
+export enum ModalsEnum {
+    ADD_MEMBER_MODAL =  "ADD_MEMBER_MODAL",
+    CREATE_GROUP_MODAL = "CREATE_GROUP_MODAL",
+    EXPIRED_TOKEN_MODAL =  "EXPIRED_TOKEN_MODAL",
+    FIGHT_REVIEW_FORM_MODAL =  "FIGHT_REVIEW_FORM_MODAL",
+    GUEST_JUDGE_MODAL =  "GUEST_JUDGE_MODAL",
+    MONEYLINE_MODAL =  "MONEYLINE_MODAL",
+    PREDICTION_MODAL =  "PREDICTION_MODAL",
+}
+
+export const resetModals = {
+    ADD_MEMBER_MODAL: false,
+    CREATE_GROUP_MODAL: false,
+    EXPIRED_TOKEN_MODAL: false,
+    FIGHT_REVIEW_FORM_MODAL: false,
+    GUEST_JUDGE_MODAL: false,
+    MONEYLINE_MODAL: false,
+    PREDICTION_MODAL: false,
+}
 
 export const resetTabs = {
     ALL: false,
@@ -35,24 +70,6 @@ export enum ContentType {
     GROUP = "GROUP",
     PANELIST = "PANELIST",
     ROUND_SCORES = "ROUND_SCORES",
-}
-
-export interface Modals {
-    addMemberModal: boolean
-    addGuestJudgeModal: boolean
-    expiredTokenModal: boolean
-    fightReviewFormModal: boolean
-    moneylineModal: boolean
-    predictionModal: boolean
-}
-
-export const resetModals = {
-    addMemberModal: false,
-    addGuestJudgeModal: false,
-    expiredTokenModal: false,
-    fightReviewFormModal: false,
-    moneylineModal: false,
-    predictionModal: false,
 }
 
 export interface Toast {

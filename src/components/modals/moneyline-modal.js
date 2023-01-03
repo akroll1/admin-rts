@@ -9,7 +9,7 @@ import {
   ModalOverlay
 } from '@chakra-ui/react'
 import { ScoringMoneylineTable } from '../tables'
-import { useGlobalStore } from '../../stores'
+import { ModalsEnum, useGlobalStore } from '../../stores'
 
 export const MoneylineModal = ({
   props,
@@ -22,14 +22,14 @@ export const MoneylineModal = ({
   } = useGlobalStore()
 
   const closeModal = () => {
-    setModals('moneylineModal', false)
+    setModals(ModalsEnum.MONEYLINE_MODAL, false)
   }
   return (
     <Modal 
       size="lg"
       blockScrollOnMount={false} 
       isCentered 
-      isOpen={modals.moneylineModal} 
+      isOpen={modals[ModalsEnum.MONEYLINE_MODAL]} 
       onClose={closeModal}
       motionPreset="slideInBottom"
     >
@@ -53,7 +53,7 @@ export const MoneylineModal = ({
           <Button 
             size="md"
             minW="40%" 
-            onClick={() => setModals('moneylineModal', false)} 
+            onClick={closeModal} 
             colorScheme="solid"
           >
             Close

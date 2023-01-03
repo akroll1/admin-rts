@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { 
     Button, 
-    Divider,
     Flex,
     FormControl,
     FormErrorMessage,
@@ -18,23 +17,21 @@ import {
     Text,
     Textarea,
 } from '@chakra-ui/react'
-import { useGlobalStore } from '../../stores'
+import { ModalsEnum, useGlobalStore } from '../../stores'
 import { CreateGroupDividerWithText } from '../../chakra';
 
 export const CreateGroupModal = ({
-    displayNameModal,
     handleCreateSeasonScorecard,
-    setDisplayNameModal,
-    username
 }) => {
     
     const {
+        modals,
         selectedFightSummary,
-        selectedSeason
+        selectedSeason,
+        setModals,
+        user,
     } = useGlobalStore();
-    // console.log('selectedFightSummary: ', selectedFightSummary)
-    // console.log('selectedSeason: ', selectedSeason)
-    const [season, setSeason] = useState({})
+
     const [form, setForm] = useState({
         groupScorecardNotes: '',
         groupScorecardName: '',
@@ -43,7 +40,10 @@ export const CreateGroupModal = ({
     const [value, setValue] = useState('1')
 
     useEffect(() => {
-        setForm({ ...form, groupScorecardName: value === '1' ? selectedFightSummary?.fight?.fightQuickTitle : selectedSeason?.seasonName })
+        setForm({ ...form, groupScorecardName: value === '1' 
+            ? selectedFightSummary?.fight?.fightQuickTitle 
+            : selectedSeason?.seasonName 
+        })
     },[value])
 
     useEffect(() => {
@@ -51,7 +51,7 @@ export const CreateGroupModal = ({
             setForm({ 
                 ...form, 
                 groupScorecardName: selectedFightSummary?.fight.fightQuickTitle,
-                displayName: username
+                displayName: user?.username
             })
         }
     },[selectedSeason])
@@ -80,11 +80,11 @@ export const CreateGroupModal = ({
     const closeModal = () => {
         setForm({ 
             groupScorecardName: selectedSeason.seasonName, 
-            displayName: username,
+            displayName: user?.username,
             groupScorecardNotes: '',
         })
         setValue('1')
-        setDisplayNameModal(false)
+        setModals(ModalsEnum.CREATE_GROUP_MODAL, false)
     }
 
     const { groupScorecardNotes, groupScorecardName, displayName } = form
@@ -98,7 +98,7 @@ export const CreateGroupModal = ({
             closeOnOverlayClick={false}
             isCentered
             onClose={closeModal}
-            isOpen={displayNameModal}
+            isOpen={modals[ModalsEnum.CREATE_GROUP_MODAL]}
             motionPreset="slideInBottom"
         >
             <ModalOverlay />
@@ -152,7 +152,10 @@ export const CreateGroupModal = ({
                             flex="1 0 45%"
                         >
 
-                            <RadioGroup onChange={setValue} value={value}>
+                            <RadioGroup 
+                                onChange={setValue} 
+                                value={value}
+                            >
                                 <Radio  
                                     mr="2"
                                     value={'1'}
@@ -224,7 +227,7 @@ export const CreateGroupModal = ({
                         </Heading>
                         <FormControl isInvalid={displayNameError}>
                             <Input 
-                                placeholder={username}
+                                placeholder={user?.username}
                                 id="displayName"
                                 flex="1 0 45%"
                                 alignSelf="start"

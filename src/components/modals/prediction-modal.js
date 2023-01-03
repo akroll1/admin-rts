@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { FaTrophy } from 'react-icons/fa'
 import { capFirstLetters } from '../../utils'
-import { useGlobalStore } from '../../stores'
+import { ModalsEnum, useGlobalStore } from '../../stores'
 
 export const PredictionModal = () => {
   const [form, setForm] = useState({
@@ -34,7 +34,11 @@ export const PredictionModal = () => {
     if(!form.fighter || !form.result) return setModals('predictionModal', false)
     const predictionString = `${form.fighter},${form.result}`
     patchPrediction(predictionString)
-    setModals('predictionModal', false)
+    setModals(ModalsEnum.PREDICTION_MODAL, false)
+  }
+
+  const closeModal = () => {
+    setModals(ModalsEnum.PREDICTION_MODAL, false)
   }
 
   return (
@@ -42,8 +46,8 @@ export const PredictionModal = () => {
       blockScrollOnMount={false} 
       isCentered 
       size="lg"
-      isOpen={modals.predictionModal} 
-      onClose={() => setModals('predictionModal', false)}
+      isOpen={modals[ModalsEnum.PREDICTION_MODAL]} 
+      onClose={closeModal}
       motionPreset="slideInBottom"
     >
       <ModalOverlay/>
@@ -110,7 +114,7 @@ export const PredictionModal = () => {
           <Button 
             size="md"
             variant="outline"   
-            onClick={() => setModals({ ...modals, predictionModal: false})} 
+            onClick={closeModal} 
             colorScheme="outline"
             mr={3}
           >

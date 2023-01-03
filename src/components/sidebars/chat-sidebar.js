@@ -132,7 +132,7 @@ export const ChatSidebar = () => {
         if (e.key === "Enter") {
             if (chatMessage) {
                 // setChatMessage("");
-                handleSendMessageViaChat({ message: 'here' }, 'CHAT');
+                handleSendMessageViaChat(e, ContentType.GROUP);
             }
         }
     };
@@ -178,9 +178,8 @@ export const ChatSidebar = () => {
             bg="fsl-sidebar-bg"
             border="1px solid #252525"
             id="chat-sidebar"
-            w="100%"
-            flex={["1 0 30%"]} 
-            maxW="100%" 
+            flex={["1 0 25%"]} 
+            maxW={["100%", "100%", "40%"]} 
             borderRadius="md" 
             ref={chatRef}
             overflow="hidden"
@@ -239,8 +238,8 @@ export const ChatSidebar = () => {
                         justifyContent="flex-end"
                     >
                         <Flex
-                            minH="70%"
-                            maxH="70%"
+                            minH={["50vh","0"]}
+                            maxH={["50vh", "100%"]}
                             id="scroll-top"
                             overflowY="scroll"
                             maxW="100%"
@@ -296,6 +295,7 @@ export const ChatSidebar = () => {
                                             loadingText="Joining..." 
                                             onClick={socketActive() ? e => handleSendMessageViaChat(e, ContentType.GROUP) : handleRequestToken} 
                                             variant="solid"
+                                            onKeyDown={handleChatKeydown}
                                         >
                                             {socketActive() ? `Send` : `Join Chat`}
                                         </Button>

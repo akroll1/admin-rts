@@ -1,5 +1,4 @@
 
-import { useState } from 'react'
 import { Flex, Icon, Text, VStack } from '@chakra-ui/react'
 import { FaUsers } from 'react-icons/fa'
 import { GiBoxingRing } from 'react-icons/gi'
@@ -8,8 +7,6 @@ import { HiOutlinePencil } from 'react-icons/hi'
 import { TabsEnum, useGlobalStore } from '../../stores'
 
 export const ScoringTabs = () => {
-    
-    const [activeTab, setActiveTab] = useState(TabsEnum.SCORING)
     
     const {
         setTabs,
@@ -46,7 +43,6 @@ export const ScoringTabs = () => {
 
     const handleTabClick = e => {
         const { id } = e.currentTarget;
-        setActiveTab(id)
         setTabs(id)
     }
 
@@ -60,6 +56,8 @@ export const ScoringTabs = () => {
             w="100%"
             position="fixed"
             bottom="0"
+            minH="12vh"
+            maxH="12vh"
         >
             { tab_data.map( tab => {
                 return (
@@ -67,7 +65,7 @@ export const ScoringTabs = () => {
                         key={tab.value}
                         id={tab.value}
                         p="4" 
-                        border="3px solid #171717" 
+                        border={tabs[tab.value] ? "3px solid #505050" : "3px solid #202020"} 
                         alignItems="center" 
                         justifyContent="center" 
                         flex="1 0 20%"
@@ -77,10 +75,10 @@ export const ScoringTabs = () => {
                         <VStack>
                             <Icon 
                                 as={tab.icon} 
-                                color={tab.value === activeTab ? '#e62b2b' : 'whiteAlpha.900'}
+                                color={tabs[tab.value] ? 'whiteAlpha.900' : 'gray.500'}
                             />
                             <Text 
-                                color={tab.value === activeTab ? '#e62b2b' : 'whiteAlpha.900'}
+                                color={tabs[tab.value] ? 'whiteAlpha.900' : 'gray.500'}
                                 fontSize={["xs", "md"]} 
                                 textAlign="center"
                             >
@@ -88,8 +86,7 @@ export const ScoringTabs = () => {
                             </Text>
                         </VStack>
                     </Flex>
-                )
-            })}
+            )})}
         </Flex>
     )
 }

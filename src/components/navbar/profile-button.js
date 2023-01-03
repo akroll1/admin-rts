@@ -11,18 +11,17 @@ import { useNavigate } from 'react-router'
 import { useGlobalStore } from '../../stores'
 
 export const ProfileButton = ({ 
-    handleFightSyncButtonClick,
     onToggle
 }) => {
     
     const navigate = useNavigate();
     const {
-        isLoggedIn,
+        user,
         signOut,
     } = useGlobalStore();
 
     const handleClick = () => {
-        if(isLoggedIn){
+        if(user.isLoggedIn){
             navigate('/dashboard/account')
             onToggle()
             return
@@ -47,7 +46,7 @@ export const ProfileButton = ({
                     fontWeight="600"
                     onClick={handleClick}
                 >
-                    {isLoggedIn ? `Profile` : `Sign In`}
+                    {user.isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
                 {/* {!isMobile && isLoggedIn &&
                     <MenuList>

@@ -5,7 +5,7 @@ import {
     ModalContent, 
     Stack 
 } from '@chakra-ui/react'
-import { useGlobalStore } from '../../stores'
+import { ModalsEnum, useGlobalStore } from '../../stores'
 import { FightReviewForm } from '../forms'
 
 export const ReviewFormModal = () => {
@@ -16,13 +16,13 @@ export const ReviewFormModal = () => {
     } = useGlobalStore()
     
     const closeModal = () => {
-        setModals('fightReviewFormModal', false)
+        setModals(ModalsEnum.FIGHT_REVIEW_FORM_MODAL, false)
     }
     return (
         <Modal
             closeOnOverlayClick={true}
-            isOpen={modals.fightReviewFormModal}
-            onClose={() => console.log('closed')}
+            isOpen={modals[ModalsEnum.FIGHT_REVIEW_FORM_MODAL]}
+            onClose={closeModal}
             size="md"
             isCentered
             blockScrollOnMount={false}

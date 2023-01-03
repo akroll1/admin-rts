@@ -10,13 +10,13 @@ export const Footer = () => (
     role="contentinfo" 
     // bg={mode('gray.800', 'fsl-nav-footer-bg')} 
     mx="auto" 
-    mt="1rem" 
     maxW={["90%","100%"]} 
-    py={["0","0","4"]} 
-    px={{ base: '4', md: '6', lg:'8' }}
+    mt="8"
+    py={["0","0","0"]} 
+    px={{ base: '4', md: '6', lg:'4' }}
   >
-    <Stack spacing="10" maxW="100%" divider={<StackDivider />}>
-      <Stack direction={{ base: 'column', lg: 'row' }} spacing={{ base: '10', lg: '28' }}>
+    <Stack spacing="10" minW="100%" divider={<StackDivider />}>
+      <Stack direction={{ base: 'column', lg: 'row' }} spacing={['10', '12']}>
         <Box flex="1">
         </Box>
         <Stack direction={{ base: 'column', md: 'row' }} spacing={{ base: '10', md: '15' }}>

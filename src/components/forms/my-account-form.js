@@ -22,30 +22,43 @@ import { LanguageSelect, FieldGroup } from '../../chakra'
 import { useGlobalStore } from '../../stores'
 
 export const MyAccountForm = () => {
+
   const { 
+    fetchUserAccount,
+    updateUser,
     user,
-    fetchUser,
-    updateUser
+    userAccount,
   } = useGlobalStore()
 
   const [form, setForm] = useState({
     bio: '',
     email: '',
-    fightCoins: 0,
+    fightCoins: '',
     firstName: '',
     isPublic: true,
     lastName: '',
-    sub: '',
-    username: '',
   })
 
   useEffect(() => {
-    fetchUser(user)
+    fetchUserAccount()
   },[])
   
   useEffect(() => {
-      setForm(user)
-  },[user])
+    if(userAccount?.lastName){
+      setForm({
+        ...form,
+        bio: userAccount.bio,
+        email: user.email,
+        fightCoins: userAccount.fightCoins,
+        firstName: userAccount.firstName,
+        lastName: userAccount.lastName,
+        isPublic: userAccount.isPublic,
+        sub: user.sub,
+        username: user.username
+      })
+
+    }
+  },[userAccount])
 
   const handleFormInput = e => {
     const {id, value} = e.currentTarget;
@@ -67,7 +80,7 @@ export const MyAccountForm = () => {
   }
 
   const { bio, email, fightCoins, firstName, isPublic, lastName, username } = form;
-  // console.log('form: ', form)
+
   return (
     <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
       <form id="account_settings_form" onSubmit={e => e.preventDefault()}>

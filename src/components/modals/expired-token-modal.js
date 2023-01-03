@@ -11,7 +11,7 @@ import {
   Text, 
   useDisclosure 
 } from '@chakra-ui/react'
-import { useGlobalStore } from '../../stores'
+import { ModalsEnum, useGlobalStore } from '../../stores'
 
 export const ExpiredTokenModal = () => {
   
@@ -24,14 +24,14 @@ export const ExpiredTokenModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   
   const signin = () => {
-    setModals('expiredTokenModal', false)
+    setModals(ModalsEnum.EXPIRED_TOKEN_MODAL, false)
     navigate('/signin')
   }
   return (
     <Modal
       isCentered
       onClose={onClose}
-      isOpen={modals.expiredTokenModal}
+      isOpen={modals[ModalsEnum.EXPIRED_TOKEN_MODAL]}
       motionPreset="slideInBottom"
     >
       <ModalOverlay />

@@ -34,7 +34,14 @@ export const Layout = ({ children }) => {
             <Navbar />
             <ExpiredTokenModal />
             <GlobalNotification />
-            <Box as="main">{children}</Box>
+            <Box 
+                mt="2rem"
+                pt="4"
+                minW="100%" 
+                as="main"
+            >
+                {children}
+            </Box>
             <Footer bg={mode('gray.800', 'fsl-body-bg')} />
         </Flex>
     )
