@@ -3,6 +3,7 @@ import {
     Heading 
 } from '@chakra-ui/react'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
+import { ScoringSidebarNavGroupsEnum } from '../../../../stores'
 
 export const ScorecardsNavGroup = props => {
 
@@ -23,6 +24,8 @@ export const ScorecardsNavGroup = props => {
         handleSelectSeason(id)
     }
 
+    const isTitle = id === ScoringSidebarNavGroupsEnum.FIGHT;
+    
     return (  
         <Flex
             names={'scorecard_nav_group'}
@@ -32,7 +35,8 @@ export const ScorecardsNavGroup = props => {
             alignItems="flex-start"
             onClick={selectSeason}
             id={id}
-            mb="2"
+            boxSizing="border-box"
+            px="2"
         >
             <Flex
                 justifyContent="space-between"
@@ -46,19 +50,18 @@ export const ScorecardsNavGroup = props => {
             >
                 <Heading
                     w="100%"
-                    p="1"
-                    pl="2"
+                    pt={isTitle ? "4" : "2"}
                     _hover={{ color:'#fcfcfc'}}
-                    fontSize={id === 'title' ? "3xl" : "2xl"}
+                    fontSize={isTitle ? ["2xl", "2xl","3xl"] : ["xl", "xl", "2xl"]}
                     as="h3" 
-                    color={id === 'title' ? "fsl-highlight-heading-text" : '#dadada'}
+                    color={isTitle || active ? '#fafafa' : 'gray.400'}
                 >
                     {label}
                 </Heading>
 
                 <Flex
                     display={id === 'fight' ? 'none' : 'flex'}
-                    mr="4"
+                    // mr="4"
                 >
                     { active 
                         ? 

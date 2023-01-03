@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon, DeleteIcon, LockIcon } from '@chakra-ui/icons'
 import { DividerWithText } from '../../../chakra'
-import { useGlobalStore } from '../../../stores'
+import { ModalsEnum, useGlobalStore } from '../../../stores'
 
 export const ShowsCreateGroupScorecard = ({ 
     deleteInvite, 
@@ -26,16 +26,16 @@ export const ShowsCreateGroupScorecard = ({
     isError,
     invites, 
     resetInput,
-    setDisplayNameModal,
 }) => {
 
     const {
         isSubmittingForm,
+        setModals,
         user
     } = useGlobalStore()
 
     const handleSubmit = () => {
-        setDisplayNameModal(true)
+        setModals(ModalsEnum.CREATE_GROUP_MODAL, true)
     }
 
     return ( 
@@ -48,7 +48,7 @@ export const ShowsCreateGroupScorecard = ({
         >
             <DividerWithText 
                 p="0" 
-                text={'Create a Scorecard and Win'} 
+                text={'Create a Scorecard'} 
                 fontSize="2xl"
                 mt="2"
             />
@@ -92,7 +92,10 @@ export const ShowsCreateGroupScorecard = ({
                                             <DeleteIcon 
                                                 id={invite} 
                                                 onClick={deleteInvite} 
-                                                _hover={{cursor: 'pointer', color: 'white'}} 
+                                                _hover={{
+                                                    cursor: 'pointer', 
+                                                    color: 'white'
+                                                }} 
                                                 color="#dadada" 
                                                 alignItems="center"
                                                 justifyContent="center"
@@ -157,7 +160,7 @@ export const ShowsCreateGroupScorecard = ({
                                     bg: "#353535"
                                 }}
                                 bg="#252525"
-                                onClick={user?.attributes?.sub ? handleEmailSubmit : null} 
+                                onClick={user?.sub ? handleEmailSubmit : () => ''} 
                             >
                                 {`${invites.length >= 4 ? '5 Member Limit' : 'Add Member'}`}
                             </Button>
@@ -181,7 +184,7 @@ export const ShowsCreateGroupScorecard = ({
                                 m="2" 
                                 type="submit"
                                 mt={["4"]} 
-                                onClick={user?.attributes?.sub ? handleSubmit : () => ''} 
+                                onClick={user?.sub ? handleSubmit : () => ''} 
                                 colorScheme="solid" 
                             >
                                 Create Scorecard

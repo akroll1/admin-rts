@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router'
 
 const Shows = () => {
 
-    const navigate = useNavigate()
     const { 
         createGroupScorecard,
         fetchSeasonSummary,
@@ -24,9 +23,7 @@ const Shows = () => {
         user,
         userFightReview,
     } = useGlobalStore();
-    const { username } = user;
-    const email = user?.attributes?.email ? user.attributes.email : ''
-    const sub = user?.attributes?.sub ? user.attributes.sub : ''
+    const { email, sub, username } = user?.sub ? user : '';
 
     const [emailValue, setEmailValue] = useState('');
     const [groupScorecard, setGroupScorecard] = useState({
@@ -143,20 +140,18 @@ const Shows = () => {
     return (
         <Flex 
             w={["100%"]} 
-            m="auto"
+            mx="auto"
             flexWrap="wrap" 
             height="auto" 
             flexDirection={["column",'column','row']} 
             color="white" 
             alignItems="flex-start" 
             justifyContent="center" 
+            mt={["0", "2", "2", "4"]}
         >    
             <ReviewFormModal />
             <CreateGroupModal 
-                displayNameModal={displayNameModal}
                 handleCreateSeasonScorecard={handleCreateSeasonScorecard}
-                setDisplayNameModal={setDisplayNameModal}
-                username={username}
             />
                 {isSubmitting && !selectedFightSummary?.fight?.fightId
                     ?
@@ -173,7 +168,6 @@ const Shows = () => {
                                 isAdminError={isAdminError}
                                 invites={invites}
                                 resetInput={resetInput}
-                                setDisplayNameModal={setDisplayNameModal}
                                 username={username}
                             />
                         </>

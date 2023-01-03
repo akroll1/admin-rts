@@ -60,11 +60,14 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
         const groups = user?.signInUserSession?.accessToken?.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
         const isSuperAdmin = groups.some( (group: string) => group.includes('rts-admins')) ? true : false;
         const isPanelist = groups.some( (group: string) => group.includes('panelist')) ? true : false;
-        set({ 
+        const userObj = {
+            email: user.attributes.email,
             isLoggedIn: true,
             isPanelist,
             isSuperAdmin,
-            user 
-        })
+            sub: user.attributes.sub,
+            username: user.username,
+        }
+        set({ user: { ...userObj } })
     },
 })

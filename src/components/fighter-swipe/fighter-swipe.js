@@ -22,7 +22,7 @@ export const FighterSwipe = ({
 
     return (
         <Flex   
-            p="4"
+            py="4"
             zIndex={100}  
             flexDir="column"
             justifyContent="space-between"
@@ -31,9 +31,7 @@ export const FighterSwipe = ({
             id={fighterId}
             boxSizing="border-box" 
             borderRadius="1px"
-            w={fighterId === 'DRAW' ? '20%' : '40%'}
-            pt="4"
-            // minH="40vh"
+            w="100%"
             cursor="pointer"
             _after={{
                 content: "''",
@@ -45,19 +43,23 @@ export const FighterSwipe = ({
                 textAlign="center"
                 w="100%"
                 flexDir="column"
-            >
+                >
                 <Flex
                     w="100%"
                     flexDir="column"
                     alignItems="center"
                     justifyContent="center"
-                >
-                    <Center>
+                    >
+                    <Center
+                    
+                        borderColor="red.300"
+                    >
                         <Avatar 
+                            border="2px solid red.300"
                             size={["md","md","lg"]} 
                             _hover={{cursor: 'pointer'}} 
                         >
-                            {(!evenRound && selectedFighter.fighterId === fighter.fighterId) && <AvatarBadge borderColor='papayawhip' bg='red.300' boxSize='1.25em' /> }
+                            {(!evenRound && selectedFighter.fighterId === fighter.fighterId) && <AvatarBadge border="2px solid" borderColor='gray.200' bg='red.400' boxSize='1.25em' /> }
                         </Avatar>
                     </Center>
                 </Flex>

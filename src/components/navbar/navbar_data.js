@@ -7,12 +7,6 @@ export const links = [
   {
     label: 'FightSync',
     children: [
-      // {
-      //   label: 'Fighter Talk',
-      //   description: 'Fighters discuss all things fighting.',
-      //   href: '/discussions',
-      //   icon: <IoGrid />,
-      // },
       {
         label: 'Latest Boxing News',
         description: 'Updated in real-time.',
@@ -25,12 +19,12 @@ export const links = [
         href: '/blog',
         icon: <MdWeb />,
       },
-      {
-        label: 'CounterPunch Live!',
-        description: 'The ultimate boxing trivia game show! Play and answer questions- live and in real time to win prizes!',
-        href: '/live',
-        icon: <IoCalendar />,
-      },
+      // {
+      //   label: 'CounterPunch Live!',
+      //   description: 'The ultimate boxing trivia game show! Play and answer questions- live and in real time to win prizes!',
+      //   href: '/live',
+      //   icon: <IoCalendar />,
+      // },
     ],
   }
 ]

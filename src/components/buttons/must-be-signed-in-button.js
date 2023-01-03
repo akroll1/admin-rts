@@ -7,9 +7,8 @@ import {
     PopoverHeader,
     PopoverTrigger,
 } from '@chakra-ui/react'
-import { ArrowForwardIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { ChevronRightIcon } from '@chakra-ui/icons'
 import { useGlobalStore } from '../../stores'
-
 
 export const MustBeSignedInButton = ({
     label,
@@ -21,14 +20,19 @@ export const MustBeSignedInButton = ({
         user
     } = useGlobalStore()
 
+    const handleClick = () => {
+        if(user?.sub){
+            onClickHandler()
+        }
+    }
     return (
         <Popover>
             <PopoverTrigger>
                 <Button 
                     // isLoading={isSubmittingForm}
-                    // disabled={isSubmittingForm}
+                    // disabled={!user?.sub}
                     // loadingText="Submitting"
-                    onClick={user?.attributes?.sub ? onClickHandler : () => ''} 
+                    onClick={handleClick} 
                     size="md" 
                     colorScheme="solid"
                 >
@@ -51,7 +55,9 @@ export const MustBeSignedInButton = ({
                     p="2"
                     size="sm"
                     w="66%"
-                >Sign In</Button>
+                >
+                    Sign In
+                </Button>
             </PopoverContent>
         </Popover>
     )

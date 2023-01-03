@@ -3,8 +3,11 @@ import { Flex, Heading, useColorModeValue } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
 import { TabsEnum, useGlobalStore } from '../../../stores'
 
-export const FightStats = props => {
-    const { label, value, ...boxProps } = props;
+export const FightStats = ({
+    fighter1Id = '',
+    fighter2Id = '',
+    selectedFighterId = '',
+}) => {
 
     const { 
         activeGroupScorecard,
@@ -130,61 +133,60 @@ export const FightStats = props => {
 
     return (
         <Flex
+            id="fight_stats"
             mt="4"
-            display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}
-            flexDirection="column"
+            display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] || tabs[TabsEnum.SCORING] ? 'flex' : 'none'}
+            flexDirection="row"
             px="2"
-            bg="bg-surface"
-            borderRadius="lg"
             boxShadow={useColorModeValue('sm', 'sm-dark')}
-            {...boxProps}
             alignItems="center"
-            justifyContent="space-evenly"
-            w={["100%"]}
+            justifyContent="space-between"
+            w="100%"
+            m="auto"
+            borderBottom="1px solid gray"
+            mb="2"
         >
-            <Flex 
-                w="100%" 
-                flexDirection={["row"]} 
-                alignItems="center" 
-                justifyContent="space-evenly"
-            >
                 <Flex
+                    borderBottom={selectedFighterId === fighter1Id ? "2px solid white" : '2px solid transparent'}
+                    flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"
-                    justifyContent="center"                
+                    justifyContent="center"  
+                    p="1"             
                 >
                     <Heading 
-                        m="auto" 
-                        fontSize="md" 
+                        pt="2"
+                        size="lg" 
                         color="muted"
                     >
                         {capFirstLetters(fighter1)}
                     </Heading>
-                    <Heading size="md">
+                    <Heading 
+                        size="md"
+                        color="gray.400"
+                    >
                         {fighter1Percentage ? fighter1Percentage : 0}&#37;	
                     </Heading>
                 </Flex>
                 <Flex
+                    flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"
-                    justifyContent="center"                
+                    justifyContent="center"             
                 >
                     <Heading 
-                        m="auto" 
-                        fontSize="md" 
-                        color="muted"
+                        size="lg" 
+                        pt="2"
                     >
                         {capFirstLetters(fighter2)}
                     </Heading>
-                    <Heading size="md">
+                    <Heading 
+                        color="gray.400"
+                        size="md"
+                    >
                         {fighter2Percentage ? fighter2Percentage : 0}&#37;	
                     </Heading>
                 </Flex>
-            </Flex>
-
-            <Flex>
-                <p>stats</p>
-            </Flex>
         </Flex>
     )
 }

@@ -52,7 +52,6 @@ export const ShowsSidebar = () => {
             id="shows_sidebar" 
             as="aside"
             flex="1 0 20%" 
-            w="100%" 
             minH={["40vh", "50vh", "80vh"]} 
             maxH={["40vh","40vh","100%"]}
             height="auto" 

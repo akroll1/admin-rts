@@ -21,7 +21,6 @@ export const Scorecards = () => {
         isSubmitting,
         userInvites,
         userScorecardSummaries,
-        isSuperAdmin,
     } = useGlobalStore();
     useEffect(() => {
         fetchUserScorecards()
@@ -60,6 +59,7 @@ export const Scorecards = () => {
             flexDir={["column", "column", "row"]}
             flexWrap="wrap-reverse"
             p="2"
+            pt={["2", "4", "8", "12"]}
             minH="70vh"
         >
             { isSubmitting
@@ -67,77 +67,77 @@ export const Scorecards = () => {
                     <SpinnerMain />
                 :
                     <>
-                    <Flex 
-                        flexDir="column"
-                        w="100%"
-                        flex="1 0 65%"
-                        overflow="scroll"
-                        // flexWrap={["wrap-reverse", "wrap-reverse", "wrap"]}
-                        alignItems="flex-start"
-                        justifyContent="flex-start"
-                        boxSizing="border-box"
-                    >   
-                        <ScorecardsHeading 
-                            length={userScorecardSummaries?.length > 0 ? userScorecardSummaries.length : ''}
-                        />
                         <Flex 
-                            p="4"
-                            w="100%"
                             flexDir="column"
-                        >
-                            { userScorecardSummaries?.length > 0 
-                            && userScorecardSummaries.map( (summary, _i) => (
-                                <ScorecardRow 
-                                    handleSelectGroup={handleSelectGroup}
-                                    key={_i} 
-                                    selectedFightId={selectedSummary?.fight?.fightId}
-                                    summary={summary} 
-                                />
-                            ))}
-                        </Flex>
-                    </Flex>
-            
-                    <Flex 
-                        id="scorecards_page_summary" 
-                        flexDir="column"
-                        w="100%"
-                        flex="1 0 25%"
-                        overflow="scroll"
-                        // flexWrap={["wrap-reverse", "wrap-reverse", "wrap"]}
-                        alignItems="flex-start"
-                        justifyContent="flex-start"
-                        boxSizing="border-box"
-                    >   
-                        <Flex 
                             w="100%"
-                        >
-
-                            <Text 
-                                onClick={() => setShowInvitations(prev => !prev)}
-                                _hover={{
-                                    cursor: 'pointer',
-                                    color: 'white'
-                                }} 
-                                ml="2" 
-                                color="gray.400"
-                                textAlign="center"
-                                mx="auto"
-                                textDecor="underline"
-                                fontSize="lg"
+                            flex="1 0 65%"
+                            overflow="scroll"
+                            // flexWrap={["wrap-reverse", "wrap-reverse", "wrap"]}
+                            alignItems="flex-start"
+                            justifyContent="flex-start"
+                            boxSizing="border-box"
+                        >   
+                            <ScorecardsHeading 
+                                length={userScorecardSummaries?.length > 0 ? userScorecardSummaries.length : ''}
+                            />
+                            <Flex 
+                                p="4"
+                                w="100%"
+                                flexDir="column"
                             >
-                                { showInvitations ? `Show Scorecard Summary` : userInvites.length > 0 ? `Show Invitations (${userInvites.length})` : `Show Invitations`}
-                            </Text>
+                                { userScorecardSummaries?.length > 0 
+                                && userScorecardSummaries.map( (summary, _i) => (
+                                    <ScorecardRow 
+                                        handleSelectGroup={handleSelectGroup}
+                                        key={_i} 
+                                        selectedFightId={selectedSummary?.fight?.fightId}
+                                        summary={summary} 
+                                    />
+                                ))}
+                            </Flex>
                         </Flex>
-                        { showInvitations
-                            ? 
-                                <ScorecardsInvitationsBoard />
-                            :
-                                <ScorecardSummary 
-                                    selectedSummary={selectedSummary}
-                                />
-                        }                
-                    </Flex> 
-                </>   
+                
+                        <Flex 
+                            id="scorecards_page_summary" 
+                            flexDir="column"
+                            w="100%"
+                            flex="1 0 25%"
+                            overflow="scroll"
+                            // flexWrap={["wrap-reverse", "wrap-reverse", "wrap"]}
+                            alignItems="flex-start"
+                            justifyContent="flex-start"
+                            boxSizing="border-box"
+                        >   
+                            <Flex 
+                                w="100%"
+                            >
+
+                                <Text 
+                                    onClick={() => setShowInvitations(prev => !prev)}
+                                    _hover={{
+                                        cursor: 'pointer',
+                                        color: 'white'
+                                    }} 
+                                    ml="2" 
+                                    color="gray.400"
+                                    textAlign="center"
+                                    mx="auto"
+                                    textDecor="underline"
+                                    fontSize="lg"
+                                >
+                                    { showInvitations ? `Show Scorecard Summary` : userInvites.length > 0 ? `Show Invitations (${userInvites.length})` : `Show Invitations`}
+                                </Text>
+                            </Flex>
+                            { showInvitations
+                                ? 
+                                    <ScorecardsInvitationsBoard />
+                                :
+                                    <ScorecardSummary 
+                                        selectedSummary={selectedSummary}
+                                    />
+                            }                
+                        </Flex> 
+                    </>   
             }       
         </Flex>
     )

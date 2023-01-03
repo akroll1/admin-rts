@@ -17,27 +17,34 @@ export const ShowsNavItem = (props) => {
       cursor="pointer"
       userSelect="none"
       rounded="md"
-      transition="all 0.2s"
-      bg={active ? 'gray.700' : undefined}
-      _hover={{
-        bg: 'gray.700',
-      }}
+      transition="all 0.1s"
+      // bg={active ? 'gray.700' : undefined}
       _active={{
         bg: 'gray.600',
+      }}
+      _hover={{
+        color: 'whiteAlpha.900',
       }}
     >
       <Box 
         fontSize="lg" 
-        color="whiteAlpha.800"
+        color="whiteAlpha.700"
+        _hover={{
+          color: '#fafafa',
+        }}
       >
         {icon}
       </Box>
       <Box 
-        pl="1"
+        px="1"
         fontSize="1rem" 
         flex="1" 
         fontWeight="inherit" 
         color="fsl-text"
+        _hover={{
+          textDecor: 'underline',
+          color: 'whiteAlpha.900',
+        }}
       >
         {label}
       </Box>

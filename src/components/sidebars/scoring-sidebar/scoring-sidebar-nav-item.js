@@ -5,6 +5,7 @@ export const ScoringSidebarNavItem = props => {
         active, 
         fightId, 
         icon, 
+        id,
         label,
         onclickOption 
     } = props; 
@@ -17,11 +18,13 @@ export const ScoringSidebarNavItem = props => {
         e.stopPropagation()
     }
 
+    const isLinked = id === 'userPrediction' || id === 'moneyline';
+
     return (
         <Flex
             flex="1"
-            pl="3"
-            ml="1"
+            pl="2"
+            mb="1px"
             justifyContent="space-between"
             alignItems="space-between"
             minW="100%"
@@ -32,21 +35,14 @@ export const ScoringSidebarNavItem = props => {
             userSelect="none"
             rounded="md"
             transition="all 0.1s"
-            // bg={active ? 'gray.700' : ''}
-            _hover={{
-                color: 'white',
-            }}
-            _active={{
-                bg: 'gray.600',
-            }}
         >
              <Flex 
-                mt="1"
+                mt="1px"
                 mr="2"
                 justifyContent="center"
                 alignItems="center"
-                fontSize={active ? '1rem' : 'inherit'} 
-                color={active ? 'white' : 'gray.300'}
+                fontSize="md" 
+                color='gray.300'
             >
                 {icon}
             </Flex>
@@ -56,8 +52,12 @@ export const ScoringSidebarNavItem = props => {
                 w="100%"
                 fontSize="1rem" 
                 flex="1" 
-                fontWeight="inherit"                
-                color={active ? 'gray.300' : undefined}
+                // fontWeight="semibold"                
+                color="#c5c5c5"
+                _hover={{
+                    color: '#f5f5f5',
+                    textDecoration: isLinked ? 'underline' : '',
+                }}
             >
                 {label}
             </Flex>

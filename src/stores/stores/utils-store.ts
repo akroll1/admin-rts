@@ -4,6 +4,7 @@ import {
     Fighter,
     ChatMessage,
     Modals,
+    ModalsEnum,
     resetModals,
     resetTabs,
     Tabs,
@@ -23,7 +24,7 @@ export interface UtilsStoreState {
     setScoringTransformedPrediction(rawPrediction: string | null): void
     setIsSubmitting(submittingState: boolean): void
     setIsSubmittingForm(submittingState: boolean): void
-    setModals(modal: string, setOpen: boolean): void
+    setModals(modal: string, modalState: boolean): void
     setTabs(tab: TabsEnum): void
     setToast(toast: Toast): void
     setTokenExpired(state: boolean): void
@@ -65,10 +66,10 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
     setIsSubmittingForm: (submittingState: boolean) => {
         set({ isSubmittingForm: submittingState })
     },
-    setModals: (modal: string, setOpen: boolean) => {
+    setModals: (modal: ModalsEnum, modalState: boolean) => {
         const modals = Object.assign({ 
             ...resetModals,
-            [modal]: setOpen 
+            [ModalsEnum[modal]]: modalState 
         })
         set({ modals })
     },

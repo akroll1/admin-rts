@@ -2,15 +2,14 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     BettingProps,
-    ContentType,
     GroupScorecardSummary, 
+    ModalsEnum,
     PanelProps,
     resetModals,
     RoundScores,
     Scorecard 
 } from "../models";
 import axios from 'axios'
-import { v4 as uuidv4 } from 'uuid'
 import { configureAccessToken } from "./auth-store";
 
 export interface ScoringStoreState {
@@ -131,11 +130,11 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         get().setIsSubmitting(false)
         console.log('DATA- groupScorecardSummary: ', data);
         
-        const [userScorecard] = data.scorecards.filter( scorecard => scorecard.scorecardId === `${get().user.attributes.sub}-${fightId}`)
+        const [userScorecard] = data.scorecards.filter( scorecard => scorecard.scorecardId === `${get().user.sub}-${fightId}`)
 
         if(!userScorecard.prediction && data.fight.fightStatus === 'PENDING'){
             setTimeout(() => {
-                set({ modals: { ...resetModals, predictionModal: true }})
+                set({ modals: { ...resetModals, [ModalsEnum.PREDICTION_MODAL]: true }})
             },5000)
         }
         const lastScoredRound = userScorecard.scores.length;

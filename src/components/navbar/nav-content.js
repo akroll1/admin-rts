@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router'
 import { useGlobalStore } from '../../stores'
 
 const MobileNavContext = props => {
-  const { isLoggedIn } = useGlobalStore()
+  const { user } = useGlobalStore()
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const handleFightSyncButtonClick = value => {
@@ -32,7 +32,7 @@ const MobileNavContext = props => {
         {...props}
         >
         <Box 
-          flexBasis="6rem"
+          // flexBasis="6rem"
         >
           <ToggleButton 
             isOpen={isOpen} 
@@ -70,7 +70,7 @@ const MobileNavContext = props => {
         )}
           <ProfileButton 
             isMobile={true}
-            isLoggedIn={isLoggedIn}
+            isLoggedIn={user.isLoggedIn}
             isOpen={isOpen}
             handleFightSyncButtonClick={handleFightSyncButtonClick} 
             onToggle={onToggle}

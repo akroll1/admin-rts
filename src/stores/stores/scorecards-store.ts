@@ -227,7 +227,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
     
     fetchUserScorecards: async () => {
         get().setIsSubmitting(true)
-        const res = await axios.get(`${url}/me/scorecards/${get().user.attributes.sub}`, await configureAccessToken() )
+        const res = await axios.get(`${url}/me/scorecards/${get().user.sub}`, await configureAccessToken() )
         get().setIsSubmitting(false)
         if(res.data === 'Token expired!'){
             get().setModals('expiredTokenModal', true)
@@ -241,7 +241,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         })
     },
     fetchUserScorecardsBySeason: async (seasonId: string) => {
-        const res = await axios.get(`${url}/me/${encodeURIComponent(get().user.attributes.sub!)}/${seasonId}`, await configureAccessToken() )
+        const res = await axios.get(`${url}/me/${encodeURIComponent(get().user.sub!)}/${seasonId}`, await configureAccessToken() )
         const userScorecards = res.data as Scorecard[]
         set({ userScorecards })
     },
@@ -295,11 +295,11 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         console.log('RESOLUTION put res: ', data)
     },
     submitList: async (list: List) => {
-        const res = await axios.put(`${url}/lists/${get().user.attributes.sub}/${list.listType}`, list, await configureAccessToken() )
+        const res = await axios.put(`${url}/lists/${get().user.sub}/${list.listType}`, list, await configureAccessToken() )
         console.log('res.data: ', res.data)
     },
     submitPanelPredictions: async (predictionObj: Record<string, string[]>) => {
-        Object.assign(predictionObj, { panelistId: get().user.attributes.sub })
+        Object.assign(predictionObj, { panelistId: get().user.sub })
         const res = await axios.put(`${url}/panels`, predictionObj, )
         const data = res.data
         console.log('DATA: ', data)
@@ -330,7 +330,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         console.log('res.data: ', res.data)
     },
     updateUser: async (updateOptions: Partial<User>) => {
-        const res = await axios.put(`${url}/users/${get().user.attributes.sub}`, updateOptions, await configureAccessToken() )
+        const res = await axios.put(`${url}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
         console.log('UPDATE USER res: ', res)
     },  
 })

@@ -23,7 +23,6 @@ export const ShowsMain = ({
     invites,
     resetInput,
     setDisplayNameModal,
-    username
 }) => {
     const {
         selectedFightSummary,
@@ -57,7 +56,10 @@ export const ShowsMain = ({
                 p="2"
                 color="#bababa"
             >
-                { selectedSeasonSummary?.season?.seasonName ? selectedSeasonSummary.season.seasonName : `` }
+                { selectedSeasonSummary?.season?.seasonName 
+                    ? selectedSeasonSummary.season.seasonName 
+                    : `` 
+                }
             </Heading>
 
             <ShowsArrows />
@@ -118,7 +120,6 @@ export const ShowsMain = ({
                             invites={invites} 
                             resetInput={resetInput}
                             setDisplayNameModal={setDisplayNameModal}
-                            username={username}
                         />
                     :
                         <>

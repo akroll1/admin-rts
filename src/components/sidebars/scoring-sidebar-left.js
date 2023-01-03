@@ -12,14 +12,22 @@ import {
     FaLockOpen, 
     FaRegClock, 
     FaRegMoneyBillAlt, 
+    FaTrophy,
     FaTv 
 } from 'react-icons/fa'
 import { IoScaleOutline } from 'react-icons/io5'
 import { MdOnlinePrediction } from 'react-icons/md'
-import { parseEpoch, transformedWeightclass } from '../../utils'
-import { TabsEnum, useGlobalStore } from '../../stores'
-import { FighterSelectionSwipe } from '../forms/my-panels-form-els/fighter-selection-swipe'
 import { FaRegQuestionCircle } from 'react-icons/fa'
+import { BellIcon } from '@chakra-ui/icons'
+import { parseEpoch, transformedWeightclass } from '../../utils'
+import { FighterSelectionSwipe } from '../forms/my-panels-form-els/fighter-selection-swipe'
+import { 
+    ModalsEnum, 
+    resetScoringSidebarNavGroups,
+    ScoringSidebarNavGroupsEnum, 
+    TabsEnum, 
+    useGlobalStore,
+} from '../../stores'
 
 export const ScoringSidebarLeft = () => {
     const {
@@ -30,14 +38,9 @@ export const ScoringSidebarLeft = () => {
         tabs,
     } = useGlobalStore()
     
-    const navGroups = {
-        officialJudges: false,
-        predictions: false,
-    };
-    
-    const [activeNavGroups, setActiveNavGroups] = useState(navGroups);
+    const [activeNavGroups, setActiveNavGroups] = useState({ ...resetScoringSidebarNavGroups, [ScoringSidebarNavGroupsEnum.FIGHT]: true });
 
-    const { weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
+    const { isTitleFight, totalRounds, weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
     const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';
     const isLocked = Date.now() > showTime
 
@@ -47,31 +50,30 @@ export const ScoringSidebarLeft = () => {
     }
 
     const handleHideShow = id => {
-        setActiveNavGroups({ ...activeNavGroups, [id]: !activeNavGroups[id] })
-
+        setActiveNavGroups(prev => ({ ...activeNavGroups, [id]: !prev[id] }) ) 
     }
 
     const handleOpenGuestJudgeModal = () => {
-        setModals('addGuestJudgeModal', true)
+        setModals(ModalsEnum.GUEST_JUDGE_MODAL, true)
     }
 
     const handleMoneylineModal = () => {
-        setModals('moneylineModal', true)
+        setModals(ModalsEnum.MONEYLINE_MODAL, true)
     }
 
     const handlePredictionModalToggle = () => {
         if(isLocked){
             return alert('Predictions are locked.')
         }
-        setModals('predictionModal', true);
+        setModals(ModalsEnum.PREDICTION_MODAL, true);
     };
 
     return (
         <Flex 
             display={tabs[TabsEnum.INFO] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             id="scoring_sidebar_left" 
-            w="100%" 
-            flex={["1 0 30%"]} 
+            maxW={["100%","30%"]}
+            flex={["1 0 20%"]} 
             position="relative" 
             alignItems={["flex-start", "center"]} 
             justifyContent="center"
@@ -79,11 +81,12 @@ export const ScoringSidebarLeft = () => {
             direction="column" 
             p="1" 
             pb="4"
+            fontSize="sm"
+            boxSizing="border-box"
+            overflowX="none"
+            minH={tabs[TabsEnum.INFO] ? "75vh" : ""}
             bg={tabs[TabsEnum.INFO] ? "inherit" : "fsl-sidebar-bg"}
             color={tabs[TabsEnum.INFO] ? "#dadada" : "#c8c8c8"}
-            fontSize="sm"
-            minH={tabs[TabsEnum.INFO] ? "75vh" : ""}
-            border={tabs[TabsEnum.ALL] ? "1px solid #252525" : 'none'}
         >
             <Flex
                 display={tabs[TabsEnum.INFO] ? 'flex' : 'none'}
@@ -110,51 +113,55 @@ export const ScoringSidebarLeft = () => {
                 overflowY="scroll" 
                 w="100%"
             >
-                <ScorecardsNavGroup 
-                    id="title"
-                    label={activeGroupScorecard?.fight?.fightQuickTitle ? activeGroupScorecard?.fight?.fightQuickTitle : ''}
-                />
-
-                <ScorecardsNavGroup 
+                <ScorecardsNavGroup
                     handleHideShow={handleHideShow} 
-                    id="fight"
-                    label={''}
-                    active={true}
+                    active={activeNavGroups[ScoringSidebarNavGroupsEnum.FIGHT]}
+                    id={ScoringSidebarNavGroupsEnum.FIGHT}
+                    label={activeGroupScorecard?.fight?.fightQuickTitle ? activeGroupScorecard?.fight?.fightQuickTitle : ''}
                 >
-                    <Flex 
+                     <Flex 
                         w="100%"
                         flexDir="column"
-                        mt="-4"
-                        h="auto"
                     >
-                        <ScoringSidebarNavItem 
-                            id="weightclass"
-                            icon={<IoScaleOutline />} 
-                            label={ weightclass ? transformedWeightclass(weightclass) : '' }
-                        /> 
-                        <ScoringSidebarNavItem 
-                            id="network"
-                            icon={<FaTv />} 
-                            label={ network ? transformNetwork(network) : '' }
-                        /> 
-                        <ScoringSidebarNavItem 
-                            id="time"
-                            icon={<FaRegClock />} 
-                            label={ showTime ? parseEpoch(showTime) : '' }
-                        /> 
-                        <ScoringSidebarNavItem 
-                            onclickOption={handleMoneylineModal}
-                            icon={<FaRegMoneyBillAlt />} 
-                            label="Moneyline"
-                        />
+                        <Collapse 
+                            w="100%"
+                            in={activeNavGroups.FIGHT} 
+                            animateOpacity
+                        >
+                            <ScoringSidebarNavItem 
+                                id="network"
+                                icon={<FaTv />} 
+                                label={ network ? transformNetwork(network) : '' }
+                            /> 
+                            <ScoringSidebarNavItem 
+                                id="time"
+                                icon={<FaRegClock />} 
+                                label={ showTime ? parseEpoch(showTime) : '' }
+                            /> 
+                            <ScoringSidebarNavItem 
+                                id="weightclass"
+                                icon={<IoScaleOutline />} 
+                                label={ weightclass ? transformedWeightclass(weightclass) : '' }
+                            /> 
+                            <ScoringSidebarNavItem 
+                                id="totalRounds"
+                                icon={<BellIcon />} 
+                                label={ totalRounds ? `${totalRounds} Rounds` : `12 Rounds` }
+                            /> 
+                            <ScoringSidebarNavItem 
+                                id="totalRounds"
+                                icon={<FaTrophy />} 
+                                label={ isTitleFight ? `Title- YES` : `Title- NO` }
+                            /> 
+                        </Collapse>
                     </Flex>
                 </ScorecardsNavGroup>
                 
                 <ScorecardsNavGroup
                     handleHideShow={handleHideShow} 
-                    id="predictions"
+                    id={ScoringSidebarNavGroupsEnum.PREDICTIONS}
                     label="Predictions"
-                    active={activeNavGroups.predictions}
+                    active={activeNavGroups[ScoringSidebarNavGroupsEnum.PREDICTIONS]}
                 >
                     <Flex 
                         w="100%"
@@ -162,11 +169,11 @@ export const ScoringSidebarLeft = () => {
                     >
                         <Collapse 
                             w="100%"
-                            in={activeNavGroups.predictions} 
+                            in={activeNavGroups.PREDICTIONS} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 
-                                id="prediction"
+                                id="userPrediction"
                                 icon={isLocked ? <FaLock /> : <FaLockOpen />} 
                                 onclickOption={handlePredictionModalToggle}
                                 label={ scoringTransformedPrediction ? scoringTransformedPrediction : 'Not Set' }
@@ -177,21 +184,27 @@ export const ScoringSidebarLeft = () => {
                                 icon={<MdOnlinePrediction size="1.1rem" />} 
                                 label="FSL- "
                             /> 
+                             <ScoringSidebarNavItem 
+                                id="moneyline"
+                                onclickOption={handleMoneylineModal}
+                                icon={<FaRegMoneyBillAlt />} 
+                                label="Moneyline"
+                            />
                         </Collapse>
                     </Flex>
                 </ScorecardsNavGroup>
                 <ScorecardsNavGroup 
                     handleHideShow={handleHideShow} 
-                    id="officialJudges"
+                    id={ScoringSidebarNavGroupsEnum.PANELISTS}
                     label="Panelists"
-                    active={activeNavGroups.officialJudges}
+                    active={activeNavGroups[ScoringSidebarNavGroupsEnum.PANELISTS]}
                 >
                     <Flex 
                         w="100%"
                         flexDir="column"
                     >
                         <Collapse 
-                            in={activeNavGroups.officialJudges} 
+                            in={activeNavGroups[ScoringSidebarNavGroupsEnum.PANELISTS]} 
                             animateOpacity
                         >
                             <ScoringSidebarNavItem 
@@ -213,7 +226,6 @@ export const ScoringSidebarLeft = () => {
                     userSelect="none"
                     rounded="md"
                     transition="all 0.1s"
-                    // bg={active ? 'gray.700' : ''}
                     _hover={{
                         color: 'white',
                     }}
