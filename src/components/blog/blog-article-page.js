@@ -4,8 +4,10 @@ import {
     Heading,
     Text,
 } from '@chakra-ui/react'
-import { useParams } from 'react-router';
-import { useGlobalStore } from '../../stores';
+import { useParams } from 'react-router'
+import { useGlobalStore } from '../../stores'
+import { replaceNewLineWithBreaks } from '../../stores/stores/utils-store'
+import { SpinnerMain } from '../spinner'
 
 export const BlogArticlePage = () => {
 
@@ -14,7 +16,8 @@ export const BlogArticlePage = () => {
 
     const { 
         fetchBlogPost,
-        selectedBlogPost
+        isLoading,
+        selectedBlogPost,
     } = useGlobalStore()
 
     useEffect(() => {
@@ -40,7 +43,7 @@ export const BlogArticlePage = () => {
         title,
         updatedAt 
     } = blogPost
-
+      
     return (
         <Flex
             alignItems="flex-start"
@@ -52,17 +55,24 @@ export const BlogArticlePage = () => {
 
             mx="auto"
         >
-            <Heading
-                mx="auto"
-                mb="4"
-                p="2"
-            >
-                {title}
-            </Heading>
+            { isLoading
+                ?
+                    <SpinnerMain />
+                :
+                    <>
+                        <Heading
+                            mx="auto"
+                            mb="4"
+                            p="2"
+                        >
+                            {title}
+                        </Heading>
 
-            <Text>
-                {body}
-            </Text>
+                        <Text
+                            dangerouslySetInnerHTML={{ __html: replaceNewLineWithBreaks(body ? body : '')}}
+                        />
+                    </>
+            }
         </Flex>
     )
 }

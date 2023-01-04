@@ -4,9 +4,7 @@ import { capFirstLetters } from '../../../utils'
 import { TabsEnum, useGlobalStore } from '../../../stores'
 
 export const FightStats = ({
-    fighter1Id = '',
-    fighter2Id = '',
-    selectedFighterId = '',
+    fighterIds
 }) => {
 
     const { 
@@ -16,18 +14,19 @@ export const FightStats = ({
     } = useGlobalStore();
 
     const [fighters, setFighters] = useState(null);
+    const { fighter1Id, fighter2Id, selectedFighterId} = fighterIds?.fighter1Id ? fighterIds : {};
     const totalRounds = activeGroupScorecard?.fight?.totalRounds ? activeGroupScorecard?.fight?.totalRounds : 12
 
     useEffect(() => {
         if(stats?.length > 0){
-            console.log('STATS: ', stats)
+            // console.log('STATS: ', stats)
             setFighters(stats[0].fighters);
             const [fighter1, fighter2] = stats[0].fighters;
             const obj = {
                 [fighter1]: 0,
                 [fighter2]: 0,
             };
-            console.log('obj, 26 ', obj)
+            // console.log('obj, 26 ', obj)
             // divide by total scorers...
 
             const getMappedScoresArr = stats?.map( (statObj, _i) => statObj.mappedScores)
@@ -117,7 +116,8 @@ export const FightStats = ({
                 ...obj,
                 total: mappedScores.length
             })
-        },{[fighter1]: 0, [fighter2]: 0, even: 0});
+        },{[fighter1]: 0, [fighter2]: 0, even: 0})
+        
     });
     // console.log('totalObj: ', totalObj)
     const getPercentages = totalObj => {
@@ -147,7 +147,13 @@ export const FightStats = ({
             mb="2"
         >
                 <Flex
-                    borderBottom={selectedFighterId === fighter1Id ? "2px solid white" : '2px solid transparent'}
+                    borderBottom={
+                        selectedFighterId && selectedFighterId == fighter1Id 
+                        ? "2px solid white" 
+                        : selectedFighterId && selectedFighterId != fighter1Id 
+                            ? '2px solid blue' 
+                            : '2px solid red'
+                        }
                     flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"

@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { 
     Button,
     Collapse,
     Flex, 
     Text 
 } from '@chakra-ui/react'
+import { replaceNewLineWithBreaks } from '../../stores/stores/utils-store'
 
 export const FightStoryline = ({ 
     selectedFightSummary 
@@ -24,9 +25,9 @@ export const FightStoryline = ({
             w="100%"
         >
             <Collapse startingHeight={'4rem'} in={showFullStoryline} animateOpacity>
-                <Text>
-                    {fightStoryline}
-                </Text>
+                <Text
+                    dangerouslySetInnerHTML={{ __html: replaceNewLineWithBreaks(fightStoryline ? fightStoryline : '')}}
+                />
             </Collapse>
                 { fightStoryline && 
                     <Button 

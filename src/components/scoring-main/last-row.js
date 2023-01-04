@@ -10,14 +10,13 @@ import {
 } from "@chakra-ui/icons"
 
 export const LastRow = ({
-    clearSelectedFighter,
-    fighter1Id,
-    fighter2Id,
+    handleFighterSelect,
+    fighterIds,
     handleAdjustScore,
     notSelectedScore,
-    selectedFighterId
 }) => {
 
+    const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
     const evenRound = notSelectedScore == 10;
     const setScoreColor = fighter => {
         if(!selectedFighterId) return 'gray.400'
@@ -95,7 +94,7 @@ export const LastRow = ({
                     color={selectedFighterId ? "red.500" : 'red.900'}
                     cursor="pointer"
                     _hover={{color: 'red.600'}}
-                    onClick={clearSelectedFighter}
+                    onClick={() => handleFighterSelect(null)}
                 >
                     {<RepeatIcon />}
                 </Heading>

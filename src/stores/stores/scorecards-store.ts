@@ -143,16 +143,16 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         set({ panelists })
     },
     fetchBlogPost: async (blogPostId: string) => {
-        get().setIsSubmitting(true)
+        get().setIsLoading(true)
         const res = await axios.get(`${url}/blog/${blogPostId}`)
-        get().setIsSubmitting(false)
+        get().setIsLoading(false)
         const selectedBlogPost = res.data as BlogPost
         set({ selectedBlogPost })
     },
     fetchBlogPosts: async () => {
-        get().setIsSubmitting(true)
+        get().setIsLoading(true)
         const res = await axios.get(`${url}/blog`)
-        get().setIsSubmitting(false)
+        get().setIsLoading(false)
         const blogPosts = res.data as BlogPost[]
         set({ blogPosts })
     },
@@ -173,7 +173,7 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
     },
     
     fetchList: async (listType: string) => {
-        const res = await axios.get(`${url}/lists/${get().user.attributes.sub}/${listType}`, await configureAccessToken() );
+        const res = await axios.get(`${url}/lists/${get().user.sub}/${listType}`, await configureAccessToken() );
         const data = res.data as any;
         if(listType === "pound"){
             set({ 

@@ -82,16 +82,16 @@ export const MyAccountForm = () => {
   const { bio, email, fightCoins, firstName, isPublic, lastName, username } = form;
 
   return (
-    <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
+    <Box px={{ base: '4', md: '10' }} py="8" maxWidth="3xl" mx="auto">
       <form id="account_settings_form" onSubmit={e => e.preventDefault()}>
-        <Stack spacing="4" divider={<StackDivider />}>
+        <Stack spacing="2" divider={<StackDivider />}>
           <Heading size="lg" as="h1" paddingBottom="4">
             Account Settings
           </Heading>
           <FieldGroup title="FightCoins">
             <FormControl id="fightCoins">
               <FormLabel>Total</FormLabel>
-              <Input w="25%" readOnly type="number" value={fightCoins} />
+              <Input w={["40%","25%"]} readOnly type="number" value={fightCoins} />
             </FormControl>
           </FieldGroup>
           <FieldGroup title="Personal Info">
@@ -145,16 +145,16 @@ export const MyAccountForm = () => {
 
           <FieldGroup title="Profile Image">
             <Stack 
-              direction="row" 
+              direction={["column", "row"]}
               spacing="6" 
               align="center" 
               width="full"
             >
               <Avatar
-                size="xl"
+                size={["lg", "xl"]}
               />
               <Box>
-                <HStack spacing="5">
+                <HStack spacing="2">
                   <Button 
                     size="sm" 
                     leftIcon={<HiCloudUpload />}
@@ -176,7 +176,7 @@ export const MyAccountForm = () => {
             </Stack>
           </FieldGroup>
         </Stack>
-        <FieldGroup mt="8">
+        <FieldGroup mt="2">
           <HStack width="full">
             <Button 
               onClick={handleUpdateUser} 

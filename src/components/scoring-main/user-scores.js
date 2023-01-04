@@ -9,37 +9,26 @@ import {
     ChevronRightIcon, 
     RepeatIcon,
 } from '@chakra-ui/icons'
-import { GiConsoleController } from 'react-icons/gi'
 
 export const UserScores = ({
-    clearSelectedFighter,
     evenRound,
-    fighter1Id,
-    fighter2Id,
+    fighterIds,
     handleAdjustScore,
-    selectedFighter,
+    handleFighterSelect,
 }) => {
 
     const { 
         userScorecard,
     } = useGlobalStore()
-
-    const [selectedFighterId, setSelectedFighterId] = useState('')
-
-    useEffect(() => {
-        if(selectedFighter?.fighterId){
-            setSelectedFighterId(selectedFighter.fighterId)
-            return
-        }
-        setSelectedFighterId('')
-    },[selectedFighter])
+    
+    const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
 
     return (
         <Flex
             id="user_scores"
             w="100%"
             maxW="100%"
-            px="1"
+            px="4"
             flexDir="column"
             alignItems="center"
             justifyContent="flex-start"
@@ -77,12 +66,12 @@ export const UserScores = ({
                         score1,
                         score2,
                         score1Color: score1 >= score2 
-                            ? selectedFighter 
+                            ? selectedFighterId
                                 ? 'gray.500' : 'whiteAlpha.800' 
                             : selectedFighterId
                                 ? 'yellow.500' : 'yellow.400',
                         score2Color: score2 >= score1 
-                            ? selectedFighter 
+                            ? selectedFighterId
                                 ? 'gray.500' : 'whiteAlpha.800' 
                             : selectedFighterId 
                                 ? 'yellow.500' : 'yellow.400',                   
@@ -165,10 +154,10 @@ export const UserScores = ({
                                     <Heading 
                                         as="h3" 
                                         size={["lg", "md"]}
-                                        color={selectedFighter ? "red.500" : 'red.900'}
+                                        color={selectedFighterId ? "red.500" : 'red.900'}
                                         cursor="pointer"
                                         _hover={{color: 'red.600'}}
-                                        onClick={clearSelectedFighter}
+                                        onClick={() => handleFighterSelect(null)}
                                         alignSelf="center"
                                     >
                                         {<RepeatIcon />}
