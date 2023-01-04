@@ -45,57 +45,27 @@ export const ShowsArrows = () => {
 
 
     return (
-        <Flex
-            id="shows_arrows"
-            display="flex"
-            alignItems="flex-start"
-            justifyContent="space-between"
-            position="absolute"
-            top={["100px", "50px"]}
-            left="0"
-            right="0"
-            w="100%"
-        >
-            { ['left', 'right'].map( el => {
-                return (
-                    <Flex
-                        key={el}
-                        p="4"
-                        maxW={["30%", "20%"]}
-                        justifyContent="space-between"
-                    >
-                        <IconButton
-                            // m="auto"
-                            variant="ghost"
-                            id={el}
-                            key={el}
-                            zIndex={1000}
-                            onClick={rotateFighters}
-                            w="100%"
-                            h="20%"
-                            color="#cacaca"
-                            border={["1px solid transparent"]}
-                            _hover={{
-                                color: 'white',
-                                border: '1px solid #fff'
-                            }}
-                            icon={el === 'right' 
-                                ? 
-                                    <ChevronRightIcon 
-                                        width="100%" 
-                                        height="100%" 
-                                    /> 
-                                : 
-                                    <ChevronLeftIcon
-                                        mr="0"
-                                        width="100%"
-                                        height="100%"
-                                    />
-                            }
-                        />
-                    </Flex>
-                )
-            })}
-        </Flex>
+        <>
+            <ChevronLeftIcon
+                onClick={rotateFighters}
+                id="left"
+                position="absolute"
+                left="0"
+                top="10"
+                maxW="20%"
+                fontSize="6rem" 
+                ml="-1"
+            />
+            <ChevronRightIcon
+                onClick={rotateFighters}
+                id="right"
+                right="0"
+                top="10"
+                position="absolute"
+                maxW="20%"
+                fontSize="6rem" 
+                mr="-1"
+            /> 
+        </>
     )
 }

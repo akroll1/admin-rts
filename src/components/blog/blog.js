@@ -16,14 +16,14 @@ export const Blog = () => {
   const {
     blogPosts,
     fetchBlogPosts,
-    isSubmitting,
+    isLoading,
   } = useGlobalStore()
 
   useEffect(() => {
+
     fetchBlogPosts()
   },[])
   
-  console.log('blogPosts: ', blogPosts)
   return (
     <Box as="section" bg={mode('whiteAlpha.200', 'inherit')} py="4">
       <Box maxW={{base: 'xl', md: '7xl'}} mx="auto" px={{base: '6', md: '8'}}>
@@ -34,7 +34,7 @@ export const Blog = () => {
         >
           Featured Articles
         </Heading>
-        { isSubmitting && blogPosts.length === 0
+        { isLoading && blogPosts.length === 0
           ?
             <SpinnerMain />
           :

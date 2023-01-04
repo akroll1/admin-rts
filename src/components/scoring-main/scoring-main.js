@@ -8,21 +8,18 @@ import { ScoringButtons } from './scoring-buttons'
 import { FightStats } from '../sidebars/chat-sidebar-components'
 
 export const ScoringMain = () => {
+
     const [evenRound, setEvenRound] = useState(false)
-    const [selectedFighter, setSelectedFighter] = useState('');
+    const [fighterIds, setFighterIds] = useState(null);
     const [notSelectedScore, setNotSelectedScore] = useState(9);
-    
     const {
         activeGroupScorecard,
-        fightComplete,
         fighterScores,
-        isSubmitting,
         lastScoredRound,
         setScoringComplete,
         submitRoundScores,
         tabs,
         totalRounds,
-        userScorecard,
     } = useGlobalStore();
 
     useEffect(() => {
@@ -32,37 +29,46 @@ export const ScoringMain = () => {
         } 
     },[notSelectedScore])
 
-    const handleFighterSelect = fighter => {
-        setSelectedFighter(fighter)
+    useEffect(() => {
+        if(activeGroupScorecard?.fighters?.length === 2){
+            setFighterIds({
+                fighter1Id: activeGroupScorecard.fighters[0].fighterId,
+                fighter2Id: activeGroupScorecard.fighters[1].fighterId,
+                selectedFighterId: null
+            })
+        }
+    },[activeGroupScorecard])
+
+    const handleFighterSelect = fighterId => {
+        setFighterIds({ 
+            ...fighterIds, 
+            selectedFighterId: fighterId
+        })
         setNotSelectedScore(9)
     }
 
     const submitScores = () => {
-        const [fighter1, fighter2] = activeGroupScorecard?.fighters;
-        const notSelected = selectedFighter.fighterId === fighter1.fighterId ? fighter2.fighterId : fighter1.fighterId;
+        const notSelected = fighterIds.selectedFighterId;
         const { scorecardId } = fighterScores
         const roundScores = {
             round: lastScoredRound+ 1,
             scorecardId,
-            [selectedFighter.fighterId]: 10,
+            [fighterIds.selectedFighter]: 10,
             [notSelected]: notSelectedScore,
         };
         const scoringIsComplete = (lastScoredRound + 1)  > totalRounds;
         submitRoundScores(roundScores);
-        setSelectedFighter('');
+        setFighterIds({ 
+            ...fighterIds, 
+            selectedFighterId: null
+        });
         setNotSelectedScore(9)
         setScoringComplete(scoringIsComplete)
     }
 
-
-    const clearSelectedFighter = () => {
-        setSelectedFighter('')
-        setNotSelectedScore('9')
-    }
-
     const handleAdjustScore = (e,fighterId) => {
         const { id } = e.currentTarget;
-        if(!selectedFighter?.fighterId || fighterId == selectedFighter?.fighterId || notSelectedScore == 10) return
+        if(!fighterIds.selectedFighterId || fighterId == fighterIds.selectedFighterId || notSelectedScore == 10) return
         if(id === 'increment'){
             if(notSelectedScore >= 10) return;
             setNotSelectedScore(prev => prev + 1)
@@ -73,50 +79,37 @@ export const ScoringMain = () => {
         }
     }
 
-    const [fighter1, fighter2] = activeGroupScorecard?.fighters?.length === 2 ? activeGroupScorecard.fighters : [];
-    console.log('selectedFighter: ', selectedFighter)
     return (
         <Flex 
+            border="1px solid #404040"
             id="scoring_main"
             display={tabs[TabsEnum.SCORING] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             maxW={["100%", "100%","40%", "40%"]}
             flexDir="column" 
-            justifyContent="flex-start"
+            justifyContent="space-between"
+            alignItems="flex-start"
             w="100%"  
             position="relative"  
             boxSizing="border-box"
-            maxH="70vh"
-            mb="4rem"
+            maxH="80vh"
+            mt="1"
         >
-            {/* <Heading
-                py="1"
-                textAlign="center"
-            >
-                {lastScoredRound ? `Round ${lastScoredRound + 1}` : `Round`}
-            </Heading> */}
             <FightStats 
-                selectedFighterId={selectedFighter?.fighterId}
+                fighterIds={fighterIds}
             />
             <UserScores
                 evenRound={evenRound}
-                notSelectedScore={notSelectedScore}
-                selectedFighter={selectedFighter}
-                setNotSelectedScore={setNotSelectedScore}
-                submitScores={submitScores}
+                fighterIds={fighterIds}
                 handleAdjustScore={handleAdjustScore}
-                setSelectedFighter={setSelectedFighter}
-                clearSelectedFighter={clearSelectedFighter}
-                fighter1Id={fighter1?.fighterId}
-                fighter2Id={fighter2?.fighterId}
+                notSelectedScore={notSelectedScore}
+                setNotSelectedScore={setNotSelectedScore}
+                handleFighterSelect={handleFighterSelect}
             />
             <ScoringButtons
-                clearSelectedFighter={clearSelectedFighter}
                 evenRound={evenRound}
+                fighterIds={fighterIds}
                 handleAdjustScore={handleAdjustScore}
-                fighter1Id={fighter1?.fighterId}
-                fighter2Id={fighter2?.fighterId}
                 notSelectedScore={notSelectedScore}
-                selectedFighter={selectedFighter}
                 handleFighterSelect={handleFighterSelect}
                 submitScores={submitScores}
             />

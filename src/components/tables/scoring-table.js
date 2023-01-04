@@ -19,6 +19,7 @@ export const ScoringTable = () => {
 
     const {
         activeGroupScorecard,
+        handleRealTimeSwitchClick,
         lastScoredRound,
         setToast,
         tableData,
@@ -30,28 +31,6 @@ export const ScoringTable = () => {
     const totalRounds = activeGroupScorecard?.fight ? activeGroupScorecard.fight.rounds : 12;
     const sortData = (a, b) => a.username - b.username
     const sortedTable = [...new Set(tableData?.sort(sortData))]
-
-    const handleRealTimeSwitchClick = () => {
-        if(activeGroupScorecard?.groupScorecard?.chatKey){
-            const toast = {
-                title: 'Real-Time Updates Enabled',
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-            }
-            setToast(toast)
-        }
-        if(!activeGroupScorecard?.groupScorecard?.chatKey){
-            const toast = {
-                title: 'Real-Time Updates Disabled',
-                description: 'Please upgrade to allow real-time updates.',
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-            }
-            setToast(toast)
-        }
-    }
 
     const handleShowToCurrentRound = () => {
         setToCurrentRound(prev => !prev)
@@ -110,7 +89,7 @@ export const ScoringTable = () => {
                 handleShowToCurrentRound={handleShowToCurrentRound}
                 toCurrentRound={toCurrentRound}
             />
-            <FightStats />
+            {/* <FightStats /> */}
             <Flex 
                 overflow="scroll"
                 display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}

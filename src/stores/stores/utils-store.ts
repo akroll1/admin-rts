@@ -15,6 +15,7 @@ import axios from 'axios'
 import { capFirstLetters } from "../../utils"
 
 export interface UtilsStoreState {
+    isLoading: boolean
     isSubmitting: boolean
     isSubmittingForm: boolean,
     chatMessage: ChatMessage | null
@@ -22,6 +23,7 @@ export interface UtilsStoreState {
     scoringTransformedPrediction: string | null
     setGlobalNotification(chatMessage: ChatMessage): void
     setScoringTransformedPrediction(rawPrediction: string | null): void
+    setIsLoading(loadingState: boolean): void
     setIsSubmitting(submittingState: boolean): void
     setIsSubmittingForm(submittingState: boolean): void
     setModals(modal: string, modalState: boolean): void
@@ -40,6 +42,7 @@ export interface UtilsStoreState {
 
 export const initialUtilsStoreState = {
     chatMessage: {} as ChatMessage,
+    isLoading: false,
     isSubmitting: false,
     isSubmittingForm: false,
     modals: {} as Modals,
@@ -53,12 +56,19 @@ export const initialUtilsStoreState = {
 
 const url = process.env.REACT_APP_API;
 
+export const replaceNewLineWithBreaks = (text: string) => {
+    return text.replace(/\n/g, "<br />")
+}
+
 export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreState> = (set, get) => ({
     ...initialUtilsStoreState,
     setGlobalNotification: (chatMessage: ChatMessage) => {
         set({
             chatMessage
         })
+    },
+    setIsLoading: (loadingState: boolean) => {
+        set({ isLoading: loadingState })
     },
     setIsSubmitting: (submittingState: boolean) => {
         set({ isSubmitting: submittingState })

@@ -7,13 +7,11 @@ import { FighterSelectionButtons } from "./fighter-selection-buttons"
 import { useGlobalStore } from "../../stores"
 
 export const ScoringButtons = ({
-    clearSelectedFighter,
     evenRound,
+    fightComplete,
+    fighterIds,
     handleAdjustScore,
-    fighter1Id,
-    fighter2Id,
     notSelectedScore,
-    selectedFighter,
     handleFighterSelect,
     submitScores,
 }) => {
@@ -23,24 +21,22 @@ export const ScoringButtons = ({
         userScorecard
     } = useGlobalStore()
 
-    const isDisabled = false;
-    const fightComplete = false;
-    const selectedFighterId = selectedFighter.fighterId
+    const isDisabled = !fighterIds?.selectedFighter || fightComplete
+    const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
+
     return (
         <Flex
             id="scoring_buttons"
             flexDir="column"
             w="100%"
-            maxH="20%"
+            minH="25vh"
+            maxH="25vh"
             mb="12"
         >
             <LastRow 
-                clearSelectedFighter={clearSelectedFighter}
+                fighterIds={fighterIds}
                 handleAdjustScore={handleAdjustScore}
-                fighter1Id={fighter1Id}
-                fighter2Id={fighter2Id}
                 notSelectedScore={notSelectedScore}
-                selectedFighterId={selectedFighter.fighterId}
                 handleFighterSelect={handleFighterSelect}
             />
             <Flex  
@@ -55,13 +51,10 @@ export const ScoringButtons = ({
                 >
                     { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, _i) => (
                         <FighterSelectionButtons
-                            evenRound={evenRound}
                             fighter={fighter}
-                            key={fighter?.fighterId}
-                            fighter1Id={fighter1Id}
-                            fighter2Id={fighter2Id}
-                            selectedFighterId={selectedFighter.fighterId}
+                            fighterIds={fighterIds}
                             handleFighterSelect={handleFighterSelect}
+                            key={fighter?.fighterId}
                         /> 
                     ))}
                 </Flex>

@@ -30,8 +30,6 @@ const Dashboard = () => {
   const { type } = useParams();
   const { 
     signOut,
-    isPanelist,
-    isSuperAdmin,
     user, 
   } = useGlobalStore()
 
@@ -43,15 +41,15 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    if(isSuperAdmin && isPanelist){
+    if(user.isSuperAdmin && user.isPanelist){
       setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
       return;
-    } else if(isPanelist){
+    } else if(user.isPanelist){
       setFormLinks([...formLinks, ...panelistOptions]);
-    } else if(isSuperAdmin){
+    } else if(user.isSuperAdmin){
       setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
     }
-  },[isSuperAdmin, isPanelist])
+  },[user])
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
@@ -100,8 +98,7 @@ const Dashboard = () => {
       direction="row" 
       color="white" 
       flexWrap="wrap" 
-      px={6} 
-      py={8}
+      p={["3","6","8","10"]}
     >
       <Box flex="1 0 25%">
         <Stack spacing={6}>
@@ -128,7 +125,10 @@ const Dashboard = () => {
         </Stack>
         <Divider borderColor="whiteAlpha.400" />
         <Stack spacing={6} mt={6}>
-          <Stack>
+          <Stack
+            maxH="30vh"
+            overflowY="scroll"
+          >
             {userFormLinks()}
           </Stack>
           <Divider borderColor="whiteAlpha.400" />

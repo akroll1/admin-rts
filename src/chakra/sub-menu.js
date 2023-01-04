@@ -38,9 +38,9 @@ const DesktopSubmenu = ({ link }) => {
           px="8"
         >
           <SimpleGrid spacing="10" columns={2}>
-            {link.children?.map( (item, idx) => (
+            {link.children?.map( (item, _i) => (
               <DesktopMenuItem 
-                key={idx} 
+                key={_i} 
                 title={item.label} 
                 href={item.href} 
                 icon={item.icon}
@@ -55,8 +55,10 @@ const DesktopSubmenu = ({ link }) => {
   )
 }
 
-const MobileSubMenu = ({ link }) => {
+const MobileSubMenu = ({ closeMain, link }) => {
+  
   const { isOpen, onToggle } = useDisclosure()
+
   return (
     <Box>
       <NavLink.Mobile
@@ -74,13 +76,15 @@ const MobileSubMenu = ({ link }) => {
       </NavLink.Mobile>
       <Collapse in={isOpen}>
         <Box pl="5">
-          {link.children?.map( (item, idx) => (
-            <NavLink.Mobile 
-              key={idx} 
+          {link.children?.map( (item, _i) => (
+            <NavLink.Mobile   
+              key={_i} 
               href={item.href}
-              onClick={onToggle}
+              onToggle={onToggle}
+              isOpen={isOpen}
+              closeMain={closeMain}
             >
-              {item.label}
+              {item.label} 
             </NavLink.Mobile>
           ))}
         </Box>

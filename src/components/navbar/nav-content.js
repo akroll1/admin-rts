@@ -56,13 +56,15 @@ const MobileNavContext = props => {
             <Submenu.Mobile 
               key={i} 
               link={link} 
-              onClick={onToggle}
+              href={link.href}
+              closeMain={onToggle}
+              isOpen={isOpen}
             />
           ) : (
             <NavLink.Mobile 
               key={i} 
               href={link.href}
-              onClick={onToggle}
+              onToggle={onToggle}
             >
               {link.label}
             </NavLink.Mobile>
@@ -82,7 +84,6 @@ const MobileNavContext = props => {
 
 const DesktopNavContent = props => {
 
-  const { user } = useGlobalStore()
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure(); 
   return (
@@ -120,9 +121,15 @@ const DesktopNavContent = props => {
         {links.map( (link, idx) => (
           <Box as="li" key={idx} id={`nav__menuitem-${idx}`}>
             {link.children ? (
-              <Submenu.Desktop link={link} />
+              <Submenu.Desktop 
+                link={link} 
+              />
             ) : (
-              <NavLink.Desktop href={link.href}>{link.label}</NavLink.Desktop>
+              <NavLink.Desktop 
+                href={link.href}
+              >
+                {link.label}
+              </NavLink.Desktop>
             )}
           </Box>
         ))}

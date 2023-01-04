@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Link, useColorModeValue as mode } from '@chakra-ui/react'
 import { NavLink as RRLink } from 'react-router-dom'
+import { GiConsoleController } from 'react-icons/gi';
 
 const DesktopNavLink = React.forwardRef((props, ref) => {
   const { active, href, ...rest } = props;
@@ -38,7 +39,13 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
   DesktopNavLink.displayName = 'DesktopNavLink'
   
 export const MobileNavLink = props => {
-  const { active, href, onToggle, ...rest } = props
+
+  const { active, closeMain, href, onToggle, ...rest } = props
+  const close = () => {
+    onToggle()
+    closeMain()
+  }
+
   return (
     <Link
       as={RRLink}
@@ -50,7 +57,7 @@ export const MobileNavLink = props => {
       height="14"
       fontWeight="semibold"
       borderBottomWidth="1px"
-      onClick={onToggle}
+      onClick={close}
       {...rest}
     />
   )
