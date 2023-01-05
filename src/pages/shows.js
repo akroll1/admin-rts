@@ -13,10 +13,12 @@ import { useNavigate } from 'react-router'
 
 const Shows = () => {
 
+    const navigate = useNavigate();
     const { 
         createGroupScorecard,
         fetchSeasonSummary,
         isSubmitting,
+        navigateTo,
         putUserFightReview,
         selectedFightSummary, 
         setToast,
@@ -56,6 +58,12 @@ const Shows = () => {
         }
     },[userFightReview]);
     
+    useEffect(() => {
+        if(navigateTo){
+            navigate(navigateTo)
+        }
+    },[navigateTo])
+
     const handleReviewFormSubmit = async () => {
         const putObj = Object.assign(reviewForm, {
             ownerId: sub,

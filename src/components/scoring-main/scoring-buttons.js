@@ -8,21 +8,39 @@ import { useGlobalStore } from "../../stores"
 
 export const ScoringButtons = ({
     evenRound,
-    fightComplete,
     fighterIds,
     handleAdjustScore,
+    lastScoredRound,
     notSelectedScore,
     handleFighterSelect,
     submitScores,
+    totalRounds,
 }) => {
 
     const {
-        activeGroupScorecard,
+        fighters,
         userScorecard
     } = useGlobalStore()
 
-    const isDisabled = !fighterIds?.selectedFighter || fightComplete
-    const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
+    
+    const fightComplete = lastScoredRound >= totalRounds; 
+    const isDisabled = !fighterIds?.selectedFighterId || fightComplete;
+    const { selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
+    
+    const setButtonLabel = () => {
+        
+        if(fightComplete){
+            return `Fight Complete`
+        }
+        if(!selectedFighterId){
+            return `Select Fighter`
+        }
+        if(selectedFighterId){
+            return `Submit Round ${userScorecard?.scores?.length + 1}`
+        }
+    }
+    
+    const buttonLabel = setButtonLabel()
 
     return (
         <Flex
@@ -49,8 +67,9 @@ export const ScoringButtons = ({
                     alignItems="center"
                     justifyContent="space-around"
                 >
-                    { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard?.fighters.map( (fighter, _i) => (
+                    { fighters?.length > 0 && fighters.map( (fighter, _i) => (
                         <FighterSelectionButtons
+                            evenRound={evenRound}
                             fighter={fighter}
                             fighterIds={fighterIds}
                             handleFighterSelect={handleFighterSelect}
@@ -62,17 +81,19 @@ export const ScoringButtons = ({
                     zIndex={1000}
                     onClick={submitScores}
                     disabled={isDisabled} 
-                    variant={isDisabled ? "outline" : "solid"} 
-                    colorScheme="solid" 
+                    variant={isDisabled ? "outline" : "none"} 
                     mx="auto" 
                     my="2"
+                    bg={selectedFighterId ? "#303030" : "#666"}
                     fontSize="1.2rem"
+                    border="1px solid"
+                    borderColor={selectedFighterId ? 'whiteAlpha.900' : '#bababa'}
                     fontWeight="bold"
-                    color={selectedFighterId ? "inherit" : "#FAFAFA"}
+                    color={selectedFighterId ? "inherit" : "gray.200 !important"}
                     w={["80%", "70%", "60%", "50%"]}
                     minH="3rem"
                 >
-                    {isDisabled && fightComplete ? `Scoring Complete` : selectedFighterId ? `Score Round ${userScorecard?.scores?.length + 1}` : `Round ${userScorecard?.scores?.length > 0 ? userScorecard?.scores?.length + 1 : 12}` }
+                    {`${buttonLabel}`}
                 </Button>
             </Flex>
         </Flex>

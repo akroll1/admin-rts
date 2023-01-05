@@ -24,7 +24,7 @@ export const FightStoryline = ({
             color="fsl-text"
             w="100%"
         >
-            <Collapse startingHeight={'4rem'} in={showFullStoryline} animateOpacity>
+            <Collapse startingHeight={'4.5rem'} in={showFullStoryline} animateOpacity>
                 <Text
                     dangerouslySetInnerHTML={{ __html: replaceNewLineWithBreaks(fightStoryline ? fightStoryline : '')}}
                 />

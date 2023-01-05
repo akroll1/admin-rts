@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Stack } from '@chakra-ui/react'
 import { AnalyticsSearchField } from '../../analytics'
-import { NavGroup } from '../scoring-sidebar/nav-group'
-import { NavItem } from '../scoring-sidebar/nav-item'
+import { NavGroup } from '../scoring-sidebar-components/nav-group'
+import { NavItem } from '../scoring-sidebar-components/nav-item'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { stateStore } from '../../../stores'
 

@@ -97,7 +97,7 @@ export const fslTheme = {
         _dark: '#171717'
       },
       'chakra-body-text': {
-        _dark: '#C8C8C8'
+        _dark: '#F0F0F0'
       },
       'fsl-sidebar-bg': {
         _dark: '#131313'

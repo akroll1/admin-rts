@@ -18,7 +18,7 @@ export const Scorecards = () => {
     const { 
         fetchUserInvites,
         fetchUserScorecards,
-        isSubmitting,
+        isLoading,
         userInvites,
         userScorecardSummaries,
     } = useGlobalStore();
@@ -62,7 +62,7 @@ export const Scorecards = () => {
             pt={["2", "4", "8", "12"]}
             minH="70vh"
         >
-            { isSubmitting
+            { isLoading
                 ?
                     <SpinnerMain />
                 :

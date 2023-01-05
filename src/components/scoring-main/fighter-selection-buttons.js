@@ -5,6 +5,7 @@ import { useGlobalStore } from '../../stores';
 import { capFirstLetters } from '../../utils'
 
 export const FighterSelectionButtons = ({
+    evenRound,
     fighter,
     fighterIds,
     handleFighterSelect
@@ -23,10 +24,9 @@ export const FighterSelectionButtons = ({
             color: '#cacaca'
         }
         if(!selectedFighterId) return colorsObj
-        
+        if(evenRound) return colorsObj
         if(selectedFighterId && selectedFighterId == currentFighter){
-            console.log('selectedFighterId: ', selectedFighterId)
-            console.log('selectedFighter: ', fighter.lastName)
+
             Object.assign(colorsObj, {
                 bg: '#C01616',
                 borderColor: 'gray.600',
@@ -35,7 +35,7 @@ export const FighterSelectionButtons = ({
             return colorsObj
         } 
         if(selectedFighterId && selectedFighterId != currentFighter){  
-            console.log('NOT selectedFighter: ', fighter.lastName)
+
             Object.assign(colorsObj,{
                 bg: '#blue',
                 borderColor: 'gray.700',

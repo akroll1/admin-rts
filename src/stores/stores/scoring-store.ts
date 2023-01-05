@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     BettingProps,
+    Fighter,
     GroupScorecardSummary, 
     ModalsEnum,
     PanelProps,
@@ -11,16 +12,18 @@ import {
 } from "../models";
 import axios from 'axios'
 import { configureAccessToken } from "./auth-store";
+import { generateAnaltyicsData, generateCollatedData } from "../../utils/analytics-utils";
 
 export interface ScoringStoreState {
     activeGroupScorecard: GroupScorecardSummary
     bettingProps: BettingProps
     chatKey: string | null
     chatToken: string
-    collateTableData(): void
+    // collateTableData(): void
     fetchGroupScorecardSummary(fightId: string, groupScorecardId: string): void
     fetchPanelProps(): void
     fightComplete: boolean
+    fighters: Fighter[]
     groupScorecards: Scorecard[]
     groupScorecardSummary: GroupScorecardSummary
     lastScoredRound: number
@@ -43,6 +46,7 @@ export const initialScoringStoreState = {
     chatKey: '',
     chatToken: '',
     fightComplete: false,
+    fighters: [] as Fighter[],
     groupScorecards: [],
     groupScorecardSummary: {} as GroupScorecardSummary,
     lastScoredRound: 0,
@@ -53,67 +57,12 @@ export const initialScoringStoreState = {
     tableData: [],
     totalRounds: 12,
     userScorecard: {} as Scorecard,
-
 }
 
 const url = process.env.REACT_APP_API;
 
 export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringStoreState> = (set, get) => ({
     ...initialScoringStoreState,
-    collateTableData: () => {
-
-        const collated = get().groupScorecards.map( (scorecard: Scorecard) => {
-            const [fighter1, fighter2] = get().activeGroupScorecard.fighters
-            let { finalScore, prediction, scores, displayName } = scorecard
-            const sortRoundAscending = (a: any, b: any) => a.round - b.round
-
-            if(prediction){
-                const index = prediction.indexOf(',')
-                prediction = prediction.slice(0, index) === fighter1.fighterId 
-                    ? `${fighter1.lastName}- ${prediction.slice(index+1)}` 
-                    : `${fighter2.lastName}- ${prediction.slice(index+1)}`
-            }
-
-            const totals = scores.reduce( (acc: any, curr: any) => {
-                
-                if(curr[fighter1.fighterId]){
-                    // this is the score, below
-                    acc[fighter1.lastName] += curr[fighter1.fighterId]
-                }
-                if(curr[fighter2.fighterId]){
-                    acc[fighter2.lastName] += curr[fighter2.fighterId]
-                }
-                return acc;
-            }, {[fighter1.lastName]: 0, [fighter2.lastName]: 0 })
-            
-            const mappedScores = scores.map( (score: any) => {
-                const { round } = score;
-                const f1name = fighter1.lastName;
-                const f2name = fighter2.lastName;
-                return ({
-                    round,
-                    [f1name]: score[fighter1.fighterId] ? score[fighter1.fighterId] : 0,
-                    [f2name]: score[fighter2.fighterId] ? score[fighter2.fighterId] : 0
-                })
-            })
-            .sort(sortRoundAscending);
-
-
-            return ({
-                fighters: [fighter1.lastName, fighter2.lastName],
-                finalScore,
-                mappedScores,
-                prediction,
-                totals,
-                displayName,
-            })
-        })
-        const stats = new Set(collated)
-        set({ 
-            stats: [...stats],
-            tableData: [...stats],
-        })
-    },
     fetchBettingProps: async (fightId: string) => {
         const res = await axios.get(`${url}/props/${fightId}`)
         const bettingProps = res.data as BettingProps
@@ -122,12 +71,11 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
     fetchGroupScorecardSummary: async (fightId: string, groupScorecardId: string) => {
         get().setIsSubmitting(true)
         const res = await axios.get(`${url}/me/group-scorecards/${groupScorecardId}/${fightId}`, await configureAccessToken() );
+        get().setIsSubmitting(false)
         if(res.data === 'Token expired!'){
-            get().setModals('expiredTokenModal', true)
-            return
+            return get().setModals(ModalsEnum.EXPIRED_TOKEN_MODAL, true)
         }
         const data = res.data as GroupScorecardSummary;
-        get().setIsSubmitting(false)
         console.log('DATA- groupScorecardSummary: ', data);
         
         const [userScorecard] = data.scorecards.filter( scorecard => scorecard.scorecardId === `${get().user.sub}-${fightId}`)
@@ -138,21 +86,26 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             },5000)
         }
         const lastScoredRound = userScorecard.scores.length;
-        const scoringComplete = userScorecard.scores.length >= get().totalRounds;
+        const scoringComplete = userScorecard.scores.length >= data.fight.rounds;
+
+        
         set({ 
             activeGroupScorecard: data, 
             chatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
             lastScoredRound,
+            fighters: data.fighters,
             groupScorecards: data.scorecards,
             scoringComplete,
             userScorecard,
         });
+        const collatedData = await generateCollatedData(data.scorecards, data.fighters);
+        const analyticsData = await generateAnaltyicsData(collatedData, data.fighters, data.fight.rounds)
         /////// PREDICTION ///////
         get().setScoringTransformedPrediction(userScorecard.prediction)
         /////// FIGHTER_SCORES ///////
         // get().setSelectedFightSummary(data.fightSummary)
         get().setFighterScores()
-        get().collateTableData()
+
     },
     fetchPanelProps: async () => {
         const res = await axios.get(`${url}/props/${get().activeGroupScorecard.fight.fightId}`, await configureAccessToken() )
@@ -227,7 +180,5 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         const completeChatUpdate = otherScorecards.slice().concat(update)
         console.log('completeChatUpdate', completeChatUpdate)
         set({ groupScorecards: completeChatUpdate })
-        get().collateTableData()
     },
-
 })

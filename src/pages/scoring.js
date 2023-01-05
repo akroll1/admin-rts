@@ -28,7 +28,6 @@ const Scoring = props => {
         fetchBettingProps,
         fetchGroupScorecardSummary,
         fetchPanelProps,
-        isSubmitting,
         lastScoredRound,
         modals,
         setTabs,

@@ -15,6 +15,7 @@ export const ScoringMain = () => {
     const {
         activeGroupScorecard,
         fighterScores,
+        fighters,
         lastScoredRound,
         setScoringComplete,
         submitRoundScores,
@@ -30,14 +31,14 @@ export const ScoringMain = () => {
     },[notSelectedScore])
 
     useEffect(() => {
-        if(activeGroupScorecard?.fighters?.length === 2){
+        if(fighters?.length === 2){
             setFighterIds({
-                fighter1Id: activeGroupScorecard.fighters[0].fighterId,
-                fighter2Id: activeGroupScorecard.fighters[1].fighterId,
+                fighter1Id: fighters[0].fighterId,
+                fighter2Id: fighters[1].fighterId,
                 selectedFighterId: null
             })
         }
-    },[activeGroupScorecard])
+    },[fighters])
 
     const handleFighterSelect = fighterId => {
         setFighterIds({ 
@@ -48,12 +49,12 @@ export const ScoringMain = () => {
     }
 
     const submitScores = () => {
-        const notSelected = fighterIds.selectedFighterId;
+        const notSelected = fighterIds.selectedFighterId !== fighterIds.fighter1Id ? fighterIds.fighter1Id : fighterIds.fighter2Id;
         const { scorecardId } = fighterScores
         const roundScores = {
             round: lastScoredRound+ 1,
             scorecardId,
-            [fighterIds.selectedFighter]: 10,
+            [fighterIds.selectedFighterId]: 10,
             [notSelected]: notSelectedScore,
         };
         const scoringIsComplete = (lastScoredRound + 1)  > totalRounds;

@@ -20,6 +20,7 @@ export interface UtilsStoreState {
     isSubmittingForm: boolean,
     chatMessage: ChatMessage | null
     modals: Modals
+    navigateTo: string
     scoringTransformedPrediction: string | null
     setGlobalNotification(chatMessage: ChatMessage): void
     setScoringTransformedPrediction(rawPrediction: string | null): void
@@ -27,6 +28,7 @@ export interface UtilsStoreState {
     setIsSubmitting(submittingState: boolean): void
     setIsSubmittingForm(submittingState: boolean): void
     setModals(modal: string, modalState: boolean): void
+    setNavigateTo(path: string): void
     setTabs(tab: TabsEnum): void
     setToast(toast: Toast): void
     setTokenExpired(state: boolean): void
@@ -46,6 +48,7 @@ export const initialUtilsStoreState = {
     isSubmitting: false,
     isSubmittingForm: false,
     modals: {} as Modals,
+    navigateTo: '',
     scoringTransformedPrediction: null,
     tabs: { ...resetTabs, [TabsEnum.ALL]: true } as Tabs,
     toast: {} as Toast,
@@ -82,6 +85,9 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
             [ModalsEnum[modal]]: modalState 
         })
         set({ modals })
+    },
+    setNavigateTo: (path: string) => {
+        set({ navigateTo: path })
     },
     setScoringTransformedPrediction: (rawPrediction: string) => {
         if(rawPrediction){
