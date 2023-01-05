@@ -54,7 +54,7 @@ export const FightStats = ({
                         size="lg" 
                         color="muted"
                     >
-                        {capFirstLetters(fighter1.lastName)}
+                        {capFirstLetters(fighter1?.lastName)}
                     </Heading>
                     <Heading 
                         size="md"
@@ -73,7 +73,7 @@ export const FightStats = ({
                         size="lg" 
                         pt="2"
                     >
-                        {capFirstLetters(fighter2.lastName)}
+                        {capFirstLetters(fighter2?.lastName)}
                     </Heading>
                     <Heading 
                         color="gray.400"
