@@ -61,7 +61,7 @@ export const ScoringTableInfo = ({
             fontWeight="normal"
             border={isPredicted ? '1px solid white' : ''}
           >
-            <Text>{`${capFirstLetters(fighter)}`}</Text> 
+            <Text>{`${capFirstLetters(fighter.lastName)}`}</Text> 
             <Text>{`${isPredicted ? predictionHow : ''}`}</Text>
           </Flex>
         )

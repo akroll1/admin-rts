@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     BettingProps,
+    ChatEnum,
     Fighter,
     GroupScorecardSummary, 
     ModalsEnum,
@@ -26,8 +27,7 @@ export interface ScoringStoreState {
     lastScoredRound: number
     panelistChatToken: string | null
     panelProps: PanelProps
-    requestPanelistChatToken(panelistChatKey: string): void
-    requestUserChatToken(userChatKey: string): void
+    requestChatToken(chatKey: string, type: ChatEnum): void
     roundScores: RoundScores
     scoringComplete: boolean
     setPanelistChatToken(panelistChatToken: string | null): void
@@ -103,12 +103,10 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             scoringComplete,
             userScorecard,
         });
-        const collatedData = await generateCollatedData(data.scorecards, data.fighters);
-        const analyticsData = await generateAnaltyicsData(collatedData, data.fighters, data.fight.rounds)
-        /////// PREDICTION ///////
+        const tableData = await generateCollatedData(data.scorecards, data.fighters);
+        const analyticsData = await generateAnaltyicsData(tableData, data.fighters, data.fight.rounds)
+        set({ tableData })
         get().setScoringTransformedPrediction(userScorecard.prediction)
-        /////// FIGHTER_SCORES ///////
-        // get().setSelectedFightSummary(data.fightSummary)
         get().setFighterScores()
 
     },
@@ -132,9 +130,10 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         const panelistChatToken = res.data 
         set({ panelistChatToken })
     },
-    requestUserChatToken: async (userChatKey: string) => {    
+    requestChatToken: async (chatKey: string, type: ChatEnum) => {    
+    
         const options = {
-            chatKey: userChatKey,
+            chatKey,
             attributes: {
                 username: `${get().user.username}`
             },
@@ -144,8 +143,12 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         };
         
         const res = await axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, options, await configureAccessToken() )
-        const userChatToken = res.data 
-        set({ userChatToken })
+        const token = res.data 
+        if(type === ChatEnum.PANELIST){
+            set({ panelistChatToken: token })
+        } else {
+            set({ userChatToken: token })
+        }
     },
     setPanelistChatToken: (panelistChatToken: string | null) => {
         set({ panelistChatToken })

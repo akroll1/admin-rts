@@ -48,7 +48,8 @@ export const ChatPanelistPanel = ({
                     </span>
                 </p>
             </Box>
-    )}
+        )
+    }
 
     const renderPanelistMessages = () => {
         return panelistMessages.map( (message, i) => renderPanelistMessage(message, i))
