@@ -54,7 +54,7 @@ export const ScorecardsNavGroup = props => {
                     _hover={{ color:'#fcfcfc'}}
                     fontSize={isTitle ? ["2xl", "2xl","3xl"] : ["xl", "xl", "2xl"]}
                     as="h3" 
-                    color={isTitle || active ? '#fafafa' : 'gray.400'}
+                    color={isTitle || active ? '#fafafa' : 'gray.300'}
                 >
                     {label}
                 </Heading>

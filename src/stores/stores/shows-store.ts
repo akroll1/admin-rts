@@ -13,6 +13,7 @@ import {
 import { FightStatus } from "../models/enums"
 import { configureAccessToken } from "./auth-store"
 import axios from 'axios'
+import { Navigate } from "react-router"
 
 export interface ShowsStoreState {
     checkForUserFightReview(): void
@@ -71,6 +72,11 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
                 status: res.data.message.includes('Success!') ? 'success' : 'error',
                 isClosable: true
             })
+            if(res.data.message.includes('Success')){
+                setTimeout(() => {
+                    get().setNavigateTo('/scorecards')
+                },3000)
+            }
         }
     },
     fetchFightReviews: async (fightId: string) => {

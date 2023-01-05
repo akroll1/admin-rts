@@ -8,16 +8,16 @@ export const links = [
     label: 'FightSync',
     children: [
       {
-        label: 'Latest Boxing News',
-        description: 'Updated in real-time.',
-        href: '/news',
-        icon: <IoHelpBuoy />,
-      },
-      {
         label: 'Blog',
         description: 'Get the latest boxing insights from the team.',
         href: '/blog',
         icon: <MdWeb />,
+      },
+      {
+        label: 'Latest Boxing News',
+        description: 'Updated in real-time.',
+        href: '/news',
+        icon: <IoHelpBuoy />,
       },
       // {
       //   label: 'CounterPunch Live!',

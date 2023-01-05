@@ -21,11 +21,11 @@ export const LastRow = ({
     const setScoreColor = fighter => {
         if(!selectedFighterId) return 'gray.400'
         if(selectedFighterId == fighter){
-            if(notSelectedScore == '10') return 'red.300'
+            if(notSelectedScore == '10') return 'red.400'
             return 'gray.100'
         } 
         if(selectedFighterId != fighter){
-            if(notSelectedScore == '10') return 'red.300'
+            if(notSelectedScore == '10') return 'red.400'
             return 'yellow.300'
         }
         return 'gray.400'
@@ -38,8 +38,8 @@ export const LastRow = ({
             justifyContent="center"
             flexDir="row"
             w="100%"
-            borderTop="1px solid #303030"
-            borderBottom="1px solid #303030" 
+            py="1"
+            borderY={selectedFighterId ? "1px solid #555555" : "1px solid #404040"}
             _hover={{
                 bg: "#151515",
                 cursor: "pointer"
@@ -93,7 +93,7 @@ export const LastRow = ({
                     size={["lg", "md"]}
                     color={selectedFighterId ? "red.500" : 'red.900'}
                     cursor="pointer"
-                    _hover={{color: 'red.600'}}
+                    _hover={{color: 'red.500'}}
                     onClick={() => handleFighterSelect(null)}
                 >
                     {<RepeatIcon />}

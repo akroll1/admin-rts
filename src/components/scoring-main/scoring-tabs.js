@@ -67,7 +67,9 @@ export const ScoringTabs = () => {
                         key={tab.value}
                         id={tab.value}
                         p="4" 
-                        border={tabs[tab.value] ? "1px solid #aaa" : "2px solid #353535"} 
+                        border={tabs[tab.value] ? "2px solid #505050" : "1px solid #353535"} 
+                        
+                        borderBottom="1px solid #404040"
                         alignItems="center" 
                         justifyContent="center" 
                         flex="1 0 20%"

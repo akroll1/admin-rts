@@ -41,6 +41,7 @@ export const GlobalNotification = () => {
             <Flex
                 id="globalNotification"
                 position="fixed"
+                top={["10"]}
                 right={["2", "2"]}
                 m={["10 auto"]}
                 w={["100%"]}

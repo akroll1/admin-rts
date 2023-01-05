@@ -22,6 +22,7 @@ import { Show } from "../models/show.model"
 import { User } from '../models/user.model'
 import { GlobalStoreState } from "./global-store"
 import { configureAccessToken, configureIDToken } from "./auth-store"
+import { ModalsEnum } from "../models"
 
 export interface ScorecardStoreState {
     acceptInvite(groupScorecardId: string, inviteId: string): void
@@ -226,11 +227,11 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
     },
     
     fetchUserScorecards: async () => {
-        get().setIsSubmitting(true)
+        get().setIsLoading(true)
         const res = await axios.get(`${url}/me/scorecards/${get().user.sub}`, await configureAccessToken() )
-        get().setIsSubmitting(false)
+        get().setIsLoading(false)
         if(res.data === 'Token expired!'){
-            get().setModals('expiredTokenModal', true)
+            get().setModals(ModalsEnum.EXPIRED_TOKEN_MODAL, true)
             return
         }
         const userScorecardSummaries = res.data as ScorecardSummary[]
@@ -241,14 +242,14 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         })
     },
     fetchUserScorecardsBySeason: async (seasonId: string) => {
-        const res = await axios.get(`${url}/me/${encodeURIComponent(get().user.sub!)}/${seasonId}`, await configureAccessToken() )
+        const res = await axios.get(`${url}/me/${encodeURIComponent(get().user.sub)}/${seasonId}`, await configureAccessToken() )
         const userScorecards = res.data as Scorecard[]
         set({ userScorecards })
     },
     fetchUserInvites: async () => {
         const res = await axios.get(`${url}/me/invites`, await configureIDToken() )
         if(res.data === 'Token expired!'){
-            get().setModals('expiredTokenModal', true)
+            get().setModals(ModalsEnum.EXPIRED_TOKEN_MODAL, true)
             return
         }
         const userInvites = res.data;
@@ -261,10 +262,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
             // refresh on 200
             // get().fetchGroupScorecardSummary(get().activeGroupScorecard.groupScorecardId)
         }
-    },
-    
-    setChatToken: (chatToken: string) => {
-        set({ chatToken })
     },
     setFighterScores: () => {
         const scores = get().activeGroupScorecard.fighters.map( (fighter: Fighter) => {

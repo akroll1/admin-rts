@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { 
     Flex, 
     Heading, 
@@ -19,18 +19,28 @@ export const ScoringTable = () => {
 
     const {
         activeGroupScorecard,
+        fighters,
         handleRealTimeSwitchClick,
         lastScoredRound,
-        setToast,
         tableData,
         tabs, 
     } = useGlobalStore()
-
+    
+    console.log('tableData: ', tableData)
     const [toCurrentRound, setToCurrentRound] = useState(true)
+    const [data, setData] = useState([])
+    const [fighter1, setFighter1] = useState({})
+    const [fighter2, setFighter2] = useState({})
+
+    useEffect(() => {
+        if(tableData.length > 0 && fighters.length === 2){
+            setData(tableData)
+            setFighter1(fighters[0])
+            setFighter2(fighters[1])
+        }
+    },[tableData, fighters])
 
     const totalRounds = activeGroupScorecard?.fight ? activeGroupScorecard.fight.rounds : 12;
-    const sortData = (a, b) => a.username - b.username
-    const sortedTable = [...new Set(tableData?.sort(sortData))]
 
     const handleShowToCurrentRound = () => {
         setToCurrentRound(prev => !prev)
@@ -43,7 +53,7 @@ export const ScoringTable = () => {
             Cell: function TableCell( fighters, prediction, displayName, finalScore ) {
                 return (
                     <ScoringTableInfo 
-                        fighters={fighters} 
+                        fighters={fighters?.length === 2 ? fighters : []} 
                         prediction={prediction} 
                         displayName={displayName} 
                         finalScore={finalScore}
@@ -64,7 +74,6 @@ export const ScoringTable = () => {
     
 
     const rounds = new Array(totalRounds).fill('Round')
-    const [fighter1, fighter2] = sortedTable?.length > 0 ? sortedTable[0].fighters : ''
     
     const renderRoundStyles = (i, roundKO, transformedPrediction, fighter) => {
         if((i+1) == roundKO && transformedPrediction == fighter){
@@ -159,9 +168,8 @@ export const ScoringTable = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {sortedTable?.length > 0 && sortedTable?.map( (row, idx) => {
+                        {data?.length > 0 && data?.map( (row, idx) => {
                             const { 
-                                fighters, 
                                 finalScore, 
                                 mappedScores, 
                                 prediction, 
@@ -172,7 +180,7 @@ export const ScoringTable = () => {
 
                             if(mappedScores.length <= totalRounds){
                                 const numberToFill = totalRounds - (mappedScores.length);
-                                const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1]:0, [fighter2]: 0}));
+                                const addingRounds = [...Array(numberToFill).fill(1)].map( round => ({[fighter1.lastName]:0, [fighter2.lastName]: 0}));
                                 filledMappedScores = mappedScores.concat(addingRounds)
                             }
                             const index = prediction ? prediction.indexOf('-') : '';
@@ -223,13 +231,13 @@ export const ScoringTable = () => {
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
-                                                                style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter1)}
+                                                                style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter1.lastName)}
                                                             >   
-                                                                {roundScores[fighter1]}
+                                                                {roundScores[fighter1.lastName]}
                                                             </Flex>
                                                             <Flex 
                                                                 w="100%"
-                                                                style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2)}
+                                                                style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2.lastName)}
                                                                 color={showToCurrentRoundSelected()}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
@@ -237,7 +245,7 @@ export const ScoringTable = () => {
                                                                 mt="0.5rem" 
                                                                 p="1"
                                                             >
-                                                                {roundScores[fighter2]}
+                                                                {roundScores[fighter2.lastName]}
                                                             </Flex>
                                                         </Flex>
                                                     </Td>
