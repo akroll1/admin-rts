@@ -17,9 +17,6 @@ import { generateAnaltyicsData, generateCollatedData } from "../../utils/analyti
 export interface ScoringStoreState {
     activeGroupScorecard: GroupScorecardSummary
     bettingProps: BettingProps
-    chatKey: string | null
-    chatToken: string
-    // collateTableData(): void
     fetchGroupScorecardSummary(fightId: string, groupScorecardId: string): void
     fetchPanelProps(): void
     fightComplete: boolean
@@ -27,15 +24,21 @@ export interface ScoringStoreState {
     groupScorecards: Scorecard[]
     groupScorecardSummary: GroupScorecardSummary
     lastScoredRound: number
+    panelistChatToken: string | null
     panelProps: PanelProps
-    requestChatToken(chatKey: string): void
+    requestPanelistChatToken(panelistChatKey: string): void
+    requestUserChatToken(userChatKey: string): void
     roundScores: RoundScores
     scoringComplete: boolean
+    setPanelistChatToken(panelistChatToken: string | null): void
     setScoringComplete(boolean: boolean): void
+    setUserChatToken(userChatToken: string | null): void
     submitRoundScores(roundScores: Record<string, number>): void
     tableData: any[]
     totalRounds: number,
     updateScorecardsFromChat(roundScores: RoundScores): void
+    userChatKey: string | null
+    userChatToken: string | null
     userScorecard: Scorecard
 
 }
@@ -43,19 +46,21 @@ export interface ScoringStoreState {
 export const initialScoringStoreState = {
     activeGroupScorecard: {} as GroupScorecardSummary,
     bettingProps: {} as BettingProps,
-    chatKey: '',
-    chatToken: '',
+    userChatKey: null,
     fightComplete: false,
     fighters: [] as Fighter[],
     groupScorecards: [],
     groupScorecardSummary: {} as GroupScorecardSummary,
     lastScoredRound: 0,
-    chatMessage: null,
+    panelistChatToken: null,
+    panelistChatMessage: null,
     panelProps: {} as PanelProps,
     roundScores: {} as RoundScores,
     scoringComplete: false,
     tableData: [],
     totalRounds: 12,
+    userChatMessage: null,
+    userChatToken: '',
     userScorecard: {} as Scorecard,
 }
 
@@ -91,7 +96,7 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         
         set({ 
             activeGroupScorecard: data, 
-            chatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
+            userChatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
             lastScoredRound,
             fighters: data.fighters,
             groupScorecards: data.scorecards,
@@ -112,9 +117,9 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         const panelProps = res.data as PanelProps
         set({ panelProps })
     },
-    requestChatToken: async (chatKey: string) => {    
+    requestPanelistChatToken: async (panelistChatKey: string) => {    
         const options = {
-            chatKey: chatKey,
+            chatKey: panelistChatKey,
             attributes: {
                 username: `${get().user.username}`
             },
@@ -124,11 +129,32 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         };
         
         const res = await axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, options, await configureAccessToken() )
-        const chatToken = res.data 
-        set({ chatToken })
+        const panelistChatToken = res.data 
+        set({ panelistChatToken })
+    },
+    requestUserChatToken: async (userChatKey: string) => {    
+        const options = {
+            chatKey: userChatKey,
+            attributes: {
+                username: `${get().user.username}`
+            },
+            capabilities: ["SEND_MESSAGE"],
+            sessionDurationInMinutes: 60,
+            userId: `${get().user.username}`,
+        };
+        
+        const res = await axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, options, await configureAccessToken() )
+        const userChatToken = res.data 
+        set({ userChatToken })
+    },
+    setPanelistChatToken: (panelistChatToken: string | null) => {
+        set({ panelistChatToken })
     },
     setScoringComplete: (boolean: boolean) => {
         set({ scoringComplete: boolean })
+    },
+    setUserChatToken: (userChatToken: string | null) => {
+        set({ userChatToken })
     },
     submitRoundScores: async (roundScores: RoundScores) => {
 

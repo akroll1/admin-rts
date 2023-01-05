@@ -263,10 +263,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
             // get().fetchGroupScorecardSummary(get().activeGroupScorecard.groupScorecardId)
         }
     },
-    
-    setChatToken: (chatToken: string) => {
-        set({ chatToken })
-    },
     setFighterScores: () => {
         const scores = get().activeGroupScorecard.fighters.map( (fighter: Fighter) => {
             return ({

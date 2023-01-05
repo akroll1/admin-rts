@@ -1,3 +1,8 @@
+export enum ChatEnum {
+    PANELIST = "PANELIST",
+    USER = "USER"
+}
+
 export enum ScoringSidebarNavGroupsEnum {
     FIGHT = "FIGHT",
     PANELISTS = "PANELISTS",
