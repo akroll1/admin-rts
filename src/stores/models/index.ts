@@ -1,5 +1,6 @@
 export * from './blog-post.model'
 export * from './discussion.model'
+export * from './enums'
 export * from './fight.model'
 export * from './fighter.model'
 export * from './fight-props.model'

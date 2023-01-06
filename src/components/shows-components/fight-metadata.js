@@ -19,6 +19,7 @@ export const FightMetadata = ({
             textAlign="center"
             mt="4"
             minH='4rem'
+            boxSizing="border-box"
         >
             <Heading 
                 as="h2" 
