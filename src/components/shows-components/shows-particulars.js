@@ -35,7 +35,7 @@ export const ShowsParticulars = ({
     useEffect(() => {
         // if(fightProps?.fightProps && fightProps?.fightProps[FightPropsEnum.MONEYLINE]){
         if(predictionsList){
-            if(fight[FIGHT_STATUS_CONSTANTS.CANCELED]){
+            if(fight && fight[FIGHT_STATUS_CONSTANTS.CANCELED]){
                 setPropsLabels({
                     moneyline1: '',
                     moneyline2: ''
@@ -55,7 +55,6 @@ export const ShowsParticulars = ({
             })
         }
     },[fightProps, selectedFightSummary])
-    console.log('predictionsList: ', predictionsList)
     return (
         <Flex 
             as="section"
