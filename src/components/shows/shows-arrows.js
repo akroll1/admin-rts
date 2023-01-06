@@ -57,20 +57,35 @@ export const ShowsArrows = () => {
             px={["4","4", "10", "10", "12"]}
             color="whiteAlpha.600"
         >
-            <FiChevronsLeft
-                cursor="pointer"
-                p="2"
-                onClick={rotateFighters}
-                id="left"
-                fontSize="4.5rem" 
-            />
-            <FiChevronsRight
-                cursor="pointer"
-                p="2"
-                onClick={rotateFighters}
-                id="right"
-                fontSize="4.5rem" 
-            /> 
+            <Flex
+                fontSize={["4rem", "5rem"]}
+                _hover={{
+                    color: "whiteAlpha.800"
+                }}
+                ml={["-2", "0"]}
+            >
+                <FiChevronsLeft
+                    cursor="pointer"
+                    p="2"
+                    onClick={rotateFighters}
+                    id="left"
+                />
+            </Flex>
+            <Flex
+                mr={["-2", "0"]}
+                _hover={{
+                    color: "whiteAlpha.800"
+                }}
+                fontSize={["4rem", "5rem"]} 
+            >
+
+                <FiChevronsRight
+                    cursor="pointer"
+                    p="2"
+                    onClick={rotateFighters}
+                    id="right"
+                /> 
+            </Flex>
         </Flex>
     )
 }

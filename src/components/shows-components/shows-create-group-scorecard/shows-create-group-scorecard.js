@@ -40,6 +40,7 @@ export const ShowsCreateGroupScorecard = ({
 
     return ( 
         <Flex
+            id="create_group"
             w="100%"
             flexDir="column"  
             alignItems="flex-end"
@@ -53,8 +54,9 @@ export const ShowsCreateGroupScorecard = ({
                 mt="2"
             />
             <Flex 
+                pr={["0", "4"]}
                 mt="8"
-                w={["100%", "80%", "60%"]}
+                w={["100%", "60%", "60%"]}
                 flexDir="column"
                 alignItems="flex-end"
                 justifyContent="flex-end"
