@@ -22,7 +22,6 @@ const Scoring = props => {
     const { 
         activeGroupScorecard,
         fetchGroupScorecardSummary,
-        fetchFightProps,
         lastScoredRound,
         setTabs,
         setToast,

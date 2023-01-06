@@ -36,7 +36,6 @@ const Shows = () => {
         rounds: 12, // for scorecards creation.
         showId: '',
     });
-    const [displayNameModal, setDisplayNameModal] = useState(false)
     const [invites, setInvites] = useState([email])
     const [reviewForm, setReviewForm] = useState({
         reviewId: null,

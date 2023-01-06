@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Flex, IconButton } from '@chakra-ui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { useGlobalStore } from '../../stores'
+import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi'
 
 export const ShowsArrows = () => {
     const [currentFightId, setCurrentFightId] = useState('')
@@ -45,27 +46,29 @@ export const ShowsArrows = () => {
 
 
     return (
-        <>
-            <ChevronLeftIcon
+        <Flex
+            position="absolute"
+            top="75px"
+            right="0"
+            left="0"
+            justifyContent="space-between"
+            zIndex="1000000"
+            boxSizing="border-box"
+            px={["4","4", "10", "10", "12"]}
+            color="whiteAlpha.600"
+        >
+            <FiChevronsLeft
+                p="2"
                 onClick={rotateFighters}
                 id="left"
-                position="absolute"
-                left="0"
-                top="10"
-                maxW="20%"
-                fontSize="6rem" 
-                ml="-1"
+                fontSize="4.5rem" 
             />
-            <ChevronRightIcon
+            <FiChevronsRight
+                p="2"
                 onClick={rotateFighters}
                 id="right"
-                right="0"
-                top="10"
-                position="absolute"
-                maxW="20%"
-                fontSize="6rem" 
-                mr="-1"
+                fontSize="4.5rem" 
             /> 
-        </>
+        </Flex>
     )
 }

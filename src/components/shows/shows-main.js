@@ -47,20 +47,6 @@ export const ShowsMain = ({
             w="100%"
             minH="50vh"
         >
-            <Heading
-                position="absolute"
-                top="0"
-                left="0"
-                as="h2"
-                size={["md", "lg"]}
-                p="2"
-                color="#bababa"
-            >
-                { selectedSeasonSummary?.season?.seasonName 
-                    ? selectedSeasonSummary.season.seasonName 
-                    : `` 
-                }
-            </Heading>
 
             <ShowsArrows />
 

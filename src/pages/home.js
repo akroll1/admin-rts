@@ -15,6 +15,7 @@ const Home = () => {
       as="section" 
       bg="brand.base" 
       p="2"
+      py="8"
       >
       <Box 
         maxW={["100%", "100%", "90%", "90%"]} 

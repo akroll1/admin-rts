@@ -1,8 +1,14 @@
-export enum ShowStatus {
-	UPCOMING = 'PENDING',
-    CANCELED = 'CANCELED',
+export enum FightPropsEnum {
+	MONEYLINE = "MONEYLINE",
+    OU = "OU"
+}
+
+export enum FightStatus {
+	ACTIVE = 'ACTIVE',
+	CANCELED = 'CANCELED',
 	COMPLETE = 'COMPLETE',
-	HISTORICAL = 'HISTORICAL'
+    FANTASY = 'FANTASY',
+	PENDING = 'PENDING',
 }
 
 export enum Network {
@@ -18,12 +24,11 @@ export enum Network {
 	NONE = 'NONE'
 }
 
-export enum FightStatus {
-	ACTIVE = 'ACTIVE',
-	CANCELED = 'CANCELED',
+export enum ShowStatus {
+	UPCOMING = 'PENDING',
+    CANCELED = 'CANCELED',
 	COMPLETE = 'COMPLETE',
-    FANTASY = 'FANTASY',
-	PENDING = 'PENDING',
+	HISTORICAL = 'HISTORICAL'
 }
 
 export enum WeightClass {

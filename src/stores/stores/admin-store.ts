@@ -33,7 +33,7 @@ export interface AdminStoreState {
     deleteSeason(seasonId: string): void
     deleteShow(showId: string): void
     fetchFightProps(fightId: string): void
-    fightProps: FightProps
+    fightProps: FightProps | null
     updateFightProps(obj: Partial<FightProps>): void
 }
 
