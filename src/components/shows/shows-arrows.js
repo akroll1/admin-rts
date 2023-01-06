@@ -58,12 +58,14 @@ export const ShowsArrows = () => {
             color="whiteAlpha.600"
         >
             <FiChevronsLeft
+                cursor="pointer"
                 p="2"
                 onClick={rotateFighters}
                 id="left"
                 fontSize="4.5rem" 
             />
             <FiChevronsRight
+                cursor="pointer"
                 p="2"
                 onClick={rotateFighters}
                 id="right"
