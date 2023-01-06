@@ -35,7 +35,7 @@ export const ShowsParticulars = ({
 
     useEffect(() => {
         // if(fightProps?.fightProps && fightProps?.fightProps[FightPropsEnum.MONEYLINE]){
-        if(predictionsList && fighters?.length === 2){
+        if(selectedFightSummary?.fighters?.length === 2){
             if(fight && fight[FIGHT_STATUS_CONSTANTS.CANCELED]){
                 setPropsLabels({
                     moneyline1: '',
@@ -43,7 +43,7 @@ export const ShowsParticulars = ({
                 })
                 return
             }
-            const [fighter1, fighter2] = fighters;
+            const [fighter1, fighter2] = selectedFightSummary.fighters;
             // const obj = fightProps.fightProps[FightPropsEnum.MONEYLINE]
             setPropsLabels({
                 moneyline1: `${capFirstLetters(fighter1.lastName)}` + '  ' + `${predictionsList[fighter1.fighterId] ? predictionsList[fighter1.fighterId] : `N/A` }`,
@@ -55,7 +55,8 @@ export const ShowsParticulars = ({
                 moneyline2: ''
             })
         }
-    },[fightProps, selectedFightSummary])
+    },[selectedFightSummary])
+
     return (
         <Flex 
             as="section"
