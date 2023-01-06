@@ -1,11 +1,12 @@
+import { useEffect, useState } from 'react'
 import { 
   Button, 
+  Heading,
   Modal, 
   ModalBody,
   ModalCloseButton, 
   ModalContent, 
   ModalFooter, 
-  ModalHeader, 
   ModalOverlay
 } from '@chakra-ui/react'
 import { ScoringMoneylineTable } from '../tables'
@@ -24,9 +25,19 @@ export const MoneylineModal = ({
   const closeModal = () => {
     setModals(ModalsEnum.MONEYLINE_MODAL, false)
   }
+  
+  const OverlayTwo = () => (
+    <ModalOverlay
+      bg='#cacaca'
+      backdropFilter='auto'
+      backdropInvert='80%'
+      backdropBlur='2px'
+    />
+  )
+  const [overlay, setOverlay] = useState(<OverlayTwo />)
   return (
     <Modal 
-      size="lg"
+      size="sm"
       blockScrollOnMount={false} 
       isCentered 
       isOpen={modals[ModalsEnum.MONEYLINE_MODAL]} 
@@ -35,14 +46,17 @@ export const MoneylineModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader textAlign="center">FightSync Props</ModalHeader>
-        <ModalCloseButton onClick={closeModal} />
+        <Heading
+          textAlign="center"
+        >
+          Moneyline 
+        </Heading>
+        <ModalCloseButton 
+          onClick={closeModal} 
+          size="lg"  
+        />
         <ModalBody>
-          <ScoringMoneylineTable 
-            fighters={fighters} 
-            props={props} 
-            totalRounds={fight?.totalRounds}
-          />
+          <ScoringMoneylineTable />
         </ModalBody>
         <ModalFooter 
           display="flex" 
@@ -52,7 +66,7 @@ export const MoneylineModal = ({
         >
           <Button 
             size="md"
-            minW="40%" 
+            minW="50%" 
             onClick={closeModal} 
             colorScheme="solid"
           >

@@ -1,18 +1,49 @@
 
+import { useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { FaMapMarkerAlt, FaRegClock, FaTrophy, FaTv } from 'react-icons/fa'
 import { BiChevronRightCircle } from 'react-icons/bi'
-import { parseEpoch, transformedWeightclass } from '../../utils'
+import { capFirstLetters, parseEpoch, transformedWeightclass } from '../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { ShowsNavItem } from './shows-nav-item'
 import { GiMoneyStack } from 'react-icons/gi'
 import { VscWand } from 'react-icons/vsc'
+import { FightPropsEnum, useGlobalStore } from '../../stores'
 
 export const ShowsParticulars = ({
     selectedFightSummary
 }) => {
-    const { isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
+
+    const { 
+        fetchFightProps,
+        fightProps
+    } = useGlobalStore()
+
+    const [propsLabels, setPropsLabels] = useState({
+        moneyline1: '',
+        moneyline2: ''
+    })
+    const { fightId, isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
     const { location, network, showTime } = selectedFightSummary?.show ? selectedFightSummary.show : '';
+    const { fighters } = selectedFightSummary?.fighters?.length === 2 ? selectedFightSummary : [];
+
+    useEffect(() => {
+        if(selectedFightSummary?.fight?.fightId){
+            fetchFightProps(selectedFightSummary.fight.fightId)
+        }
+    },[selectedFightSummary])
+
+    useEffect(() => {
+        if(fightProps?.fightProps && fightProps?.fightProps[FightPropsEnum.MONEYLINE]){
+            const [fighter1, fighter2] = fighters;
+            const obj = fightProps.fightProps[FightPropsEnum.MONEYLINE]
+            setPropsLabels({
+                moneyline1: `${capFirstLetters(fighter1.lastName)}` + '  ' + `${obj[fighter1.fighterId]}`,
+                moneyline2: `${capFirstLetters(fighter2.lastName)}`  + '  ' + `${obj[fighter2.fighterId]}`
+            })
+        }
+    },[fightProps, selectedFightSummary])
+
     return (
         <Flex 
             as="section"
@@ -56,9 +87,9 @@ export const ShowsParticulars = ({
                     justifyContent="flex-start"
                     alignItems="flex-start"
                 >
-                    <ShowsNavItem icon={<GiMoneyStack />} color="fsl-text" label={`Moneyline`} />
-                    <ShowsNavItem icon={<VscWand />} color="fsl-text" label={ `FSL Prediction` } />
-                    {/* <ShowsNavItem icon={<FaTrophy />} color="fsl-text" label={ `FSL Prediction`} /> */}
+                    <ShowsNavItem icon={<GiMoneyStack />} color="fsl-text" label={propsLabels.moneyline1 ? propsLabels.moneyline1 : `N/A`} />
+                    <ShowsNavItem icon={<GiMoneyStack />} color="fsl-text" label={propsLabels.moneyline2 ? propsLabels.moneyline2 : `N/A`} />
+                    {/* <ShowsNavItem icon={<VscWand />} color="fsl-text" label={ `FSL Prediction` } /> */}
                     <ShowsNavItem label={ ``} />
                 </Flex>
             </Flex>

@@ -61,7 +61,7 @@ export const FighterSelectionButtons = ({
             bg={colors.bg}
             size={["sm","md"]}
             color={colors.color}
-            borderColor={colors.borderColor}
+            // borderColor={colors.borderColor}s
             border="1px solid"
             _hover={{
                 bg: '',

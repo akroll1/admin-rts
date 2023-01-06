@@ -183,7 +183,7 @@ export const ChatSidebar = () => {
             position="relative"
             justifyContent="space-between"
             flexDir="column" 
-            minH="90%"
+            minH="100%"
             pb="4"
         >
             <Tabs 

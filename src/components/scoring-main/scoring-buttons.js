@@ -49,7 +49,6 @@ export const ScoringButtons = ({
             w="100%"
             minH="25vh"
             maxH="25vh"
-            mb="12"
         >
             <LastRow 
                 fighterIds={fighterIds}
@@ -81,15 +80,15 @@ export const ScoringButtons = ({
                     zIndex={1000}
                     onClick={submitScores}
                     disabled={isDisabled} 
-                    variant={isDisabled ? "outline" : "none"} 
+                    variant="outline" 
                     mx="auto" 
                     my="2"
-                    bg={selectedFighterId ? "#303030" : "#666"}
+                    // bg={selectedFighterId ? "red.600" : "#666"}
                     fontSize="1.2rem"
                     border="1px solid"
-                    borderColor={selectedFighterId ? 'whiteAlpha.900' : '#bababa'}
+                    borderColor={selectedFighterId ? 'red.400' : '#bababa'}
                     fontWeight="bold"
-                    color={selectedFighterId ? "inherit" : "gray.200 !important"}
+                    color={selectedFighterId ? "inherit" : "gray.100"}
                     w={["80%", "70%", "60%", "50%"]}
                     minH="3rem"
                 >

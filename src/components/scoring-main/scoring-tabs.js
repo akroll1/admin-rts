@@ -56,20 +56,22 @@ export const ScoringTabs = () => {
             w="100%"
             position="fixed"
             bottom="0"
-            minH="12vh"
-            maxH="12vh"
-            border={"3px solid #151515"}
+            minH="11vh"
+            maxH="11vh"
+            // border={"1px solid #151515"}
             boxSizing="border-box"
+            borderTop="1px solid #718096"
         >
             { tab_data.map( tab => {
                 return (
                     <Flex 
                         key={tab.value}
                         id={tab.value}
-                        p="4" 
-                        border={tabs[tab.value] ? "2px solid #505050" : "1px solid #353535"} 
-                        
-                        borderBottom="1px solid #404040"
+                        p="4"
+                        border={tabs[tab.value] ? "2px solid #555" : "1px solid #353535"} 
+                        borderRadius="sm"
+                        borderBottomRadius="none"
+                        borderBottom="2px solid whiteAlpha.700"
                         alignItems="center" 
                         justifyContent="center" 
                         flex="1 0 20%"
@@ -82,7 +84,7 @@ export const ScoringTabs = () => {
                                 color={tabs[tab.value] ? 'whiteAlpha.900' : 'gray.500'}
                             />
                             <Text 
-                                color={tabs[tab.value] ? 'red.300' : 'gray.500'}
+                                color={tabs[tab.value] ? 'whiteAlpha.900' : 'gray.500'}
                                 fontSize={["xs", "md"]} 
                                 textAlign="center"
                             >

@@ -115,7 +115,7 @@ export const ShowsCreateGroupScorecard = ({
                             value={ emailValue } 
                             id="emailValue" 
                             // _focus={{color: 'black',background: 'lightgray'}} 
-                            mt="4" 
+                            mt="3" 
                             placeholder="email@example.com" 
                             type="email" 
                             maxLength={255} 
@@ -141,6 +141,7 @@ export const ShowsCreateGroupScorecard = ({
                     alignItems="center" 
                     justifyContent="center" 
                     flexDir={['column', 'row']}
+                    mt={isError ? '0' : '5'}
                 >     
                     <Popover>
                         <PopoverTrigger>

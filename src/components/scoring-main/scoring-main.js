@@ -13,7 +13,6 @@ export const ScoringMain = () => {
     const [fighterIds, setFighterIds] = useState(null);
     const [notSelectedScore, setNotSelectedScore] = useState(9);
     const {
-        activeGroupScorecard,
         fighterScores,
         fighters,
         lastScoredRound,
@@ -82,18 +81,18 @@ export const ScoringMain = () => {
 
     return (
         <Flex 
-            border="1px solid #404040"
             id="scoring_main"
             display={tabs[TabsEnum.SCORING] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             maxW={["100%", "100%","40%", "40%"]}
             flexDir="column" 
-            justifyContent="space-between"
-            alignItems="flex-start"
+            justifyContent="flex-start"
+            alignItems="center"
             w="100%"  
             position="relative"  
             boxSizing="border-box"
-            maxH="80vh"
-            mt="1"
+            // minH="70vh"
+            // maxH="80vh"
+            h="100%"
         >
             <FightStats 
                 fighterIds={fighterIds}

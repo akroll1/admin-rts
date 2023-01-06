@@ -13,6 +13,7 @@ import {
   DiscussionsForm, 
   FightForm, 
   FightersForm, 
+  FightPropsForm,
   FightResolutionForm,
   GuestJudgeForm, 
   PanelistForm,
@@ -67,6 +68,7 @@ const Dashboard = () => {
     { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
     { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
     { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
+    { value: "FIGHT-PROPS-FORM", label:"Fight Props", type: 'Fight Props', icon: FaEdit, link: '/dashboard/fight-props' },
     { value: "FIGHT-RESOLUTION", label:"Fight Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/fight-resolution' },
     { value: "GUEST-JUDGES", label:"Guest Judges Form", type: 'Guest Judges', icon: FaEdit, link: '/dashboard/guest-judges' },
     { value: "PANELIST", label:"Panelist Form", type: 'User', icon: FaUser, link: '/dashboard/panelist' },
@@ -165,6 +167,7 @@ const Dashboard = () => {
         { form === 'DISCUSSIONS' && <DiscussionsForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
         { form === 'FIGHT-FORM' && <FightForm /> }
+        { form === 'FIGHT-PROPS-FORM' && <FightPropsForm />}
         { form === 'FIGHT-RESOLUTION' && <FightResolutionForm /> }
         { form === 'GUEST-JUDGES' && <GuestJudgeForm /> }
         { form === 'PANELS_MEMBER' && <MyPanelsForm /> }

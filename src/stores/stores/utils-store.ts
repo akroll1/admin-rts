@@ -104,12 +104,6 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
         const tabs = { ...resetTabs, [tab]: true }
         set({ tabs })
     },
-    setToast: (toast: Toast) => {
-        set({ toast })
-    },
-    setTokenExpired: (tokenExpired: boolean) => {
-        set({ tokenExpired })
-    },
     setTransformedPrediction: (rawPrediction: string | null) => {
         if(!rawPrediction && (Date.now() > get().show.showTime) ){
             set({ transformedPrediction: `Predictions Locked!` })
@@ -125,6 +119,12 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
             const transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
             set({ transformedPrediction })
         }
+    },
+    setToast: (toast: Toast) => {
+        set({ toast })
+    },
+    setTokenExpired: (tokenExpired: boolean) => {
+        set({ tokenExpired })
     },
     setTransformedResult: (officialResult: string) => {
         if(officialResult){

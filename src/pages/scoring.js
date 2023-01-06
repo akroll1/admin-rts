@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { 
     Flex, 
     Heading,
-    Skeleton,
-    Stack
 } from '@chakra-ui/react'
 import { ScoringTable } from '../components/tables'
 import { 
@@ -23,13 +21,9 @@ const Scoring = props => {
     let { fightId, groupScorecardId } = useParams()
     const { 
         activeGroupScorecard,
-        chatScore,
-        collateTableData,
-        fetchBettingProps,
         fetchGroupScorecardSummary,
-        fetchPanelProps,
+        fetchFightProps,
         lastScoredRound,
-        modals,
         setTabs,
         setToast,
         tabs,
@@ -40,7 +34,6 @@ const Scoring = props => {
 
     useEffect(() => {
         fetchGroupScorecardSummary(fightId, groupScorecardId)
-        // fetchPanelProps()
         // const fetchLatest = setInterval(() => {
         //     fetchGroupScorecardSummary(fightId, groupScorecardId)
         // },30000)
@@ -57,19 +50,6 @@ const Scoring = props => {
         }
         getWindowWidth();
     },[windowWidth])
-
-    useEffect(() => {
-        if(modals.moneylineModal){
-            fetchPanelProps()
-            fetchBettingProps()
-        }
-    }, [modals])
-
-    useEffect(() => {
-        if(chatScore?.scorecardId){
-            collateTableData()
-        }
-    },[chatScore])
 
     const handleRealTimeSwitchClick = () => {
         if(activeGroupScorecard?.groupScorecard?.chatKey){
@@ -129,7 +109,7 @@ const Scoring = props => {
                 flexWrap="wrap"
                 w="100%" 
                 maxW="100%"
-                maxH={["100vh", "60vh", "70vh"]}
+                // maxH={["100vh", "60vh", "70vh"]}
                 mb="4"
             >
                 <ScoringSidebarLeft />
