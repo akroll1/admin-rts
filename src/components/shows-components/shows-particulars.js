@@ -22,19 +22,20 @@ export const ShowsParticulars = ({
 }) => {
 
     const { 
+        fighters,
     } = useGlobalStore()
 
     const [propsLabels, setPropsLabels] = useState({
         moneyline1: '',
         moneyline2: ''
     })
-    const { fight, fighters, fightProps } = selectedFightSummary?.fighters?.length === 2 ? selectedFightSummary : [];
+    const { fight, fightProps } = selectedFightSummary?.fighters?.length === 2 ? selectedFightSummary : [];
     const { fightId, isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
     const { location, network, showTime } = selectedFightSummary?.show ? selectedFightSummary.show : '';
 
     useEffect(() => {
         // if(fightProps?.fightProps && fightProps?.fightProps[FightPropsEnum.MONEYLINE]){
-        if(predictionsList){
+        if(predictionsList && fighters?.length === 2){
             if(fight && fight[FIGHT_STATUS_CONSTANTS.CANCELED]){
                 setPropsLabels({
                     moneyline1: '',
