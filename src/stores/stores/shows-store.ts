@@ -92,7 +92,7 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
         set({ selectedSeason: data.season })
         get().setIsSubmitting(false)
     },   
-    filterFights: async (selectedSeasonSummary: SeasonSummary) => {
+    filterFights: (selectedSeasonSummary: SeasonSummary) => {
         const obj: FightByStatus = {
             PENDING: [],
             COMPLETE: [],
@@ -101,7 +101,7 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
             FANTASY: [],
         }
        
-        await selectedSeasonSummary.fightSummaries.map( (summary: FightSummary) => {
+        selectedSeasonSummary.fightSummaries.map( (summary: FightSummary) => {
     
             let fightStatus: FightStatus = summary.fight.fightStatus;
             if(obj[fightStatus]) {
@@ -112,9 +112,10 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
     
         const list = Object.entries(obj as FightByStatus).map( ([key, value]) => value)
             .reduce( (arr: any, curr: any) => arr.concat(curr),[])
+
         set({ 
             fightsByStatus: obj,
-            selectedSeasonSummary: list, 
+            selectedSeasonSummary: list,
             selectedFightSummary: list[0],
             selectedSeasonFightSummaries: list
         })

@@ -1,9 +1,9 @@
 import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
-    BettingProps,
     ChatEnum,
     Fighter,
+    FightProps,
     GroupScorecardSummary, 
     ModalsEnum,
     PanelProps,
@@ -17,7 +17,6 @@ import { generateAnaltyicsData, generateCollatedData } from "../../utils/analyti
 
 export interface ScoringStoreState {
     activeGroupScorecard: GroupScorecardSummary
-    bettingProps: BettingProps
     fetchGroupScorecardSummary(fightId: string, groupScorecardId: string): void
     fetchPanelProps(): void
     fightComplete: boolean
@@ -45,7 +44,7 @@ export interface ScoringStoreState {
 
 export const initialScoringStoreState = {
     activeGroupScorecard: {} as GroupScorecardSummary,
-    bettingProps: {} as BettingProps,
+    bettingProps: {} as FightProps,
     userChatKey: null,
     fightComplete: false,
     fighters: [] as Fighter[],
@@ -68,11 +67,6 @@ const url = process.env.REACT_APP_API;
 
 export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringStoreState> = (set, get) => ({
     ...initialScoringStoreState,
-    fetchBettingProps: async (fightId: string) => {
-        const res = await axios.get(`${url}/props/${fightId}`)
-        const bettingProps = res.data as BettingProps
-        set({ bettingProps })
-    },
     fetchGroupScorecardSummary: async (fightId: string, groupScorecardId: string) => {
         get().setIsSubmitting(true)
         const res = await axios.get(`${url}/me/group-scorecards/${groupScorecardId}/${fightId}`, await configureAccessToken() );

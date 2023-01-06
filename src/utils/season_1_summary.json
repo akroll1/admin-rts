@@ -1,0 +1,914 @@
+
+[
+    {
+         "fight": {
+             "fightId": "4ec70a9a-8d20-40ba-80d7-d80e002b02bd",
+             "fighterIds": [
+                 "0fcb1bd2-af7b-4b1d-9faa-85282850d7e8",
+                 "4fcecceb-c1cc-4b35-9d05-aa507b21f9de"
+             ],
+             "fightQuickTitle": "Bivol vs Ramirez",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "​A title opportunity has arisen for Gilberto Ramirez (44-0), who makes his ring return against WBA light-heavyweight king Dmitry Bivol (20-0). The bout marks another mandatory defense for Bivol, who is fresh from an upset victory over Canelo Alvarez.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": "0fcb1bd2-af7b-4b1d-9faa-85282850d7e8,UD",
+             "rounds": 12,
+             "showId": "484e8171-630d-42de-b7e2-aba035804a94",
+             "weightclass": "LIGHTHEAVYWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "0fcb1bd2-af7b-4b1d-9faa-85282850d7e8",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "dmitry",
+                 "home": "Indio, CA",
+                 "kos": 11,
+                 "lastName": "bivol",
+                 "losses": 0,
+                 "ringname": "N/A",
+                 "socials": [],
+                 "wins": 20
+             },
+             {
+                 "fighterId": "4fcecceb-c1cc-4b35-9d05-aa507b21f9de",
+                 "firstName": "gilberto",
+                 "lastName": "ramirez",
+                 "ringname": "zurdo",
+                 "wins": 44,
+                 "losses": 0,
+                 "draws": 0,
+                 "kos": 31,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Sinaloa, Mexico"
+             }
+         ],
+         "show": {
+             "showId": "484e8171-630d-42de-b7e2-aba035804a94",
+             "fightIds": [
+                 "4ec70a9a-8d20-40ba-80d7-d80e002b02bd"
+             ],
+             "isFeatured": true,
+             "location": "Abu Dhabi, UAE",
+             "network": "DAZN",
+             "promoter": "DAZN",
+             "showStoryline": "​A title opportunity has arisen for Gilberto Ramirez (44-0), who makes his ring return against WBA light-heavyweight king Dmitry Bivol (20-0). The bout marks another mandatory defense for Bivol, who is fresh from an upset victory over Canelo Alvarez.",
+             "showTime": 1667685600000,
+             "showName": "Bivol vs Ramirez",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "7237ba1f-6f7f-4a32-85d2-0c06d792b90a",
+             "fighterIds": [
+                 "eeeca10e-41b2-48a4-8e8e-b933771891a3",
+                 "963b0d64-c92a-4ffd-97d2-27fc0070745d"
+             ],
+             "fightQuickTitle": "Edwards vs Alvarado",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Sunny Edwards will defend his 112-pound title against Felix Alvarado on Nov. 11 in Sheffield, England, the champion's promoter, Probellum, announced on Thursday.\n\nEdwards (18-0, 4 KOs) was in talks for a title unification bout with Julio Cesar Martinez, ESPN's No. 1 flyweight, but no deal was reached. Instead, Edwards will make the third defense of his IBF title against Alvarado, a former champion at 108 pounds.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": "eeeca10e-41b2-48a4-8e8e-b933771891a3,UD",
+             "rounds": 12,
+             "showId": "fea49d72-d7a3-4be2-9ab6-535d2d5d4373",
+             "weightclass": "FLYWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "eeeca10e-41b2-48a4-8e8e-b933771891a3",
+                 "firstName": "sunny",
+                 "lastName": "edwards",
+                 "ringname": "showtime",
+                 "wins": 18,
+                 "losses": 0,
+                 "draws": 0,
+                 "kos": 4,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "London, UK"
+             },
+             {
+                 "fighterId": "963b0d64-c92a-4ffd-97d2-27fc0070745d",
+                 "firstName": "felix",
+                 "lastName": "alvarado",
+                 "ringname": "el gemelo",
+                 "wins": 38,
+                 "losses": 2,
+                 "draws": 0,
+                 "kos": 33,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Managua, Nicaragua"
+             }
+         ],
+         "show": {
+             "showId": "fea49d72-d7a3-4be2-9ab6-535d2d5d4373",
+             "fightIds": [
+                 "7237ba1f-6f7f-4a32-85d2-0c06d792b90a"
+             ],
+             "isFeatured": true,
+             "location": "Sheffield, England",
+             "network": "NONE",
+             "promoter": "Probellum",
+             "showStoryline": "Sunny Edwards will defend his 112-pound title against Felix Alvarado on Nov. 11 in Sheffield, England, the champion's promoter, Probellum, announced on Thursday.\n",
+             "showTime": 1668204000000,
+             "showName": "Edwards vs Alvarado",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "50753082-b5ef-49ee-b07c-a3a3a5915510",
+             "fighterIds": [
+                 "54304eff-e1e0-442a-91e9-20b8605b0033",
+                 "f5de6529-7250-4411-91b1-93b0e03d22d9"
+             ],
+             "fightQuickTitle": "Love vs Spark",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Montana Love will return home to Cleveland for his first DAZN main event, facing Australia’s Stevie Spark at Rocket Mortgage FieldHouse on Saturday, Nov. 12.\n\nThe 27-year-old Love (18-0-1, 9 KO) has emerged as contender at 140 lbs, with the southpaw stylist really breaking through with a dominant win over former titlist Ivan Baranchyk in Aug. 2021 in Cleveland, on the first Jake Paul vs Tyron Woodley undercard.\n\nThat led him to a Matchroom deal, and he’s scored wins over Carlos Diaz and Gabriel Gollaz, the latter a narrow decision on the Canelo vs Bivol card in May, his last outing.\n\nSpark (15-2, 14 KO) is probably best known for jumping up two weight classes on short notice to face Tim Tszyu in July 2021 in Australia. Tszyu was much bigger and stopped the game Spark in three, but it showed the sort of guts Spark has. He’s won three in a row since then, all by stoppage; his last fight came in June, where he stopped Apinun Khongsong inside of three rounds.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": false,
+             "officialResult": "f5de6529-7250-4411-91b1-93b0e03d22d9,DQ",
+             "rounds": 12,
+             "showId": "28ad2bde-ce6d-49d6-9709-ab6ede4f5777",
+             "weightclass": "SUPERLIGHTWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "54304eff-e1e0-442a-91e9-20b8605b0033",
+                 "firstName": "montana",
+                 "lastName": "love",
+                 "ringname": "too pretty",
+                 "wins": 21,
+                 "losses": 3,
+                 "draws": 4,
+                 "kos": 11,
+                 "dq": 2,
+                 "socials": null,
+                 "home": "Cleveland, OH"
+             },
+             {
+                 "fighterId": "f5de6529-7250-4411-91b1-93b0e03d22d9",
+                 "firstName": "stevie",
+                 "lastName": "spark",
+                 "ringname": "the viking",
+                 "wins": 19,
+                 "losses": 5,
+                 "draws": 3,
+                 "kos": 15,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Queensland, Australia"
+             }
+         ],
+         "show": {
+             "showId": "28ad2bde-ce6d-49d6-9709-ab6ede4f5777",
+             "fightIds": [
+                 "50753082-b5ef-49ee-b07c-a3a3a5915510"
+             ],
+             "isFeatured": true,
+             "location": "Cleveland, OH",
+             "network": "DAZN",
+             "promoter": "DAZN",
+             "showStoryline": "Spark (15-2, 14 KO) is probably best known for jumping up two weight classes on short notice to face Tim Tszyu in July 2021 in Australia. Tszyu was much bigger and stopped the game Spark in three, but it showed the sort of guts Spark has. He’s won three in a row since then, all by stoppage; his last fight came in June, where he stopped Apinun Khongsong inside of three rounds.",
+             "showTime": 1668312000000,
+             "showName": "Love vs Spark",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "3e7394a9-d5bf-4e0f-afc2-53af81a83058",
+             "fighterIds": [
+                 "59e48f3d-6834-448d-99b1-2c90dfcda34b",
+                 "f9f33e1f-7a8f-41b9-aa6e-44b4293630f8"
+             ],
+             "fightQuickTitle": "Prograis vs Zepeda",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Two of Boxing’s best junior welterweights, #1 ranked Jose ‘Chon’ Zepeda, (35-2, 27 KO’s), of LaPuente, CA and #2 ranked, former world champion Regis ‘Rougarou’ Prograis, (27-1, 23 KOs) of New Orleans, LA will battle for the vacant WBC super lightweight world championship over 12-rounds on Saturday, November 26 at ‘The War Grounds’, Dignity Health Sports Park in Carson, CA and broadcast live on Pay-Per-View, it was announced today.\n\n“I’ve been waiting for this fight for three years,” said Prograis. “I was a champion three years ago, and I stayed at 140 so that I can fulfill my goal and be a two-time champion at 140. I’ve been waiting long for this opportunity, and I believe November 26 is when I will unleash my three years of frustration. I could have gone to 147 and got more money, but I always wanted to be a two-time champion. I changed some things around, I got a nutritionist for my last fight. I am very grateful for this opportunity to come again, and I will not let it slip.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": "59e48f3d-6834-448d-99b1-2c90dfcda34b,KO11",
+             "rounds": 12,
+             "showId": "f994399d-c796-40a8-acf1-6ff99a143dff",
+             "weightclass": "SUPERLIGHTWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "59e48f3d-6834-448d-99b1-2c90dfcda34b",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "regis",
+                 "home": "Houston, TX",
+                 "kos": 25,
+                 "lastName": "prograis",
+                 "losses": 1,
+                 "ringname": "Rougarou",
+                 "socials": [],
+                 "wins": 29
+             },
+             {
+                 "fighterId": "f9f33e1f-7a8f-41b9-aa6e-44b4293630f8",
+                 "firstName": "jose",
+                 "lastName": "zepeda",
+                 "ringname": "chon",
+                 "wins": 36,
+                 "losses": 4,
+                 "draws": 0,
+                 "kos": 23,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Long Beach, CA"
+             }
+         ],
+         "show": {
+             "showId": "f994399d-c796-40a8-acf1-6ff99a143dff",
+             "fightIds": [
+                 "3e7394a9-d5bf-4e0f-afc2-53af81a83058"
+             ],
+             "isFeatured": true,
+             "location": "Carson, CA",
+             "network": "FITETV",
+             "promoter": "FITE TV",
+             "showStoryline": "Two of Boxing’s best junior welterweights, #1 ranked Jose ‘Chon’ Zepeda, (35-2, 27 KO’s), of LaPuente, CA and #2 ranked, former world champion Regis ‘Rougarou’ Prograis, (27-1, 23 KOs) of New Orleans, LA will battle for the vacant WBC super lightweight world championship over 12-rounds on Saturday, November 26 at ‘The War Grounds’, Dignity Health Sports Park in Carson, CA and broadcast live on Pay-Per-View, it was announced today.\n\n“I’ve been waiting for this fight for three years,” said Prograis. “I was a champion three years ago, and I stayed at 140 so that I can fulfill my goal and be a two-time champion at 140. I’ve been waiting long for this opportunity, and I believe November 26 is when I will unleash my three years of frustration. I could have gone to 147 and got more money, but I always wanted to be a two-time champion. I changed some things around, I got a nutritionist for my last fight. I am very grateful for this opportunity to come again, and I will not let it slip.",
+             "showTime": 1669521600000,
+             "showName": "Prograis vs Zepeda",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "b6bdc6aa-c368-475b-9e20-8f3934da8b39",
+             "fighterIds": [
+                 "aac9f9a0-5a10-447a-9a2d-c084a35ca5a7",
+                 "5cf8b709-0086-48d8-a3c7-9e347a402178"
+             ],
+             "fightQuickTitle": "Whyte vs Franklin",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Dillian Whyte will face undefeated American contender Jermaine Franklin on his eturn to the ring on Saturday November 26 at the OVO Arena, Wembley, live worldwide on DAZN.\n\n‘The Body Snatcher’ (28-3, 19 KOs) fell short in his challenge for Tyson Fury’s WBC Heavyweight World Title at Wembley Stadium in April, succumbing to a sixth-round stoppage defeat in front of over 90,000 fans. \n\nBrixton’s bit-hitting former Interim WBC Heavyweight World Champion, 35, is set to fight at the OVO Arena, Wembley for the first time in his career as he looks to kickstart his journey towards a second shot at world honors. \n\nMichigan’s Franklin (21-0, 14 KOs) is unbeaten in 21 fights since joining the professional ranks in April 2015 and the 28-year-old will be fighting outside of the USA for the first time in his professional career when he meets Whyte over 12 rounds in London. \n\nOnce described as America’s next Heavyweight hope, Franklin ended a two-and-a-half-year layoff by stopping Houston’s Rodney Moore in five rounds at McBride Hall in Gary, Indiana in May to extend his perfect record.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": false,
+             "officialResult": "aac9f9a0-5a10-447a-9a2d-c084a35ca5a7,MD",
+             "rounds": 12,
+             "showId": "b6d891ee-7bbc-4768-8861-847814db5571",
+             "weightclass": "HEAVYWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "aac9f9a0-5a10-447a-9a2d-c084a35ca5a7",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "dillian",
+                 "home": "Brixton, United Kingdom",
+                 "kos": 19,
+                 "lastName": "whyte",
+                 "losses": 3,
+                 "ringname": "The Body Snatcher",
+                 "socials": [],
+                 "wins": 29
+             },
+             {
+                 "fighterId": "5cf8b709-0086-48d8-a3c7-9e347a402178",
+                 "firstName": "jermaine",
+                 "lastName": "franklin",
+                 "ringname": "989 assassin",
+                 "wins": 21,
+                 "losses": 1,
+                 "draws": 0,
+                 "kos": 14,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Saginaw, MI"
+             }
+         ],
+         "show": {
+             "showId": "b6d891ee-7bbc-4768-8861-847814db5571",
+             "fightIds": [
+                 "b6bdc6aa-c368-475b-9e20-8f3934da8b39"
+             ],
+             "isFeatured": true,
+             "location": "Wembley Arena, London",
+             "network": "DAZN",
+             "promoter": "DAZN",
+             "showStoryline": "Dillian Whyte will face undefeated American contender Jermaine Franklin on his eturn to the ring on Saturday November 26 at the OVO Arena, Wembley, live worldwide on DAZN.\n\n‘The Body Snatcher’ (28-3, 19 KOs) fell short in his challenge for Tyson Fury’s WBC Heavyweight World Title at Wembley Stadium in April, succumbing to a sixth-round stoppage defeat in front of over 90,000 fans. \n\nBrixton’s bit-hitting former Interim WBC Heavyweight World Champion, 35, is set to fight at the OVO Arena, Wembley for the first time in his career as he looks to kickstart his journey towards a second shot at world honors. \n\nMichigan’s Franklin (21-0, 14 KOs) is unbeaten in 21 fights since joining the professional ranks in April 2015 and the 28-year-old will be fighting outside of the USA for the first time in his professional career when he meets Whyte over 12 rounds in London. \n\nOnce described as America’s next Heavyweight hope, Franklin ended a two-and-a-half-year layoff by stopping Houston’s Rodney Moore in five rounds at McBride Hall in Gary, Indiana in May to extend his perfect record.",
+             "showTime": 1669500000000,
+             "showName": "Whyte vs Franklin",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "585e9f6e-74f3-4639-bb1f-2caf3fcab7f9",
+             "fighterIds": [
+                 "ed55532a-0fb8-4e9d-b368-368618dbbb1b",
+                 "4ba18727-524d-4b90-8064-216b26285faf"
+             ],
+             "fightQuickTitle": "Estrada vs Chocolatito III",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Estrada (43-3, 28 KO) and Chocolatito (51-3, 41 KO) first met way back in 2012, when both were in the 108 lb division. Gonzalez won a decision to retain his WBA title that night, and as he went up the weight classes, Estrada chased behind him, hoping for an eventual rematch.\n\nThat rematch didn’t come for over eight years, but the two met again in early 2021. In that one, Estrada got a debated split decision nod, retaining the WBA and WBC titles at 115 lbs.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": "ed55532a-0fb8-4e9d-b368-368618dbbb1b,MD",
+             "rounds": 12,
+             "showId": "298ef2a3-83bd-438f-93e9-f34dc973f9a7",
+             "weightclass": "SUPERFLYWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "ed55532a-0fb8-4e9d-b368-368618dbbb1b",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "juan francisco",
+                 "home": "Hermosillo, Mexico",
+                 "kos": 28,
+                 "lastName": "estrada",
+                 "losses": 3,
+                 "ringname": "El Gallo",
+                 "socials": [],
+                 "wins": 44
+             },
+             {
+                 "fighterId": "4ba18727-524d-4b90-8064-216b26285faf",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "roman",
+                 "home": "Managua, Nicaragua",
+                 "kos": 41,
+                 "lastName": "gonzalez",
+                 "losses": 4,
+                 "ringname": "Chocolatito",
+                 "socials": [],
+                 "wins": 51
+             }
+         ],
+         "show": {
+             "showId": "298ef2a3-83bd-438f-93e9-f34dc973f9a7",
+             "fightIds": [
+                 "585e9f6e-74f3-4639-bb1f-2caf3fcab7f9"
+             ],
+             "isFeatured": true,
+             "location": "Phoenix, AZ",
+             "network": "DAZN",
+             "promoter": "DAZN",
+             "showStoryline": "Estrada (43-3, 28 KO) and Chocolatito (51-3, 41 KO) first met way back in 2012, when both were in the 108 lb division. Gonzalez won a decision to retain his WBA title that night, and as he went up the weight classes, Estrada chased behind him, hoping for an eventual rematch.\n",
+             "showTime": 1670126400000,
+             "showName": "Estrada vs Chocolatito III",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "90cb9e4a-aa8e-4940-b01a-e485c34b63d1",
+             "fighterIds": [
+                 "0ad9c579-1fd9-4d48-a4e1-cd620eaf6078",
+                 "23c36740-0038-4fd2-aa30-0b3ac095bd7a"
+             ],
+             "fightQuickTitle": "Fury vs Chisora III",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Tyson Fury vs Derek Chisora III, the fight no one wanted to see.\n\nTyson Fury steps into the ring with an undefeated record of 32 wins, zero loses and 1 draw, 23 of those wins coming by the way of knock out.\n\nDerek Chisora will make his way to the ring with a record of 33 wins, 12 loses and 0 draws, with 23 of those wins by knock out.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": "0ad9c579-1fd9-4d48-a4e1-cd620eaf6078,KO10",
+             "rounds": 12,
+             "showId": "5f605797-c254-4a37-97f2-b1b2dd7a5651",
+             "weightclass": "HEAVYWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "0ad9c579-1fd9-4d48-a4e1-cd620eaf6078",
+                 "dq": 0,
+                 "draws": 1,
+                 "firstName": "tyson",
+                 "home": "Henderson, NV",
+                 "kos": 24,
+                 "lastName": "fury",
+                 "losses": 0,
+                 "ringname": "The Gypsy King",
+                 "socials": [],
+                 "wins": 33
+             },
+             {
+                 "fighterId": "23c36740-0038-4fd2-aa30-0b3ac095bd7a",
+                 "firstName": "derek",
+                 "lastName": "chisora",
+                 "ringname": "del boy war",
+                 "wins": 33,
+                 "losses": 13,
+                 "draws": 0,
+                 "kos": 23,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "London, England"
+             }
+         ],
+         "show": {
+             "showId": "5f605797-c254-4a37-97f2-b1b2dd7a5651",
+             "fightIds": [
+                 "90cb9e4a-aa8e-4940-b01a-e485c34b63d1"
+             ],
+             "isFeatured": true,
+             "location": "London, England",
+             "network": "ESPN+",
+             "promoter": "ESPN+",
+             "showStoryline": "Tyson Fury vs Derek Chisora III, the fight no one wanted to see.\n\nTyson Fury steps into the ring with an undefeated record of 32 wins, zero loses and 1 draw, 23 of those wins coming by the way of knock out.\n\nDerek Chisora will make his way to the ring with a record of 33 wins, 12 loses and 0 draws, with 23 of those wins by knock out.",
+             "showTime": 1670104800000,
+             "showName": "Fury vs Chisora III",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "cd11e136-9084-4464-b5c7-0157fbf87606",
+             "fighterIds": [
+                 "d49cfc85-c944-4023-96ed-4b7bf2772021",
+                 "2fbca579-3b3a-4505-b14c-61a50d820cea"
+             ],
+             "fightQuickTitle": "Crawford vs Avanesyan",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Pound-for-pound superstar Terence “Bud” Crawford makes his long-awaited return to the ring on December 10th as he faces current European Champion and WBC No. 4-ranked David Avanesyan at CHI Health Center in Crawford’s hometown of Omaha, Neb.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": "d49cfc85-c944-4023-96ed-4b7bf2772021,KO6",
+             "rounds": 12,
+             "showId": "db341d3f-7325-4998-878a-062d565f2c79",
+             "weightclass": "WELTERWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "d49cfc85-c944-4023-96ed-4b7bf2772021",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "terence",
+                 "home": "Omaha, NE",
+                 "kos": 30,
+                 "lastName": "crawford",
+                 "losses": 0,
+                 "ringname": "bud",
+                 "socials": [],
+                 "wins": 39
+             },
+             {
+                 "fighterId": "2fbca579-3b3a-4505-b14c-61a50d820cea",
+                 "firstName": "david",
+                 "lastName": "avanesyan",
+                 "ringname": "ava",
+                 "wins": 29,
+                 "losses": 4,
+                 "draws": 1,
+                 "kos": 17,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Russia"
+             }
+         ],
+         "show": {
+             "showId": "db341d3f-7325-4998-878a-062d565f2c79",
+             "fightIds": [
+                 "cd11e136-9084-4464-b5c7-0157fbf87606"
+             ],
+             "isFeatured": true,
+             "location": "Omaha, NE",
+             "network": "BLKPRIME",
+             "promoter": "BLK Prime",
+             "showStoryline": "Pound-for-pound superstar Terence “Bud” Crawford makes his long-awaited return to the ring on December 10th as he faces current European Champion and WBC No. 4-ranked David Avanesyan at CHI Health Center in Crawford’s hometown of Omaha, Neb.",
+             "showTime": 1670727600000,
+             "showName": "Crawford vs Avanesyan",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "630a7688-ed99-4518-ab56-e4675843fe3c",
+             "fighterIds": [
+                 "c1ed3754-eda2-48bb-b62d-d8e0bdbed18e",
+                 "da1edf87-5371-4655-b5f6-b290861f9e4e"
+             ],
+             "fightQuickTitle": "Lopez vs Pedraza",
+             "fightStatus": "CANCELED",
+             "fightStoryline": "Former lightweight champion Teofimo Lopez makes his second appearance at junior welterweight in the 10-round main event against former two-weight world champion Jose “Sniper” Pedraza.\n\nLopez (17-1, 13 KOs) toppled pound-for-pound king Vasiliy Lomachenko in October 2020 to become the lightweight champion. Thirteen months later, he lost his titles via split decision to George Kambosos Jr. He returned August 13 as a junior welterweight and stopped Pedro Campa in the seventh round. Lopez is no stranger to “Heisman Night,” as he’s authored two of the most indelible Top Rank on ESPN moments on that platform. In 2018, he knocked out Mason Menard in 44 seconds, donned the jersey of Heisman winner Kyler Murray, and topped things off with the Heisman pose and a backflip. One year later, he stopped Richard Commey in the second round to win the IBF lightweight world title and immediately put on the jersey of that year’s victor, LSU’s Joe Burrow. He didn’t forget the pose or the signature backflip that time, either.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": false,
+             "officialResult": "CANCELED",
+             "rounds": 12,
+             "showId": "4fa3b64c-d9eb-4a95-9cdc-e4a2359bc009",
+             "weightclass": "SUPERLIGHTWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "c1ed3754-eda2-48bb-b62d-d8e0bdbed18e",
+                 "firstName": "teofimo",
+                 "lastName": "lopez",
+                 "ringname": "the takeoveR",
+                 "wins": 18,
+                 "losses": 1,
+                 "draws": 0,
+                 "kos": 13,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Brooklyn, NY"
+             },
+             {
+                 "fighterId": "da1edf87-5371-4655-b5f6-b290861f9e4e",
+                 "firstName": "jose",
+                 "lastName": "pedraza",
+                 "ringname": "sniper",
+                 "wins": 29,
+                 "losses": 4,
+                 "draws": 1,
+                 "kos": 14,
+                 "dq": 0,
+                 "socials": [],
+                 "home": "Caguas, Puerto Rico"
+             }
+         ],
+         "show": {
+             "showId": "4fa3b64c-d9eb-4a95-9cdc-e4a2359bc009",
+             "fightIds": [
+                 "630a7688-ed99-4518-ab56-e4675843fe3c"
+             ],
+             "isFeatured": true,
+             "location": "MSG, NY",
+             "network": "ESPN+",
+             "promoter": "ESPN+",
+             "showStoryline": "Former lightweight champion Teofimo Lopez makes his second appearance at junior welterweight in the 10-round main event against former two-weight world champion Jose “Sniper” Pedraza.\n\nLopez (17-1, 13 KOs) toppled pound-for-pound king Vasiliy Lomachenko in October 2020 to become the lightweight champion. Thirteen months later, he lost his titles via split decision to George Kambosos Jr. He returned August 13 as a junior welterweight and stopped Pedro Campa in the seventh round. Lopez is no stranger to “Heisman Night,” as he’s authored two of the most indelible Top Rank on ESPN moments on that platform. In 2018, he knocked out Mason Menard in 44 seconds, donned the jersey of Heisman winner Kyler Murray, and topped things off with the Heisman pose and a backflip. One year later, he stopped Richard Commey in the second round to win the IBF lightweight world title and immediately put on the jersey of that year’s victor, LSU’s Joe Burrow. He didn’t forget the pose or the signature backflip that time, either.",
+             "showTime": 1670731200000,
+             "showName": "Lopez vs Pedraza",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "454ecc00-1780-4e88-8401-4391a54c8832",
+             "fighterIds": [
+                 "af9cb548-d9a8-482e-a76c-74807551058c",
+                 "13ebd5b7-a5c2-42eb-b350-cb058bc1ec4f"
+             ],
+             "fightQuickTitle": "Warrington vs Lopez",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Warrington (31-1-1 8 KOs) regained the IBF strap when he stopped Kiko Martinez in his Leeds fortress in March, with the hometown hero flooring the Spaniard in the opening round before ending matters in the seventh round to punctuate a blistering performance in front of his adoring fans.\n\nThe 31 year old suffered a broken jaw in his second career win over Martinez but has fully recovered and now aims to take care of a dangerous mandatory challenge before targeting unification blockbusters.\n\nLopez (26-2 15 KOs) is no stranger to fighting in the UK having punched his ticket to fight for the title by stopping Isaac Lowe in an eliminator clash in London in December. The 29 year old Mexican has stayed busy while waiting for his chance to tackle Warrington, notching stoppage wins in April and August, and will travel to Leeds with ambitions to emulate the stunning KO win his fellow countryman Mauricio Lara inflicted on the Warrington in February 2021.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": false,
+             "officialResult": "13ebd5b7-a5c2-42eb-b350-cb058bc1ec4f,MD",
+             "rounds": 12,
+             "showId": "23d3d2cb-e706-4706-a3a8-7c053032c454",
+             "weightclass": "FEATHERWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "af9cb548-d9a8-482e-a76c-74807551058c",
+                 "firstName": "josh",
+                 "lastName": "warrington",
+                 "ringname": "the leeds warrior",
+                 "wins": 31,
+                 "losses": 2,
+                 "draws": 1,
+                 "kos": 8,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Leeds, England"
+             },
+             {
+                 "fighterId": "13ebd5b7-a5c2-42eb-b350-cb058bc1ec4f",
+                 "firstName": "luis alberto",
+                 "lastName": "lopez",
+                 "ringname": "el venado",
+                 "wins": 27,
+                 "losses": 2,
+                 "draws": 0,
+                 "kos": 15,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Mexicali, Mexico"
+             }
+         ],
+         "show": {
+             "showId": "23d3d2cb-e706-4706-a3a8-7c053032c454",
+             "fightIds": [
+                 "454ecc00-1780-4e88-8401-4391a54c8832"
+             ],
+             "isFeatured": true,
+             "location": "Leeds, England",
+             "network": "NONE",
+             "promoter": "",
+             "showStoryline": "Warrington (31-1-1 8 KOs) regained the IBF strap when he stopped Kiko Martinez in his Leeds fortress in March, with the hometown hero flooring the Spaniard in the opening round before ending matters in the seventh round to punctuate a blistering performance in front of his adoring fans.\n\nThe 31 year old suffered a broken jaw in his second career win over Martinez but has fully recovered and now aims to take care of a dangerous mandatory challenge before targeting unification blockbusters.\n\nLopez (26-2 15 KOs) is no stranger to fighting in the UK having punched his ticket to fight for the title by stopping Isaac Lowe in an eliminator clash in London in December. The 29 year old Mexican has stayed busy while waiting for his chance to tackle Warrington, notching stoppage wins in April and August, and will travel to Leeds with ambitions to emulate the stunning KO win his fellow countryman Mauricio Lara inflicted on the Warrington in February 2021.",
+             "showTime": 1670706000000,
+             "showName": "Warrington vs Lopez",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "debcdb92-be7e-46cd-a5fb-21657dd7405e",
+             "fighterIds": [
+                 "6c01552d-6ed3-4d22-8d98-2cbef0ca8274",
+                 "27e1778e-4318-4069-9f98-0a131c64f8ca"
+             ],
+             "fightQuickTitle": "Inoue vs Butler",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Inoue, a star boxer in Japan who is ESPN's No. 2 pound-for-pound boxer, will attempt to unify all four belts for the first time in his career (he holds the WBA, WBC and IBF titles.) The winner of the matchup -- Inoue will be heavily favored -- will be the first undisputed champion at 118 pounds in nearly 50 years.\n\nInoue (23-0, 20 KOs) captured a third bantamweight title with a second-round TKO victory over Nonito Donaire in a June rematch. The first meeting was named ESPN's 2019 Fight of the Year; Inoue overcame a fractured orbital bone and broken nose en route to a decision victory.",
+             "guestJudgeIds": null,
+             "isMainEvent": true,
+             "isTitleFight": false,
+             "officialResult": "6c01552d-6ed3-4d22-8d98-2cbef0ca8274,KO11",
+             "rounds": 12,
+             "showId": "8abce4ad-fda5-4398-b233-a2a6a1bd4084",
+             "weightclass": "BANTAMWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "6c01552d-6ed3-4d22-8d98-2cbef0ca8274",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "naoya",
+                 "home": "Yokohama, Japan",
+                 "kos": 21,
+                 "lastName": "inoue",
+                 "losses": 0,
+                 "ringname": "Monster",
+                 "socials": [],
+                 "wins": 24
+             },
+             {
+                 "fighterId": "27e1778e-4318-4069-9f98-0a131c64f8ca",
+                 "firstName": "paul",
+                 "lastName": "butler",
+                 "ringname": "baby faced assassin",
+                 "wins": 34,
+                 "losses": 3,
+                 "draws": 0,
+                 "kos": 15,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "England"
+             }
+         ],
+         "show": {
+             "showId": "8abce4ad-fda5-4398-b233-a2a6a1bd4084",
+             "fightIds": [
+                 "debcdb92-be7e-46cd-a5fb-21657dd7405e"
+             ],
+             "isFeatured": true,
+             "location": "Tokyo, Japan",
+             "network": "ESPN+",
+             "promoter": "ESPN+",
+             "showStoryline": "Inoue, a star boxer in Japan who is ESPN's No. 2 pound-for-pound boxer, will attempt to unify all four belts for the first time in his career (he holds the WBA, WBC and IBF titles.) The winner of the matchup -- Inoue will be heavily favored -- will be the first undisputed champion at 118 pounds in nearly 50 years.\n\nInoue (23-0, 20 KOs) captured a third bantamweight title with a second-round TKO victory over Nonito Donaire in a June rematch. The first meeting was named ESPN's 2019 Fight of the Year; Inoue overcame a fractured orbital bone and broken nose en route to a decision victory.",
+             "showTime": 1670929200000,
+             "showName": "Inoue vs Butler",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "48264ddb-7504-45fb-8271-26ee6616144f",
+             "fighterIds": [
+                 "c1ed3754-eda2-48bb-b62d-d8e0bdbed18e",
+                 "37952626-dfc6-49dd-b3c3-2a1158c852f5"
+             ],
+             "fightQuickTitle": "Lopez vs Martin",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "As a last-minute replacement, Martin, who gave Danny Garcia his last loss before retirement, looks to upset the heavily favored Teofimo Lopez.",
+             "isMainEvent": true,
+             "isTitleFight": false,
+             "officialResult": "c1ed3754-eda2-48bb-b62d-d8e0bdbed18e,SD",
+             "rounds": 10,
+             "showId": "6d6c55ef-db34-4fe9-8cd2-47fffc2d46a3",
+             "weightclass": "WELTERWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "c1ed3754-eda2-48bb-b62d-d8e0bdbed18e",
+                 "firstName": "teofimo",
+                 "lastName": "lopez",
+                 "ringname": "the takeoveR",
+                 "wins": 18,
+                 "losses": 1,
+                 "draws": 0,
+                 "kos": 13,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Brooklyn, NY"
+             },
+             {
+                 "fighterId": "37952626-dfc6-49dd-b3c3-2a1158c852f5",
+                 "firstName": "sandor",
+                 "lastName": "martin",
+                 "ringname": "arrasandor",
+                 "wins": 40,
+                 "losses": 4,
+                 "draws": 0,
+                 "kos": 13,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Barcelona, Spain"
+             }
+         ],
+         "show": {
+             "showId": "6d6c55ef-db34-4fe9-8cd2-47fffc2d46a3",
+             "fightIds": [
+                 "48264ddb-7504-45fb-8271-26ee6616144f"
+             ],
+             "isFeatured": true,
+             "location": "MSG,  NY",
+             "network": "ESPN",
+             "promoter": "ESPN",
+             "showStoryline": "As a last-minute replacement, Martin, who gave Danny Garcia his last loss before retirement, looks to upset the heavily favored Teofimo Lopez.",
+             "showTime": 1670727600000,
+             "showName": "Lopez vs Martin",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "a720a602-cca4-47f0-aaf7-cf5b6c2c4fe2",
+             "fighterIds": [
+                 "61855471-7e59-430c-b9dc-ff656b20983f",
+                 "f27ca188-34fb-44d2-815a-0b6c8d94a149"
+             ],
+             "fightQuickTitle": "Rivera vs Martin",
+             "fightStatus": "COMPLETE",
+             "fightStoryline": "Frank Martin steps into the ring with an undefeated record of 16 wins, zero loses and 0 draws, 12 of those wins coming by the way of knock out.\n\nMichel Rivera will make his way to the ring with an unblemished record of 24 wins and 0 draws, with 14 of those by knock out.\n\nThe stats suggest Martin has advantage in power over Rivera, with a 75% knock out percentage over Rivera's 58%.\n\nFrank Martin is the older man by 3 years, at 27 years old.\n\nRivera has 3-inch reach advantage.\n\nFrank Martin fights out of the southpaw stance, while Michel Rivera is an orthodox fighter.",
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": "f27ca188-34fb-44d2-815a-0b6c8d94a149,UD",
+             "rounds": 12,
+             "showId": "1b1734b7-2c8a-4a05-a505-5246347a78a0",
+             "weightclass": "LIGHTWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "61855471-7e59-430c-b9dc-ff656b20983f",
+                 "firstName": "michel",
+                 "lastName": "rivera",
+                 "ringname": "la zarza ali",
+                 "wins": 24,
+                 "losses": 1,
+                 "draws": 0,
+                 "kos": 14,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Santo Domingo, DR"
+             },
+             {
+                 "fighterId": "f27ca188-34fb-44d2-815a-0b6c8d94a149",
+                 "firstName": "frank",
+                 "lastName": "martin",
+                 "ringname": "the ghost",
+                 "wins": 17,
+                 "losses": 0,
+                 "draws": 0,
+                 "kos": 12,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Indianapolis, IN"
+             }
+         ],
+         "show": {
+             "showId": "1b1734b7-2c8a-4a05-a505-5246347a78a0",
+             "fightIds": [
+                 "a720a602-cca4-47f0-aaf7-cf5b6c2c4fe2"
+             ],
+             "isFeatured": true,
+             "location": "Las Vegas, NV",
+             "network": "SHOWTIME",
+             "promoter": "Showtime",
+             "showStoryline": "",
+             "showTime": 1671332400000,
+             "showName": "Rivera vs Martin",
+             "showStatus": "COMPLETE"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "7b1cec1d-04ef-4fb0-891d-7d2e7da5c035",
+             "fighterIds": [
+                 "65a6b29e-9b3b-4bf5-903f-778e0d2dc351",
+                 "a832c8d5-7f59-41b2-a8e5-654d3d5c1e27"
+             ],
+             "fightQuickTitle": "Davis vs Garcia",
+             "fightStatus": "PENDING",
+             "fightStoryline": "Davis (27-0, 25 KOs) is coming off a sixth-round KO win against Rolando Romero in May. \n\nThe Dominican southpaw from San Juan de la Maguana knocked down Chris Colbert and scored a unanimous decision win against the heralded, then-unbeaten contender in February. Following the upset win, Garcia outlasted Roger Gutierrez in August in yet another unanimous decision victory to claim the 130-pound WBA title. ",
+             "isMainEvent": true,
+             "isTitleFight": true,
+             "officialResult": null,
+             "rounds": 12,
+             "showId": "546e3533-2814-4083-8642-986e942a98f0",
+             "weightclass": "LIGHTWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "65a6b29e-9b3b-4bf5-903f-778e0d2dc351",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "gervonta",
+                 "home": "Baltimore, MD",
+                 "kos": 25,
+                 "lastName": "davis",
+                 "losses": 0,
+                 "ringname": "Tank",
+                 "socials": [],
+                 "wins": 27
+             },
+             {
+                 "fighterId": "a832c8d5-7f59-41b2-a8e5-654d3d5c1e27",
+                 "firstName": "hector",
+                 "lastName": "garcia",
+                 "ringname": "el androide",
+                 "wins": 16,
+                 "losses": 0,
+                 "draws": 0,
+                 "kos": 10,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "San Juan, PR"
+             }
+         ],
+         "show": {
+             "showId": "546e3533-2814-4083-8642-986e942a98f0",
+             "fightIds": [
+                 "7b1cec1d-04ef-4fb0-891d-7d2e7da5c035"
+             ],
+             "isFeatured": true,
+             "location": "Washington DC",
+             "network": "SHOWTIMEPPV",
+             "promoter": "Showtime PPV",
+             "showStoryline": "Davis (27-0, 25 KOs) is coming off a sixth-round KO win against Rolando Romero in May. \n\nThe Dominican southpaw from San Juan de la Maguana knocked down Chris Colbert and scored a unanimous decision win against the heralded, then-unbeaten contender in February. Following the upset win, Garcia outlasted Roger Gutierrez in August in yet another unanimous decision victory to claim the 130-pound WBA title. ",
+             "showTime": 1673146800000,
+             "showName": "Davis vs Garcia",
+             "showStatus": "PENDING"
+         }
+     },
+     {
+         "fight": {
+             "fightId": "8479a912-2d13-4993-a431-5c154a9e331f",
+             "fighterIds": [
+                 "d2e6ca30-4bc7-47a5-a9fb-a3bb51197403",
+                 "d5eb3ce2-d1f7-4c9f-8a40-4b9d5f8e2ee1"
+             ],
+             "fightQuickTitle": "Ennis vs Chukhadzhyan ",
+             "fightStatus": "PENDING",
+             "fightStoryline": "Unbeaten rising star Jaron “Boots” Ennis returns to action to take on the IBF No.4-rated welterweight Karen Chukhadzhian for the Interim IBF Welterweight Title.\n\nEnnis (29-0, 27 KOs) is the latest in the pantheon of outstanding Philadelphia fighters, combining elite boxing skills with natural power in both hands. After two appearances on SHOBOX: The New Generation®, the 25-year-old Ennis graduated to headlining his first SHOWTIME CHAMPIONSHIP BOXING® telecast in April 2021, as he became the first fighter to stop former world champion Sergey Lipinets. He followed up that performance with an impressive first-round stoppage of Thomas Dulorme in October of that year, before most recently blasting out Custio Clayton in two rounds in May in his ninth appearance on SHOWTIME®. The knockout victory gave Ennis 19 KOs in his last 20 fights, with the only blemish being a no-decision in the first round against Chris van Heerden in December 2020.",
+             "isMainEvent": true,
+             "isTitleFight": false,
+             "officialResult": null,
+             "rounds": 12,
+             "showId": "c855c10f-4f72-40ec-acfb-21443b6a2de2",
+             "weightclass": "LIGHTWEIGHT"
+         },
+         "fighters": [
+             {
+                 "fighterId": "d2e6ca30-4bc7-47a5-a9fb-a3bb51197403",
+                 "dq": 0,
+                 "draws": 0,
+                 "firstName": "jaron",
+                 "home": "Philadelphia,PA",
+                 "kos": 27,
+                 "lastName": "ennis",
+                 "losses": 0,
+                 "ringname": "boots",
+                 "socials": [],
+                 "wins": 29
+             },
+             {
+                 "fighterId": "d5eb3ce2-d1f7-4c9f-8a40-4b9d5f8e2ee1",
+                 "firstName": "karen",
+                 "lastName": "chukhadzhyan",
+                 "ringname": "n/a",
+                 "wins": 21,
+                 "losses": 1,
+                 "draws": 0,
+                 "kos": 11,
+                 "dq": 0,
+                 "socials": null,
+                 "home": "Kiev, Ukraine"
+             }
+         ],
+         "show": {
+             "showId": "c855c10f-4f72-40ec-acfb-21443b6a2de2",
+             "fightIds": [
+                 "8479a912-2d13-4993-a431-5c154a9e331f"
+             ],
+             "isFeatured": true,
+             "location": "Capital One Arena, DC",
+             "network": "SHOWTIMEPPV",
+             "promoter": "Showtime",
+             "showStoryline": "Unbeaten rising star Jaron “Boots” Ennis returns to action to take on the IBF No.4-rated welterweight Karen Chukhadzhian for the Interim IBF Welterweight Title.\n\nEnnis (29-0, 27 KOs) is the latest in the pantheon of outstanding Philadelphia fighters, combining elite boxing skills with natural power in both hands. After two appearances on SHOBOX: The New Generation®, the 25-year-old Ennis graduated to headlining his first SHOWTIME CHAMPIONSHIP BOXING® telecast in April 2021, as he became the first fighter to stop former world champion Sergey Lipinets. He followed up that performance with an impressive first-round stoppage of Thomas Dulorme in October of that year, before most recently blasting out Custio Clayton in two rounds in May in his ninth appearance on SHOWTIME®. The knockout victory gave Ennis 19 KOs in his last 20 fights, with the only blemish being a no-decision in the first round against Chris van Heerden in December 2020.",
+             "showTime": 1673146800000,
+             "showName": "Ennis vs Chukhadzhian",
+             "showStatus": "PENDING"
+         }
+     }
+ ]

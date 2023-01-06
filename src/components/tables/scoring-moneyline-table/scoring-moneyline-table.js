@@ -1,111 +1,79 @@
-import React, { useState } from 'react'
-import { Flex, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { 
+    Flex, 
+    Heading,    
+    Text 
+} from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils'
+import { useGlobalStore } from '../../../stores'
+import { FightPropsEnum } from '../../../stores'
 
+export const ScoringMoneylineTable = () => {
 
-export const ScoringMoneylineTable = ({ 
-    fighters, 
-    props, 
-    totalRounds 
-}) => {
-    // console.log('fighters: ', fighters);
-    const mapPropsToFighter = (fighters, props, totalRounds) => {
-        const fighter1PropsObj = {
-            'DC': '',
-            'KO13': '',
-            'KO46': '',
-            'KO79': '',
-            'KO10': ''
+    const {
+        activeGroupScorecard,
+        fetchFightProps,
+        fighters,
+        fightProps,
+    } = useGlobalStore()
+
+    const [propsLabels, setPropsLabels] = useState({})
+
+    const [fighter1, fighter2] = fighters.length === 2 ? fighters : []
+
+    useEffect(() => {
+        fetchFightProps(activeGroupScorecard?.fight?.fightId)
+    },[])
+
+    // console.log('fightProps: ', fightProps.fightProps)
+    useEffect(() => {
+        if(fightProps?.fightProps?.MONEYLINE){
+            const [fighter1, fighter2] = fighters;
+            const obj = fightProps.fightProps[FightPropsEnum.MONEYLINE]
+            setPropsLabels({
+                moneyline1: `${obj[fighter1.fighterId]}`,
+                moneyline2: `${obj[fighter2.fighterId]}`
+            })
         }
-        const fighter2PropsObj = {
-            'DC': '',
-            'KO13': '',
-            'KO46': '',
-            'KO79': '',
-            'KO10': ''
-        }
-        
-        const [fighter1Id, fighter2Id] = fighters.map( fighter => fighter.fighterId);
-        const fighter1Props = props.filter( prop => prop.fighterId === fighter1Id)
-            .map( x => {
-                const { odds, outcome } = x
-                fighter1PropsObj[outcome] = odds;
-                return 
-            });
-        const fighter2Props = props.filter( prop => prop.fighterId === fighter2Id)
-            .map( x => {
-                const { odds, outcome } = x;
-                fighter2PropsObj[outcome] = odds;
-                return 
-            });
-        return [fighter1PropsObj, fighter2PropsObj];
-    }
-    
-    const roundProps = ['DC', 'KO13', 'KO46', 'KO79', 'KO10'];
-    const [fighter1, fighter2] = fighters.length > 0 ? fighters : [];
-    const [fighter1Props, fighter2Props] = fighters?.length > 0 && props?.length > 0 ? mapPropsToFighter(fighters, props) : [];
-    const transfromPropLabel = label => {
-        if(label.includes('KO10')) return `KO 10-12`;
-        if(label.includes('KO')) return `KO ${label.slice(2).split('').join('-')}`;
-    }
+    },[fightProps])
     return (
         <Flex flexDir="column">
             <Flex flexDir="row"> 
                 <Flex 
-                    flex="1 0 30%" 
+                    flex="1 0 45%" 
                     flexDir="column" 
                     alignItems="center" 
                     justifyContent="center"
-                >
-                    <Text fontSize="lg" color="#A1A2A1">{fighter1?.lastName ? `${capFirstLetters(fighter1.lastName)}` : ``}</Text>
+                    >
+                    <Heading 
+                        color="whiteAlpha.800"                        
+                        fontSize="2xl" 
+                    >
+                        {fighter1?.lastName ? `${capFirstLetters(fighter1.lastName)}` : ``}
+                    </Heading>
+                    <Heading 
+                        fontSize="xl" 
+                    >
+                        {propsLabels.moneyline1}
+                    </Heading>
                 </Flex>
-
                 <Flex 
-                    flex="1 0 30%" 
+                    flex="1 0 45%" 
                     flexDir="column" 
                     alignItems="center" 
                     justifyContent="center"
                 >
-                    <Text fontSize="lg" color="#A1A2A1">Props</Text>
-
-                </Flex>
-
-                <Flex 
-                    flex="1 0 30%" 
-                    flexDir="column" 
-                    alignItems="center" 
-                    justifyContent="center"
-                >
-                    <Text fontSize="lg" color="#A1A2A1">{fighter2?.lastName ? `${capFirstLetters(fighter2.lastName)}` : ``}</Text>
-                </Flex>
-            </Flex>
-        
-            <Flex flexDir="row">
-                
-                <Flex 
-                    flex="1 0 30%" 
-                    flexDir="column" 
-                    alignItems="center" 
-                    justifyContent="center"
-                >
-                    { fighter1Props?.DC && roundProps.map( (prop, i) => <Text fontSize="1.2rem" key={i}>{fighter1Props[prop]}</Text> )}
-                </Flex>
-                
-                <Flex flex="1 0 30%" flexDir="column" alignItems="center" justifyContent="center">
-                    { fighter2Props?.DC && roundProps.map( (prop, i) => {
-                        return (
-                            <Text color="#c9c9c9" fontSize="1.2rem" key={i}>{prop === 'DC' ? 'Decision' : `${transfromPropLabel(prop)}`}</Text>
-                            )
-                        })}
-                </Flex>
-
-                <Flex 
-                    flex="1 0 30%" 
-                    flexDir="column" 
-                    alignItems="center" 
-                    justifyContent="center"
-                >
-                    { fighter2Props?.DC && roundProps.map( (prop, i) => <Text fontSize="1.2rem" key={i}>{fighter2Props[prop]}</Text> )}
+                    <Heading 
+                        color="whiteAlpha.800"
+                        fontSize="2xl" 
+                    >
+                        {fighter2?.lastName ? `${capFirstLetters(fighter2.lastName)}` : ``}
+                    </Heading>
+                    <Heading 
+                        fontSize="xl" 
+                    >
+                        {propsLabels.moneyline2}
+                    </Heading>
                 </Flex>
             </Flex>
         </Flex>

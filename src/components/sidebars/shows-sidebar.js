@@ -36,7 +36,7 @@ export const ShowsSidebar = () => {
             setCanceled(fightsByStatus[FightStatus.CANCELED])
         }
     }, [fightsByStatus])
-    
+
     const selectFight = e => {
         const { id } = e.currentTarget;
         setSelectedFightSummary(id)

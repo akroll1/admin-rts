@@ -8,7 +8,6 @@ export const FightStats = ({
 }) => {
 
     const { 
-        activeGroupScorecard,
         fighters,
         tabs,
     } = useGlobalStore();
@@ -19,7 +18,8 @@ export const FightStats = ({
 
     const fighter1Percentage = 50;
     const fighter2Percentage = 50;
-
+    console.log('selectedFighterId: ', selectedFighterId && selectedFighterId == fighter1Id)
+    console.log('fighterId1: ', fighter1)
     return (
         <Flex
             id="fight_stats"
@@ -27,59 +27,61 @@ export const FightStats = ({
             display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] || tabs[TabsEnum.SCORING] ? 'flex' : 'none'}
             flexDirection="row"
             px="2"
-            // boxShadow={useColorModeValue('sm', 'sm-dark')}
+            boxShadow={useColorModeValue('sm', 'sm-dark')}
             alignItems="center"
             justifyContent="space-between"
             w="100%"
             m="auto"
             borderBottom="1px solid gray"
-            mb="2"
+            pb="1"
         >
                 <Flex
-                    borderBottom={
-                        selectedFighterId && selectedFighterId == fighter1Id 
-                        ? "2px solid white" 
-                        : selectedFighterId && selectedFighterId != fighter1Id 
-                            ? '2px solid blue' 
-                            : '2px solid red'
-                        }
+                    borderBottom={ selectedFighterId 
+                        ? selectedFighterId === fighter1Id
+                            ? '2px solid red'
+                            : '2px solid transparent'
+                        : '2px solid transparent'
+                    }
                     flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"
-                    justifyContent="center"  
-                    p="1"             
+                    justifyContent="center"            
                 >
+                     <Heading 
+                        size="md"
+                        color="gray.300"
+                    >
+                        {fighter1Percentage ? fighter1Percentage : 0}&#37;	
+                    </Heading>
                     <Heading 
-                        pt="2"
                         size="lg" 
                         color="muted"
                     >
                         {capFirstLetters(fighter1?.lastName)}
-                    </Heading>
-                    <Heading 
-                        size="md"
-                        color="gray.400"
-                    >
-                        {fighter1Percentage ? fighter1Percentage : 0}&#37;	
                     </Heading>
                 </Flex>
                 <Flex
                     flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"
-                    justifyContent="center"             
+                    justifyContent="center"  
+                    borderBottom={ selectedFighterId 
+                        ? selectedFighterId === fighter2Id
+                            ? '2px solid red'
+                            : '2px solid transparent'
+                        : '2px solid transparent'
+                    }           
                 >
                     <Heading 
-                        size="lg" 
-                        pt="2"
-                    >
-                        {capFirstLetters(fighter2?.lastName)}
-                    </Heading>
-                    <Heading 
-                        color="gray.400"
+                        color="gray.300"
                         size="md"
                     >
                         {fighter2Percentage ? fighter2Percentage : 0}&#37;	
+                    </Heading>
+                    <Heading 
+                        size="lg" 
+                    >
+                        {capFirstLetters(fighter2?.lastName)}
                     </Heading>
                 </Flex>
         </Flex>

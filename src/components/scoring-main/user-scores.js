@@ -25,10 +25,11 @@ export const UserScores = ({
 
     return (
         <Flex
+            bg="#151515"
             id="user_scores"
             w="100%"
             maxW="100%"
-            px="4"
+            px="1"
             flexDir="column"
             alignItems="center"
             justifyContent="flex-start"
@@ -128,7 +129,7 @@ export const UserScores = ({
                                 color={fighter1Data.score1Color}
                                 as="h3"
                                 w="100%"
-                                size="lg"
+                                size="md"
                             >
                                 {fighter1Data.score1}
                             </Heading>
@@ -164,12 +165,11 @@ export const UserScores = ({
                                     </Heading>
                                 :  
                                     <Heading
-                                        color={lastRow ? 'red.500' : "gray.400"}
+                                        color={selectedFighterId ? "gray.600" : "gray.400"}
                                         as="h3"
                                         size={"sm"}
                                         alignItems="center"
                                         justifyContent="center"
-                                        // borderY="1px solid #303030"
                                         p="1"
                                     >
                                         {_i+1}
@@ -196,7 +196,7 @@ export const UserScores = ({
                                 textAlign="center"
                                 as="h3"
                                 w="100%"
-                                size="lg"
+                                size="md"
                                 color={fighter2Data.score2Color}
                             >
 
