@@ -69,8 +69,8 @@ export const ShowsParticulars = ({
         }
         setPrediction('')
     },[selectedFightSummary])
-    
-        return (
+
+    return (
         <Flex 
             as="section"
             alignItems="baseline"
@@ -104,42 +104,46 @@ export const ShowsParticulars = ({
                 >
                     <ShowsNavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
                     <ShowsNavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
-                    <Flex
+                <Flex
                     pos="relative"
                     w="100%"
                     flexDir="column"
                 >
                     <Flex
-                        zIndex={100}
-                        position="absolute"
-                        left="0"
+                        w="100%"
+                        pl={isTitleFight ? "1" : "1"}
                     >
-                         { !isTitleFight && <ShowsNavItem icon={
-                            <NotAllowedIcon 
-                                fontSize="1.5rem" 
-                                color="red.400" 
-                                opacity="0.3"
-                                ml="-1.5"
-                                mt="-2"
-                            />} 
-                            color="fsl-text" 
-                            label={``} 
-                            /> 
-                        }
-                    </Flex>
-                        <ShowsNavItem 
-                            icon={
-                                <FaTrophy 
-                                    fontSize="0.7rem" 
-                                />
-                            } 
-                            color="fsl-text" 
-                            label={ `${selectedFightSummary?.fight?.fightId 
-                                ? isTitleFight 
-                                    ? `Title Fight` 
-                                    : `No Belts` : ``}`
-                            } 
-                        />
+                        <Flex
+                            zIndex={100}
+                            position="absolute"
+                            left="0"
+                        >
+                            { !isTitleFight && <ShowsNavItem icon={
+                                <NotAllowedIcon 
+                                    fontSize="1.9rem" 
+                                    color="red.500" 
+                                    opacity="0.5"
+                                    ml="-2px"
+                                    mt="-2"
+                                />} 
+                                color="fsl-text" 
+                                label={``} 
+                                /> 
+                            }
+                        </Flex>
+                            <ShowsNavItem 
+                                id="trophy"
+                                fontSize={isTitleFight ? "1rem" : "0.8rem"}
+                                icon={
+                                        <FaTrophy opacity="0.7" color={isTitleFight ? "#c2c271" : 'inherit'} />
+                                    } 
+                                label={ `${selectedFightSummary?.fight?.fightId 
+                                    ? isTitleFight 
+                                        ? `Title Fight` 
+                                        : `No Belts` : ``}`
+                                } 
+                            />
+                        </Flex>
                     </Flex>
                 </Flex>
                 <Flex

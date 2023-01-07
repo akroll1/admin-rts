@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Flex, IconButton } from '@chakra-ui/react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { 
+    ArrowRightIcon, 
+    ChevronLeftIcon, 
+    ChevronRightIcon,
+    TriangleUpIcon,
+} from '@chakra-ui/icons'
 import { useGlobalStore } from '../../stores'
-import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi'
 
 export const ShowsArrows = () => {
     const [currentFightId, setCurrentFightId] = useState('')
@@ -48,7 +52,7 @@ export const ShowsArrows = () => {
     return (
         <Flex
             position="absolute"
-            top="75px"
+            top="80px"
             right="0"
             left="0"
             justifyContent="space-between"
@@ -58,13 +62,15 @@ export const ShowsArrows = () => {
             color="whiteAlpha.600"
         >
             <Flex
-                fontSize={["4rem", "5rem"]}
+                fontSize={["3.5rem", "4.5rem"]}
                 _hover={{
                     color: "whiteAlpha.800"
                 }}
-                ml={["-2", "0"]}
+                ml={["-2", "2"]}
+                borderRadius="lg"
             >
-                <FiChevronsLeft
+                <TriangleUpIcon
+                    transform="rotateZ(-90deg)"
                     cursor="pointer"
                     p="2"
                     onClick={rotateFighters}
@@ -72,14 +78,16 @@ export const ShowsArrows = () => {
                 />
             </Flex>
             <Flex
-                mr={["-2", "0"]}
+                borderRadius="lg"
+                mr={["-2", "2"]}
                 _hover={{
                     color: "whiteAlpha.800"
                 }}
-                fontSize={["4rem", "5rem"]} 
+                fontSize={["3.5rem", "4.5rem"]} 
             >
 
-                <FiChevronsRight
+                <TriangleUpIcon
+                    transform="rotateZ(90deg)"
                     cursor="pointer"
                     p="2"
                     onClick={rotateFighters}
