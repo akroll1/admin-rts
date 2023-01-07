@@ -25,6 +25,7 @@ export const ShowsParticulars = ({
         fighters,
     } = useGlobalStore()
 
+    const [prediction, setPrediction] = useState('')
     const [propsLabels, setPropsLabels] = useState({
         moneyline1: '',
         moneyline2: ''
@@ -55,9 +56,21 @@ export const ShowsParticulars = ({
                 moneyline2: ''
             })
         }
-    },[selectedFightSummary])
 
-    return (
+        // Temporary for Predictions.
+        if(selectedFightSummary)
+        if(selectedFightSummary.fight.fightId === "7b1cec1d-04ef-4fb0-891d-7d2e7da5c035"){
+            setPrediction(`Tank KO7`)
+            return
+        }
+        if(selectedFightSummary.fight.fightId === "8479a912-2d13-4993-a431-5c154a9e331f"){
+            setPrediction(`Boots KO3`)
+            return
+        }
+        setPrediction('')
+    },[selectedFightSummary])
+    
+        return (
         <Flex 
             as="section"
             alignItems="baseline"
@@ -101,15 +114,32 @@ export const ShowsParticulars = ({
                         position="absolute"
                         left="0"
                     >
-                         { !isTitleFight && <ShowsNavItem icon={<NotAllowedIcon 
-                            fontSize="2.5rem" 
-                            color="red.400" 
-                            opacity="0.3"
-                            ml="-14px"
-                            mt="-2"
-                        />} color="fsl-text" label={``} /> }
+                         { !isTitleFight && <ShowsNavItem icon={
+                            <NotAllowedIcon 
+                                fontSize="1.5rem" 
+                                color="red.400" 
+                                opacity="0.3"
+                                ml="-1.5"
+                                mt="-2"
+                            />} 
+                            color="fsl-text" 
+                            label={``} 
+                            /> 
+                        }
                     </Flex>
-                        <ShowsNavItem icon={<FaTrophy />} color="fsl-text" label={ `${selectedFightSummary?.fight?.fightId ? isTitleFight ? `Title Fight` : `No Belts` : ``}`} />
+                        <ShowsNavItem 
+                            icon={
+                                <FaTrophy 
+                                    fontSize="0.7rem" 
+                                />
+                            } 
+                            color="fsl-text" 
+                            label={ `${selectedFightSummary?.fight?.fightId 
+                                ? isTitleFight 
+                                    ? `Title Fight` 
+                                    : `No Belts` : ``}`
+                            } 
+                        />
                     </Flex>
                 </Flex>
                 <Flex
@@ -121,8 +151,13 @@ export const ShowsParticulars = ({
                 >      
                     <ShowsNavItem icon={<GiMoneyStack />} color="fsl-text" label={propsLabels.moneyline1 ? propsLabels.moneyline1 : `N/A`} />
                     <ShowsNavItem icon={<GiMoneyStack />} color="fsl-text" label={propsLabels?.moneyline2 ? propsLabels.moneyline2 : `N/A`} />
-                    {/* <ShowsNavItem icon={<VscWand />} color="fsl-text" label={ `FSL Prediction` } /> */}
-                    <ShowsNavItem label={ ``} />
+                    { prediction 
+                        ? 
+                            <ShowsNavItem icon={<VscWand />} color="fsl-text" label={prediction} />
+
+                        :
+                            <ShowsNavItem label={ ``} />
+                    }
                 </Flex>
             </Flex>
         </Flex>
