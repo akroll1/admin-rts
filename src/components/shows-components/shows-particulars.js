@@ -58,16 +58,18 @@ export const ShowsParticulars = ({
         }
 
         // Temporary for Predictions.
-        if(selectedFightSummary)
-        if(selectedFightSummary.fight.fightId === "7b1cec1d-04ef-4fb0-891d-7d2e7da5c035"){
-            setPrediction(`Tank KO7`)
-            return
+        if(selectedFightSummary?.fight?.fightId){
+
+            if(selectedFightSummary.fight.fightId === "7b1cec1d-04ef-4fb0-891d-7d2e7da5c035"){
+                setPrediction(`Tank KO7`)
+                return
+            } else if(selectedFightSummary.fight.fightId === "8479a912-2d13-4993-a431-5c154a9e331f"){
+                setPrediction(`Boots KO3`)
+                return
+            } else {
+                setPrediction('')
+            }
         }
-        if(selectedFightSummary.fight.fightId === "8479a912-2d13-4993-a431-5c154a9e331f"){
-            setPrediction(`Boots KO3`)
-            return
-        }
-        setPrediction('')
     },[selectedFightSummary])
 
     return (
