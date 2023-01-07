@@ -29,14 +29,15 @@ export const UserScores = ({
             id="user_scores"
             w="100%"
             maxW="100%"
-            px="1"
             flexDir="column"
             alignItems="center"
-            justifyContent="flex-start"
+            justifyContent="flex-end"
             boxSizing="border-box"
             h="auto"
-            maxH="60%"
             overflow="scroll"
+            px="2"
+            // minH="50%"
+            maxH="50%"
         >
             { userScorecard?.scores?.map( (roundObj, _i) => {
 

@@ -90,9 +90,7 @@ export const ScoringMain = () => {
             w="100%"  
             position="relative"  
             boxSizing="border-box"
-            // minH="70vh"
-            // maxH="80vh"
-            h="100%"
+            minH="80vh"
         >
             <FightStats 
                 fighterIds={fighterIds}

@@ -91,7 +91,7 @@ const Scoring = props => {
             flex="1"
         >       
             <Heading
-                mb={["2","2","4"]}
+                mb={["2","2","2"]}
                 display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE]  || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             >
                 {`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
@@ -108,8 +108,6 @@ const Scoring = props => {
                 flexWrap="wrap"
                 w="100%" 
                 maxW="100%"
-                // maxH={["100vh", "60vh", "70vh"]}
-                mb="4"
             >
                 <ScoringSidebarLeft />
                 <ScoringMain />
