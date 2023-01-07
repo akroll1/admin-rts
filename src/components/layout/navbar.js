@@ -5,7 +5,6 @@ export const Navbar = () => {
   return (
     <Box 
       as="header" 
-      // minH="3rem" 
       position="fixed" 
       w="100%"
       zIndex="10000"

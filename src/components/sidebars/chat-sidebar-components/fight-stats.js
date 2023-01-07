@@ -8,18 +8,14 @@ export const FightStats = ({
 }) => {
 
     const { 
+        analytics,
         fighters,
         tabs,
     } = useGlobalStore();
 
-    const [fighter1, fighter2] = fighters?.length === 2 ? fighters : '';
-    const { fighter1Id, fighter2Id, selectedFighterId} = fighterIds?.fighter1Id ? fighterIds : {};
-    const [fighterPercentages, setFighterPercentages] = useState({})
+    console.log('analytics: ', analytics)
+    const [fighter1, fighter2] = fighters.length === 2 ? fighters.map( fighter => fighter.lastName) : '';
 
-    const fighter1Percentage = 50;
-    const fighter2Percentage = 50;
-    console.log('selectedFighterId: ', selectedFighterId && selectedFighterId == fighter1Id)
-    console.log('fighterId1: ', fighter1)
     return (
         <Flex
             id="fight_stats"
@@ -43,13 +39,13 @@ export const FightStats = ({
                         size="md"
                         color="gray.300"
                     >
-                        {fighter1Percentage ? fighter1Percentage : 0}&#37;	
+                        {analytics && analytics[fighter1] ? analytics[fighter1] : ''}&#37;	
                     </Heading>
                     <Heading 
                         size="lg" 
-                        color={!selectedFighterId ? 'gray.300' : selectedFighterId && selectedFighterId === fighter1 ?.fighterId ? 'gray.200' : "gray.200"}
+                        color="gray.200"
                     >
-                        {capFirstLetters(fighter1?.lastName)}
+                        {capFirstLetters(fighter1 ? fighter1 : '')}
                     </Heading>
                 </Flex>
                 <Flex
@@ -62,13 +58,13 @@ export const FightStats = ({
                         color="gray.300"
                         size="md"
                     >
-                        {fighter2Percentage ? fighter2Percentage : 0}&#37;	
+                        {analytics && analytics[fighter2] ? analytics[fighter2] : ''}&#37;	
                     </Heading>
                     <Heading 
                         size="lg" 
-                        color={!selectedFighterId ? 'gray.300' : selectedFighterId && selectedFighterId === fighter2 ?.fighterId ? 'gray.200' : "gray.200"}
+                        color="gray.200"
                     >
-                        {capFirstLetters(fighter2?.lastName)}
+                        {capFirstLetters(fighter2 ? fighter2 : '')}
                     </Heading>
                 </Flex>
         </Flex>

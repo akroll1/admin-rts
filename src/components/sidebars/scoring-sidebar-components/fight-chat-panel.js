@@ -175,28 +175,31 @@ export const FightChatPanel = () => {
     return (
         <Flex
             id="fight_chat"
-            minH="100%"
-            maxH="100%"
+            ref={fightConnectionRef}
+            minH="70vh"
+            maxH="70vh"
             flexDir="column"
             w="100%"
             overflow="scroll"
             alignItems="center"
             justifyContent="flex-end"
-            >
+            // pb="4"
+        >
             <Flex
-                ref={fightChatRef}
-                id={'fightChatRef'}
-                minH={["50vh","0"]}
-                maxH={["50vh", "100%"]}
-                overflowY="scroll"
-                maxW="100%"
-                flexDir="column-reverse"
-                justifyContent="flex-start"
-                borderRadius="md"
-                p="4"
-                color="white" 
-                fontSize="sm"
-                w="100%"
+               id="fightConnectionRef"
+            //    ref={fightChatRef}
+               minH={["45vh","0"]}
+               maxH={["45vh", "100%"]}
+               overflowY="scroll"
+               maxW="100%"
+               flexDir="column-reverse"
+               justifyContent="flex-start"
+               borderRadius="md"
+               bg="#171717"
+               mb="1"
+               color="white" 
+               fontSize="sm"
+               w="100%"
             >    
                 {renderMessages()}
             </Flex>
@@ -207,7 +210,7 @@ export const FightChatPanel = () => {
                 flexDir="column"
                 alignItems="center"
                 justifyContent="flex-end"
-                pb="4"
+                pt="4"
             >
                 <Input
                     id="group_input"

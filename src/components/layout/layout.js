@@ -26,7 +26,7 @@ export const Layout = ({ children }) => {
 
     return (
         <Flex 
-            minH="100vh" 
+            minH="100%" 
             bg="fsl-body-bg" 
             flexDirection="column" 
             position="relative"
@@ -35,8 +35,7 @@ export const Layout = ({ children }) => {
             <ExpiredTokenModal />
             <GlobalNotification />
             <Box 
-                mt="2rem"
-                pt="4"
+                minH="100vh"
                 minW="100%" 
                 as="main"
             >

@@ -86,15 +86,19 @@ export const ScoringMain = () => {
             maxW={["100%", "100%","40%", "40%"]}
             flexDir="column" 
             justifyContent="flex-start"
-            alignItems="center"
             w="100%"  
             position="relative"  
             boxSizing="border-box"
             minH="80vh"
-        >
+        >   
+            <Flex
+                flexDirection="column"
+                w="100%"
+            >
+
             <FightStats 
                 fighterIds={fighterIds}
-            />
+                />
             <UserScores
                 evenRound={evenRound}
                 fighterIds={fighterIds}
@@ -102,7 +106,8 @@ export const ScoringMain = () => {
                 notSelectedScore={notSelectedScore}
                 setNotSelectedScore={setNotSelectedScore}
                 handleFighterSelect={handleFighterSelect}
-            />
+                />
+            </Flex>
             <ScoringButtons
                 evenRound={evenRound}
                 fighterIds={fighterIds}

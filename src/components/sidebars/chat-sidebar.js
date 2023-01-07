@@ -44,11 +44,12 @@ export const ChatSidebar = () => {
             flex={["1 0 25%"]} 
             maxW={["100%", "100%", "40%"]} 
             borderRadius="md" 
-            overflow="hidden"
+            // overflow="hidden"
             position="relative"
             justifyContent="space-between"
             flexDir="column" 
             minH="100%"
+            maxH="100%"
             pb="4"
         >
             <Tabs 
@@ -56,13 +57,15 @@ export const ChatSidebar = () => {
                 isFitted 
                 variant='enclosed' 
                 minH="85%"
-                maxH="85%"
                 onChange={handleTabsChange}
                 display="flex"
                 flexDirection="column"
                 justifyContent="space-between"
             >
-                <TabList mb='1em' className='group_chat'>
+                <TabList 
+                    mb='1em' 
+                    id='group_chat'
+                >
                     <Tab
                         _focus={{borderBottom: "1px solid tranparent"}}>
                         <Heading 
@@ -85,11 +88,12 @@ export const ChatSidebar = () => {
                 <TabPanels
                     display="flex"
                     flexDir="column"
-                    justifyContent="space-between"
-                    minH="100%"
+                    justifyContent="flex-end"
                     maxH="100%"
                 >
-                    <TabPanel>
+                    <TabPanel
+                        overflow="scroll"
+                    >
                         <GroupChatPanel />
                     </TabPanel>
                     <TabPanel>

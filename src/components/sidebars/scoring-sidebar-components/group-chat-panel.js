@@ -177,25 +177,27 @@ export const GroupChatPanel = () => {
     return (
         <Flex
             id="group_chat"
-            minH="100%"
-            maxH="100%"
+            ref={groupChatRef}
+            minH="70vh"
+            maxH="70vh"
             flexDir="column"
             w="100%"
             overflow="scroll"
             alignItems="center"
             justifyContent="flex-end"
-            >
+            // pb="4"
+        >
             <Flex
-                ref={groupConnectionRef}
                 id="groupConnectionRef"
-                minH={["50vh","0"]}
-                maxH={["50vh", "100%"]}
+                minH={["45vh","0"]}
+                maxH={["45vh", "100%"]}
                 overflowY="scroll"
                 maxW="100%"
                 flexDir="column-reverse"
                 justifyContent="flex-start"
                 borderRadius="md"
-                p="4"
+                bg="#171717"
+                mb="1"
                 color="white" 
                 fontSize="sm"
                 w="100%"
@@ -209,7 +211,7 @@ export const GroupChatPanel = () => {
                 flexDir="column"
                 alignItems="center"
                 justifyContent="flex-end"
-                pb="4"
+                pt="4"
             >
                 <Input
                     id="group_input"
