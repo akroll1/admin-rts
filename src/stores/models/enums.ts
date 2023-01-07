@@ -1,3 +1,8 @@
+export enum ChatTokenEnum {
+	GROUP = "GROUP",
+	FIGHT = "FIGHT"
+}
+
 export enum FightPropsEnum {
 	MONEYLINE = "MONEYLINE",
     OU = "OU"

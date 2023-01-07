@@ -21,11 +21,11 @@ export const LastRow = ({
     const setScoreColor = fighter => {
         if(!selectedFighterId) return 'gray.400'
         if(selectedFighterId == fighter){
-            if(notSelectedScore == '10') return 'red.400'
-            return 'gray.100'
+            if(notSelectedScore == '10') return 'gray.300'
+            return 'gray.300'
         } 
         if(selectedFighterId != fighter){
-            if(notSelectedScore == '10') return 'red.400'
+            if(notSelectedScore == '10') return 'gray.300'
             return 'yellow.300'
         }
         return 'gray.400'
@@ -59,6 +59,7 @@ export const LastRow = ({
                     color={evenRound || !selectedFighterId || selectedFighterId === fighter1Id ? "#303030" : "gray.400"}
                 />
                 <Heading
+                    onClick={() => handleFighterSelect(fighter1Id)}
                     textAlign="center"
                     // color={fighter1Data.score1Color}
                     as="h3"
@@ -114,6 +115,7 @@ export const LastRow = ({
 
                 />
                 <Heading
+                    onClick={() => handleFighterSelect(fighter2Id)}
                     size="2xl"
                     textAlign="center"
                     as="h3"
