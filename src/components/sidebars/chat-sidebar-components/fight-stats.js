@@ -23,7 +23,6 @@ export const FightStats = ({
     return (
         <Flex
             id="fight_stats"
-            mt="4"
             display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] || tabs[TabsEnum.SCORING] ? 'flex' : 'none'}
             flexDirection="row"
             px="2"
@@ -31,8 +30,7 @@ export const FightStats = ({
             alignItems="center"
             justifyContent="space-between"
             w="100%"
-            m="auto"
-            borderBottom={selectedFighterId ? "1px solid #707070" : '1px solid #404040'}
+            borderBottom='1px solid #404040'
             mb="1"
         >
                 <Flex

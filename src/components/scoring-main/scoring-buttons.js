@@ -47,8 +47,6 @@ export const ScoringButtons = ({
             id="scoring_buttons"
             flexDir="column"
             w="100%"
-            minH="25vh"
-            maxH="25vh"
         >
             <LastRow 
                 fighterIds={fighterIds}
