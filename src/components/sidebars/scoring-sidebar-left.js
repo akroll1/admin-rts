@@ -231,7 +231,7 @@ export const ScoringSidebarLeft = () => {
                                         pt="0"
                                         justifyContent="flex-start"
                                         alignItems="center"
-                                        color={'active' ? 'white' : 'whiteAlpha.800'}
+                                        color="gray.300"
                                         cursor="pointer"
                                         userSelect="none"
                                         rounded="md"

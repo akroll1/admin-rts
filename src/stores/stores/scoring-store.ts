@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     ChatEnum,
+    ChatTokenEnum,
     Fighter,
     FightProps,
     GroupScorecardSummary, 
@@ -19,25 +20,25 @@ export interface ScoringStoreState {
     activeGroupScorecard: GroupScorecardSummary
     fetchGroupScorecardSummary(fightId: string, groupScorecardId: string): void
     fetchPanelProps(): void
+    fightChatKey: string | null
+    fightChatToken: string | null
     fightComplete: boolean
     fighters: Fighter[]
+    groupChatKey: string | null
+    groupChatToken: string | null
     groupScorecards: Scorecard[]
     groupScorecardSummary: GroupScorecardSummary
     lastScoredRound: number
-    panelistChatToken: string | null
     panelProps: PanelProps
-    requestChatToken(chatKey: string, type: ChatEnum): void
+    requestChatToken(chatKey: string, type: ChatTokenEnum): void
     roundScores: RoundScores
     scoringComplete: boolean
-    setPanelistChatToken(panelistChatToken: string | null): void
+    setChatToken(chatToken: string | null, type: ChatTokenEnum): void
     setScoringComplete(boolean: boolean): void
-    setUserChatToken(userChatToken: string | null): void
     submitRoundScores(roundScores: Record<string, number>): void
     tableData: any[]
     totalRounds: number,
     updateScorecardsFromChat(roundScores: RoundScores): void
-    userChatKey: string | null
-    userChatToken: string | null
     userScorecard: Scorecard
 
 }
@@ -45,21 +46,21 @@ export interface ScoringStoreState {
 export const initialScoringStoreState = {
     activeGroupScorecard: {} as GroupScorecardSummary,
     bettingProps: {} as FightProps,
-    userChatKey: null,
+    chatKey: null,
+    fightChatKey: 'hzdegD0vRhKO',
+    fightChatToken: null,
     fightComplete: false,
     fighters: [] as Fighter[],
+    groupChatKey: null,
+    groupChatToken: '',
     groupScorecards: [],
     groupScorecardSummary: {} as GroupScorecardSummary,
     lastScoredRound: 0,
-    panelistChatToken: null,
-    panelistChatMessage: null,
     panelProps: {} as PanelProps,
     roundScores: {} as RoundScores,
     scoringComplete: false,
     tableData: [],
     totalRounds: 12,
-    userChatMessage: null,
-    userChatToken: '',
     userScorecard: {} as Scorecard,
 }
 
@@ -90,7 +91,7 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         
         set({ 
             activeGroupScorecard: data, 
-            userChatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
+            groupChatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
             lastScoredRound,
             fighters: data.fighters,
             groupScorecards: data.scorecards,
@@ -109,22 +110,7 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         const panelProps = res.data as PanelProps
         set({ panelProps })
     },
-    requestPanelistChatToken: async (panelistChatKey: string) => {    
-        const options = {
-            chatKey: panelistChatKey,
-            attributes: {
-                username: `${get().user.username}`
-            },
-            capabilities: ["SEND_MESSAGE"],
-            sessionDurationInMinutes: 60,
-            userId: `${get().user.username}`,
-        };
-        
-        const res = await axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, options, await configureAccessToken() )
-        const panelistChatToken = res.data 
-        set({ panelistChatToken })
-    },
-    requestChatToken: async (chatKey: string, type: ChatEnum) => {    
+    requestChatToken: async (chatKey: string, type: ChatTokenEnum) => {    
     
         const options = {
             chatKey,
@@ -138,20 +124,22 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         
         const res = await axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, options, await configureAccessToken() )
         const token = res.data 
-        if(type === ChatEnum.PANELIST){
-            set({ panelistChatToken: token })
+        if(type === ChatTokenEnum.FIGHT){
+            set({ fightChatToken: token })
         } else {
-            set({ userChatToken: token })
+            set({ groupChatToken: token })
         }
     },
-    setPanelistChatToken: (panelistChatToken: string | null) => {
-        set({ panelistChatToken })
+    setChatToken: (chatToken: string | null, type: ChatTokenEnum) => {
+        if(type === ChatTokenEnum.FIGHT){ 
+            set({ fightChatToken: chatToken })
+        }
+        if(type === ChatTokenEnum.GROUP){ 
+            set({ groupChatToken: chatToken })
+        }
     },
     setScoringComplete: (boolean: boolean) => {
         set({ scoringComplete: boolean })
-    },
-    setUserChatToken: (userChatToken: string | null) => {
-        set({ userChatToken })
     },
     submitRoundScores: async (roundScores: RoundScores) => {
 

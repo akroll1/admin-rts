@@ -32,16 +32,10 @@ export const FightStats = ({
             justifyContent="space-between"
             w="100%"
             m="auto"
-            borderBottom="1px solid gray"
-            pb="1"
+            borderBottom={selectedFighterId ? "1px solid #707070" : '1px solid #404040'}
+            mb="1"
         >
                 <Flex
-                    borderBottom={ selectedFighterId 
-                        ? selectedFighterId === fighter1Id
-                            ? '2px solid red'
-                            : '2px solid transparent'
-                        : '2px solid transparent'
-                    }
                     flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"
@@ -55,7 +49,7 @@ export const FightStats = ({
                     </Heading>
                     <Heading 
                         size="lg" 
-                        color="muted"
+                        color={!selectedFighterId ? 'gray.300' : selectedFighterId && selectedFighterId === fighter1 ?.fighterId ? 'gray.200' : "gray.200"}
                     >
                         {capFirstLetters(fighter1?.lastName)}
                     </Heading>
@@ -64,13 +58,7 @@ export const FightStats = ({
                     flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"
-                    justifyContent="center"  
-                    borderBottom={ selectedFighterId 
-                        ? selectedFighterId === fighter2Id
-                            ? '2px solid red'
-                            : '2px solid transparent'
-                        : '2px solid transparent'
-                    }           
+                    justifyContent="center"    
                 >
                     <Heading 
                         color="gray.300"
@@ -80,6 +68,7 @@ export const FightStats = ({
                     </Heading>
                     <Heading 
                         size="lg" 
+                        color={!selectedFighterId ? 'gray.300' : selectedFighterId && selectedFighterId === fighter2 ?.fighterId ? 'gray.200' : "gray.200"}
                     >
                         {capFirstLetters(fighter2?.lastName)}
                     </Heading>
