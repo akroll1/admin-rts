@@ -135,7 +135,7 @@ export const ShowsParticulars = ({
                                 id="trophy"
                                 fontSize={isTitleFight ? "1rem" : "0.8rem"}
                                 icon={
-                                        <FaTrophy opacity="0.7" color={isTitleFight ? "#c2c271" : 'inherit'} />
+                                        <FaTrophy opacity="0.7" />
                                     } 
                                 label={ `${selectedFightSummary?.fight?.fightId 
                                     ? isTitleFight 
