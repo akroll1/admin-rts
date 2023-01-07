@@ -18,7 +18,7 @@ export const ShowsArrows = () => {
     } = useGlobalStore() 
 
     useEffect(() => {
-        if(selectedSeasonFightSummaries.length > 0){
+        if(selectedSeasonFightSummaries?.length > 0){
             setCurrentFightId(selectedSeasonFightSummaries[0].fight.fightId)
         }
     },[selectedSeasonFightSummaries])
@@ -56,7 +56,7 @@ export const ShowsArrows = () => {
             right="0"
             left="0"
             justifyContent="space-between"
-            zIndex="1000000"
+            zIndex="5000"
             boxSizing="border-box"
             px={["4","4", "10", "10", "12"]}
             color="whiteAlpha.600"

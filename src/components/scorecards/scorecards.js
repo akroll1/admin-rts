@@ -34,7 +34,6 @@ export const Scorecards = () => {
     },[userScorecardSummaries])
 
     const handleSelectGroup = value => {
-        // console.log('value: ', value)
         const scorecardGroups = userScorecardSummaries.filter( summary => {
             return summary.scorecardGroups.filter( group => {
                 if(group.groupScorecardId === value){
@@ -43,7 +42,6 @@ export const Scorecards = () => {
                         scorecard: summary.scorecard,
                         group
                     }
-                    
                     return setSelectedSummary(obj)
                 }
             })

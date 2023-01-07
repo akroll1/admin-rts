@@ -57,7 +57,7 @@ export const ScorecardRowItemRight = ({
                     size="sm" 
                     fontSize="sm" 
                     rightIcon={<FaArrowRight />}
-                    onClick={() => navigate(`/leaderboard/${fightId}`)}
+                    // onClick={() => navigate(`/leaderboard/${fightId}`)}
                 >
                     Leaderboard
                 </Button>
@@ -70,7 +70,7 @@ export const ScorecardRowItemRight = ({
                     size="sm" 
                     fontSize="sm" 
                     rightIcon={<CopyIcon />}
-                    onClick={() => navigate(`/leaderboard/${fightId}`)}
+                    // onClick={() => navigate(`/leaderboard/${fightId}`)}
                 >
                     Share Scorecard
                 </Button>
