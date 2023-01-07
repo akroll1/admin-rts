@@ -33,7 +33,7 @@ export const ShowsFighterFaceoff = ({
           px="auto"
           w="100%"
           boxSizing='border-box'
-          alignItems="center" 
+          alignItems="flex-start" 
           justifyContent="center"
           minH="7rem"
         >

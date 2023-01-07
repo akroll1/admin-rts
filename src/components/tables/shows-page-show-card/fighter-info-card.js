@@ -12,6 +12,7 @@ export const FighterInfoCard = props => {
       _hover={{cursor: 'pointer'}} 
       flexDir="column" 
       alignItems="center" 
+      justifyContent="flex-start"
       my="0"
       minW={["45%"]}
     >

@@ -23,6 +23,7 @@ export const OfficialResultBanner = () => {
             justifyContent="center"
             alignItems="center"
             borderRadius="5px"
+            minH="4rem"
         >
             <Flex
                 alignItems="center"
@@ -32,7 +33,7 @@ export const OfficialResultBanner = () => {
                 w="100%"
             >
                 <Text
-                    px="4"
+                    px="2"
                     textAlign="center"
                     fontWeight="thin" 
                     fontSize={["md", "lg", "xl"]}
@@ -40,7 +41,7 @@ export const OfficialResultBanner = () => {
                 Official Result
                 </Text>
                 <Heading 
-                    px="4"
+                    px="2"
                     textAlign="center"
                     as="h3"
                     // fontSize={["lg", "lg", "xl"]}

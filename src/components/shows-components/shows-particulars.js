@@ -120,10 +120,10 @@ export const ShowsParticulars = ({
                         >
                             { !isTitleFight && <ShowsNavItem icon={
                                 <NotAllowedIcon 
-                                    fontSize="1.9rem" 
-                                    color="red.500" 
-                                    opacity="0.5"
-                                    ml="-2px"
+                                    fontSize="2.1rem" 
+                                    color="red.100" 
+                                    opacity="0.3"
+                                    ml="-4px"
                                     mt="-2"
                                 />} 
                                 color="fsl-text" 
