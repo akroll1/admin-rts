@@ -88,7 +88,7 @@ export const ScorecardsInvitationsBoard = () => {
                             flexDirection="column"
                             mb={["4"]}
                             pb="8"
-                            borderBottom="1px solid lightgray"
+                            borderBottom={_i < userInvites.length - 1 ? "1px solid #252525" : 'none'}
                         >
                             <Flex
                                 flexDir="column"
@@ -182,8 +182,6 @@ export const ScorecardsInvitationsBoard = () => {
                                     {`${groupScorecardNotes ? groupScorecardNotes : ''}`}
                                 </Text>
                             </Flex>
-                            
-                            { _i > 0 && <Divider mt="2" /> }
                         </Flex>
                     )
                 })}
