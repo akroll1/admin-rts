@@ -3,7 +3,16 @@ import * as React from 'react'
 import { BsCaretRightFill } from 'react-icons/bs'
 
 export const ShowsNavItem = (props) => {
-  const { fighterId, handleSidebarFighterSelect, active, subtle, icon, children, label, endElement, href } = props
+  const { 
+    children, 
+    endElement, 
+    fighterId, 
+    handleSidebarFighterSelect, 
+    href,
+    icon, 
+    id,
+    label, 
+  } = props
   return (
     <HStack
       w="100%"
@@ -36,6 +45,7 @@ export const ShowsNavItem = (props) => {
         {icon}
       </Box>
       <Box 
+        pl={id === 'trophy' ? '4' : '4'}
         px="1"
         fontSize="1rem" 
         flex="1" 
