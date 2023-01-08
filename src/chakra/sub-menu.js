@@ -1,15 +1,19 @@
 import { useNavMenu } from './use-nav-menu'
 import { Box, Collapse, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
-import { NavLink, NavMenu } from '../components/navbar'
+import { 
+  DesktopNavLink, 
+  MobileNavLink,
+  NavMenu 
+} from '../components/navbar'
 import { SubmenuItem as DesktopMenuItem } from './sub-menu-item'
 
-const DesktopSubmenu = ({ link }) => {
+export const DesktopSubmenu = ({ link }) => {
   const { isOpen, getMenuProps, getTriggerProps } = useNavMenu()
 
   return (
     <>
-      <NavLink.Desktop
+      <DesktopNavLink
         display="flex"
         alignItems="center"
         as="button"
@@ -26,7 +30,7 @@ const DesktopSubmenu = ({ link }) => {
           {link.label}
         </Box>
         <Box marginStart="2" as={FaChevronDown} fontSize="xs" />
-      </NavLink.Desktop>
+      </DesktopNavLink>
 
       <NavMenu 
         animate={isOpen ? 'open' : 'closed'}
@@ -55,13 +59,13 @@ const DesktopSubmenu = ({ link }) => {
   )
 }
 
-const MobileSubMenu = ({ closeMain, link }) => {
+export const MobileSubMenu = ({ closeMain, link }) => {
   
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <Box>
-      <NavLink.Mobile
+      <MobileNavLink
         as="button"
         textAlign="start"
         type="button"
@@ -73,27 +77,20 @@ const MobileSubMenu = ({ closeMain, link }) => {
       >
         <Box flex="1">{link.label}</Box>
         <Box as={FaChevronDown} transform={`rotate(${isOpen ? '180deg' : '0deg'})`} />
-      </NavLink.Mobile>
+      </MobileNavLink>
       <Collapse in={isOpen}>
         <Box pl="5">
           {link.children?.map( (item, _i) => (
-            <NavLink.Mobile   
+            <MobileNavLink  
+              as="button" 
               key={_i} 
               href={item.href}
-              onToggle={onToggle}
-              isOpen={isOpen}
-              closeMain={closeMain}
             >
               {item.label} 
-            </NavLink.Mobile>
+            </MobileNavLink>
           ))}
         </Box>
       </Collapse>
     </Box>
   )
-}
-
-export const Submenu = {
-  Mobile: MobileSubMenu,
-  Desktop: DesktopSubmenu,
 }

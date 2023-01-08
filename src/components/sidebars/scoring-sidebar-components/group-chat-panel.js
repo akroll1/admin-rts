@@ -6,46 +6,31 @@ import {
 } from 'react'
 import { 
     Box, 
-    Button, 
-    ButtonGroup, 
     Flex, 
-    Input,
-    Tab,
-    Tabs,
-    TabList,
-    TabPanels,
-    Heading,
-    TabPanel,
 } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid'
 import { 
     ChatTokenEnum,
-    ContentType,
-    TabsEnum, 
+    ChatMessageType,
     useGlobalStore 
 } from '../../../stores'
 
-export const GroupChatPanel = () => {
+export const GroupChatPanel = ({
+    groupChat,
+    setGroupChat,
+}) => {
     const { 
-        chatMessage,
         groupChatKey,
         groupChatToken,
         isPanelist,
         requestChatToken,
         setChatToken,
         setGlobalNotification,
-        tabs,
         user
     } = useGlobalStore()
 
     const { username } = user
-
-    const [message, setMessage] = useState('')
     const [chatMessages, setChatMessages] = useState([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-  
-    const messagesEndRef = createRef();
-    // user
     const groupChatRef = createRef();
     const [groupConnection, setGroupConnection] = useState(null);
     const groupConnectionRef = useRef(groupConnection);
@@ -63,12 +48,26 @@ export const GroupChatPanel = () => {
         }
     },[groupChatToken])
 
+    useEffect(() => {
+        if(groupConnection?.readyState === 1 && setGroupChat){
+            setGroupChat({ ...groupChat, socketActive: true })
+        } 
+    },[groupConnection?.readyState])
+
+    useEffect(() => {
+        if(groupChat.sendMessage){
+            handleSendGroupMessage()
+            setGroupChat({ ...groupChat, sendMessage: false, message: '' })
+        }
+    },[groupChat.sendMessage])
+
     const initGroupConnection = async (token) => {
         const groupConnectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
         setGroupConnection(groupConnectionInit);
         setChatToken(null, ChatTokenEnum.GROUP)
+        
         groupConnectionInit.onopen = (event) => {
-            console.info("Connected to the chat room.");
+            console.info("Connected to the group chat.");
             setChatMessages(prevState => [...prevState]);
         };
     
@@ -84,67 +83,54 @@ export const GroupChatPanel = () => {
     
         groupConnectionInit.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            handleReceiveMessage(data);
+            handleReceiveChatMessage(data);
         };
     };
 
-    const handleSendMessageViaChat = (e, contentType) => {
-        if(!message) return
+    const handleSendGroupMessage = () => {
+        if(!groupChat.message) return
         // const sanitizedMessage = message.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-        let data = {
-            requestId: uuidv4(),
-            action: 'SEND_MESSAGE',
-            username,
+        let payload = {
+            RequestId: uuidv4(),
+            Action: 'SEND_MESSAGE',
         }
 
-        if(contentType === ContentType.GROUP || contentType === ContentType.CALLING_IT){ 
-            const messageType = contentType === ContentType.CALLING_IT ? ContentType.CALLING_IT : ContentType.GROUP
-            const callingIt = Object.assign({
-                ...data,
-                Attributes: { [messageType]: message },
-                content: messageType
-            })
-            setMessage('')
-            return groupConnection.send(JSON.stringify(callingIt))
-        }
+        const messageType = groupChat.contentType === ChatMessageType.CALLING_IT 
+            ? ChatMessageType.CALLING_IT 
+            : ChatMessageType.GROUP
+        
+        Object.assign(payload, {
+            Attributes: { 
+                messageType,
+                chat: ChatMessageType.GROUP
+            },
+            Content: groupChat.message
+        })
+        groupConnection.send(JSON.stringify(payload))
+        setGroupChat({ ...groupChat, message: '', sendMessage: false })
+        // clear message
     }
 
-    const handleReceiveMessage = data => {
-        console.log('data- 111: ', data)
+    const handleReceiveChatMessage = data => {
+        console.log('receive groupChat data: ', data)
         const { Attributes, Content, Id, Sender, Type } = data;
+        const messageType = Attributes?.messageType === ChatMessageType.GROUP
+            ? ChatMessageType.GROUP 
+            : ChatMessageType.CALLING_IT;
 
-        if(Content === ContentType.CALLING_IT){
-            const message = Attributes[ContentType.CALLING_IT]
+        const message = Content;
+
+        setChatMessages(prev => [{ Id, message, username: Sender.UserId }, ...prev ]);
+
+        if(messageType === ChatMessageType.CALLING_IT){
             setGlobalNotification({ heading: Sender.Attributes.username, body: message })
-            setChatMessages(prev => [{ Id, message, type: Type, username: Sender.Attributes.username }, ...prev ]);
-        }
-        if(Content === ContentType.GROUP){
-            const message = Attributes[ContentType.GROUP]
-            setChatMessages(prev => [{ Id, message, type: Type, username: Sender.Attributes.username }, ...prev ]);
         }
     };
     
     const handleRequestToken = () => {
-        if(groupChatKey && !socketActive()){
+        if(groupChatKey && !groupChat.groupSocketActive){
             requestChatToken(groupChatKey, ChatTokenEnum.GROUP);
         }
-    };
-
-    const handleChatChange = e => {
-        setMessage(e.target.value);
-    };
-
-    const handleChatKeydown = e => {
-        if (e.key === "Enter") {
-            if (chatMessage) {
-                // setChatMessage("");
-                handleSendMessageViaChat(e, ContentType.GROUP);
-            }
-        }
-    };
-
-    const socketActive = () => {
-        return groupConnection?.readyState === 1;
     };
 
     // Renderers
@@ -178,14 +164,12 @@ export const GroupChatPanel = () => {
         <Flex
             id="group_chat"
             ref={groupChatRef}
-            minH="70vh"
             maxH="70vh"
             flexDir="column"
             w="100%"
             overflow="scroll"
             alignItems="center"
             justifyContent="flex-end"
-            // pb="4"
         >
             <Flex
                 id="groupConnectionRef"
@@ -203,67 +187,6 @@ export const GroupChatPanel = () => {
                 w="100%"
             >    
                 {renderMessages()}
-            </Flex>
-            {/* <Flex ref={messagesEndRef} /> */}
-            <Flex
-                h="auto"
-                w="100%"
-                flexDir="column"
-                alignItems="center"
-                justifyContent="flex-end"
-                pt="4"
-            >
-                <Input
-                    id="group_input"
-                    w="90%"
-                    bg="#202020"
-                    m="auto"
-                    mb="1"
-                    as="input"
-                    size="sm"
-                    type="text"
-                    color="whiteAlpha.900"
-                    _placeholder={{ color: 'whiteAlpha.700' }}
-                    placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
-                    isDisabled={!socketActive()}
-                    value={message}
-                    maxLength={150}
-                    onChange={handleChatChange}
-                    onKeyDown={handleChatKeydown}
-                />
-                <ButtonGroup 
-                    px="4" 
-                    w="100%"
-                    mt="2"
-                >
-                    <Button     
-                        w="100%"
-                        m="1"
-                        size="sm"
-                        isLoading={isSubmitting} 
-                        loadingText="Joining..." 
-                        onClick={socketActive() ? e => handleSendMessageViaChat(e, ContentType.GROUP) : handleRequestToken} 
-                        variant="solid"
-                        onKeyDown={handleChatKeydown}
-                    >
-                        {socketActive() ? `Send` : `Join Chat`}
-                    </Button>
-                    <Button     
-                        w="100%"
-                        minH="1.5rem"
-                        m="1"
-                        p="1"
-                        size="sm"
-                        // disabled={!socketActive() || callingItDisabled}
-                        loadingText="Joining..." 
-                        onClick={e => handleSendMessageViaChat(e, ContentType.CALLING_IT)} 
-                        variant="outline"
-                        colorScheme="red"
-                        color='#dadada'
-                    >
-                        Calling It
-                    </Button>
-                </ButtonGroup>
             </Flex>
         </Flex>
     )

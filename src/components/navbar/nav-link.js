@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Link, useColorModeValue as mode } from '@chakra-ui/react'
 import { NavLink as RLink } from 'react-router-dom'
 
-const DesktopNavLink = React.forwardRef((props, ref) => {
+export const DesktopNavLink = React.forwardRef((props, ref) => {
   const { active, href, ...rest } = props;
 
   return (
@@ -39,7 +39,7 @@ const DesktopNavLink = React.forwardRef((props, ref) => {
   
 export const MobileNavLink = props => {
 
-  const { active, closeMain, href, onToggle, ...rest } = props
+  const { active, closeMain, href, link, onToggle, ...rest } = props
   const close = () => {
     onToggle()
     closeMain()
@@ -56,12 +56,8 @@ export const MobileNavLink = props => {
       height="14"
       fontWeight="semibold"
       borderBottomWidth="1px"
-      onClick={close}
+      onClick={onToggle}
       {...rest}
     />
   )
-}
-export const NavLink = {
-  Mobile: MobileNavLink,
-  Desktop: DesktopNavLink,
 }

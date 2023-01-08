@@ -6,44 +6,31 @@ import {
 } from 'react'
 import { 
     Box, 
-    Button, 
-    ButtonGroup, 
-    Flex, 
-    Input,
-    Tab,
-    Tabs,
-    TabList,
-    TabPanels,
-    Heading,
-    TabPanel,
+    Flex,
 } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid'
 import { 
     ChatTokenEnum,
-    ContentType,
-    TabsEnum, 
+    ChatMessageType,
     useGlobalStore 
 } from '../../../stores'
 
-export const FightChatPanel = () => {
+export const FightChatPanel = ({
+    fightChat,
+    setFightChat,
+}) => {
     const { 
-        chatMessage,
         fightChatKey,
         fightChatToken,
         isPanelist,
         requestChatToken,
         setChatToken,
         setGlobalNotification,
-        tabs,
         user
     } = useGlobalStore()
 
     const { username } = user
-    const [message, setMessage] = useState('')
     const [chatMessages, setChatMessages] = useState([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const fightChatRef = createRef();
     const [fightConnection, setFightConnection] = useState(null);
     const fightConnectionRef = useRef(fightConnection);
     fightConnectionRef.current = fightConnection;
@@ -60,13 +47,25 @@ export const FightChatPanel = () => {
         }
     },[fightChatToken])
     
+    useEffect(() => {
+        if(fightConnection?.readyState === 1 && setFightChat){
+            setFightChat({ ...fightChat, socketActive: true })
+        } 
+    },[fightConnection?.readyState])
+
+    useEffect(() => {
+        if(fightChat.sendMessage){
+            handleSendFightMessage()
+            setFightChat({ ...fightChat, sendMessage: false, message: '' })
+        }
+    },[fightChat.sendMessage])
 
     const initFightConnection = async (token) => {
         const fightConnectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
         setFightConnection(fightConnectionInit);
         setChatToken(null, ChatTokenEnum.GROUP)
         fightConnectionInit.onopen = (event) => {
-            console.info("Connected to the chat room.");
+            console.info("Connected to the fight chat.");
             setChatMessages(prevState => [...prevState]);
         };
     
@@ -86,63 +85,49 @@ export const FightChatPanel = () => {
         };
     };
 
-    const handleSendMessageViaChat = (e, contentType) => {
-        if(!message) return
+    const handleSendFightMessage = () => {
+        if(!fightChat.message) return
         // const sanitizedMessage = message.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-        let data = {
-            requestId: uuidv4(),
-            action: 'SEND_MESSAGE',
-            username,
+        let payload = {
+            RequestId: uuidv4(),
+            Action: 'SEND_MESSAGE',
         }
 
-        if(contentType === ContentType.GROUP || contentType === ContentType.CALLING_IT){ 
-            const messageType = contentType === ContentType.CALLING_IT ? ContentType.CALLING_IT : ContentType.GROUP
-            const callingIt = Object.assign({
-                ...data,
-                Attributes: { [messageType]: message },
-                content: messageType
-            })
-            setMessage('')
-            return fightConnection.send(JSON.stringify(callingIt))
-        }
+        const messageType = fightChat.contentType === ChatMessageType.CALLING_IT 
+            ? ChatMessageType.CALLING_IT 
+            : ChatMessageType.GROUP
+        
+        Object.assign(payload, {
+            Attributes: { 
+                messageType,
+                chat: ChatMessageType.GROUP
+            },
+            Content: fightChat.message
+        })
+        fightConnection.send(JSON.stringify(payload))
+        setFightChat({ ...fightChat, message: '', sendMessage: false })
+        // clear message
     }
 
     const handleReceiveMessage = data => {
-        console.log('data- 111: ', data)
+        console.log('fightChat data ', data)
         const { Attributes, Content, Id, Sender, Type } = data;
+        const messageType = Attributes?.messageType === ChatMessageType.FIGHT
+            ? ChatMessageType.FIGHT 
+            : ChatMessageType.CALLING_IT;
 
-        if(Content === ContentType.CALLING_IT){
-            const message = Attributes[ContentType.CALLING_IT]
+        const message = Content;
+        setChatMessages(prev => [{ Id, message, username: Sender.UserId }, ...prev ]);
+
+        if(messageType === ChatMessageType.CALLING_IT){
             setGlobalNotification({ heading: Sender.Attributes.username, body: message })
-            setChatMessages(prev => [{ Id, message, type: Type, username: Sender.Attributes.username }, ...prev ]);
-        }
-        if(Content === ContentType.GROUP){
-            const message = Attributes[ContentType.GROUP]
-            setChatMessages(prev => [{ Id, message, type: Type, username: Sender.Attributes.username }, ...prev ]);
         }
     };
     
     const handleRequestToken = () => {
-        if(fightChatKey && !socketActive()){
+        if(fightChatKey && !fightChat.socketActive){
             requestChatToken(fightChatKey, ChatTokenEnum.FIGHT);
         }
-    };
-
-    const handleChatChange = e => {
-        setMessage(e.target.value);
-    };
-
-    const handleChatKeydown = e => {
-        if (e.key === "Enter") {
-            if (chatMessage) {
-                // setChatMessage("");
-                handleSendMessageViaChat(e, ContentType.GROUP);
-            }
-        }
-    };
-
-    const socketActive = () => {
-        return fightConnection?.readyState === 1;
     };
 
     // Renderers
@@ -176,7 +161,6 @@ export const FightChatPanel = () => {
         <Flex
             id="fight_chat"
             ref={fightConnectionRef}
-            minH="70vh"
             maxH="70vh"
             flexDir="column"
             w="100%"
@@ -204,66 +188,7 @@ export const FightChatPanel = () => {
                 {renderMessages()}
             </Flex>
 
-            <Flex
-                h="auto"
-                w="100%"
-                flexDir="column"
-                alignItems="center"
-                justifyContent="flex-end"
-                pt="4"
-            >
-                <Input
-                    id="group_input"
-                    w="90%"
-                    bg="#202020"
-                    m="auto"
-                    mb="1"
-                    as="input"
-                    size="sm"
-                    type="text"
-                    color="whiteAlpha.900"
-                    _placeholder={{ color: 'whiteAlpha.700' }}
-                    placeholder={socketActive() ? "Connected!" : "Waiting to connect..."}
-                    isDisabled={!socketActive()}
-                    value={message}
-                    maxLength={150}
-                    onChange={handleChatChange}
-                    onKeyDown={handleChatKeydown}
-                />
-                <ButtonGroup 
-                    px="4" 
-                    w="100%"
-                    mt="2"
-                >
-                    <Button     
-                        w="100%"
-                        m="1"
-                        size="sm"
-                        isLoading={isSubmitting} 
-                        loadingText="Joining..." 
-                        onClick={socketActive() ? e => handleSendMessageViaChat(e, ContentType.GROUP) : handleRequestToken} 
-                        variant="solid"
-                        onKeyDown={handleChatKeydown}
-                    >
-                        {socketActive() ? `Send` : `Join Chat`}
-                    </Button>
-                    <Button     
-                        w="100%"
-                        minH="1.5rem"
-                        m="1"
-                        p="1"
-                        size="sm"
-                        // disabled={!socketActive() || callingItDisabled}
-                        loadingText="Joining..." 
-                        onClick={e => handleSendMessageViaChat(e, ContentType.CALLING_IT)} 
-                        variant="outline"
-                        colorScheme="red"
-                        color='#dadada'
-                    >
-                        Calling It
-                    </Button>
-                </ButtonGroup>
-            </Flex>
+            
         </Flex>
     )
 }

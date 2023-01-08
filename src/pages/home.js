@@ -14,7 +14,7 @@ const Home = () => {
       id="home"
       as="section" 
       bg="brand.base" 
-      p="2"
+      p={["2", "8", "8", "8"]}
       py="8"
       >
       <Box 

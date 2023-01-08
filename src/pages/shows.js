@@ -154,7 +154,7 @@ const Shows = () => {
             color="white" 
             alignItems="flex-start" 
             justifyContent="center" 
-            mt={["0", "2", "2", "4"]}
+            mt={["8", "2", "2", "4"]}
         >    
             <ReviewFormModal />
             <CreateGroupModal 

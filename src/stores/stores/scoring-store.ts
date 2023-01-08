@@ -91,8 +91,6 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         }
         const lastScoredRound = userScorecard.scores.length;
         const scoringComplete = userScorecard.scores.length >= data.fight.rounds;
-
-        
         set({ 
             activeGroupScorecard: data, 
             groupChatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
@@ -115,6 +113,8 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         })
         get().setScoringTransformedPrediction(userScorecard.prediction)
         get().setFighterScores()
+        get().fetchFightProps(data?.fight?.fightId)
+
 
     },
     fetchPanelProps: async () => {
@@ -169,7 +169,7 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             // get().sendMessageViaChat({
             //     id: uuidv4(),
             //     Attributes: {
-            //         [ContentType.ROUND_SCORES]: JSON.stringify(roundScores)
+            //         [ChatMessageType.ROUND_SCORES]: JSON.stringify(roundScores)
             // })
         }
 

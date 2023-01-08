@@ -11,8 +11,6 @@ import { FightPropsEnum } from '../../../stores'
 export const ScoringMoneylineTable = () => {
 
     const {
-        activeGroupScorecard,
-        fetchFightProps,
         fighters,
         fightProps,
     } = useGlobalStore()
@@ -20,10 +18,6 @@ export const ScoringMoneylineTable = () => {
     const [propsLabels, setPropsLabels] = useState({})
 
     const [fighter1, fighter2] = fighters.length === 2 ? fighters : []
-
-    useEffect(() => {
-        fetchFightProps(activeGroupScorecard?.fight?.fightId)
-    },[])
 
     // console.log('fightProps: ', fightProps.fightProps)
     useEffect(() => {

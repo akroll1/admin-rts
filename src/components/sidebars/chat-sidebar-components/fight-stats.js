@@ -13,7 +13,7 @@ export const FightStats = ({
         tabs,
     } = useGlobalStore();
 
-    console.log('analytics: ', analytics)
+    // console.log('analytics: ', analytics)
     const [fighter1, fighter2] = fighters.length === 2 ? fighters.map( fighter => fighter.lastName) : '';
 
     return (

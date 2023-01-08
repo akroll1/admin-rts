@@ -1,3 +1,16 @@
+export const sanitize = (string) => {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#x27;',
+        "/": '&#x2F;',
+        "`": '&grave;'
+    };
+    const reg = /[&<>"'/]/ig;
+    return string.replace(reg, (match)=>(map[match]));
+}
 
 export const predictionIsLocked = epoch => {
     return Date.now() > epoch ? true : false;

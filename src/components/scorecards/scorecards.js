@@ -56,9 +56,10 @@ export const Scorecards = () => {
             w="100%"
             flexDir={["column", "column", "row"]}
             flexWrap="wrap-reverse"
-            p="2"
-            pt={["2", "4", "8", "12"]}
+            p={["2", "8"]}
+            pt={["2", "4", "8", "4"]}
             minH="70vh"
+            mt={["12", "4", "4", "8"]}
         >
             { isLoading
                 ?
