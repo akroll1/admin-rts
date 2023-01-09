@@ -1,15 +1,13 @@
 import {
-    Button,
-    Flex,
-    Heading,
-    Stack,
-    Text,
-    useColorModeValue as mode,
-  } from '@chakra-ui/react'
-  import { capFirstLetters } from '../../utils'
-  import { FaArrowRight } from 'react-icons/fa'
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  useColorModeValue as mode,
+} from '@chakra-ui/react'
+import { capFirstLetters } from '../../utils'
 import { FightStatus } from '../../stores/models/enums'
-import { useNavigate } from 'react-router'
 import { GoToArrowButton } from '../buttons'
 
 const ScorecardItem = (props) => {

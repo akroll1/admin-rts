@@ -40,7 +40,6 @@ export const FightStoryline = ({
                         mt="2"
                         _focus="1px solid black"
                         _hover={{
-                            border: '1px solid black',
                             color: 'white'
                         }}
                     >

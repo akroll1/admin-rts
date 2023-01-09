@@ -35,7 +35,7 @@ export const GoToArrowButton = ({
             rightIcon={
                 <Box
                     as={FaArrowRight}
-                    fontSize="1.2rem"
+                    fontSize="1rem"
                     transition="transform 0.2s"
                     _groupHover={{ transform: 'translateX(2px)' }}
                 />
