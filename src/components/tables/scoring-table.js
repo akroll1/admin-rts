@@ -111,7 +111,7 @@ export const ScoringTable = () => {
                 h="auto"
                 mb={tabs[TabsEnum.ALL] ? "0rem" : "4rem"}
             >     
-                { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" mb="-2" size="md">FIGHT IS OFFICIAL</Heading> }
+                { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" size="md">FIGHT IS OFFICIAL</Heading> }
                 
                 <Table 
                     id="scoring_table"

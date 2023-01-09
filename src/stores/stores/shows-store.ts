@@ -13,7 +13,6 @@ import {
 import { FightStatus } from "../models/enums"
 import { configureAccessToken } from "./auth-store"
 import axios from 'axios'
-import { Navigate } from "react-router"
 
 export interface ShowsStoreState {
     checkForUserFightReview(): void
@@ -90,6 +89,7 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
         const data = res.data as SeasonSummary
         get().filterFights(data)
         set({ selectedSeason: data.season })
+        // get().setTransformedResult(data.)
         get().setIsSubmitting(false)
     },   
     filterFights: (selectedSeasonSummary: SeasonSummary) => {
@@ -109,19 +109,22 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
                 return obj
             }
         })
-    
+
+        const reverseCompleteList = obj.COMPLETE.reverse();
+        
         const list = Object.entries(obj as FightByStatus).map( ([key, value]) => value)
             .reduce( (arr: any, curr: any) => arr.concat(curr),[])
-
         set({ 
             fightsByStatus: obj,
             selectedSeasonSummary: list,
             selectedFightSummary: list[0],
             selectedSeasonFightSummaries: list
         })
+        get().setTransformedResult(list[0].fight.officialResult)
     },
     setSelectedFightReview: (reviewId: string) => {
         const [selected] = get().fightReviews.filter( (review: Review) => review.reviewId === reviewId);
+        // change state when result not official.
         set({ selectedFightReview: selected });
     },
     setSelectedFightSummary: (fightId: string) => {

@@ -20,7 +20,7 @@ export const FighterSelectionButtons = ({
     const setButtonColors = currentFighter => {
         let colorsObj = {
             bg: 'transparent',
-            borderColor: 'gray.400',
+            borderColor: 'gray.600',
             color: '#cacaca'
         }
         if(!selectedFighterId) return colorsObj
@@ -58,7 +58,8 @@ export const FighterSelectionButtons = ({
             maxH="2.5rem"
             variant={'outline'}
             py={["2", "2",]}
-            bg={colors.bg}
+            // bg={colors.bg}
+            bg="transparent"
             size={["sm","md"]}
             borderColor={colors.borderColor}
             color={colors.color}

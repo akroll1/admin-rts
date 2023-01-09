@@ -11,8 +11,7 @@ export const DesktopNavLink = React.forwardRef((props, ref) => {
       to={href}
       ref={ref}
       display="inline-block"
-      px="4"
-      py="6"
+      p="4"
       isExternal={false}
       fontWeight="semibold"
       aria-current={active ? 'page' : undefined}

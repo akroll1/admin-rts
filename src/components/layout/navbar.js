@@ -14,6 +14,7 @@ export const Navbar = () => {
       bg="fsl-body-bg"
       borderBottom={["1px solid #111111"]}
       boxSizing="border-box"
+      maxH="4rem"
     >
       <Box 
         as="nav" 

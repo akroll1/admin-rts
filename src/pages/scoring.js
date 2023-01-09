@@ -82,14 +82,12 @@ const Scoring = props => {
             justifyContent="center" 
             margin="auto" 
             p={["1", "2", "4"]}
-            // pt={["2", "4", "8", "12"]}
             bg="transparent"
             position="relative"
             maxW="100%"
             boxSizing='border-box'
             overflow="hidden"
             flex="1"
-            mt="4rem"
         >       
             <Heading
                 mb={["2","2","2"]}
@@ -105,7 +103,7 @@ const Scoring = props => {
             <PredictionModal />
             <Flex 
                 boxSizing="border-box"
-                display={windowWidth < 768 ? tabs[TabsEnum.TABLE] ? 'none' : 'flex' : 'flex'} 
+                display={tabs[TabsEnum.TABLE] ? 'none' : 'flex'} 
                 flexWrap="wrap"
                 w="100%" 
                 maxW="100%"

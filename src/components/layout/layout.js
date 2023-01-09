@@ -29,13 +29,13 @@ export const Layout = ({ children }) => {
             bg="fsl-body-bg" 
             flexDirection="column" 
             position="relative"
+            minH="100vh"
         >  
             <Navbar />
             <ExpiredTokenModal />
             <GlobalNotification />
             <Box 
-                pt={["4", "8", "12"]}
-                minH="100vh"
+                mt="4rem"
                 minW="100%" 
                 as="main"
             >

@@ -18,10 +18,30 @@ export const UserScores = ({
 }) => {
 
     const { 
+        totalRounds,
         userScorecard,
     } = useGlobalStore()
     
+    const [t, setT] = useState([])
     const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
+
+    useEffect(() => {
+        if(userScorecard?.scores.length > 0){
+            const scoredRounds = userScorecard.scores.length;
+            const toFill = totalRounds - scoredRounds;
+            if(toFill > 0){
+                const t = [ ...new Array(toFill).fill('')].map( (el, _i) => {
+                    const obj = {
+                        round: scoredRounds + _i,
+                        fighter1Id: 0,
+                        fighter2Id: 0
+                    };
+                    return obj
+                })
+                setT(t)
+            }
+        }
+    },[userScorecard])
 
     return (
         <Flex
@@ -30,16 +50,16 @@ export const UserScores = ({
             w="100%"
             maxW="100%"
             flexDir="column"
-            alignItems="center"
+            // alignItems="center"
             justifyContent="flex-end"
             boxSizing="border-box"
             h="auto"
             overflow="scroll"
             px="2"
-            // minH="50%"
-            maxH="50%"
+            maxH="40vh"
+            alignSelf="stretch"
         >
-            { userScorecard?.scores?.map( (roundObj, _i) => {
+            { userScorecard?.scores?.length > 0 && userScorecard.scores.map( (roundObj, _i) => {
 
                 let lastRow;
                 const setScores = currentFighterId => {

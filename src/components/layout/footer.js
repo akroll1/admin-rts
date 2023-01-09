@@ -1,31 +1,52 @@
-import React from "react";
-import { Divider, Box, Stack, StackDivider, useColorModeValue as mode } from '@chakra-ui/react'
-import { Logo, Copyright, SocialMediaLinks, LinkGrid, SubscribeForm } from '../../chakra'
+import { 
+  Box, 
+  Stack, 
+  StackDivider 
+} from '@chakra-ui/react'
+import { 
+  Copyright, 
+  SocialMediaLinks, 
+  LinkGrid, 
+  SubscribeForm 
+} from '../../chakra'
 
 export const Footer = () => (
   <Box 
-    display={["none", "none", "flex"]}
+    display={["none", "none", "flex", "flex", "flex"]}
     boxSizing="border-box"
     as="footer" 
     role="contentinfo" 
-    // bg={mode('gray.800', 'fsl-nav-footer-bg')} 
     mx="auto" 
     maxW={["90%","100%"]} 
     mt="8"
     py={["0","0","0"]} 
-    px={{ base: '4', md: '6', lg:'4' }}
+    px={['4', '6', '4']}
   >
-    <Stack spacing="10" minW="100%" divider={<StackDivider />}>
-      <Stack direction={{ base: 'column', lg: 'row' }} spacing={['10', '12']}>
+    <Stack 
+      spacing="10" 
+      minW="100%" 
+      divider={<StackDivider />}
+    >
+      <Stack 
+        direction={['column', 'row']} 
+        spacing={['10', '12']}
+      >
         <Box flex="1">
         </Box>
-        <Stack direction={{ base: 'column', md: 'row' }} spacing={{ base: '10', md: '15' }}>
-          <LinkGrid spacing={{ base: '10', md: '20', lg: '28' }} flex="1" />
-          <SubscribeForm width={{ base: 'full', md: 'sm' }} />
+        <Stack 
+          direction={['column', 'row']} 
+          spacing={['10', '15']}>
+          <LinkGrid 
+            spacing={['10', '20', '28']} 
+            flex="1" 
+          />
+          <SubscribeForm 
+            width={['full', 'sm']} 
+          />
         </Stack>
       </Stack>
       <Stack
-        direction={{ base: 'column-reverse', md: 'row' }}
+        direction={['column-reverse', 'row']}
         justifyContent="space-between"
         alignItems="center"
       >

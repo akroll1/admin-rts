@@ -1,7 +1,6 @@
 import { useEffect,  useState } from 'react'
 import { 
   Button, 
-  chakra, 
   FormControl,
   FormErrorMessage,
   Input, 
@@ -65,7 +64,7 @@ export const SubscribeForm = (props) => {
   return (
     <Stack spacing="2">
       <FooterHeading>Subscribe to our newsletter</FooterHeading>
-      <Text>Get the <span style={{fontWeight: 'bold',color: '#FFF'}}>FightSync newsletter</span> delivered directly to your inbox!</Text>
+      <Text>Get the <span style={{fontWeight: 'bold',color: '#FFF'}}>FightSync newsletter</span> delivered to your inbox!</Text>
       <Stack spacing="4" direction={{ base: 'column', md: 'row' }}>
         <FormControl isInvalid={isError}>
           <InputGroup>

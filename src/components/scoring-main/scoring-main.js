@@ -6,6 +6,7 @@ import { TabsEnum, useGlobalStore } from '../../stores'
 import { UserScores } from './user-scores'
 import { ScoringButtons } from './scoring-buttons'
 import { FightStats } from '../sidebars/chat-sidebar-components'
+import { ScoringFightersFaceoff } from '../scoring/fighter-faceoff'
 
 export const ScoringMain = () => {
 
@@ -78,27 +79,30 @@ export const ScoringMain = () => {
             setNotSelectedScore(prev => prev -1)
         }
     }
-
     return (
         <Flex 
             id="scoring_main"
             display={tabs[TabsEnum.SCORING] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
-            maxW={["100%", "100%","40%", "40%"]}
+            // maxW={["100%", "100%","40%", "40%"]}
             flexDir="column" 
-            justifyContent="flex-start"
-            w="100%"  
+            // justifyContent={tabs[TabsEnum.SCORING] ? "flex-end" : 'flex-start'}
+            justifyContent="space-between"
+            alignItems="center"
+            flex="1 0 40%"
             position="relative"  
             boxSizing="border-box"
-            minH="80vh"
+            minH={["70vh", "auto"]}
+            maxH={["70vh", "auto"]}
         >   
             <Flex
-                flexDirection="column"
+                flexDir="column"
                 w="100%"
             >
-
-            <FightStats 
-                fighterIds={fighterIds}
+                <FightStats 
+                    fighterIds={fighterIds}
                 />
+                <ScoringFightersFaceoff />
+            </Flex>
             <UserScores
                 evenRound={evenRound}
                 fighterIds={fighterIds}
@@ -106,8 +110,7 @@ export const ScoringMain = () => {
                 notSelectedScore={notSelectedScore}
                 setNotSelectedScore={setNotSelectedScore}
                 handleFighterSelect={handleFighterSelect}
-                />
-            </Flex>
+            />
             <ScoringButtons
                 evenRound={evenRound}
                 fighterIds={fighterIds}

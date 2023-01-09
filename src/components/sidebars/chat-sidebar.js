@@ -30,6 +30,7 @@ export const ChatSidebar = () => {
         user,
     } = useGlobalStore()
 
+    const { isPanelist } = user;
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [tabIndex, setTabIndex] = useState(0)
     const [groupChat, setGroupChat] = useState({
@@ -108,15 +109,15 @@ export const ChatSidebar = () => {
             bg="fsl-sidebar-bg"
             border="1px solid #252525"
             id="chat-sidebar"
-            flex={["1 0 25%"]} 
+            flex={["1 0 30%"]} 
             maxW={["100%", "100%", "40%"]} 
             borderRadius="md" 
             // overflow="hidden"
             position="relative"
             justifyContent="space-between"
             flexDir="column" 
-            minH="100%"
-            maxH="100%"
+            // minH="100%"
+            // maxH="100%"
             pb="4"
         >
             <Flex
@@ -127,7 +128,6 @@ export const ChatSidebar = () => {
                     w="100%"
                     isFitted 
                     variant='enclosed' 
-                    minH="85%"
                     onChange={handleTabsChange}
                     display="flex"
                     flexDirection="column"
@@ -179,6 +179,12 @@ export const ChatSidebar = () => {
                     </TabPanels>
                 </Tabs>
                 <Flex
+                    display={isGroupTab 
+                        ? 'flex'
+                        : isPanelist
+                            ? 'flex'
+                            : 'none'
+                    }
                     h="auto"
                     w="100%"
                     flexDir="column"

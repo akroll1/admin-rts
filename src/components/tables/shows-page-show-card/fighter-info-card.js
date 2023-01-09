@@ -1,9 +1,17 @@
 import { Avatar, Flex, HStack, Icon, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { capFirstLetters } from '../../../utils';
 
-export const FighterInfoCard = props => {
-  const { ...stackProps } = props;
-  const { draws, fighterId, firstName, kos, lastName, losses, ringname, wins } = props.fighter;
+export const FighterInfoCard = ({ fighter }) => {
+  const { 
+    draws, 
+    fighterId, 
+    firstName, 
+    kos, 
+    lastName, 
+    losses, 
+    ringname, 
+    wins 
+  } = fighter;
 
   return (
     <Flex 

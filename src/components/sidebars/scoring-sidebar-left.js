@@ -21,7 +21,6 @@ import { MdOnlinePrediction } from 'react-icons/md'
 import { FaRegQuestionCircle } from 'react-icons/fa'
 import { BellIcon } from '@chakra-ui/icons'
 import { parseEpoch, transformedWeightclass } from '../../utils'
-import { FighterSelectionSwipe } from '../forms/my-panels-form-els/fighter-selection-swipe'
 import { ScoringSidebarSkeletons } from './scoring-sidebar-components'
 
 import { 
@@ -31,6 +30,7 @@ import {
     TabsEnum, 
     useGlobalStore,
 } from '../../stores'
+import { ScoringFightersFaceoff } from '../scoring'
 
 export const ScoringSidebarLeft = () => {
     const {
@@ -76,15 +76,15 @@ export const ScoringSidebarLeft = () => {
         <Flex 
             display={tabs[TabsEnum.INFO] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             id="scoring_sidebar_left" 
-            maxW={["100%","30%"]}
-            flex={["1 0 20%"]} 
+            // maxW={["100%","30%"]}
+            flex={["1 0 25%"]} 
             position="relative" 
             alignItems={["flex-start", "center"]} 
             justifyContent="center"
             borderRadius="md"
             direction="column" 
-            p="1" 
             pb="4"
+            p={["0", "4"]}
             fontSize="sm"
             boxSizing="border-box"
             overflowX="none"
@@ -92,30 +92,15 @@ export const ScoringSidebarLeft = () => {
             bg={tabs[TabsEnum.INFO] ? "inherit" : "fsl-sidebar-bg"}
             color={tabs[TabsEnum.INFO] ? "#dadada" : "#c8c8c8"}
         >
-            <Flex
-                display={tabs[TabsEnum.INFO] ? 'flex' : 'none'}
-                flexDir="row"
-                w="100%"
-                textAlign="center"
-                alignItems="center"
-                justifyContent="center"
-            >
-                { activeGroupScorecard?.fighters?.length > 0 && activeGroupScorecard.fighters.map( (fighter, _i) => (
-                    <FighterSelectionSwipe 
-                        key={_i}
-                        fighter={fighter} 
-                        handleFighterSelect={null} 
-                        isScoringSidebar={true}
-                        selectedFighter={{}}
-                    /> 
-                ))}
-            </Flex>
+            <ScoringFightersFaceoff isSidebar={true} />
             <Flex 
                 flexDir="column"
                 h={"auto"}
                 flex="1" 
                 overflowY="scroll" 
                 w="100%"
+                p={["2", "4"]}
+                pt="0"
             >
                 { isLoading
                     ? 

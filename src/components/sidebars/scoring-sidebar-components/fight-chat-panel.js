@@ -167,7 +167,7 @@ export const FightChatPanel = ({
             overflow="scroll"
             alignItems="center"
             justifyContent="flex-end"
-            // pb="4"
+            minH={["40vh", "60vh"]}
         >
             <Flex
                id="fightConnectionRef"

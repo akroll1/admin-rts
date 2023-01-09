@@ -59,7 +59,6 @@ export const Scorecards = () => {
             p={["2", "8"]}
             pt={["2", "4", "8", "4"]}
             minH="70vh"
-            mt={["12", "4", "4", "8"]}
         >
             { isLoading
                 ?

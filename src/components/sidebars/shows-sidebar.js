@@ -86,7 +86,7 @@ export const ShowsSidebar = () => {
                 mt="4"
             >
                 <NavGroup label="Upcoming">
-                    { pending.length && pending.map( summary => {
+                    { pending.length > 0 && pending.map( summary => {
                         const { fightId, fightQuickTitle, isTitleFight } = summary.fight;
                         const active = fightId === selectedFightSummary?.fight?.fightId;
                         return (
@@ -113,6 +113,18 @@ export const ShowsSidebar = () => {
                             />
                         )
                     })}
+                    { pending.length === 0 &&
+                        <UpcomingNavItem 
+                            active={false}
+                            name={REVIEW_TYPE.COMPLETE} 
+                            // icon={<NotAllowedIcon mt="-5px" /> } 
+                            // selectFight={selectFight} 
+                            fightId={'fightId'} 
+                            label={`SEASON COMPLETE`} 
+                            key={'fightId'} 
+                            isTitleFight={true}
+                        />
+                    }
                 </NavGroup>
                 <NavGroup label="Recent">
                     { complete.length > 0 && complete.map( summary => {
