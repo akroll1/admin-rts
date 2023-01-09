@@ -60,8 +60,7 @@ export const ScoringFightersFaceoff = ({
                             flexDir="column"
                             alignItems="center"
                             justifyContent="center"
-                            py="4"
-                            px="2"
+                            p="2"
                         >
                             <Center>
                                 <Avatar 
@@ -77,6 +76,7 @@ export const ScoringFightersFaceoff = ({
                 textAlign="center"
                 w="100%"
                 flexDir="row"
+                p="2"
             >
                 { fighters.length === 2 && fighters.map( fighter => (
                     <Flex
@@ -84,7 +84,6 @@ export const ScoringFightersFaceoff = ({
                         flexDir="column"
                     >
                         <Heading 
-                            py="1"
                             flex="1 0 50%"
                             size="md" 
                             color="gray.200"

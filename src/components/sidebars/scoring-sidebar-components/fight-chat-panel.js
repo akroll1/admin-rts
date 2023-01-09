@@ -161,25 +161,22 @@ export const FightChatPanel = ({
         <Flex
             id="fight_chat"
             ref={fightConnectionRef}
-            maxH="70vh"
             flexDir="column"
             w="100%"
-            overflow="scroll"
             alignItems="center"
             justifyContent="flex-end"
-            minH={["40vh", "60vh"]}
+            minH={["30vh", "50vh"]}
+            maxH="40%"
+            bg="inherit"
+            borderRadius="sm"
         >
             <Flex
                id="fightConnectionRef"
-            //    ref={fightChatRef}
-               minH={["45vh","0"]}
-               maxH={["45vh", "100%"]}
                overflowY="scroll"
                maxW="100%"
                flexDir="column-reverse"
                justifyContent="flex-start"
                borderRadius="md"
-               bg="#171717"
                mb="1"
                color="white" 
                fontSize="sm"

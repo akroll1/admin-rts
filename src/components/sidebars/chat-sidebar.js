@@ -112,12 +112,9 @@ export const ChatSidebar = () => {
             flex={["1 0 30%"]} 
             maxW={["100%", "100%", "40%"]} 
             borderRadius="md" 
-            // overflow="hidden"
             position="relative"
             justifyContent="space-between"
             flexDir="column" 
-            // minH="100%"
-            // maxH="100%"
             pb="4"
         >
             <Flex
@@ -134,7 +131,7 @@ export const ChatSidebar = () => {
                     justifyContent="space-between"
                 >
                     <TabList 
-                        mb='1em' 
+                        mb='4' 
                         id='group_chat'
                     >
                         <Tab

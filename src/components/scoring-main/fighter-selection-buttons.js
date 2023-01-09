@@ -29,7 +29,7 @@ export const FighterSelectionButtons = ({
 
             Object.assign(colorsObj, {
                 bg: '#303030',
-                borderColor: 'red',
+                borderColor: '#c01616',
                 color: 'gray.100'
             })
             return colorsObj
@@ -68,7 +68,7 @@ export const FighterSelectionButtons = ({
             _hover={{
                 border: '1px solid',
                 // bg: '#252525',
-                borderColor: 'red',
+                borderColor: '#c01616',
                 color: 'white'
             }}
             _focus={{

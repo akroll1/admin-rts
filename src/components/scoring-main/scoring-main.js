@@ -86,23 +86,18 @@ export const ScoringMain = () => {
             // maxW={["100%", "100%","40%", "40%"]}
             flexDir="column" 
             // justifyContent={tabs[TabsEnum.SCORING] ? "flex-end" : 'flex-start'}
-            justifyContent="space-between"
+            justifyContent="center"
             alignItems="center"
             flex="1 0 40%"
             position="relative"  
             boxSizing="border-box"
-            minH={["70vh", "auto"]}
+            // minH={["70vh", "auto"]}
             maxH={["70vh", "auto"]}
         >   
-            <Flex
-                flexDir="column"
-                w="100%"
-            >
-                <FightStats 
-                    fighterIds={fighterIds}
-                />
-                <ScoringFightersFaceoff />
-            </Flex>
+            <FightStats 
+                fighterIds={fighterIds}
+            />
+            <ScoringFightersFaceoff />
             <UserScores
                 evenRound={evenRound}
                 fighterIds={fighterIds}

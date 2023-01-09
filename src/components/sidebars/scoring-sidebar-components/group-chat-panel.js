@@ -141,9 +141,7 @@ export const GroupChatPanel = ({
         return (
             <Box 
                 key={i} 
-                m="2" 
-                mb="0" 
-                mt="1"
+                my="1"
             >
                 <p style={{ overflowWrap: 'break-word' }}>
                     <span style={isSender ? isSenderStyles : notIsSenderStyles}>
@@ -164,18 +162,16 @@ export const GroupChatPanel = ({
         <Flex
             id="group_chat"
             ref={groupChatRef}
-            // maxH="70vh"
             flexDir="column"
             w="100%"
-            overflow="scroll"
             alignItems="center"
             justifyContent="flex-end"
-            minH={["40vh", "60vh"]}
+            // minH={["40vh", "60vh"]}
+            borderRadius="sm"
+
         >
             <Flex
                 id="groupConnectionRef"
-                // minH={["45vh","0"]}
-                // maxH={["45vh", "100%"]}
                 overflowY="scroll"
                 maxW="100%"
                 flexDir="column-reverse"

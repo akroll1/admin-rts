@@ -20,22 +20,22 @@ export const GoToArrowButton = ({
     
     return (
         <Button
+            id="arrow_btn"
             onClick={() => navigate(navigateTo)}
             disabled={isSubmitting || isSubmittingForm}
             className="group"
             mt={["4"]}
             size={["lg", "lg"]}
             px="8"
-            fontSize="1.2rem"
+            fontSize="1.1rem !important"
             fontWeight="bold"
-            h="14"
             // bg="brand.100"
             iconSpacing="3"
             colorScheme="solid"
             rightIcon={
                 <Box
                     as={FaArrowRight}
-                    fontSize="1rem"
+                    fontSize="1.1rem"
                     transition="transform 0.2s"
                     _groupHover={{ transform: 'translateX(2px)' }}
                 />

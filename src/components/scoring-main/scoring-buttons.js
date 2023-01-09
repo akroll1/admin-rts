@@ -33,7 +33,7 @@ export const ScoringButtons = ({
             return `Fight Complete`
         }
         if(!selectedFighterId){
-            return `Select Fighter`
+            return `Select Round ${userScorecard?.scores?.length + 1}`
         }
         if(selectedFighterId){
             return `Submit Round ${userScorecard?.scores?.length + 1}`
@@ -81,14 +81,14 @@ export const ScoringButtons = ({
                     variant="solid" 
                     mx="auto" 
                     my="2"
-                    // bg={selectedFighterId ? "red.600" : "#666"}
+                    bg={selectedFighterId ? "red.600" : "#666"}
                     fontSize="1.2rem"
                     border="1px solid"
                     borderColor={selectedFighterId ? 'red.400' : '#bababa'}
                     fontWeight="bold"
                     color={selectedFighterId ? "inherit" : "gray.100"}
                     w={["80%", "70%", "60%", "50%"]}
-                    minH="3rem"
+                    minH={["2.5rem", "3rem"]}
                 >
                     {`${buttonLabel}`}
                 </Button>

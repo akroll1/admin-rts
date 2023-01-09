@@ -51,7 +51,7 @@ export const UserScores = ({
             maxW="100%"
             flexDir="column"
             // alignItems="center"
-            justifyContent="flex-end"
+            justifyContent="flex-start"
             boxSizing="border-box"
             h="auto"
             overflow="scroll"
@@ -171,20 +171,7 @@ export const UserScores = ({
                             alignItems="center"
                             justifyContent="center"
                         >
-                            { lastRow
-                                ? 
-                                    <Heading 
-                                        as="h3" 
-                                        size={["lg", "md"]}
-                                        color={selectedFighterId ? "red.500" : 'red.900'}
-                                        cursor="pointer"
-                                        _hover={{color: 'red.600'}}
-                                        onClick={() => handleFighterSelect(null)}
-                                        alignSelf="center"
-                                    >
-                                        {<RepeatIcon />}
-                                    </Heading>
-                                :  
+
                                     <Heading
                                         color={selectedFighterId ? "gray.600" : "gray.400"}
                                         as="h3"
@@ -195,7 +182,7 @@ export const UserScores = ({
                                     >
                                         {_i+1}
                                     </Heading>
-                            }
+
                         </Flex>
                         <Flex
                             flex="1 0 40%"
