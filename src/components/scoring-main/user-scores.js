@@ -26,7 +26,7 @@ export const UserScores = ({
     const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
 
     useEffect(() => {
-        if(userScorecard?.scores.length > 0){
+        if(userScorecard?.scores?.length > 0){
             const scoredRounds = userScorecard.scores.length;
             const toFill = totalRounds - scoredRounds;
             if(toFill > 0){

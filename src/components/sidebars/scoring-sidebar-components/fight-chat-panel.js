@@ -117,10 +117,10 @@ export const FightChatPanel = ({
             : ChatMessageType.CALLING_IT;
 
         const message = Content;
-        setChatMessages(prev => [{ Id, message, username: Sender.UserId }, ...prev ]);
+        setChatMessages(prev => [{ Id, message, username: Sender?.UserId }, ...prev ]);
 
         if(messageType === ChatMessageType.CALLING_IT){
-            setGlobalNotification({ heading: Sender.Attributes.username, body: message })
+            setGlobalNotification({ heading: Sender?.Attributes?.username, body: message })
         }
     };
     
