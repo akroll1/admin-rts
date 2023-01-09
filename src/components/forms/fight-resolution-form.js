@@ -28,7 +28,7 @@ import { useGlobalStore } from '../../stores'
 export const FightResolutionForm = () => {
 
     const { 
-        selectedSeasonFightSummary, 
+        selectedFightSummary, 
         fetchFightSummary,
         submitFightResolution,
     } = useGlobalStore()
@@ -50,10 +50,10 @@ export const FightResolutionForm = () => {
     })  
 
     useEffect(() => {
-        if(selectedSeasonFightSummary?.fighters?.length > 0 ){
-            setForm({ ...form, fight: selectedSeasonFightSummary.fight, fighters: selectedSeasonFightSummary.fighters })
+        if(selectedFightSummary?.fighters?.length > 0 ){
+            setForm({ ...form, fight: selectedFightSummary.fight, fighters: selectedFightSummary.fighters })
         }
-    },[selectedSeasonFightSummary])
+    },[selectedFightSummary])
 
     const resolveFighterUpdates = officialResult => {
 
@@ -104,7 +104,7 @@ export const FightResolutionForm = () => {
             fightId,
             fightStatus: radio === `DR` ? 'COMPLETE' : resolvedFightStatus,
             officialResult,
-            showId: selectedSeasonFightSummary.show.showId,
+            showId: selectedFightSummary.show.showId,
         }
         // console.log('resolutionObj: ', resolutionObj);
         submitFightResolution(resolutionObj, fightId)
@@ -124,7 +124,7 @@ export const FightResolutionForm = () => {
     const { fightQuickTitle, fightStatus, officialResult, rounds, weightclass } = form.fight;
     const [fighter1, fighter2] = form.fighters.length ? form.fighters : [];
     const theOfficialResult = form.fighters.length > 0 ? setOfficalResult() : '';
-
+    // console.log('form: ', form)
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
             <form id="fight_resolution_form" onSubmit={(e) => {e.preventDefault()}}>

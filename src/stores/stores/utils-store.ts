@@ -127,6 +127,7 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
         set({ tokenExpired })
     },
     setTransformedResult: (officialResult: string) => {
+        if(!officialResult) return;
         if(officialResult){
             if(officialResult === 'CANCELED'){
                 return set({ transformedResult: `Canceled`})

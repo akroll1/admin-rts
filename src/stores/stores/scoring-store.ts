@@ -14,9 +14,14 @@ import {
 } from "../models";
 import axios from 'axios'
 import { configureAccessToken } from "./auth-store";
-import { generateAnaltyicsData, generateCollatedData } from "../../utils/analytics-utils";
+import { 
+    calculatePercentages, 
+    generateAnaltyicsData, 
+    generateCollatedData 
+} from "../../utils/analytics-utils";
 
 export interface ScoringStoreState {
+    analytics: any
     activeGroupScorecard: GroupScorecardSummary
     fetchGroupScorecardSummary(fightId: string, groupScorecardId: string): void
     fetchPanelProps(): void
@@ -40,12 +45,11 @@ export interface ScoringStoreState {
     totalRounds: number,
     updateScorecardsFromChat(roundScores: RoundScores): void
     userScorecard: Scorecard
-
 }
 
 export const initialScoringStoreState = {
     activeGroupScorecard: {} as GroupScorecardSummary,
-    bettingProps: {} as FightProps,
+    analytics: {},
     chatKey: null,
     fightChatKey: 'hzdegD0vRhKO',
     fightChatToken: null,
@@ -87,8 +91,6 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         }
         const lastScoredRound = userScorecard.scores.length;
         const scoringComplete = userScorecard.scores.length >= data.fight.rounds;
-
-        
         set({ 
             activeGroupScorecard: data, 
             groupChatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
@@ -98,11 +100,21 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             scoringComplete,
             userScorecard,
         });
-        const tableData = await generateCollatedData(data.scorecards, data.fighters);
-        const analyticsData = await generateAnaltyicsData(tableData, data.fighters, data.fight.rounds)
-        set({ tableData })
+        
+        ///////////////////////
+        const tableData = generateCollatedData(data.scorecards, data.fighters);
+        const analyticsData = generateAnaltyicsData(tableData, data.fighters, data.fight.rounds)
+        const analytics = calculatePercentages(analyticsData, data.fighters, data.scorecards.length)
+        ///////////////////////
+
+        set({ 
+            analytics,
+            tableData 
+        })
         get().setScoringTransformedPrediction(userScorecard.prediction)
         get().setFighterScores()
+        get().fetchFightProps(data?.fight?.fightId)
+
 
     },
     fetchPanelProps: async () => {
@@ -157,7 +169,7 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             // get().sendMessageViaChat({
             //     id: uuidv4(),
             //     Attributes: {
-            //         [ContentType.ROUND_SCORES]: JSON.stringify(roundScores)
+            //         [ChatMessageType.ROUND_SCORES]: JSON.stringify(roundScores)
             // })
         }
 

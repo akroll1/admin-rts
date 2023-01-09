@@ -9,7 +9,6 @@ export const ScorecardsHeading = ({
         <Heading 
             fontSize="3xl" 
             fontWeight="extrabold"
-            mb="4"
             mx="auto"
         >
             {length ? `${length} Scorecard${length > 1 ? `s` : ``}` : `Create A Scorecard`}

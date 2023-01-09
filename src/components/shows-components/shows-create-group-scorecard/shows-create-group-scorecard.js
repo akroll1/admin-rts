@@ -172,7 +172,7 @@ export const ShowsCreateGroupScorecard = ({
                             <PopoverArrow />
                             <PopoverCloseButton />
                             <PopoverHeader>
-                                You must be signed in.
+                                Please sign in.
                             </PopoverHeader>
                         </PopoverContent>
                     </Popover>
@@ -197,7 +197,7 @@ export const ShowsCreateGroupScorecard = ({
                             <PopoverArrow />
                             <PopoverCloseButton />
                             <PopoverHeader>
-                                You must be signed in.
+                                Please sign in.
                             </PopoverHeader>
                         </PopoverContent>
                     </Popover>

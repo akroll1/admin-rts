@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, Center, chakra, VisuallyHidden } from '@chakra-ui/react'
 
 const Bar = chakra('span', {
@@ -50,7 +49,7 @@ const ToggleIcon = (props) => {
 }
 
 export const ToggleButton = (props) => {
-  const { isOpen, handleFightSyncButtonClick } = props
+  const { isOpen, onToggle } = props
   return (
     <Center
       // marginStart="-6"
@@ -61,7 +60,7 @@ export const ToggleButton = (props) => {
       _active={{
         color: 'white',
       }}
-      onClick={() => handleFightSyncButtonClick('signin')}
+      onClick={onToggle}
     >
       <ToggleIcon active={isOpen} />
       <VisuallyHidden>Toggle Menu</VisuallyHidden>

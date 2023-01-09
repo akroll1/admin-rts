@@ -20,7 +20,7 @@ export const FighterSelectionButtons = ({
     const setButtonColors = currentFighter => {
         let colorsObj = {
             bg: 'transparent',
-            borderColor: 'gray.300',
+            borderColor: 'gray.600',
             color: '#cacaca'
         }
         if(!selectedFighterId) return colorsObj
@@ -28,8 +28,8 @@ export const FighterSelectionButtons = ({
         if(selectedFighterId && selectedFighterId == currentFighter){
 
             Object.assign(colorsObj, {
-                bg: '#C01616',
-                borderColor: 'gray.600',
+                bg: '#303030',
+                borderColor: 'red',
                 color: 'gray.100'
             })
             return colorsObj
@@ -37,7 +37,7 @@ export const FighterSelectionButtons = ({
         if(selectedFighterId && selectedFighterId != currentFighter){  
 
             Object.assign(colorsObj,{
-                bg: '#blue',
+                bg: 'transparent',
                 borderColor: 'gray.700',
                 color: 'gray.400'
             })
@@ -58,18 +58,22 @@ export const FighterSelectionButtons = ({
             maxH="2.5rem"
             variant={'outline'}
             py={["2", "2",]}
-            bg={colors.bg}
+            // bg={colors.bg}
+            bg="transparent"
             size={["sm","md"]}
+            borderColor={colors.borderColor}
             color={colors.color}
             // borderColor={colors.borderColor}s
             border="1px solid"
             _hover={{
-                bg: '',
-                borderColor: 'gray.400',
-                color: '#fcfcfc'
+                border: '1px solid',
+                // bg: '#252525',
+                borderColor: 'red',
+                color: 'white'
             }}
             _focus={{
-                borderColor: 'transparent'
+                border: '2px solid',
+                borderColor: colors.borderColor
             }}
             // borderColor={selectedFighterId && selectedFighterId == fighter.fighterId ? "red" : 'gray'}
         >

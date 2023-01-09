@@ -60,20 +60,20 @@ export const resetTabs = {
 
 export interface ChatMessage {
     action?: 'SEND_MESSAGE'
-    Attributes?: Record<keyof ContentType, string>
+    Attributes?: Record<keyof ChatMessageType, string>
     body?: string
-    Content: ContentType
+    Content: string // stringified message
     heading?: string
     Id?: string
     requestId?: string
     state?: boolean
 }
 
-export enum ContentType {
+export enum ChatMessageType {
     CALLING_IT = "CALLING_IT",
     FSL = "FSL",
     GROUP = "GROUP",
-    PANELIST = "PANELIST",
+    FIGHT = "FIGHT",
     ROUND_SCORES = "ROUND_SCORES",
 }
 

@@ -6,21 +6,22 @@ import {
   HStack, 
   useDisclosure 
 } from '@chakra-ui/react'
-import { NavLink } from './nav-link'
+import { DesktopNavLink, MobileNavLink } from './nav-link'
 import { NavMenu } from './nav-menu'
-import { ToggleButton, Submenu } from '../../chakra'
+import { 
+  DesktopSubmenu, 
+  MobileSubMenu,
+  ToggleButton, 
+} from '../../chakra'
 import { links } from './navbar_data'
 import { ProfileButton } from './profile-button'
 import { useNavigate } from 'react-router'
 import { useGlobalStore } from '../../stores'
 
-const MobileNavContext = props => {
+export const MobileNavContext = props => {
   const { user } = useGlobalStore()
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
-  const handleFightSyncButtonClick = value => {
-      onToggle()
-  }
 
   return (
     <>
@@ -28,17 +29,13 @@ const MobileNavContext = props => {
         zIndex={100000}
         align="center" 
         justify="space-between" 
-        className="nav-content__mobile" 
         {...props}
         >
-        <Box 
-          // flexBasis="6rem"
-        >
-          <ToggleButton 
-            isOpen={isOpen} 
-            handleFightSyncButtonClick={handleFightSyncButtonClick} 
-          />
-        </Box>
+
+        <ToggleButton 
+          isOpen={isOpen} 
+          onToggle={onToggle}
+        />
         <Heading 
           as="h3" 
           size="sm"
@@ -53,28 +50,24 @@ const MobileNavContext = props => {
       <NavMenu animate={isOpen ? 'open' : 'closed'}>
         {links.map( (link, i) => 
           link.children ? (
-            <Submenu.Mobile 
+            <MobileSubMenu
               key={i} 
               link={link} 
-              href={link.href}
-              closeMain={onToggle}
-              isOpen={isOpen}
             />
           ) : (
-            <NavLink.Mobile 
+            <MobileNavLink
               key={i} 
               href={link.href}
               onToggle={onToggle}
             >
               {link.label}
-            </NavLink.Mobile>
+            </MobileNavLink>
           ),
         )}
           <ProfileButton 
             isMobile={true}
             isLoggedIn={user.isLoggedIn}
             isOpen={isOpen}
-            handleFightSyncButtonClick={handleFightSyncButtonClick} 
             onToggle={onToggle}
           />
       </NavMenu>
@@ -82,7 +75,7 @@ const MobileNavContext = props => {
   )
 }
 
-const DesktopNavContent = props => {
+export const DesktopNavContent = props => {
 
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure(); 
@@ -121,15 +114,15 @@ const DesktopNavContent = props => {
         {links.map( (link, idx) => (
           <Box as="li" key={idx} id={`nav__menuitem-${idx}`}>
             {link.children ? (
-              <Submenu.Desktop 
+              <DesktopSubmenu 
                 link={link} 
               />
             ) : (
-              <NavLink.Desktop 
+              <DesktopNavLink
                 href={link.href}
               >
                 {link.label}
-              </NavLink.Desktop>
+              </DesktopNavLink>
             )}
           </Box>
         ))}
@@ -142,9 +135,4 @@ const DesktopNavContent = props => {
       </HStack>
     </Flex>
   )
-}
-
-export const NavContent = {
-  Mobile: MobileNavContext,
-  Desktop: DesktopNavContent,
 }

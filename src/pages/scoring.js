@@ -82,7 +82,6 @@ const Scoring = props => {
             justifyContent="center" 
             margin="auto" 
             p={["1", "2", "4"]}
-            pt={["2", "4", "8", "12"]}
             bg="transparent"
             position="relative"
             maxW="100%"
@@ -92,7 +91,7 @@ const Scoring = props => {
         >       
             <Heading
                 mb={["2","2","2"]}
-                display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE]  || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
+                display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE]  || tabs[TabsEnum.ALL] || tabs[TabsEnum.SCORING]? 'flex' : 'none'}
             >
                 {`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
             </Heading>
@@ -104,10 +103,11 @@ const Scoring = props => {
             <PredictionModal />
             <Flex 
                 boxSizing="border-box"
-                display={windowWidth < 768 ? tabs[TabsEnum.TABLE] ? 'none' : 'flex' : 'flex'} 
+                display={tabs[TabsEnum.TABLE] ? 'none' : 'flex'} 
                 flexWrap="wrap"
                 w="100%" 
                 maxW="100%"
+                h="auto"
             >
                 <ScoringSidebarLeft />
                 <ScoringMain />

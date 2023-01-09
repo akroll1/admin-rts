@@ -26,17 +26,16 @@ export const Layout = ({ children }) => {
 
     return (
         <Flex 
-            minH="100vh" 
             bg="fsl-body-bg" 
             flexDirection="column" 
             position="relative"
+            minH="100vh"
         >  
             <Navbar />
             <ExpiredTokenModal />
             <GlobalNotification />
             <Box 
-                mt="2rem"
-                pt="4"
+                mt="4rem"
                 minW="100%" 
                 as="main"
             >

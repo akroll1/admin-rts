@@ -7,6 +7,7 @@ import {
     Fighter,
     FightPostObj,
     FightProps,
+    FightResolution,
     Panelist,
     Season,
     Show,
@@ -32,8 +33,10 @@ export interface AdminStoreState {
     deletePanelist(panelistId: string): void
     deleteSeason(seasonId: string): void
     deleteShow(showId: string): void
+    fetchFightById(fightId: string): void
     fetchFightProps(fightId: string): void
     fightProps: FightProps | null
+    submitFightResolution(resolutionObj: FightResolution): void
     updateFightProps(obj: Partial<FightProps>): void
 }
 
@@ -112,10 +115,18 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const res = await axios.delete(`${url}/shows/${showId}`, await configureAccessToken() )
         console.log('res.data: ', res.data)
     },
+    fetchFightById: async (fightId: string) => {
+        const res = await axios.get(`${url}/fights/${fightId}`)
+    },
     fetchFightProps: async (fightId: string) => {
         const res = await axios.get(`${url}/fight-props/${fightId}`, await configureAccessToken() )
         const fightProps = res.data as FightProps
         set({ fightProps })
+    },
+    submitFightResolution: async (resolutionObj: FightResolution) => {
+        const res = await axios.put(`${url}/resolutions/${resolutionObj.fightId}`, resolutionObj, await configureAccessToken() )
+        const data = res.data
+        console.log('RESOLUTION put res: ', data)
     },
     updateFightProps: async (obj: Partial<FightProps>) => {
         const res = await axios.put(`${url}/fight-props`, obj, await configureAccessToken() )

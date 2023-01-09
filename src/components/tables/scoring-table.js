@@ -26,7 +26,7 @@ export const ScoringTable = () => {
         tabs, 
     } = useGlobalStore()
     
-    console.log('tableData: ', tableData)
+    // console.log('tableData: ', tableData)
     const [toCurrentRound, setToCurrentRound] = useState(true)
     const [data, setData] = useState([])
     const [fighter1, setFighter1] = useState({})
@@ -111,7 +111,7 @@ export const ScoringTable = () => {
                 h="auto"
                 mb={tabs[TabsEnum.ALL] ? "0rem" : "4rem"}
             >     
-                { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" mb="-2" size="md">FIGHT IS OFFICIAL</Heading> }
+                { activeGroupScorecard?.fight?.fightStatus === `COMPLETE` && <Heading m="auto" size="md">FIGHT IS OFFICIAL</Heading> }
                 
                 <Table 
                     id="scoring_table"
@@ -277,7 +277,7 @@ export const ScoringTable = () => {
                                                             justifyContent="center" 
                                                             w="100%"
                                                             >
-                                                            {totals[fighter1]}
+                                                            {totals[fighter1.lastName]}
                                                         </Flex>
                                                         <Flex 
                                                             className="scores"
@@ -291,7 +291,7 @@ export const ScoringTable = () => {
                                                             mt="0.5rem" 
                                                             w="100%"
                                                         >
-                                                            {totals[fighter2]}
+                                                            {totals[fighter2.lastName]}
                                                         </Flex>
                                                     </Flex>
                                                 </Td>

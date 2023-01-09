@@ -54,7 +54,6 @@ export const generateCollatedData = (
             displayName,
         })
     })
-    // const stats = new Set(collated)
     return collated
 }
 
@@ -126,12 +125,80 @@ export const generateAnaltyicsData = (
             }
         })
     })
-    console.log('fightSwingsArr: ' , fightSwingsArr)
+    // console.log('fightSwingsArr: ' , fightSwingsArr)
     return fightSwingsArr
 }
 
-export const calculatePercentages = (fightSwingsArr: FightSwingRound[]) => {
-    // const 
+export const calculatePercentages = (fightSwingsArr: FightSwingRound[], 
+    fighters: Fighter[], 
+    totalScorecards: number,    
+) => {
+
+    const [fighter1, fighter2] = fighters.map(fighter => fighter.lastName)
+
+    const roundByRoundTotals = fightSwingsArr.map( (roundObj, _i) => {
+
+        const calculateFighterTotal = (fighter: string) => {
+            const fighterTotal = roundObj[fighter+'6'] 
+                + roundObj[fighter+'7'] 
+                + roundObj[fighter+'8'] 
+                + roundObj[fighter+'9'];
+            
+            return fighterTotal == 0 
+                ? 0 
+                : (fighterTotal / totalScorecards) * 10;
+        }
+        const fighter1TotalPercentage = calculateFighterTotal(fighter1);
+        const fighter2TotalPercentage = calculateFighterTotal(fighter2);
+
+        return ({
+            [fighter1]: fighter1TotalPercentage,
+            [fighter2]: fighter2TotalPercentage
+        })
+    })
+    
+    const totalPercentagesObj = {
+        [fighter1]: 0,
+        [fighter2]: 0,
+        even: 0
+    };
+
+    const percentageTotals = fightSwingsArr.map( (roundObj, _i) => {
+        const calculateForTotalPercentages = (roundObj: Record<string, number>) => {
+            Object.entries(roundObj).map( ([key, value], _i) => {
+                // This will exclude even and totals from roundObj.
+                if(key.includes(fighter1) && key.length > fighter1.length){
+                    totalPercentagesObj[fighter1] += value;
+                }
+                if(key.includes(fighter2) && key.length > fighter2.length){
+                    totalPercentagesObj[fighter2] += value;
+                }
+                if(key.includes('even')){
+                    totalPercentagesObj['even'] += value
+                }
+            })
+        }
+        return calculateForTotalPercentages(roundObj)
+    })
+    
+    const calculateTotalPercentages = (totalPercentagesObj: Record<string, number>): any => {
+        
+        const totalPossible = Number(totalPercentagesObj[fighter1]) + Number(totalPercentagesObj[fighter2]) + Number(totalPercentagesObj['even']);
+        const fighter1Percentage = (totalPercentagesObj[fighter1] / totalPossible).toFixed(2).slice(2);
+        const fighter2Percentage = (totalPercentagesObj[fighter2] / totalPossible).toFixed(2).slice(2);
+    
+        return ({
+            [fighter1]: fighter1Percentage,
+            [fighter2]: fighter2Percentage,
+        })
+    }
+
+    const totalPercentages = calculateTotalPercentages(totalPercentagesObj)
+
+    return ({
+        roundTotals: roundByRoundTotals,
+        ...totalPercentages
+    })
 } 
 
 export const generateFightSwingsTotalsArr = (fighter1: string, fighter2: string, totalRounds: number): FightSwingRound[] => {

@@ -77,8 +77,8 @@ export const ScoringButtons = ({
                 <Button
                     zIndex={1000}
                     onClick={submitScores}
-                    disabled={isDisabled} 
-                    variant="outline" 
+                    disabled={!selectedFighterId} 
+                    variant="solid" 
                     mx="auto" 
                     my="2"
                     // bg={selectedFighterId ? "red.600" : "#666"}

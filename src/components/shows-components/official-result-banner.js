@@ -10,6 +10,7 @@ export const OfficialResultBanner = () => {
     const {
         transformedResult
     } = useGlobalStore()
+        // this is not changing state when still PENDING.
         
     return (
         <Flex 

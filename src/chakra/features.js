@@ -39,7 +39,7 @@ export const Feature = (props) => {
           {title}
         </Heading>
         <Text 
-          pr="6" 
+          pr={["6", "2", "6"]}
           color={mode('gray.600', 'gray.400')} 
           lineHeight="short"
           fontSize="lg"

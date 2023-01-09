@@ -8,7 +8,6 @@ import {
 } from "../models/scorecard.model"
 import { 
     Fight, 
-    FightResolution,
     FightSummary, 
     FightUpdateOptions
 } from '../models/fight.model' 
@@ -64,7 +63,6 @@ export interface ScorecardStoreState {
     setFighterScores(): void
     setSeasonsOptions(): void
     stats: any[]
-    submitFightResolution(resolutionObj: FightResolution): void
     submitList(list: List): void
     updateDiscussion(discussionObj: Partial<Discussion>): void
     updateFight(fightUpdateOptions: FightUpdateOptions): void
@@ -285,11 +283,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
             })
             set({ seasonsOptions })
         }
-    },
-    submitFightResolution: async (resolutionObj: FightResolution) => {
-        const res = await axios.put(`${url}/resolutions/${resolutionObj.fightId}`, resolutionObj, await configureAccessToken() )
-        const data = res.data
-        console.log('RESOLUTION put res: ', data)
     },
     submitList: async (list: List) => {
         const res = await axios.put(`${url}/lists/${get().user.sub}/${list.listType}`, list, await configureAccessToken() )
