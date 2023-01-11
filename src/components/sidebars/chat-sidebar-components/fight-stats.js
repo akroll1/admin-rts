@@ -14,7 +14,7 @@ export const FightStats = ({
     } = useGlobalStore();
 
     const [fighter1, fighter2] = fighters.length === 2 ? fighters.map( fighter => fighter.lastName) : '';
-
+    console.log('analytics: ', analytics)
     return (
         <Flex
             id="fight_stats"

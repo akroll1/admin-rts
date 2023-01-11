@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { 
     VictoryChart,
     VictoryLine 
@@ -6,10 +7,42 @@ import {
     Flex,
     Heading
 } from '@chakra-ui/react'
-
+import { useGlobalStore } from '../../stores'
 
 export const SwingsGraph = props => {
 
+    const {
+        analytics,
+        fighters,
+        totalRounds,
+    } = useGlobalStore()
+
+    const [swingsline, setSwingsline] = useState(null)
+
+    useEffect(() => {
+        if(analytics?.roundByRoundTotals?.length > 0 && fighters?.length === 2){
+            const [f1, f2] = fighters.map( fighter => fighter.lastName);
+            const swingsline = [ ...new Array(totalRounds).fill('')].map( (_, _i) => {
+                const calculateYAxis = () => {
+                    if(!analytics.roundByRoundTotals[_i+1]) return 50;
+                    if(analytics.roundByRoundTotals[_i+1][f1] == 0 && analytics.roundByRoundTotals[_i+1][f2] == 0) return 50;
+                    if(analytics.roundByRoundTotals[_i+1][f1] == 100 && analytics.roundByRoundTotals[_i+1][f2] == 0) return 0;
+                    if(analytics.roundByRoundTotals[_i+1][f1] == 0 && analytics.roundByRoundTotals[_i+1][f2] == 100) return 100;
+                    return analytics.roundByRoundTotals[_i+1][f2]
+
+                }
+                return ({
+                    x: (_i+1),
+                    y: calculateYAxis()
+                })
+            })
+            setSwingsline(swingsline)
+        }
+    }, [analytics, fighters])
+
+    // console.log('roundByRoundTotals: ', analytics.roundByRoundTotals)
+    // console.log('swingsline: ', swingsline)
+    
     return (
         <Flex
             flexDir="column"
@@ -26,10 +59,12 @@ export const SwingsGraph = props => {
                 Viewer Scoring
             </Heading>
             <VictoryChart
+                scale="linear"
                 // height={50}
                 // width={50}
             >
-                <VictoryLine 
+                <VictoryLine
+                    domain={{ x: [1, 12], y: [0, 100]}} 
                     responsive={true}
                     style={{
                         data: { stroke: "#c43a31" },
@@ -40,20 +75,13 @@ export const SwingsGraph = props => {
                         } 
                     }}
                     animate={{
-                        duration: 2000,
+                        duration: 1000,
                         onLoad: { duration: 1000 }
                     }}
-                    // labels={[{ x:  }, { y: 'Swing' }].map( el => el.x)}
-                    // minDomain={[{ x: 0 }, { y: 1 }]}
-                    // maxDomain={[{ x: 12}, { y: 10 }]}
-                    // data={[
-                    //     { x: 1, y: 2 },
-                    //     { x: 2, y: 3 },
-                    //     { x: 3, y: 5 },
-                    //     { x: 4, y: 4 },
-                    //     { x: 5, y: 6 }
-                    //   ]}
-                    // x="Rounds"
+                    // minDomain={[{ x: 0 }, { y: 100 }]}
+                    // maxDomain={[{ x: 12}, { y: 100 }]}
+                    data={swingsline}
+                    // x="x"
                     // y="Fighters"
                     // range={{ x: [1,12], y: [0, 100]}}
                     // scale={{ x: 'linear', y: 'linear'}}
