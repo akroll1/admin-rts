@@ -1,5 +1,4 @@
 import { Box, Button, Center, Divider, Flex, Heading, Img, SimpleGrid, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
-import { useNavigate } from 'react-router'
 import { Feature } from '../chakra'
 import { GoToArrowButton } from '../components/buttons'
 import { FaHandsHelping } from 'react-icons/fa'
@@ -7,23 +6,23 @@ import { GiTrophy } from 'react-icons/gi'
 import { EditIcon } from '@chakra-ui/icons'
 
 const Home = () => {
-  const navigate = useNavigate();
+
   return (
 
     <Box 
       id="home"
       as="section" 
       bg="brand.base" 
-      p={["2", "8", "8", "8"]}
-      py="8"
-      >
+      px={["6", "12", "12",]}
+      py={["2", "4"]}
+      mx="auto"
+    >
       <Box 
         maxW={["100%", "100%", "90%", "90%"]} 
-        mx="auto" 
+        mx="auto"
       >
         <Stack 
-          p={["4"]} 
-          m="auto" 
+          // p={["4"]} 
           spacing={['2', '4', '4']} 
           direction={['column', 'column', 'row']}
         >

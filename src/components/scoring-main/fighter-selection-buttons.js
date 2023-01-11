@@ -12,7 +12,7 @@ export const FighterSelectionButtons = ({
 }) => {
 
     const {
-        fightComplete
+        scoringComplete
     } = useGlobalStore()
 
     const { selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
@@ -48,11 +48,10 @@ export const FighterSelectionButtons = ({
 
     return (    
         <Button
-            disabled={fightComplete}
+            disabled={scoringComplete}
             onClick={() => handleFighterSelect(fighter.fighterId)}
             flex="0 0 45%"
-            mt="2"
-            mb="4"
+            my="2"
             px="2"
             minH="2.5rem"
             maxH="2.5rem"

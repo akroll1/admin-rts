@@ -74,7 +74,7 @@ export enum ChatMessageType {
     FSL = "FSL",
     GROUP = "GROUP",
     FIGHT = "FIGHT",
-    ROUND_SCORES = "ROUND_SCORES",
+    ROUND_SCORE = "ROUND_SCORE",
 }
 
 export interface Toast {

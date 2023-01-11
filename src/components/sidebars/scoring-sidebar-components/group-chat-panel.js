@@ -22,10 +22,11 @@ export const GroupChatPanel = ({
     const { 
         groupChatKey,
         groupChatToken,
-        isPanelist,
         requestChatToken,
+        roundScore,
         setChatToken,
         setGlobalNotification,
+        updateScorecardsFromChat,
         user
     } = useGlobalStore()
 
@@ -61,6 +62,12 @@ export const GroupChatPanel = ({
         }
     },[groupChat.sendMessage])
 
+    useEffect(() => {
+        if(roundScore?.scorecardId){
+            handleSendRoundScores()
+        }
+    },[roundScore])
+
     const initGroupConnection = async (token) => {
         const groupConnectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
         setGroupConnection(groupConnectionInit);
@@ -86,6 +93,20 @@ export const GroupChatPanel = ({
             handleReceiveChatMessage(data);
         };
     };
+
+    const handleSendRoundScores = () => {
+        
+        if(!roundScore?.scorecardId) return
+        const payload = {
+            RequestId: uuidv4(),
+            Action: 'SEND_MESSAGE',
+            Attributes: {
+                messageType: ChatMessageType.ROUND_SCORE
+            },
+            Content: JSON.stringify(roundScore)
+        }
+        groupConnection.send(JSON.stringify(payload))
+    }
 
     const handleSendGroupMessage = () => {
         if(!groupChat.message) return
@@ -113,7 +134,13 @@ export const GroupChatPanel = ({
 
     const handleReceiveChatMessage = data => {
         console.log('receive groupChat data: ', data)
-        const { Attributes, Content, Id, Sender, Type } = data;
+        const { Attributes, Content, Id, Sender } = data;
+
+        if(Attributes?.messageType === ChatMessageType.ROUND_SCORE){
+            
+            updateScorecardsFromChat(JSON.parse(data.Content))
+            return
+        }
         const messageType = Attributes?.messageType === ChatMessageType.GROUP
             ? ChatMessageType.GROUP 
             : ChatMessageType.CALLING_IT;

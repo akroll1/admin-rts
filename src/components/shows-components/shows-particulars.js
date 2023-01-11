@@ -106,47 +106,17 @@ export const ShowsParticulars = ({
                 >
                     <ShowsNavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
                     <ShowsNavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
-                <Flex
-                    pos="relative"
-                    w="100%"
-                    flexDir="column"
-                >
-                    <Flex
-                        w="100%"
-                        pl={isTitleFight ? "1" : "1"}
-                    >
-                        <Flex
-                            zIndex={100}
-                            position="absolute"
-                            left="0"
-                        >
-                            { !isTitleFight && <ShowsNavItem icon={
-                                <NotAllowedIcon 
-                                    fontSize="2.1rem" 
-                                    color="red.100" 
-                                    opacity="0.3"
-                                    ml="-4px"
-                                    mt="-2"
-                                />} 
-                                color="fsl-text" 
-                                label={``} 
-                                /> 
-                            }
-                        </Flex>
-                            <ShowsNavItem 
-                                id="trophy"
-                                fontSize={isTitleFight ? "1rem" : "0.8rem"}
-                                icon={
-                                        <FaTrophy opacity="0.7" />
-                                    } 
-                                label={ `${selectedFightSummary?.fight?.fightId 
-                                    ? isTitleFight 
-                                        ? `Title Fight` 
-                                        : `No Belts` : ``}`
-                                } 
-                            />
-                        </Flex>
-                    </Flex>
+                    <ShowsNavItem 
+                        id="trophy"
+                        icon={
+                                <FaTrophy opacity="0.7" />
+                            } 
+                        label={ `${selectedFightSummary?.fight?.fightId 
+                            ? isTitleFight 
+                                ? `Title Fight` 
+                                : `No Belts` : ``}`
+                        } 
+                    />  
                 </Flex>
                 <Flex
                     flexDir="column"
@@ -154,7 +124,7 @@ export const ShowsParticulars = ({
                     maxW={["100%", "70%", "40%"]}
                     justifyContent="flex-start"
                     alignItems="flex-start"
-                >      
+                >
                     <ShowsNavItem icon={<GiMoneyStack />} color="fsl-text" label={propsLabels.moneyline1 ? propsLabels.moneyline1 : `N/A`} />
                     <ShowsNavItem icon={<GiMoneyStack />} color="fsl-text" label={propsLabels?.moneyline2 ? propsLabels.moneyline2 : `N/A`} />
                     { prediction 

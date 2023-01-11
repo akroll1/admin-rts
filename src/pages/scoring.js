@@ -89,7 +89,7 @@ const Scoring = props => {
             overflow="hidden"
         >       
             <Heading
-                size="md"
+                size={["md", "md", "md", "lg"]}
                 mb={["0","2","2"]}
                 display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE]  || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             >

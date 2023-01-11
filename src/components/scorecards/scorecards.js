@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
+    Box,
+    Button,
     Flex,
     Text,
     useColorModeValue as mode,
@@ -10,8 +12,11 @@ import { ScorecardSummary } from './scorecard-summary'
 import { ScorecardsHeading } from './scorecards-heading'
 import { ScorecardsInvitationsBoard } from '../sidebars/scorecards-sidebar-components/scorecards-boards'
 import { SpinnerMain } from '../spinner'
-
+import { useNavigate } from 'react-router'
+import { FaArrowLeft } from 'react-icons/fa'
 export const Scorecards = () => {
+
+    const navigate = useNavigate();
     
     const [selectedSummary, setSelectedSummary] = useState({})
     const [showInvitations, setShowInvitations] = useState(false)
@@ -60,7 +65,7 @@ export const Scorecards = () => {
             pt={["2", "4", "8", "4"]}
             minH="70vh"
         >
-            { isLoading
+            { isLoading && !selectedSummary?.fight?.fightId
                 ?
                     <SpinnerMain />
                 :
@@ -75,6 +80,34 @@ export const Scorecards = () => {
                             justifyContent="flex-start"
                             boxSizing="border-box"
                         >   
+                             <Button
+                                id="back_btn"
+                                onClick={() => navigate('/shows')}
+                                className="group"
+                                mt={["4"]}
+                                size={["lg", "lg"]}
+                                px="8"
+                                fontSize="1.1rem !important"
+                                fontWeight="bold"
+                                iconSpacing="3"
+                                colorScheme="solid"
+                                variant="link"
+                                color="gray.300"
+                                _hover={{
+                                    color: '#fff',
+                                    textDecor: "none"
+                                }}
+                                leftIcon={
+                                    <Box
+                                        as={FaArrowLeft}
+                                        fontSize="1.1rem"
+                                        transition="transform 0.2s"
+                                        _groupHover={{ transform: 'translateX(-2px)' }}
+                                    />
+                                }
+                            >
+                                Find More Shows
+                            </Button>
                             <ScorecardsHeading 
                                 length={userScorecardSummaries?.length > 0 ? userScorecardSummaries.length : ''}
                             />
@@ -84,14 +117,15 @@ export const Scorecards = () => {
                                 flexDir="column"
                             >
                                 { userScorecardSummaries?.length > 0 
-                                && userScorecardSummaries.map( (summary, _i) => (
-                                    <ScorecardRow 
-                                        handleSelectGroup={handleSelectGroup}
-                                        key={_i} 
-                                        selectedFightId={selectedSummary?.fight?.fightId}
-                                        summary={summary} 
-                                    />
-                                ))}
+                                    && userScorecardSummaries.map( (summary, _i) => (
+                                        <ScorecardRow 
+                                            handleSelectGroup={handleSelectGroup}
+                                            key={_i} 
+                                            selectedFightId={selectedSummary?.fight?.fightId}
+                                            summary={summary} 
+                                        />
+                                    )
+                                )}
                             </Flex>
                         </Flex>
                 
@@ -101,7 +135,6 @@ export const Scorecards = () => {
                             w="100%"
                             flex="1 0 25%"
                             overflow="scroll"
-                            // flexWrap={["wrap-reverse", "wrap-reverse", "wrap"]}
                             alignItems="flex-start"
                             justifyContent="flex-start"
                             boxSizing="border-box"
@@ -117,7 +150,7 @@ export const Scorecards = () => {
                                         color: 'white'
                                     }} 
                                     ml="2" 
-                                    color="gray.400"
+                                    color="gray.300"
                                     textAlign="center"
                                     mx="auto"
                                     textDecor="underline"

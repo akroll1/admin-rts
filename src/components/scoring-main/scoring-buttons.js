@@ -10,27 +10,25 @@ export const ScoringButtons = ({
     evenRound,
     fighterIds,
     handleAdjustScore,
-    lastScoredRound,
     notSelectedScore,
     handleFighterSelect,
     submitScores,
-    totalRounds,
 }) => {
 
     const {
         fighters,
+        scoringComplete,
         userScorecard
     } = useGlobalStore()
 
     
-    const fightComplete = lastScoredRound >= totalRounds; 
-    const isDisabled = !fighterIds?.selectedFighterId || fightComplete;
+    const isDisabled = !fighterIds?.selectedFighterId || scoringComplete;
     const { selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
     
     const setButtonLabel = () => {
         
-        if(fightComplete){
-            return `Fight Complete`
+        if(scoringComplete){
+            return `Scoring Complete`
         }
         if(!selectedFighterId){
             return `Select Round ${userScorecard?.scores?.length + 1}`

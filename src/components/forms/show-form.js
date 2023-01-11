@@ -19,7 +19,6 @@ import { FieldGroup } from '../../chakra'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
-// import { addDays } from 'date-fns/addDays'
 import { useGlobalStore } from '../../stores'
 
 export const ShowForm = () => {
@@ -35,7 +34,7 @@ export const ShowForm = () => {
     // showId is kept out of the form for put/post logic.
     const [showId, setShowId] = useState(null);
     const [form, setForm] = useState({
-        fightIds: '', 
+        fightId: '', 
         location: '',
         network: '',
         promoter: '',
@@ -45,8 +44,11 @@ export const ShowForm = () => {
     })    
 
     useEffect(() => {
-        if(show.showId){
-            setForm({ ...show, showId: null })
+        if(show?.showId){
+            setForm({ 
+                ...form, 
+                ...show 
+            })
             setShowId(show.showId)
         }
     },[show])
@@ -56,23 +58,24 @@ export const ShowForm = () => {
     };
 
     const handlePostShow = () => {
-        let postObj = Object.assign(form, 
-            { showTime: createTimestamp(showTime) }, 
-            {fightIds: [fightIds[0]]},
-            { showId: null }
-        )
+        const postObj = Object.assign(form, { 
+            showTime: createTimestamp(showTime), 
+            fightIds: [fightId],
+            showId: null
+        })
 
         console.log('postObj: ', postObj);
+
         createShow(postObj)
-        setForm({
-            fightIds: [], 
-            location: '',
-            network: '',
-            promoter: '',
-            showName: '',
-            showStoryline: '',
-            showTime: 0,
-        })
+        // setForm({
+        //     fightIds: '', 
+        //     location: '',
+        //     network: '',
+        //     promoter: '',
+        //     showName: '',
+        //     showStoryline: '',
+        //     showTime: 0,
+        // })
     }
     
     const handleUpdateShow = () => {
@@ -84,15 +87,11 @@ export const ShowForm = () => {
 
     const handleFormChange = (e, type) => {
         const { name, id, value } = e.currentTarget;
-        if(id === 'network'){
-            console.log('network')
-        }
-        if(name) return setForm({ ...form, fightIds: [value]});
         setForm({...form, [id]: value});
     };
 
     const { 
-        fightIds, 
+        fightId, 
         location, 
         network,
         promoter, 
@@ -101,8 +100,7 @@ export const ShowForm = () => {
         showTime 
     } = form;
 
-    const fightId = fightIds[0];
-
+    console.log('form: ', form)
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
             <form id="show_form" onSubmit={(e) => {e.preventDefault()}}>
@@ -141,8 +139,8 @@ export const ShowForm = () => {
                                 <Input value={showName} onChange={handleFormChange}  type="text" maxLength={255} />
                             </FormControl>
 
-                            <FormControl id="fightIds">
-                                <FormLabel htmlFor="fightIds">Fight ID</FormLabel>
+                            <FormControl id="fightId">
+                                <FormLabel htmlFor="fightId">Fight ID</FormLabel>
                                 <Input name="fightId" value={fightId} onChange={handleFormChange} type="text" maxLength={200} />
                             </FormControl>
                             

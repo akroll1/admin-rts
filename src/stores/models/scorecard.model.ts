@@ -13,7 +13,7 @@ export interface Scorecard {
 	targetId: string // fightId or seasonId
 }
 
-export interface RoundScores {
+export interface RoundScore {
     [index: string]: string | number
 }
 

@@ -4,7 +4,7 @@ import { capFirstLetters } from '../../../utils'
 import { TabsEnum, useGlobalStore } from '../../../stores'
 
 export const FightStats = ({
-    fighterIds
+    isTable
 }) => {
 
     const { 
@@ -13,7 +13,6 @@ export const FightStats = ({
         tabs,
     } = useGlobalStore();
 
-    // console.log('analytics: ', analytics)
     const [fighter1, fighter2] = fighters.length === 2 ? fighters.map( fighter => fighter.lastName) : '';
 
     return (
@@ -34,11 +33,18 @@ export const FightStats = ({
                     alignItems="center"
                     justifyContent="center"            
                 >
+                    { isTable &&
+                        <Heading
+                            size="md"
+                        >
+                            {`${capFirstLetters(fighter1)}`}
+                        </Heading>
+                    }
                      <Heading 
                         size="md"
                         color="gray.300"
                     >
-                        {analytics && analytics[fighter1] ? analytics[fighter1] : ''}&#37;	
+                        {analytics?.totalPercentages && analytics.totalPercentages[fighter1] ? analytics.totalPercentages[fighter1] : ''}&#37;	
                     </Heading>
                    
                 </Flex>
@@ -48,11 +54,18 @@ export const FightStats = ({
                     alignItems="center"
                     justifyContent="center"    
                 >
+                    { isTable &&
+                        <Heading
+                            size="md"
+                        >
+                            {`${capFirstLetters(fighter2)}`}
+                        </Heading>
+                    }
                     <Heading 
                         color="gray.300"
                         size="md"
                     >
-                        {analytics && analytics[fighter2] ? analytics[fighter2] : ''}&#37;	
+                        {analytics?.totalPercentages && analytics?.totalPercentages[fighter2] ? analytics.totalPercentages[fighter2] : ''}&#37;	
                     </Heading>
                 </Flex>
         </Flex>

@@ -5,7 +5,6 @@ import {
 import { TabsEnum, useGlobalStore } from '../../stores'
 import { UserScores } from './user-scores'
 import { ScoringButtons } from './scoring-buttons'
-import { FightStats } from '../sidebars/chat-sidebar-components'
 import { ScoringFightersFaceoff } from '../scoring/fighter-faceoff'
 
 export const ScoringMain = () => {
@@ -14,7 +13,6 @@ export const ScoringMain = () => {
     const [fighterIds, setFighterIds] = useState(null);
     const [notSelectedScore, setNotSelectedScore] = useState(9);
     const {
-        fighterScores,
         fighters,
         lastScoredRound,
         setScoringComplete,
@@ -50,10 +48,8 @@ export const ScoringMain = () => {
 
     const submitScores = () => {
         const notSelected = fighterIds.selectedFighterId !== fighterIds.fighter1Id ? fighterIds.fighter1Id : fighterIds.fighter2Id;
-        const { scorecardId } = fighterScores
         const roundScores = {
             round: lastScoredRound+ 1,
-            scorecardId,
             [fighterIds.selectedFighterId]: 10,
             [notSelected]: notSelectedScore,
         };
@@ -83,20 +79,15 @@ export const ScoringMain = () => {
         <Flex 
             id="scoring_main"
             display={tabs[TabsEnum.SCORING] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
-            // maxW={["100%", "100%","40%", "40%"]}
             flexDir="column" 
-            // justifyContent={tabs[TabsEnum.SCORING] ? "flex-end" : 'flex-start'}
-            justifyContent="center"
+            justifyContent="flex-start"
             alignItems="center"
             flex="1 0 40%"
             position="relative"  
             boxSizing="border-box"
-            // minH={["70vh", "auto"]}
-            maxH={["70vh", "auto"]}
+            minH={["75vh", "auto"]}
+            maxH={["75vh", "auto"]}
         >   
-            <FightStats 
-                fighterIds={fighterIds}
-            />
             <ScoringFightersFaceoff />
             <UserScores
                 evenRound={evenRound}

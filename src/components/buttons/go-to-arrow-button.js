@@ -22,7 +22,7 @@ export const GoToArrowButton = ({
         <Button
             id="arrow_btn"
             onClick={() => navigate(navigateTo)}
-            disabled={isSubmitting || isSubmittingForm}
+            // disabled={isSubmitting || isSubmittingForm}
             className="group"
             mt={["4"]}
             size={["lg", "lg"]}
