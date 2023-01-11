@@ -294,8 +294,11 @@ export const generateAnaltyicsAndTableData = (fighters: Fighter[], scorecards: S
     const roundByRoundTotals = generateRoundByRoundTotals(fighters, calculatedFightSwingsArr, totalScorecards)
     const analyticsFinal = calculatePercentages(calculatedFightSwingsArr, fighters, totalScorecards)
     return ({
+        analytics: {
+            analyticsFinal,
+            roundByRoundTotals,
+        },
         tableData,
-        analytics: analyticsFinal
     })
 }
 
