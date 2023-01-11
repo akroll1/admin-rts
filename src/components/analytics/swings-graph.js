@@ -40,8 +40,8 @@ export const SwingsGraph = props => {
         }
     }, [analytics, fighters])
 
-    console.log('roundByRoundTotals: ', analytics.roundByRoundTotals)
-    console.log('swingsline: ', swingsline)
+    // console.log('roundByRoundTotals: ', analytics.roundByRoundTotals)
+    // console.log('swingsline: ', swingsline)
     
     return (
         <Flex
