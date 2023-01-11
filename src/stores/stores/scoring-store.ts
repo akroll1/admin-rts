@@ -1,24 +1,19 @@
 import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
-    ChatEnum,
     ChatTokenEnum,
+    Fight,
     Fighter,
-    FightProps,
     GroupScorecardSummary, 
     ModalsEnum,
     PanelProps,
     resetModals,
-    RoundScores,
+    RoundScore,
     Scorecard 
 } from "../models";
 import axios from 'axios'
 import { configureAccessToken } from "./auth-store";
-import { 
-    calculatePercentages, 
-    generateAnaltyicsData, 
-    generateCollatedData 
-} from "../../utils/analytics-utils";
+import { generateAnaltyicsAndTableData } from "../../utils/analytics-utils";
 
 export interface ScoringStoreState {
     analytics: any
@@ -27,7 +22,7 @@ export interface ScoringStoreState {
     fetchPanelProps(): void
     fightChatKey: string | null
     fightChatToken: string | null
-    fightComplete: boolean
+    fight: Fight
     fighters: Fighter[]
     groupChatKey: string | null
     groupChatToken: string | null
@@ -36,14 +31,15 @@ export interface ScoringStoreState {
     lastScoredRound: number
     panelProps: PanelProps
     requestChatToken(chatKey: string, type: ChatTokenEnum): void
-    roundScores: RoundScores
+    roundScore: RoundScore
     scoringComplete: boolean
+    setAnalyticsAndTableData(fighters: Fighter[], scorecards: Scorecard[], totalRounds: number): void
     setChatToken(chatToken: string | null, type: ChatTokenEnum): void
     setScoringComplete(boolean: boolean): void
-    submitRoundScores(roundScores: Record<string, number>): void
+    submitRoundScores(roundScore: RoundScore): void
     tableData: any[]
     totalRounds: number,
-    updateScorecardsFromChat(roundScores: RoundScores): void
+    updateScorecardsFromChat(roundScore: RoundScore): void
     userScorecard: Scorecard
 }
 
@@ -53,7 +49,7 @@ export const initialScoringStoreState = {
     chatKey: null,
     fightChatKey: 'hzdegD0vRhKO',
     fightChatToken: null,
-    fightComplete: false,
+    fight: {} as Fight,
     fighters: [] as Fighter[],
     groupChatKey: null,
     groupChatToken: '',
@@ -61,7 +57,7 @@ export const initialScoringStoreState = {
     groupScorecardSummary: {} as GroupScorecardSummary,
     lastScoredRound: 0,
     panelProps: {} as PanelProps,
-    roundScores: {} as RoundScores,
+    roundScore: {} as RoundScore,
     scoringComplete: false,
     tableData: [],
     totalRounds: 12,
@@ -95,32 +91,33 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             activeGroupScorecard: data, 
             groupChatKey: data.groupScorecard.chatKey ? data.groupScorecard.chatKey : null,
             lastScoredRound,
+            fight: data.fight,
             fighters: data.fighters,
             groupScorecards: data.scorecards,
             scoringComplete,
             userScorecard,
         });
         
-        ///////////////////////
-        const tableData = generateCollatedData(data.scorecards, data.fighters);
-        const analyticsData = generateAnaltyicsData(tableData, data.fighters, data.fight.rounds)
-        const analytics = calculatePercentages(analyticsData, data.fighters, data.scorecards.length)
-        ///////////////////////
-
-        set({ 
-            analytics,
-            tableData 
-        })
+        get().setAnalyticsAndTableData(data.fighters, data.scorecards, data.fight.rounds);
         get().setScoringTransformedPrediction(userScorecard.prediction)
-        get().setFighterScores()
         get().fetchFightProps(data?.fight?.fightId)
-
-
     },
     fetchPanelProps: async () => {
         const res = await axios.get(`${url}/props/${get().activeGroupScorecard.fight.fightId}`, await configureAccessToken() )
         const panelProps = res.data as PanelProps
         set({ panelProps })
+    },
+    setAnalyticsAndTableData: (fighters: Fighter[], scorecards: Scorecard[], totalRounds: number) => {
+        
+        const { 
+            analytics, 
+            tableData 
+        } = generateAnaltyicsAndTableData(fighters, scorecards, totalRounds)
+
+        set({ 
+            analytics,
+            tableData 
+        })
     },
     requestChatToken: async (chatKey: string, type: ChatTokenEnum) => {    
     
@@ -131,7 +128,7 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
             },
             capabilities: ["SEND_MESSAGE"],
             sessionDurationInMinutes: 60,
-            userId: `${get().user.username}`,
+            userId: `${get().user.sub}`,
         };
         
         const res = await axios.post(`${process.env.REACT_APP_CHAT_TOKEN_SERVICE}`, options, await configureAccessToken() )
@@ -153,55 +150,45 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
     setScoringComplete: (boolean: boolean) => {
         set({ scoringComplete: boolean })
     },
-    submitRoundScores: async (roundScores: RoundScores) => {
+    submitRoundScores: async (roundScore: RoundScore) => {
 
-        const update = Object.entries(roundScores).filter( entry => entry[0] !== 'scorecardId')
-        .reduce( (acc: any, curr) => {
-            acc[curr[0]] = curr[1]
-            return acc
-        },{})
-        // needs better logic here.
-        // where am I setting if fightComplete??
+        Object.assign(roundScore, {
+            scorecardId: get().userScorecard.scorecardId
+        })
 
-        set({ lastScoredRound: get().lastScoredRound + 1 })
-
-        if(get().activeGroupScorecard.groupScorecard.chatKey){
-            // get().sendMessageViaChat({
-            //     id: uuidv4(),
-            //     Attributes: {
-            //         [ChatMessageType.ROUND_SCORES]: JSON.stringify(roundScores)
-            // })
-        }
-
-        const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, update, await configureAccessToken() )
-        let [userScorecard] = get().groupScorecards.filter( (scorecard: Scorecard) => scorecard.scorecardId === roundScores.scorecardId);
-        const otherScorecards = get().groupScorecards.filter( (scorecard: Scorecard) => scorecard.scorecardId !== roundScores.scorecardId) 
-        let tempScores = userScorecard.scores.slice();
-        tempScores.concat(update)
+        let [userScorecard] = get().groupScorecards.filter( (scorecard: Scorecard) => scorecard.scorecardId === roundScore.scorecardId);
+        const otherScorecards = get().groupScorecards.filter( (scorecard: Scorecard) => scorecard.scorecardId !== roundScore.scorecardId) 
+        const update = userScorecard.scores.concat(roundScore);
         const updatedScorecard = {
             ...userScorecard, 
-            scores: tempScores
+            scores: update
         }
         const updatedScorecards = [...otherScorecards, userScorecard]
 
+        get().setAnalyticsAndTableData(get().fighters, updatedScorecards, get().fight.rounds)
+        if(get().activeGroupScorecard.groupScorecard.chatKey){
+            set({ roundScore })
+        }
+        
         set({ 
-            roundScores, 
+            lastScoredRound: get().lastScoredRound + 1,
+            scoringComplete: (get().lastScoredRound + 1) === get().totalRounds ? true : false,
             groupScorecards: updatedScorecards,
             userScorecard: updatedScorecard,
         })       
+        const res = await axios.put(`${url}/scorecards/${get().userScorecard.scorecardId}`, roundScore, await configureAccessToken() )
     },
-    updateScorecardsFromChat: (roundScores: RoundScores) => {
+    updateScorecardsFromChat: (roundScore: RoundScore) => {
         const userScorecards = get().groupScorecards;
-        const [roundScoresOwner] = userScorecards.filter( (userScorecard: Scorecard) => userScorecard.scorecardId === roundScores.scorecardId);
-        const otherScorecards = userScorecards.filter( (userScorecard: Scorecard) => userScorecard.scorecardId !== roundScores.scorecardId);
-        const scores: RoundScores[] = roundScoresOwner.scores;
+        const [roundScoresOwner] = userScorecards.filter( (userScorecard: Scorecard) => userScorecard.scorecardId === roundScore.scorecardId);
+        const otherScorecards = userScorecards.filter( (userScorecard: Scorecard) => userScorecard.scorecardId !== roundScore.scorecardId);
+        const scores: RoundScore[] = roundScoresOwner.scores;
         const update = {
             ...roundScoresOwner,
-            scores: scores.concat(roundScores)
+            scores: scores.concat(roundScore)
         };
-        console.log('update: ', update)
         const completeChatUpdate = otherScorecards.slice().concat(update)
-        console.log('completeChatUpdate', completeChatUpdate)
         set({ groupScorecards: completeChatUpdate })
+        get().setAnalyticsAndTableData(get().fighters, completeChatUpdate, get().fight.rounds)
     },
 })

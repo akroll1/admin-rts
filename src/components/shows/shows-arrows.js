@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Flex, IconButton } from '@chakra-ui/react'
+import { 
+    Box,
+    Button,
+    Flex, 
+    IconButton, 
+} from '@chakra-ui/react'
 import { 
     ArrowRightIcon, 
+    ArrowLeftIcon,
     ChevronLeftIcon, 
     ChevronRightIcon,
     TriangleUpIcon,
+    TriangleDownIcon,
 } from '@chakra-ui/icons'
 import { useGlobalStore } from '../../stores'
 
@@ -53,47 +60,79 @@ export const ShowsArrows = () => {
         <Flex
             position="absolute"
             top="80px"
-            right="0"
-            left="0"
             justifyContent="space-between"
+            alignItems="space-between"
             zIndex="5000"
             boxSizing="border-box"
-            px={["4","4", "10", "10", "12"]}
+            px={["0", "4", "4", "8", "12"]}
             color="whiteAlpha.600"
+            w="100%"
         >
-            <Flex
-                fontSize={["3.5rem", "4.5rem"]}
-                _hover={{
-                    color: "whiteAlpha.800"
-                }}
-                ml={["-2", "2"]}
-                borderRadius="lg"
-            >
-                <TriangleUpIcon
-                    transform="rotateZ(-90deg)"
-                    cursor="pointer"
-                    p="2"
-                    onClick={rotateFighters}
-                    id="left"
-                />
-            </Flex>
-            <Flex
-                borderRadius="lg"
-                mr={["-2", "2"]}
-                _hover={{
-                    color: "whiteAlpha.800"
-                }}
-                fontSize={["3.5rem", "4.5rem"]} 
-            >
 
-                <TriangleUpIcon
-                    transform="rotateZ(90deg)"
-                    cursor="pointer"
-                    p="2"
-                    onClick={rotateFighters}
-                    id="right"
-                /> 
-            </Flex>
+            <Button
+                id="left"
+                onClick={rotateFighters}
+                fontSize={["2.5rem", "4rem"]}
+                className="group"
+                fontWeight="bold"
+                iconSpacing="3"
+                colorScheme="solid"
+                variant="link"
+                color="gray.300"
+                _hover={[
+                    {
+                        color: '#fff',
+                        textDecor: "none",
+                        transition: "transform 0.2s"},
+                    {
+                        color: '#fff',
+                        textDecor: "none",
+                        transition: "transform 0.2s",
+                        transform: 'translateX(-3px)'
+                    }
+                ]}
+                _focus={{
+                    borderColor: 'tranparent'
+                }}
+                leftIcon={
+                    <Box
+                        transform="rotate(90deg)"
+                        as={TriangleDownIcon}
+                    />
+                }
+            />
+            <Button
+                id="right"
+                onClick={rotateFighters}
+                fontSize={["2.5rem", "4rem"]}
+                className="group"
+                fontWeight="bold"
+                iconSpacing="3"
+                colorScheme="solid"
+                variant="link"
+                color="gray.300"
+                _hover={[
+                    {
+                        color: '#fff',
+                        textDecor: "none",
+                        transition: "transform 0.2s"},
+                    {
+                        color: '#fff',
+                        textDecor: "none",
+                        transition: "transform 0.2s",
+                        transform: 'translateX(3px)'
+                    }
+                ]}
+                _focus={{
+                    borderColor: 'tranparent'
+                }}
+                rightIcon={
+                    <Box
+                        transform="rotate(90deg)"
+                        as={TriangleUpIcon}
+                    />
+                }
+            />
         </Flex>
     )
 }

@@ -12,7 +12,7 @@ export const FighterSelectionButtons = ({
 }) => {
 
     const {
-        fightComplete
+        scoringComplete
     } = useGlobalStore()
 
     const { selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
@@ -29,7 +29,7 @@ export const FighterSelectionButtons = ({
 
             Object.assign(colorsObj, {
                 bg: '#303030',
-                borderColor: 'red',
+                borderColor: '#c01616',
                 color: 'gray.100'
             })
             return colorsObj
@@ -48,11 +48,10 @@ export const FighterSelectionButtons = ({
 
     return (    
         <Button
-            disabled={fightComplete}
+            disabled={scoringComplete}
             onClick={() => handleFighterSelect(fighter.fighterId)}
             flex="0 0 45%"
-            mt="2"
-            mb="4"
+            my="2"
             px="2"
             minH="2.5rem"
             maxH="2.5rem"
@@ -68,7 +67,7 @@ export const FighterSelectionButtons = ({
             _hover={{
                 border: '1px solid',
                 // bg: '#252525',
-                borderColor: 'red',
+                borderColor: '#c01616',
                 color: 'white'
             }}
             _focus={{

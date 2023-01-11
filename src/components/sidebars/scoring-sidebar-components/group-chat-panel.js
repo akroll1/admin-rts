@@ -22,10 +22,11 @@ export const GroupChatPanel = ({
     const { 
         groupChatKey,
         groupChatToken,
-        isPanelist,
         requestChatToken,
+        roundScore,
         setChatToken,
         setGlobalNotification,
+        updateScorecardsFromChat,
         user
     } = useGlobalStore()
 
@@ -61,6 +62,12 @@ export const GroupChatPanel = ({
         }
     },[groupChat.sendMessage])
 
+    useEffect(() => {
+        if(roundScore?.scorecardId){
+            handleSendRoundScores()
+        }
+    },[roundScore])
+
     const initGroupConnection = async (token) => {
         const groupConnectionInit = new WebSocket(process.env.REACT_APP_CHAT_WEBSOCKET_URL, token);
         setGroupConnection(groupConnectionInit);
@@ -86,6 +93,20 @@ export const GroupChatPanel = ({
             handleReceiveChatMessage(data);
         };
     };
+
+    const handleSendRoundScores = () => {
+        
+        if(!roundScore?.scorecardId) return
+        const payload = {
+            RequestId: uuidv4(),
+            Action: 'SEND_MESSAGE',
+            Attributes: {
+                messageType: ChatMessageType.ROUND_SCORE
+            },
+            Content: JSON.stringify(roundScore)
+        }
+        groupConnection.send(JSON.stringify(payload))
+    }
 
     const handleSendGroupMessage = () => {
         if(!groupChat.message) return
@@ -113,7 +134,13 @@ export const GroupChatPanel = ({
 
     const handleReceiveChatMessage = data => {
         console.log('receive groupChat data: ', data)
-        const { Attributes, Content, Id, Sender, Type } = data;
+        const { Attributes, Content, Id, Sender } = data;
+
+        if(Attributes?.messageType === ChatMessageType.ROUND_SCORE){
+            
+            updateScorecardsFromChat(JSON.parse(data.Content))
+            return
+        }
         const messageType = Attributes?.messageType === ChatMessageType.GROUP
             ? ChatMessageType.GROUP 
             : ChatMessageType.CALLING_IT;
@@ -141,9 +168,7 @@ export const GroupChatPanel = ({
         return (
             <Box 
                 key={i} 
-                m="2" 
-                mb="0" 
-                mt="1"
+                my="1"
             >
                 <p style={{ overflowWrap: 'break-word' }}>
                     <span style={isSender ? isSenderStyles : notIsSenderStyles}>
@@ -164,18 +189,16 @@ export const GroupChatPanel = ({
         <Flex
             id="group_chat"
             ref={groupChatRef}
-            // maxH="70vh"
             flexDir="column"
             w="100%"
-            overflow="scroll"
             alignItems="center"
             justifyContent="flex-end"
-            minH={["40vh", "60vh"]}
+            // minH={["40vh", "60vh"]}
+            borderRadius="sm"
+
         >
             <Flex
                 id="groupConnectionRef"
-                // minH={["45vh","0"]}
-                // maxH={["45vh", "100%"]}
                 overflowY="scroll"
                 maxW="100%"
                 flexDir="column-reverse"

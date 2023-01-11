@@ -14,6 +14,7 @@ import { ScoringTableInfo } from './scoring-table-els'
 import { TabsEnum, useGlobalStore } from '../../stores'
 import { FightStats } from '../sidebars/chat-sidebar-components'
 import { ScoringTableSwitches } from './table-els'
+import { PieChart, SwingsGraph } from '../analytics'
 
 export const ScoringTable = () => {
 
@@ -99,11 +100,25 @@ export const ScoringTable = () => {
                 toCurrentRound={toCurrentRound}
             />
             {/* <FightStats /> */}
+            { (tabs[TabsEnum.TABLE] || tabs[TabsEnum.ALL]) && 
+                <Flex
+                    flexDir="column"
+                    w="100%"
+                >
+                    <FightStats
+                        isTable
+                    />
+                    <PieChart />
+                    <SwingsGraph
+                        my="2"
+                    />
+                </Flex>
+            }
             <Flex 
                 overflow="scroll"
                 display={tabs[TabsEnum.ALL] || tabs[TabsEnum.TABLE] ? 'flex' : 'none'}
                 flexDirection="column"
-                id="score_table" 
+                id="scoring_table" 
                 w="100%" 
                 p="8"
                 pt="2"
@@ -224,7 +239,6 @@ export const ScoringTable = () => {
                                                         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
                                                             <Flex 
                                                                 color={showToCurrentRoundSelected()}
-                                                                borderRadius="2px"
                                                                 w="100%"
                                                                 p="1"
                                                                 bg={roundScores[fighter1] ? "#4C4C4C" : "#383838"}
@@ -237,13 +251,13 @@ export const ScoringTable = () => {
                                                             </Flex>
                                                             <Flex 
                                                                 w="100%"
+                                                                p="1"
                                                                 style={renderRoundStyles(_i, roundKO, transformedPrediction, fighter2.lastName)}
                                                                 color={showToCurrentRoundSelected()}
                                                                 flexDirection="column" 
                                                                 alignItems="center" 
                                                                 justifyContent="center" 
                                                                 mt="0.5rem" 
-                                                                p="1"
                                                             >
                                                                 {roundScores[fighter2.lastName]}
                                                             </Flex>

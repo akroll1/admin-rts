@@ -4,16 +4,18 @@ import {
     Flex, 
     Heading, 
 } from '@chakra-ui/react'
+import { FightStats } from '../sidebars/chat-sidebar-components'
 import { capFirstLetters } from '../../utils'
 import backgroundImage from '../../image/boxing-background.png'
-import { useGlobalStore } from '../../stores'
+import { TabsEnum, useGlobalStore } from '../../stores'
 
 export const ScoringFightersFaceoff = ({
     isSidebar
 }) => {
 
     const {
-        fighters
+        fighters,
+        tabs,
     } = useGlobalStore()
 
     return (
@@ -22,6 +24,11 @@ export const ScoringFightersFaceoff = ({
             flexDir="column"
             w="100%"
         >
+            { tabs[TabsEnum.SCORING] && 
+                <FightStats 
+                    fighterIds={fighters.length === 2 ? fighters.map( fighter => fighter.fighterId) : {}}
+                />
+            }
             <Flex  
                 zIndex={100}  
                 flexDir="column"
@@ -60,8 +67,7 @@ export const ScoringFightersFaceoff = ({
                             flexDir="column"
                             alignItems="center"
                             justifyContent="center"
-                            py="4"
-                            px="2"
+                            p={["2","4"]}
                         >
                             <Center>
                                 <Avatar 
@@ -77,6 +83,7 @@ export const ScoringFightersFaceoff = ({
                 textAlign="center"
                 w="100%"
                 flexDir="row"
+                p="2"
             >
                 { fighters.length === 2 && fighters.map( fighter => (
                     <Flex
@@ -84,7 +91,6 @@ export const ScoringFightersFaceoff = ({
                         flexDir="column"
                     >
                         <Heading 
-                            py="1"
                             flex="1 0 50%"
                             size="md" 
                             color="gray.200"

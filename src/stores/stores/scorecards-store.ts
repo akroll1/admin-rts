@@ -11,11 +11,10 @@ import {
     FightSummary, 
     FightUpdateOptions
 } from '../models/fight.model' 
-import { Fighter, FighterScores } from '../models/fighter.model'
+import { Fighter } from '../models/fighter.model'
 import { AcceptInviteOptions } from '../models/invite.model'
 import { List } from '../models/lists.model'
 import { Panelist, PanelSummary } from "../models/panel.model"
-import { Review, ReviewPut } from '../models/review.model'
 import { Season, SeasonSummary } from '../models/season.model'
 import { Show } from "../models/show.model"
 import { User } from '../models/user.model'
@@ -48,7 +47,6 @@ export interface ScorecardStoreState {
     fetchUserScorecardsBySeason(seasonId: string): void
     fight: Fight
     fighters: Fighter[]
-    fighterScores: FighterScores
     panelist: Panelist
     panelists: Panelist[]
     panelSummaries: PanelSummary[]
@@ -60,7 +58,6 @@ export interface ScorecardStoreState {
     seasonsOptions: Record<string, string>[]
     selectedBlogPost: BlogPost
     selectedFighter: Fighter
-    setFighterScores(): void
     setSeasonsOptions(): void
     stats: any[]
     submitList(list: List): void
@@ -84,7 +81,6 @@ export const initialScorecardsStoreState = {
     discussions: [],
     fight: {} as Fight,
     fighters: [],
-    fighterScores: {} as FighterScores,
     panelist: {} as Panelist,
     panelists: [],
     panelSummaries: [],
@@ -260,17 +256,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
             // refresh on 200
             // get().fetchGroupScorecardSummary(get().activeGroupScorecard.groupScorecardId)
         }
-    },
-    setFighterScores: () => {
-        const scores = get().activeGroupScorecard.fighters.map( (fighter: Fighter) => {
-            return ({
-                [fighter.fighterId]: 10
-            })
-        })
-        const round = get().userScorecard.scores.length;
-        const scorecardId = get().userScorecard.scorecardId;
-        set({ fighterScores: { round, scorecardId, scores } });
-
     },
     setSeasonsOptions: () => {
         const seasonSummaries = get().seasonSummaries;

@@ -76,15 +76,13 @@ export const ScoringSidebarLeft = () => {
         <Flex 
             display={tabs[TabsEnum.INFO] || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             id="scoring_sidebar_left" 
-            // maxW={["100%","30%"]}
-            flex={["1 0 25%"]} 
+            flex={["1 0 30%"]} 
             position="relative" 
             alignItems={["flex-start", "center"]} 
             justifyContent="center"
             borderRadius="md"
             direction="column" 
             pb="4"
-            p={["0", "4"]}
             fontSize="sm"
             boxSizing="border-box"
             overflowX="none"
@@ -92,14 +90,16 @@ export const ScoringSidebarLeft = () => {
             bg={tabs[TabsEnum.INFO] ? "inherit" : "fsl-sidebar-bg"}
             color={tabs[TabsEnum.INFO] ? "#dadada" : "#c8c8c8"}
         >
-            <ScoringFightersFaceoff isSidebar={true} />
+            { tabs[TabsEnum.INFO] &&
+                <ScoringFightersFaceoff isSidebar={true} />
+            }
             <Flex 
                 flexDir="column"
                 h={"auto"}
                 flex="1" 
                 overflowY="scroll" 
                 w="100%"
-                p={["2", "4"]}
+                p={["2", "2"]}
                 pt="0"
             >
                 { isLoading

@@ -81,17 +81,17 @@ const Scoring = props => {
             alignItems="center" 
             justifyContent="center" 
             margin="auto" 
-            p={["1", "2", "4"]}
+            p={["1", "2", "2", "4"]}
             bg="transparent"
             position="relative"
             maxW="100%"
             boxSizing='border-box'
             overflow="hidden"
-            flex="1"
         >       
             <Heading
-                mb={["2","2","2"]}
-                display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE]  || tabs[TabsEnum.ALL] || tabs[TabsEnum.SCORING]? 'flex' : 'none'}
+                size={["md", "md", "md", "lg"]}
+                mb={["0","2","2"]}
+                display={tabs[TabsEnum.CHAT] || tabs[TabsEnum.TABLE]  || tabs[TabsEnum.ALL] ? 'flex' : 'none'}
             >
                 {`Round ${lastScoredRound >= totalRounds ? totalRounds : lastScoredRound + 1}`}
             </Heading>
@@ -107,7 +107,6 @@ const Scoring = props => {
                 flexWrap="wrap"
                 w="100%" 
                 maxW="100%"
-                h="auto"
             >
                 <ScoringSidebarLeft />
                 <ScoringMain />

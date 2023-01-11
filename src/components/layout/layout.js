@@ -29,7 +29,7 @@ export const Layout = ({ children }) => {
             bg="fsl-body-bg" 
             flexDirection="column" 
             position="relative"
-            minH="100vh"
+            minH={["100vh", "100vh", "100%"]}
         >  
             <Navbar />
             <ExpiredTokenModal />

@@ -88,7 +88,7 @@ export const ScorecardsInvitationsBoard = () => {
                             flexDirection="column"
                             mb={["4"]}
                             pb="8"
-                            borderBottom={_i < userInvites.length - 1 ? "1px solid #252525" : 'none'}
+                            borderBottom={_i < userInvites?.length - 1 ? "1px solid #252525" : 'none'}
                         >
                             <Flex
                                 flexDir="column"
@@ -149,7 +149,7 @@ export const ScorecardsInvitationsBoard = () => {
                                 pl="2"
                                 maxH="10rem"
                             >
-                                { members.length > 0 && members.map( (member, _i) => {
+                                { members?.length > 0 && members.map( (member, _i) => {
                                     return (
                                         <ListItem 
                                             key={_i}
@@ -230,7 +230,7 @@ export const InvitationsHeader = ({
     fontSize,
     userInvites
   }) => {
-    const title = userInvites.length > 0 ? `${userInvites.length} Invitations` : `No Invitations`;
+    const title = userInvites?.length > 0 ? `${userInvites.length} Invitations` : `No Invitations`;
     return (
       <Flex 
         display="inline-flex"
@@ -246,7 +246,7 @@ export const InvitationsHeader = ({
         >
           {title}
         </Heading>
-        { userInvites.length && 
+        { userInvites?.length > 0 && 
           <Alert 
             p="2"
             status="error"

@@ -14,7 +14,6 @@ export const UserScores = ({
     evenRound,
     fighterIds,
     handleAdjustScore,
-    handleFighterSelect,
 }) => {
 
     const { 
@@ -25,24 +24,24 @@ export const UserScores = ({
     const [t, setT] = useState([])
     const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
 
-    useEffect(() => {
-        if(userScorecard?.scores?.length > 0){
-            const scoredRounds = userScorecard.scores.length;
-            const toFill = totalRounds - scoredRounds;
-            if(toFill > 0){
-                const t = [ ...new Array(toFill).fill('')].map( (el, _i) => {
-                    const obj = {
-                        round: scoredRounds + _i,
-                        fighter1Id: 0,
-                        fighter2Id: 0
-                    };
-                    return obj
-                })
-                setT(t)
-            }
-        }
-    },[userScorecard])
-
+    // useEffect(() => {
+    //     if(userScorecard?.scores?.length > 0){
+    //         const scoredRounds = userScorecard.scores.length;
+    //         const toFill = totalRounds - scoredRounds;
+    //         if(toFill > 0){
+    //             const t = [ ...new Array(toFill).fill('')].map( (el, _i) => {
+    //                 const obj = {
+    //                     round: scoredRounds + _i,
+    //                     [fighter1Id]: '',
+    //                     [fighter2Id]: ''
+    //                 };
+    //                 return obj
+    //             })
+    //             setT(userScorecard.scores.concat(t))
+    //         }
+    //     }
+    // },[userScorecard])
+    // console.log('t: ', t)
     return (
         <Flex
             bg="#151515"
@@ -50,16 +49,15 @@ export const UserScores = ({
             w="100%"
             maxW="100%"
             flexDir="column"
-            // alignItems="center"
-            justifyContent="flex-end"
+            justifyContent="flex-start"
             boxSizing="border-box"
             h="auto"
             overflow="scroll"
             px="2"
-            maxH="40vh"
-            alignSelf="stretch"
+            flex="1"
         >
             { userScorecard?.scores?.length > 0 && userScorecard.scores.map( (roundObj, _i) => {
+            // { t.map( (roundObj, _i) => {
 
                 let lastRow;
                 const setScores = currentFighterId => {
@@ -117,6 +115,7 @@ export const UserScores = ({
 
                 return (
                     <Flex
+                        flex="1"
                         boxSizing="border-box"
                         key={_i}
                         alignItems="center"
@@ -126,7 +125,7 @@ export const UserScores = ({
                         borderTop={lastRow ? "1px solid #303030" : "1px solid #202020"}
                         borderBottom={lastRow ? "1px solid #303030" : "1px solid transparent"}
                         _hover={{
-                            bg: "#151515",
+                            bg: "#202020",
                             cursor: "pointer"
                         }}
                     >
@@ -171,20 +170,7 @@ export const UserScores = ({
                             alignItems="center"
                             justifyContent="center"
                         >
-                            { lastRow
-                                ? 
-                                    <Heading 
-                                        as="h3" 
-                                        size={["lg", "md"]}
-                                        color={selectedFighterId ? "red.500" : 'red.900'}
-                                        cursor="pointer"
-                                        _hover={{color: 'red.600'}}
-                                        onClick={() => handleFighterSelect(null)}
-                                        alignSelf="center"
-                                    >
-                                        {<RepeatIcon />}
-                                    </Heading>
-                                :  
+
                                     <Heading
                                         color={selectedFighterId ? "gray.600" : "gray.400"}
                                         as="h3"
@@ -195,7 +181,7 @@ export const UserScores = ({
                                     >
                                         {_i+1}
                                     </Heading>
-                            }
+
                         </Flex>
                         <Flex
                             flex="1 0 40%"

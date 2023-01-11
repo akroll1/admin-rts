@@ -92,12 +92,11 @@ export const LastRow = ({
                 <Heading 
                     as="h3" 
                     size={["lg", "md"]}
-                    color={selectedFighterId ? "red.500" : 'red.900'}
                     cursor="pointer"
                     _hover={{color: 'red.500'}}
                     onClick={() => handleFighterSelect(null)}
                 >
-                    {<RepeatIcon />}
+                    {<RepeatIcon color={selectedFighterId ? 'red.500' : 'red.900'} />}
                 </Heading>
             </Flex>
             <Flex
