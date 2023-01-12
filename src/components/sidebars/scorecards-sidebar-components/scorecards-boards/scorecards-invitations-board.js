@@ -82,6 +82,7 @@ export const ScorecardsInvitationsBoard = () => {
                         members,
                     } = invite
                     console.log('groupScorecardType: ', groupScorecardType)
+                    // seems this is wrong.
                     return (
                         <Flex
                             key={inviteId}
