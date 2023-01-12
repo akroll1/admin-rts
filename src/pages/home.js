@@ -15,6 +15,7 @@ const Home = () => {
       bg="brand.base" 
       px={["6", "12", "12",]}
       py={["2", "4"]}
+      pb='8'
       mx="auto"
     >
       <Box 

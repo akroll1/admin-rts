@@ -14,6 +14,7 @@ import { useGlobalStore } from '../../../../stores'
 import { parseEpoch } from '../../../../utils'
 import { CheckIcon } from '@chakra-ui/icons'
 import { FiTrash2 } from 'react-icons/fi'
+import { GroupScorecardTypeEnum } from '../../../../stores'
 
 export const ScorecardsInvitationsBoard = () => {
 
@@ -80,7 +81,7 @@ export const ScorecardsInvitationsBoard = () => {
                         inviteId,
                         members,
                     } = invite
-                    
+                    console.log('groupScorecardType: ', groupScorecardType)
                     return (
                         <Flex
                             key={inviteId}
@@ -96,12 +97,23 @@ export const ScorecardsInvitationsBoard = () => {
                                 alignItems="space-between"
                                 justifyContent="flex-start"
                             >
-                                <Heading
-                                    size="sm"
-                                    color="gray"
+                                <Flex
+                                    alignItems="center"
+                                    justifyContent="flex-start"
                                 >
-                                    {`${groupScorecardType}`}
-                                </Heading>
+                                    <Heading
+                                        size="sm"
+                                        color={groupScorecardType === GroupScorecardTypeEnum.FIGHT ? 'gray.200' : 'gray'}
+                                    >
+                                        {`${GroupScorecardTypeEnum.FIGHT}`}
+                                    </Heading>
+                                    <Heading
+                                        size="sm"
+                                        color={groupScorecardType === GroupScorecardTypeEnum.SEASON ? 'gray.200' : 'gray'}
+                                    >
+                                        &nbsp;{`${GroupScorecardTypeEnum.SEASON}`}
+                                    </Heading>
+                                </Flex>
                                 <Flex
                                     w="100%"
                                     alignItems="center"
@@ -202,10 +214,14 @@ export const InvitationsButtons = ({
             flexDir="row"
         >
             <IconButton
+                _hover={{
+                    border: '1px solid white',
+                    color: 'green.300'
+                }}
                 onClick={e => handleIconClick(e, 'ACCEPT')}
                 id={`${groupScorecardId}:${inviteId}`}
                 size="sm"
-                color="green"
+                color="green.500"
                 border="1px solid #888"
                 icon={<CheckIcon fontSize="1rem" />}
                 variant="ghost"
@@ -213,6 +229,11 @@ export const InvitationsButtons = ({
                 mr="2"
             />
             <IconButton
+                _hover={{
+                    border: '1px solid white',
+                    color: 'gray.100'
+                }}
+                color='whiteAlpha.700'
                 onClick={e => handleIconClick(e, 'DELETE')}
                 id={`${groupScorecardId}:${inviteId}`}
                 size="sm"

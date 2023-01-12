@@ -38,7 +38,7 @@ export const ArrowLinkButton = ({
                     as={icon}
                     fontSize="sm"
                     transition="transform 0.2s"
-                    _groupHover={id === 'copy' ? {} : { transform: 'translateX(-2px)' } }
+                    _groupHover={id === 'copy' ? {} : { transform: 'translateX(3px)' } }
                 />
             }
         >

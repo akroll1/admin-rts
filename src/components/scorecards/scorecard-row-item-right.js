@@ -8,7 +8,6 @@ import { FaArrowRight } from 'react-icons/fa'
 import { CopyIcon } from '@chakra-ui/icons'
 
 export const ScorecardRowItemRight = ({
-    fightId,
     handleSelectGroup,
     summary
 }) => {
@@ -62,10 +61,10 @@ export const ScorecardRowItemRight = ({
                 })}
             </Select>
             <Flex
-                    flexDir="column"
-                    justifyContent="center"
-                    alignItems="flex-end"
-                    w="100%"
+                flexDir="column"
+                justifyContent="center"
+                alignItems="flex-end"
+                w="100%"
             >
                 { buttonData.map( data => {
                     return (

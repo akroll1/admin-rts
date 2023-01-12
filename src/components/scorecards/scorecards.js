@@ -106,7 +106,7 @@ export const Scorecards = () => {
                                     />
                                 }
                             >
-                                Find More Shows
+                                Find More Fights
                             </Button>
                             <ScorecardsHeading 
                                 length={userScorecardSummaries?.length > 0 ? userScorecardSummaries.length : ''}

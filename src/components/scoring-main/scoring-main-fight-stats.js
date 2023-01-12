@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Divider, Flex, Heading, Stack, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { 
+    Divider, 
+    Flex, 
+    Heading, 
+    Stack, 
+    useBreakpointValue, 
+    useColorModeValue 
+} from '@chakra-ui/react'
 import { DividerWithText } from '../../chakra'
 import { capFirstLetters } from '../../utils'
 import { useGlobalStore } from '../../stores'
 
-export const ScoringMainFightStats = (props) => {
+export const ScoringMain = (props) => {
     const { label, value, ...boxProps } = props;
     const { stats } = useBoundStore.getState();
 

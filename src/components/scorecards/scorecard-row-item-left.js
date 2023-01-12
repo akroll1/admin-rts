@@ -46,7 +46,17 @@ export const ScorecardRowItemLeft = ({ summary }) => {
         w="100%"
         flexDir="column"
       >
-        <Text fontWeight="medium">{fight.fightQuickTitle}</Text>
+        <Text 
+          fontWeight="medium"
+          _hover={{
+            color: 'white',
+            cursor: 'pointer',
+            textDecor: 'underline',
+            textDecorationColor: 'gray.400' // link to the specific fight on /shows here.
+          }}
+        >
+          {fight.fightQuickTitle}
+        </Text>
         <Text color={mode('gray.600', 'gray.400')} fontSize="xs">
           {fight.weightclass}
         </Text>

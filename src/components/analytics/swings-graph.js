@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { 
+    VictoryAxis,
     VictoryChart,
     VictoryLine 
 } from 'victory'
@@ -47,8 +48,8 @@ export const SwingsGraph = props => {
         <Flex
             flexDir="column"
             // w="100%"
-            h="400"
-            w="400"
+            h="450"
+            w="600"
             p="4"
             {...props}   
         >
@@ -59,20 +60,72 @@ export const SwingsGraph = props => {
                 Viewer Scoring
             </Heading>
             <VictoryChart
+                responsive
                 scale="linear"
                 // height={50}
                 // width={50}
             >
+                <VictoryAxis 
+                    label="Rounds"
+                    style={{
+                        axis: {
+                            stroke: '#444'  //CHANGE COLOR OF X-AXIS
+                        },
+                        axisLabel: {
+                            fill: '#dadada',
+                            padding: '36',
+                            fontSize: '18',
+                        },
+                        color: '#dadada',
+                        grid: {
+                            stroke: '#222', //CHANGE COLOR OF X-AXIS GRID LINES
+                            strokeDasharray: '2',
+                        },
+                        label: {
+                            fill: '#555'
+                        },
+                        tickLabels: {
+                            fill: '#dadada' //CHANGE COLOR OF X-AXIS LABELS
+                        }, 
+                    }}
+                    tickValues={[1,2,3,4,5,6,7,8,9,10,11,12]}
+                />
+                <VictoryAxis 
+                    dependentAxis
+                    label="Round Percentages"
+                    style={{
+                        axis: {
+                            stroke: '#444'  //CHANGE COLOR OF X-AXIS
+                        },
+                        axisLabel: {
+                            fill: '#aeaeae',
+                            padding: '36',
+                            fontSize: '18',
+                        },
+                        color: '#aeaeae',
+                        grid: {
+                            stroke: '#222', //CHANGE COLOR OF X-AXIS GRID LINES
+                            strokeDasharray: '2',
+                        },
+                        label: {
+                            fill: '#555'
+                        },
+                        tickLabels: {
+                            fill: '#bbb' //CHANGE COLOR OF X-AXIS LABELS
+                        }, 
+                    }}
+                    tickFormat={(t) => `${t}%`}
+                    // tickValues={[20, ]}
+                    />
                 <VictoryLine
                     domain={{ x: [1, 12], y: [0, 100]}} 
                     responsive={true}
                     style={{
-                        data: { stroke: "#c43a31" },
+                        data: { 
+                            stroke: "#c43a31",
+                            strokeWidth: '10'
+                        },
                         parent: { border: "1px solid #ccc"},
-                        labels:{
-                            fontSize: '48',
-                            fill: '#fff'
-                        } 
                     }}
                     animate={{
                         duration: 1000,
@@ -81,11 +134,8 @@ export const SwingsGraph = props => {
                     // minDomain={[{ x: 0 }, { y: 100 }]}
                     // maxDomain={[{ x: 12}, { y: 100 }]}
                     data={swingsline}
-                    // x="x"
-                    // y="Fighters"
-                    // range={{ x: [1,12], y: [0, 100]}}
+                    // range={{ x: [1,12], y: [0, 100], label: 'Win Percentage'}}
                     // scale={{ x: 'linear', y: 'linear'}}
-                    // padding={{ top: 20, bottom: 60 }}
                 />
             </VictoryChart>
         </Flex>

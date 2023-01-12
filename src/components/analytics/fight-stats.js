@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Flex, Heading, useColorModeValue } from '@chakra-ui/react'
-import { capFirstLetters } from '../../../utils'
-import { TabsEnum, useGlobalStore } from '../../../stores'
+import { capFirstLetters } from '../../utils'
+import { TabsEnum, useGlobalStore } from '../../stores'
 
 export const FightStats = ({
     isTable
