@@ -153,11 +153,15 @@ export const SwingsGraph = props => {
                             // text={[`${fighter1}`, `${fighter2}`]}
                             textAnchor="start"
                             style={{
-                                fill: 'red',
-                                fill: 'blue'
+                                fill: '#cacaca',
+                                padding: '5',
+                                fontSize: 18
                             }}  
                             backgroundStyle={[
-                                { fill: "red", opacity: 0.8 },
+                                { 
+                                    fill: "transparent", 
+                                    opacity: 0.2,
+                                },
                             ]}
                         />
                     }
