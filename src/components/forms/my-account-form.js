@@ -3,7 +3,9 @@ import {
   Avatar, 
   Box, 
   Button, 
+  ButtonGroup, 
   Checkbox, 
+  Flex, 
   FormControl, 
   FormHelperText, 
   FormLabel, 
@@ -177,26 +179,45 @@ export const MyAccountForm = () => {
             </Stack>
           </FieldGroup>
         </Stack>
-        <FieldGroup mt="8" title="Save Changes">
-          <VStack 
-            width="full"
-            mt="4"
-          >
-            <Button 
-              onClick={handleUpdateUser} 
-              type="submit" 
-              colorScheme="solid"
-              w={["100%", "50%"]}
-            >
-              Save Changes
-            </Button>
-            <Button 
-              w={["100%", "50%"]}
-              variant="outline"
-            >
-              Cancel
-            </Button>
-          </VStack>
+        <FieldGroup 
+          mt="8" 
+          title="Save Changes"
+        >
+        <StackDivider />
+
+            <Flex
+              w="100%"
+              alignItems="center"
+              justifyContent="center"
+              flexDir={["column", "row"]}
+              maxW={["100%", "75%", "75%", "50%"]}
+              m="auto"
+              px="auto"
+              minW="100%"
+              >
+              <Button 
+                onClick={handleUpdateUser} 
+                type="submit" 
+                colorScheme="solid"
+                minH="2.5rem"
+                m="2"
+                flex="1 0 50%"
+                minW={["100%", "50%"]}
+                maxW={["100%", "50%"]}
+                >
+                Save Changes
+              </Button>
+              <Button 
+                minW={["100%", "50%"]}
+                m="2"
+                flex="1 0 50%"
+                maxW={["100%", "50%"]}
+                minH="2.5rem"
+                variant="outline"
+              >
+                Cancel
+              </Button>
+            </Flex>
         </FieldGroup>
       </form>
     </Box>
