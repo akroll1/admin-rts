@@ -22,6 +22,7 @@ import {
     FightChatPanel,
     GroupChatPanel 
 } from './scoring-sidebar-components'
+import { GiConsoleController } from 'react-icons/gi'
 
 export const ChatSidebar = () => {
 
@@ -81,6 +82,7 @@ export const ChatSidebar = () => {
 
     const handleSendMessage = e => {
         const { id } = e.currentTarget;
+
         if(isGroupTab){
             setGroupChat({ 
                 ...groupChat, 
@@ -91,7 +93,7 @@ export const ChatSidebar = () => {
         if(!isGroupTab){
             setFightChat({ 
                 ...fightChat, 
-                contentType: id === ChatMessageType.CALLING_IT ? ChatMessageType.CALLING_IT : ChatMessageType.GROUP,
+                contentType: id === ChatMessageType.CALLING_IT ? ChatMessageType.CALLING_IT : ChatMessageType.FIGHT,
                 sendMessage: true 
             })
         }
@@ -219,7 +221,7 @@ export const ChatSidebar = () => {
                             w="100%"
                             m="1"
                             size="sm"
-                            id={'test'}
+                            id={isGroupTab ? ChatMessageType.GROUP : ChatMessageType.FIGHT}
                             isLoading={isSubmitting} 
                             loadingText="Joining..." 
                             onClick={handleSendMessage} 

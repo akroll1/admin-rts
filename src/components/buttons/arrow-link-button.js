@@ -8,6 +8,7 @@ export const ArrowLinkButton = ({
     icon,
     id,
     label,
+    mr,
     navigateTo,
 }) =>  {
 
@@ -15,6 +16,7 @@ export const ArrowLinkButton = ({
 
     return (
         <Button
+            mr={mr ? mr : '0'}
             id="arrow_link_button"
             onClick={() => navigate(`${navigateTo}`)}
             className="group"

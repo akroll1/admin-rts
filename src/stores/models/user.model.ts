@@ -5,11 +5,14 @@ export interface TokenConfig {
 interface Token extends Record<string, string>{}
 
 export interface UserAccount {
-    bio?: string
+    bio?: string | null
+    email?: string
     fightCoins?: number
-    firstName?: string
-    isPublic?: string
-    lastName?: string
+    firstName?: string | null
+    isPublic?: boolean
+    lastName?: string | null
+    sub?: string
+    username?: string
 }
 export interface User {
     email?: string

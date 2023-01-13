@@ -15,6 +15,8 @@ import { parseEpoch } from '../../../../utils'
 import { CheckIcon } from '@chakra-ui/icons'
 import { FiTrash2 } from 'react-icons/fi'
 import { GroupScorecardTypeEnum } from '../../../../stores'
+import { FaArrowRight } from 'react-icons/fa'
+import { ArrowLinkButton } from '../../../buttons'
 
 export const ScorecardsInvitationsBoard = () => {
 
@@ -105,12 +107,14 @@ export const ScorecardsInvitationsBoard = () => {
                                     <Heading
                                         size="sm"
                                         color={groupScorecardType === GroupScorecardTypeEnum.FIGHT ? 'gray.200' : 'gray'}
+                                        opacity={groupScorecardType === GroupScorecardTypeEnum.FIGHT ? '1' : '0.6'}
                                     >
                                         {`${GroupScorecardTypeEnum.FIGHT}`}
                                     </Heading>
                                     <Heading
                                         size="sm"
                                         color={groupScorecardType === GroupScorecardTypeEnum.SEASON ? 'gray.200' : 'gray'}
+                                        opacity={groupScorecardType === GroupScorecardTypeEnum.SEASON ? '1' : '0.6'}
                                     >
                                         &nbsp;{`${GroupScorecardTypeEnum.SEASON}`}
                                     </Heading>

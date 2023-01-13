@@ -135,9 +135,9 @@ export const GroupChatPanel = ({
     const handleReceiveChatMessage = data => {
         console.log('receive groupChat data: ', data)
         const { Attributes, Content, Id, Sender } = data;
-
+        // if(!)
+        console.log('Attributes: ', Attributes)
         if(Attributes?.messageType === ChatMessageType.ROUND_SCORE){
-            
             updateScorecardsFromChat(JSON.parse(data.Content))
             return
         }
@@ -147,7 +147,7 @@ export const GroupChatPanel = ({
 
         const message = Content;
 
-        setChatMessages(prev => [{ Id, message, username: Sender?.UserId }, ...prev ]);
+        setChatMessages(prev => [{ Id, message, username: Sender?.Attributes?.username }, ...prev ]);
 
         if(messageType === ChatMessageType.CALLING_IT){
             setGlobalNotification({ heading: Sender?.Attributes?.username, body: message })

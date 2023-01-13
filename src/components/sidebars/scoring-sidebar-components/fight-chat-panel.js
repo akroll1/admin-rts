@@ -95,7 +95,7 @@ export const FightChatPanel = ({
 
         const messageType = fightChat.contentType === ChatMessageType.CALLING_IT 
             ? ChatMessageType.CALLING_IT 
-            : ChatMessageType.GROUP
+            : ChatMessageType.FIGHT
         
         Object.assign(payload, {
             Attributes: { 
@@ -111,13 +111,14 @@ export const FightChatPanel = ({
 
     const handleReceiveMessage = data => {
         console.log('fightChat data ', data)
-        const { Attributes, Content, Id, Sender, Type } = data;
+        const { Attributes, Content, Id, Sender } = data;
+
         const messageType = Attributes?.messageType === ChatMessageType.FIGHT
             ? ChatMessageType.FIGHT 
             : ChatMessageType.CALLING_IT;
 
         const message = Content;
-        setChatMessages(prev => [{ Id, message, username: Sender?.UserId }, ...prev ]);
+        setChatMessages(prev => [{ Id, message, username: Sender?.Attributes?.username }, ...prev ]);
 
         if(messageType === ChatMessageType.CALLING_IT){
             setGlobalNotification({ heading: Sender?.Attributes?.username, body: message })
