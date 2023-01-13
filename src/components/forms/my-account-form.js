@@ -35,7 +35,7 @@ export const MyAccountForm = () => {
     email: '',
     fightCoins: '',
     firstName: '',
-    isPublic: true,
+    isPublic: false,
     lastName: '',
   })
 
