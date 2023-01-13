@@ -75,7 +75,7 @@ export const SwingsGraph = props => {
     
     return (
         <Flex
-            w={["100%", "50%"]}
+            w={["100%", "60%"]}
             flexDir="column"
             // w="100%"
             // h="450"
