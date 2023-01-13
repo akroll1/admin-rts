@@ -3,14 +3,12 @@ import {
   Avatar, 
   Box, 
   Button, 
-  ButtonGroup, 
   Checkbox, 
   Flex, 
   FormControl, 
   FormHelperText, 
   FormLabel, 
   Heading, 
-  HStack, 
   Input, 
   Stack, 
   StackDivider, 
@@ -27,6 +25,7 @@ export const MyAccountForm = () => {
 
   const { 
     fetchUserAccount,
+    isSubmitting,
     updateUser,
     user,
     userAccount,
@@ -160,7 +159,8 @@ export const MyAccountForm = () => {
                     size="sm" 
                     leftIcon={<HiCloudUpload />}
                     w="75%"
-                    >
+                    disabled
+                  >
                     Change photo
                   </Button>
                   <Button 
@@ -168,6 +168,7 @@ export const MyAccountForm = () => {
                     variant="outline" 
                     colorScheme="solid"
                     w="75%"
+                    disabled
                   >
                     Delete
                   </Button>
@@ -190,32 +191,20 @@ export const MyAccountForm = () => {
               alignItems="center"
               justifyContent="center"
               flexDir={["column", "row"]}
-              maxW={["100%", "75%", "75%", "50%"]}
               m="auto"
               px="auto"
-              minW="100%"
-              >
+            >
               <Button 
+                loadingText='Submitting'
+                isLoading={isSubmitting}
+                m="auto"
                 onClick={handleUpdateUser} 
                 type="submit" 
                 colorScheme="solid"
                 minH="2.5rem"
-                m="2"
-                flex="1 0 50%"
-                minW={["100%", "50%"]}
-                maxW={["100%", "50%"]}
-                >
-                Save Changes
-              </Button>
-              <Button 
-                minW={["100%", "50%"]}
-                m="2"
-                flex="1 0 50%"
-                maxW={["100%", "50%"]}
-                minH="2.5rem"
-                variant="outline"
+                w={["100%", "50%", "50%"]}
               >
-                Cancel
+                Save Changes
               </Button>
             </Flex>
         </FieldGroup>

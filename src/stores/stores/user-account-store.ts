@@ -21,7 +21,9 @@ const url = process.env.REACT_APP_API;
 export const userAccountStoreSlice: StateCreator<GlobalStoreState, [], [], UserAccountStoreState> = (set, get) => ({
     ...initialUserAccountStoreState,
     createUser: async (user: UserAccount) => {
+        get().setIsSubmitting(true)
         const res = await axios.put(`${url}/users`, user, await configureAccessToken() )
+        get().setIsSubmitting(false)
         console.log('CREATE_USER: res: ', res.data)
     },
     fetchUserAccount: async () => {
@@ -39,7 +41,9 @@ export const userAccountStoreSlice: StateCreator<GlobalStoreState, [], [], UserA
         set({ userAccount })
     },
     updateUser: async (updateOptions: Partial<User>) => {
+        get().setIsSubmitting(true)
         const res = await axios.put(`${url}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
+        get().setIsSubmitting(false)
         console.log('UPDATE USER res: ', res)
     },  
     
