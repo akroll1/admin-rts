@@ -44,19 +44,18 @@ export const MyAccountForm = () => {
   },[])
   
   useEffect(() => {
-    if(userAccount?.lastName){
+    if(userAccount?.sub){
       setForm({
         ...form,
         bio: userAccount.bio,
-        email: user.email,
+        email: userAccount.email ? userAccount.email : user.email,
         fightCoins: userAccount.fightCoins,
         firstName: userAccount.firstName,
         lastName: userAccount.lastName,
         isPublic: userAccount.isPublic,
-        sub: user.sub,
-        username: user.username
+        sub: userAccount.sub ? userAccount.sub : user.sub,
+        username: userAccount.username ? userAccount.username : user.username,
       })
-
     }
   },[userAccount])
 
@@ -154,21 +153,23 @@ export const MyAccountForm = () => {
                 size={["lg", "xl"]}
               />
               <Box>
-                <HStack spacing="2">
+                <VStack spacing="2">
                   <Button 
                     size="sm" 
                     leftIcon={<HiCloudUpload />}
-                  >
+                    w="75%"
+                    >
                     Change photo
                   </Button>
                   <Button 
                     size="sm" 
                     variant="outline" 
                     colorScheme="solid"
+                    w="75%"
                   >
                     Delete
                   </Button>
-                </HStack>
+                </VStack>
                 <Text fontSize="sm" mt="3" color={mode('gray.500', 'whiteAlpha.600')}>
                   .jpg, .gif, or .png. Max file size 700K.
                 </Text>
@@ -176,21 +177,26 @@ export const MyAccountForm = () => {
             </Stack>
           </FieldGroup>
         </Stack>
-        <FieldGroup mt="2">
-          <HStack width="full">
+        <FieldGroup mt="8" title="Save Changes">
+          <VStack 
+            width="full"
+            mt="4"
+          >
             <Button 
               onClick={handleUpdateUser} 
               type="submit" 
               colorScheme="solid"
+              w={["100%", "50%"]}
             >
               Save Changes
             </Button>
             <Button 
+              w={["100%", "50%"]}
               variant="outline"
             >
               Cancel
             </Button>
-          </HStack>
+          </VStack>
         </FieldGroup>
       </form>
     </Box>

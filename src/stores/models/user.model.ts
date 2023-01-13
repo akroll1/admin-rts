@@ -13,12 +13,14 @@ export interface UserAccount {
     lastName?: string | null
     sub?: string
     username?: string
+    createdAt?: number
+    updatedAt?: number
 }
 export interface User {
-    email?: string
+    email: string
     isLoggedIn: boolean
-    sub?: string
-    username?: string
+    sub: string
+    username: string
     isPanelist?: boolean
     isSuperAdmin?: boolean
 }

@@ -93,12 +93,12 @@ export const ScoringTable = () => {
             w="100%"
             flexDir="column"
         >
-            <ScoringTableSwitches 
+            {/* <ScoringTableSwitches 
                 activeGroupScorecard={activeGroupScorecard}
                 handleRealTimeSwitchClick={handleRealTimeSwitchClick}
                 handleShowToCurrentRound={handleShowToCurrentRound}
                 toCurrentRound={toCurrentRound}
-            />
+            /> */}
             {/* <FightStats /> */}
             { (tabs[TabsEnum.TABLE] || tabs[TabsEnum.ALL]) && 
                 <Flex

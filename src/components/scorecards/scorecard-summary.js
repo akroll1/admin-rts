@@ -107,6 +107,7 @@ export const ScorecardSummary = ({ selectedSummary }) => {
 
       </Flex>
       <GoToArrowButton
+        disabled={!group?.groupScorecardId}
         label="Group Scorecard"
         navigateTo={`/scoring/${group?.groupScorecardId}/${fight?.fightId}`}
       />

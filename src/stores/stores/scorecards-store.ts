@@ -67,7 +67,6 @@ export interface ScorecardStoreState {
     updatePanelist(updateObj: Partial<Panelist>): void
     updateSeason(updateObj: Partial<Season>): void
     updateShow(update: any): void
-    updateUser(updateOptions: Partial<User>): void
     userInvites: string[]
     userScorecardSummary: ScorecardSummary
     userScorecards: Scorecard[]
@@ -304,8 +303,4 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const res = await axios.put(`${url}/shows/${update.showId}`, update, await configureAccessToken() )
         console.log('res.data: ', res.data)
     },
-    updateUser: async (updateOptions: Partial<User>) => {
-        const res = await axios.put(`${url}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
-        console.log('UPDATE USER res: ', res)
-    },  
 })

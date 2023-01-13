@@ -170,7 +170,7 @@ export const SwingsGraph = props => {
                     style={{
                         data: { 
                             stroke: "#c43a31",
-                            strokeWidth: '5'
+                            strokeWidth: '3'
                         },
                         parent: { border: "1px solid #ccc"},
                     }}
