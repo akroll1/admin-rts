@@ -25,13 +25,14 @@ export const FightStats = ({
             alignItems="center"
             justifyContent="space-between"
             w="100%"
-            mb="1"
+            mb="4"
+            maxW={["100%", "50%", "30%"]}        
         >
                 <Flex
                     flex="0 0 40%"
                     flexDir="column"
                     alignItems="center"
-                    justifyContent="center"            
+                    justifyContent="center"    
                 >
                     { isTable &&
                         <Heading

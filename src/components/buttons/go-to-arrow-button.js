@@ -8,7 +8,8 @@ import { useGlobalStore } from '../../stores';
 
 export const GoToArrowButton = ({
     label,
-    navigateTo
+    navigateTo,
+    ...rest
 }) => {
     
     const navigate = useNavigate();
@@ -17,9 +18,10 @@ export const GoToArrowButton = ({
         isSubmitting,
         isSubmittingForm,
     } = useGlobalStore()
-    
+
     return (
         <Button
+            {...rest}
             id="arrow_btn"
             onClick={() => navigate(navigateTo)}
             // disabled={isSubmitting || isSubmittingForm}

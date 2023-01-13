@@ -43,6 +43,7 @@ export const PieChart = props => {
             {...props}
             w={["auto", "50%"]}
             justifyContent="flex-start"
+            maxW={["100%", "50%", "30%"]}        
         >
             <Heading
                 size="sm"
@@ -54,7 +55,7 @@ export const PieChart = props => {
                 animate={{
                     duration: 1000
                 }}
-                colorScale={['#c01616', '#1d5d90', '#c7c78d']}
+                colorScale={['#c43a31', '#1d5d90', '#8d8d8d']}
                 data={percentages} 
                 responsive={true}
                 // labels={[`${[capFirstLetters(f1)]}`, `${[capFirstLetters(f2)]}`, `Even`]}
