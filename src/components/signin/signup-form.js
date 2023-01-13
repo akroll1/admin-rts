@@ -98,7 +98,7 @@ export const SignUpForm = ({
               colorScheme="solid" 
               size="lg" 
               fontSize="md"
-              // disabled={true}
+              disabled={true}
             >
               Sign-Up
             </Button>

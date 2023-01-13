@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { ScoringTableInfo } from './scoring-table-els'
 import { TabsEnum, useGlobalStore } from '../../stores'
-import { FightStats } from '../sidebars/chat-sidebar-components'
+import { FightStats } from '../analytics'
 import { ScoringTableSwitches } from './table-els'
 import { PieChart, SwingsGraph } from '../analytics'
 

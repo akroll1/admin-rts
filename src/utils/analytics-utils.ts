@@ -265,10 +265,10 @@ export const _createSingleUserScores = (f1: string, f2: string, totalRounds: num
             score1 = 10
             score2 = 8
         }
-        // if((_i+1) === 6){
-        //     score1 = 10
-        //     score2 = 7
-        // }
+        if((_i+1) === 6){
+            score1 = 10
+            score2 = 10
+        }
         // if((_i+1) === 7){
         //     score1 = 6
         //     score2 = 10

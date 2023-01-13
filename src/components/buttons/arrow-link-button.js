@@ -8,6 +8,7 @@ export const ArrowLinkButton = ({
     icon,
     id,
     label,
+    mr,
     navigateTo,
 }) =>  {
 
@@ -15,6 +16,7 @@ export const ArrowLinkButton = ({
 
     return (
         <Button
+            mr={mr ? mr : '0'}
             id="arrow_link_button"
             onClick={() => navigate(`${navigateTo}`)}
             className="group"
@@ -38,7 +40,7 @@ export const ArrowLinkButton = ({
                     as={icon}
                     fontSize="sm"
                     transition="transform 0.2s"
-                    _groupHover={id === 'copy' ? {} : { transform: 'translateX(-2px)' } }
+                    _groupHover={id === 'copy' ? {} : { transform: 'translateX(3px)' } }
                 />
             }
         >

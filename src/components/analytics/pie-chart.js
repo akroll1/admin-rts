@@ -41,6 +41,8 @@ export const PieChart = props => {
             flexDir="column"
             h="200px"
             {...props}
+            w={["auto", "50%"]}
+            justifyContent="flex-start"
         >
             <Heading
                 size="sm"

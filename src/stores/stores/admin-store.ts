@@ -26,7 +26,6 @@ export interface AdminStoreState {
     createPanelist(panelistObj: Partial<Panelist>): void
     createSeason(createObj: Partial<Season>): void
     createShow(createShowObj: Partial<Show>): void
-    createUser(user: User): void
     deleteDiscussion(discussionId: string): void
     deleteFight(fightId: string): void
     deleteFighter(fighterId: string): void
@@ -84,10 +83,6 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const res = await axios.post(`${url}/shows`, createShowObj, await configureAccessToken() )
         const show = res.data as Show
         console.log('SHOW-post: res: ', show)
-    },
-    createUser: async (user: User) => {
-        const res = await axios.post(`${url}/users`, get().user, await configureAccessToken() )
-        console.log('CREATE_USER: res: ', res.data)
     },
     deleteDiscussion: async (discussionId: string) => {
         const res = await axios.delete(`${url}/discussions/${discussionId}`)

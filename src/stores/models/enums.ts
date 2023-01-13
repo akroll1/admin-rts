@@ -1,3 +1,8 @@
+export enum GroupScorecardTypeEnum {
+	FIGHT = "FIGHT",
+	SEASON = "SEASON"
+}
+
 export enum ChatTokenEnum {
 	GROUP = "GROUP",
 	FIGHT = "FIGHT"

@@ -46,7 +46,6 @@ export const BlogArticlePage = () => {
         updatedAt 
     } = blogPost
     
-    console.log('updatedAt: ', parseEpoch(createdAt, true))
     return (
         <Flex
             alignItems="flex-start"
