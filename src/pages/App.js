@@ -73,17 +73,8 @@ const App = () => {
                 <Analytics /> 
               </PrivateRoute>
             }/>
-            <Route exact path="/shows" element={<Shows />}/>
-            {/* <Route exact path="/shows" element={
-              <PrivateRoute>
-                <Shows /> 
-              </PrivateRoute>
-            }/> */}
-            <Route exact path="/shows/:id" element={
-              <PrivateRoute>
-                <Shows /> 
-              </PrivateRoute>
-            }/>
+            <Route exact path="/shows" element={<Shows />} />
+            <Route exact path="/shows/:fightIdParam" element={<Shows />} />
             <Route exact path="/shows" element={<Shows />} />
             <Route exact path="/pound" element={
               <PrivateRoute>

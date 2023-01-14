@@ -108,7 +108,8 @@ const Dashboard = () => {
             <Link  
               as="button" 
               to="/dashboard/account" 
-              p="4"
+              p="2"
+              pl="0"
               w="100%" 
               transition="background 0.1s" 
               rounded="xl" 
