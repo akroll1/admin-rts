@@ -31,10 +31,10 @@ export const ScoringButtons = ({
             return `Scoring Complete`
         }
         if(!selectedFighterId){
-            return `Select Round ${userScorecard?.scores?.length + 1}`
+            return `Select Round ${userScorecard?.scores?.length > 0 ? userScorecard.scores.length + 1 : ''}`
         }
         if(selectedFighterId){
-            return `Submit Round ${userScorecard?.scores?.length + 1}`
+            return `Submit Round ${userScorecard?.scores?.length > 0 ? userScorecard.scores.length + 1 : ''}`
         }
     }
     

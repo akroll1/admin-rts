@@ -15,8 +15,6 @@ import { parseEpoch } from '../../../../utils'
 import { CheckIcon } from '@chakra-ui/icons'
 import { FiTrash2 } from 'react-icons/fi'
 import { GroupScorecardTypeEnum } from '../../../../stores'
-import { FaArrowRight } from 'react-icons/fa'
-import { ArrowLinkButton } from '../../../buttons'
 
 export const ScorecardsInvitationsBoard = () => {
 
@@ -83,8 +81,7 @@ export const ScorecardsInvitationsBoard = () => {
                         inviteId,
                         members,
                     } = invite
-                    console.log('groupScorecardType: ', groupScorecardType)
-                    // seems this is wrong.
+
                     return (
                         <Flex
                             key={inviteId}

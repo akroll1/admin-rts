@@ -17,7 +17,7 @@ export const ScorecardRowItemRight = ({
             icon: FaArrowRight,
             id: 'info',
             label: 'Fight Info',
-            navigateTo: '#' // pass in fight ID.
+            navigateTo: `/shows/${summary?.fight?.fightId}` // pass in fight ID.
         },
         {
             icon: FaArrowRight,
@@ -32,7 +32,7 @@ export const ScorecardRowItemRight = ({
             navigateTo: '#'
         }
     ]
-    
+    console.log('summary: ', summary)
     return (
         <Flex
             width="100%"
@@ -67,6 +67,7 @@ export const ScorecardRowItemRight = ({
                 w="100%"
             >
                 { buttonData.map( data => {
+                    
                     return (
                         <ArrowLinkButton
                             icon={data.icon}

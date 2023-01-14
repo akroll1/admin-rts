@@ -14,7 +14,7 @@ import { ScoringTableInfo } from './scoring-table-els'
 import { TabsEnum, useGlobalStore } from '../../stores'
 import { FightStats } from '../analytics'
 import { ScoringTableSwitches } from './table-els'
-import { PieChart, SwingsGraph } from '../analytics'
+import { Chart, SwingsGraph } from '../analytics'
 
 export const ScoringTable = () => {
 
@@ -108,7 +108,7 @@ export const ScoringTable = () => {
                     <FightStats
                         isTable
                     />
-                    <PieChart />
+                    <Chart />
                     <SwingsGraph
                         my="2"
                     />

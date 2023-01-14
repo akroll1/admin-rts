@@ -9,11 +9,13 @@ import {
 } from '../components/modals'
 import { SpinnerMain } from '../components/spinner'
 import { useGlobalStore } from '../stores'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 const Shows = () => {
 
     const navigate = useNavigate();
+    const { fightIdParam } = useParams();
+    
     const { 
         createGroupScorecard,
         fetchSeasonSummary,
@@ -21,6 +23,7 @@ const Shows = () => {
         navigateTo,
         putUserFightReview,
         selectedFightSummary, 
+        setSelectedFightSummary,
         setToast,
         user,
         userFightReview,
@@ -49,6 +52,14 @@ const Shows = () => {
     useEffect(() => {
         fetchSeasonSummary('active')
     },[])
+
+    useEffect(() => {
+        if(selectedFightSummary?.fight?.fightId && fightIdParam){
+            if(fightIdParam){
+                setSelectedFightSummary(fightIdParam)
+            }
+        }
+    },[fightIdParam, selectedFightSummary])
 
 
     useEffect(() => {

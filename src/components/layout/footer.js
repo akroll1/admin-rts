@@ -21,9 +21,10 @@ export const Footer = () => (
     mt="8"
     py={["0","0","0"]} 
     px={['4', '6', '4']}
+    pb="20"
   >
     <Stack 
-      spacing="10" 
+      spacing="6" 
       minW="100%" 
       divider={<StackDivider />}
     >
@@ -49,6 +50,7 @@ export const Footer = () => (
         direction={['column-reverse', 'row']}
         justifyContent="space-between"
         alignItems="center"
+        mb="10"
       >
         <Copyright />
         <SocialMediaLinks />

@@ -9,10 +9,23 @@ export const UserInfo = (props) => {
   }
   return (
     <HStack onClick={() => handleUserFormClick()} display="inline-flex">
-      <Avatar size="sm" name={name} src={image} />
+      <Avatar 
+        size="md" 
+        name={name} 
+        src={image} 
+      />
       <Box lineHeight="1">
-        <Text fontWeight="semibold">{name}</Text>
-        <Text fontSize="xs" mt="1" color={mode('whiteAlpha.700', 'gray.400')}>
+        <Text 
+          fontSize="lg"
+          fontWeight="semibold"
+        >
+          {name}
+        </Text>
+        <Text 
+          size="sm" 
+          mt="1" 
+          color={mode('whiteAlpha.700', 'gray.400')}
+        >
           {email}
         </Text>
       </Box>

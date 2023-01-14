@@ -1,7 +1,12 @@
-import * as React from 'react'
-import { Box, HStack, Icon } from '@chakra-ui/react'
+import { 
+  Box, 
+  Flex,
+  HStack, 
+  Icon 
+} from '@chakra-ui/react'
 import { BsCaretRightFill } from 'react-icons/bs'
 import { HiBadgeCheck } from 'react-icons/hi';
+import { CalendarIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
 export const UpcomingNavItem = props => {
   const { 
@@ -16,15 +21,13 @@ export const UpcomingNavItem = props => {
 
   const renderColor = (active, isTitleFight, upcoming) => {
     if(upcoming) return `gray.100`
-    if(isTitleFight) return `gray.400`
     if(active) return `gray.100`
-    return `gray.600`
+    return `gray.200`
   }
 
   return (
     <HStack
-      p="1"
-      pl="3"
+      pl="2"
       color={active ? 'white' : 'whiteAlpha.900'}
       id={fightId}
       onClick={selectFight}
@@ -36,18 +39,25 @@ export const UpcomingNavItem = props => {
     >
       <Box 
         color={renderColor(active, isTitleFight, upcoming)}
+        flexDir="column"
       >
-        {icon}  
+      <ChevronRightIcon
+        color="gray.400"
+        fontSize="xl"
+      />
       </Box>
-      <Box 
+      <Flex 
         transition="all 0.2s"
-        fontSize="1rem" 
+        fontSize="1.1rem" 
         flex="1" 
         fontWeight="inherit" 
         color={active ? 'fsl-highlight-heading-text' : '#dadada'}
       >
         {label}
-      </Box>
+      </Flex>
+      {/* <Flex>
+        Next Fight
+      </Flex> */}
     </HStack>
   )
 }

@@ -1,5 +1,6 @@
 export * from './analytics-main'
 export * from './analytics-search-field'
+export * from './chart'
 export * from './fight-stats'
 export * from './pie-chart'
 export * from './stats-header'

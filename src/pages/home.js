@@ -16,32 +16,37 @@ const Home = () => {
       px={["6", "12", "12",]}
       py={["2", "4"]}
       pb='8'
-      mx="auto"
+      m="auto"
     >
       <Box 
-        maxW={["100%", "100%", "90%", "90%"]} 
-        mx="auto"
+        maxW={["100%"]} 
+        m="auto"
       >
         <Stack 
           // p={["4"]} 
-          spacing={['2', '4', '4']} 
+          spacing={['2', '4', '4', '8']} 
           direction={['column', 'column', 'row']}
-        >
-          <Box maxW={{ lg: 'xl' }}>
+          >
+          <Flex
+            my="auto"
+            flexDir="column"
+            w={["100%", "100%", "100%", "40%"]}
+            alignItems="flex-start"
+          >
             <Heading
-              size="xl"
+              fontSize="3rem"
               mt={["2", "2", "4"]}
               fontWeight="extrabold"
               letterSpacing="normal"
-              lineHeight="2rem"
+              lineHeight="2.5rem"
               color="#eaeaea"
             >
               Can't get enough boxing?
             </Heading>
             <Heading
               mt="3px"
-              size="lg"
-              color="#bababa"
+              size="xl"
+              color="#C01616"
             >
               Here you go.
             </Heading>
@@ -51,7 +56,7 @@ const Home = () => {
 
             <Text 
               lineHeight="1.3"
-              fontSize="xl" 
+              fontSize="lg" 
               mt="1"
               p="1" 
               pl="0"
@@ -77,9 +82,9 @@ const Home = () => {
               label="Learn More"
               navigateTo={'/learn-more'}
             />
-          </Box>
+          </Flex>
           <Center 
-            flex="1 0 60%" 
+            flex="1 0 50%" 
             shadow="lg" 
             maxW={['xl']}
             >
