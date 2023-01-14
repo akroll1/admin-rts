@@ -65,7 +65,7 @@ export const ScoringMain = () => {
 
     const handleAdjustScore = (e,fighterId) => {
         const { id } = e.currentTarget;
-        if(!fighterIds.selectedFighterId || fighterId == fighterIds.selectedFighterId || notSelectedScore == 10) return
+        if(!fighterIds.selectedFighterId) return
         if(id === 'increment'){
             if(notSelectedScore >= 10) return;
             setNotSelectedScore(prev => prev + 1)

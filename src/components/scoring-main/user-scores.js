@@ -87,12 +87,18 @@ export const UserScores = ({
                         score2,
                         score1Color: score1 >= score2 
                             ? selectedFighterId
-                                ? 'yellow.700' : 'yellow.400' 
-                            : 'gray.500',
+                                ? 'yellow.700' 
+                                : 'yellow.400' 
+                            : selectedFighterId
+                                ? 'gray.500'
+                                : 'gray.400',
                         score2Color: score2 >= score1 
                             ? selectedFighterId
-                                ? 'yellow.700' : 'yellow.400'
-                            : 'gray.500' 
+                                ? 'yellow.700' 
+                                : 'yellow.400'
+                            : selectedFighterId
+                                ? 'gray.500'
+                                : 'gray.400' 
                     }
                     return fighterData
                 }

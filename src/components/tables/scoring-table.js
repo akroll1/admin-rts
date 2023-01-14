@@ -105,9 +105,9 @@ export const ScoringTable = () => {
                     flexDir="column"
                     w="100%"
                 >
-                    <FightStats
+                    {/* <FightStats
                         isTable
-                    />
+                    /> */}
                     <Chart />
                     <SwingsGraph
                         my="2"

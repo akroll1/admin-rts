@@ -62,8 +62,8 @@ export const SwingsGraph = props => {
         }
     }, [analytics, fighters])
 
-    console.log('roundByRoundTotals: ', analytics.roundByRoundTotals)
-    console.log('swingsline: ', swingsline)
+    // console.log('roundByRoundTotals: ', analytics.roundByRoundTotals)
+    // console.log('swingsline: ', swingsline)
 
     const renderYLabel = value => {
         if(value == 0) return '100%'
