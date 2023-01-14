@@ -19,7 +19,7 @@ export const LastRow = ({
     const { fighter1Id, fighter2Id, selectedFighterId } = fighterIds?.fighter1Id ? fighterIds : {};
     const evenRound = notSelectedScore == 10;
     const setScoreColor = fighter => {
-        if(!selectedFighterId) return 'gray.300'
+        if(!selectedFighterId) return 'gray.500'
         if(selectedFighterId == fighter){
             if(notSelectedScore == '10') return 'yellow.300'
             return 'yellow.300'

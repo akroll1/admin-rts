@@ -64,7 +64,7 @@ export const Chart = () => {
     }, [analytics, fighters])
 
     // console.log('roundByRoundTotals: ', analytics.roundByRoundTotals)
-    console.log('swingsline: ', swingsline)
+    // console.log('swingsline: ', swingsline)
 
     const renderYLabel = value => {
         if(value == 0) return '100%'
@@ -76,10 +76,34 @@ export const Chart = () => {
     
     return (
         <Flex
+            position="relative"
+            flexDir="column"
             w="100%"
+            m="auto"
+            mt={["0", "8"]}
+            maxW={["100%", "100%", "80%", "70%"]}
         >
             <Flex
-                w={["50%"]}
+                p="4"
+                pb="0"
+                mb={["-4","-12"]}
+                flexDir="row"
+                justifyContent="space-evenly"
+                alignItems="flex-start"
+                w="100%"
+            > 
+                { fighters?.length === 2 && fighters.map( (fighter, _i) => {
+                    return (
+                        <AnalyticsFighters 
+                            key={_i}
+                            iteration={_i}
+                            fighter={fighter}
+                            totalPercentages={analytics?.totalPercentages}
+                        />
+                    )
+                })}
+            </Flex>
+            <Flex
                 p="2"
                 cursor="pointer"
             >   <Flex
@@ -134,7 +158,7 @@ export const Chart = () => {
                             },
                             color: '#dadada',
                             grid: {
-                                stroke: '#999', //CHANGE COLOR OF X-AXIS GRID LINES
+                                stroke: '#888', //CHANGE COLOR OF X-AXIS GRID LINES
                                 strokeDasharray: '2',
                             },
                             label: {
@@ -166,7 +190,7 @@ export const Chart = () => {
                             },
                             color: '#aeaeae',
                             grid: {
-                                stroke: '#999', //CHANGE COLOR OF X-AXIS GRID LINES
+                                stroke: '#888', //CHANGE COLOR OF X-AXIS GRID LINES
                                 strokeDasharray: '2',
                             },
                             label: {
@@ -190,23 +214,6 @@ export const Chart = () => {
                         }}
                     />
                 </VictoryChart>
-            </Flex>
-            <Flex
-                flexDir="column"
-                justifyContent="space-evenly"
-                alignItems="center"
-            >
-
-                { fighters?.length === 2 && fighters.map( (fighter, _i) => {
-                    return (
-                        <AnalyticsFighters 
-                            key={_i}
-                            iteration={_i}
-                            fighter={fighter}
-                            totalPercentages={analytics?.totalPercentages}
-                        />
-                    )
-                })}
             </Flex>
         </Flex>
     )
