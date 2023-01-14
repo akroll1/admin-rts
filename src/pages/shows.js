@@ -51,16 +51,10 @@ const Shows = () => {
 
     useEffect(() => {
         fetchSeasonSummary('active')
-    },[])
-
-    useEffect(() => {
-        if(selectedFightSummary?.fight?.fightId && fightIdParam){
-            if(fightIdParam){
-                setSelectedFightSummary(fightIdParam)
-            }
+        if(fightIdParam){
+            setSelectedFightSummary(fightIdParam)
         }
-    },[fightIdParam, selectedFightSummary])
-
+    },[])
 
     useEffect(() => {
         if(userFightReview){
