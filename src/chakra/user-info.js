@@ -1,5 +1,11 @@
-import { Avatar, Box, HStack, Text, useColorModeValue as mode } from '@chakra-ui/react'
-import * as React from 'react'
+import { 
+  Avatar, 
+  Box, 
+  Flex,
+  HStack, 
+  Text, 
+  useColorModeValue as mode 
+} from '@chakra-ui/react'
 
 export const UserInfo = (props) => {
   const { name, image, email, setForm, setActive} = props
@@ -8,13 +14,19 @@ export const UserInfo = (props) => {
       setActive('ACCOUNT');
   }
   return (
-    <HStack onClick={() => handleUserFormClick()} display="inline-flex">
+    <HStack 
+      onClick={() => handleUserFormClick()} 
+      display="inline-flex"
+    >
       <Avatar 
+        mr="2"
         size="md" 
         name={name} 
         src={image} 
       />
-      <Box lineHeight="1">
+      <Box 
+        lineHeight="1"
+      >
         <Text 
           fontSize="lg"
           fontWeight="semibold"

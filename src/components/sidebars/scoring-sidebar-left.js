@@ -42,7 +42,7 @@ export const ScoringSidebarLeft = () => {
         tabs,
     } = useGlobalStore()
     
-    const [activeNavGroups, setActiveNavGroups] = useState({ ...resetScoringSidebarNavGroups, [ScoringSidebarNavGroupsEnum.FIGHT]: true });
+    const [activeNavGroups, setActiveNavGroups] = useState({ ...resetScoringSidebarNavGroups });
 
     const { isTitleFight, totalRounds, weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
     const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';

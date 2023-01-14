@@ -14,6 +14,7 @@ export const ScoringFightersFaceoff = ({
 }) => {
 
     const {
+        analytics,
         fighters,
         tabs,
     } = useGlobalStore()
@@ -24,11 +25,6 @@ export const ScoringFightersFaceoff = ({
             flexDir="column"
             w="100%"
         >
-            { tabs[TabsEnum.SCORING] && 
-                <FightStats 
-                    fighterIds={fighters.length === 2 ? fighters.map( fighter => fighter.fighterId) : {}}
-                />
-            }
             <Flex  
                 zIndex={100}  
                 flexDir="column"
@@ -90,6 +86,13 @@ export const ScoringFightersFaceoff = ({
                         w="100%"
                         flexDir="column"
                     >
+                        {/* <Heading 
+                            flex="1 0 50%"
+                            size="sm" 
+                            color="gray.200"
+                        >
+                            {`${analytics?.totalPercentages && analytics?.totalPercentages[fighter.lastName] ? analytics?.totalPercentages[fighter.lastName] : ''}%`}
+                        </Heading> */}
                         <Heading 
                             flex="1 0 50%"
                             size="md" 
