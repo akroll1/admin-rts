@@ -37,6 +37,14 @@ export const ShowsSidebar = () => {
         }
     }, [fightsByStatus])
 
+    // trying to sync up rotateFighters and here.
+
+    // useEffect(() => {
+    //     if(selectedFightSummary?.fight?.fightId){
+    //         setSelectedFightSummary
+    //     }
+    // },[selectedFightSummary])
+
     const selectFight = e => {
         const { id } = e.currentTarget;
         setSelectedFightSummary(id)
@@ -96,17 +104,6 @@ export const ShowsSidebar = () => {
                                 name={REVIEW_TYPE.PREDICTION} 
                                 fightId={fightId} 
                                 selectFight={selectFight} 
-                                icon={isTitleFight
-                                    ?
-                                        <IoStarOutline 
-                                            background="gray" 
-                                            mt="-5px" 
-                                        />
-                                    :
-                                        <InfoOutlineIcon 
-                                            mt="-5px" 
-                                        />
-                                } 
                                 label={fightQuickTitle} 
                                 key={fightId} 
                                 isPlaying
@@ -117,7 +114,6 @@ export const ShowsSidebar = () => {
                         <UpcomingNavItem 
                             active={false}
                             name={REVIEW_TYPE.COMPLETE} 
-                            // icon={<NotAllowedIcon mt="-5px" /> } 
                             // selectFight={selectFight} 
                             fightId={'fightId'} 
                             label={`SEASON COMPLETE`} 

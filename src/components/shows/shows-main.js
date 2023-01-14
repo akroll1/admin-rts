@@ -26,7 +26,6 @@ export const ShowsMain = ({
 }) => {
     const {
         selectedFightSummary,
-        selectedSeasonSummary,
     } = useGlobalStore()
 
     const showTime = selectedFightSummary?.show?.showTime ? selectedFightSummary.show.showTime : Date.now();
