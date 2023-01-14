@@ -10,15 +10,16 @@ export const AnalyticsFighters = ({
     iteration,
     totalPercentages,
 }) => {
-    console.log('iteration: ', iteration)
+
     return (
         <Flex
             alignItems="center"
             justifyContent="flex-start"
+            flex="1 0 50%"
         >
             <Avatar 
-                border={iteration === 0 ? "2px solid red" : "2px solid white"}
-                size="md"
+                border={iteration === 0 ? "3px solid red" : "3px solid #5c7fff"}
+                size={["md", "md", "lg"]}
             />
             <Flex
                 flexDir="column"
@@ -27,8 +28,8 @@ export const AnalyticsFighters = ({
 
                 <Heading
                     textAlign="center"
-                    size="md"
-                >
+                    size={["md", "md", "lg"]}
+                    >
                     {`${capFirstLetters(fighter.lastName)}`}
                 </Heading>
                 <Heading 

@@ -105,13 +105,10 @@ export const ScoringTable = () => {
                     flexDir="column"
                     w="100%"
                 >
-                    {/* <FightStats
-                        isTable
-                    /> */}
                     <Chart />
-                    <SwingsGraph
+                    {/* <SwingsGraph
                         my="2"
-                    />
+                    /> */}
                 </Flex>
             }
             <Flex 
