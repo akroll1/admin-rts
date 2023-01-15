@@ -10,12 +10,14 @@ export const ScoringSidebarSkeletons = () => {
         <Stack
             p="2"
             w="90%"
-            borderRadius='md'
         >
             <Stack
                 mt="2"
             >
-                <Skeleton height='50px' />
+                <Skeleton 
+                    height='50px' 
+                    borderRadius='md'
+                />
                 <SkeletonText 
                     p="2"
                     pt="0"
@@ -28,9 +30,15 @@ export const ScoringSidebarSkeletons = () => {
             <Stack
                 spacing="2"
             >
-                <Skeleton height="8" maxW="90%"></Skeleton>
-                <Skeleton height="7" maxW="80%"></Skeleton>
-                <Skeleton height="7" maxW="70%"></Skeleton>
+                { [ ...new Array(3).fill('')].map( (el, _i) => (
+                    <Skeleton 
+                        height="6" 
+                        maxW="90" 
+                        minW="80%"
+                        my="1"
+                        borderRadius='md'
+                    />
+                ))}
             </Stack>
                
         </Stack>

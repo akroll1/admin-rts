@@ -4,13 +4,12 @@ import {
     Button,
     Flex,
     Text,
-    useColorModeValue as mode,
 } from '@chakra-ui/react'
 import { useGlobalStore } from '../../stores'
 import { ScorecardRow } from './scorecard-row'
 import { ScorecardSummary } from './scorecard-summary'
 import { ScorecardsHeading } from './scorecards-heading'
-import { ScorecardsInvitationsBoard } from '../sidebars/scorecards-sidebar-components/scorecards-boards'
+import { ScorecardsInvitations } from '../sidebars/scorecards-sidebar-components'
 import { SpinnerMain } from '../utils'
 import { useNavigate } from 'react-router'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -21,15 +20,18 @@ export const Scorecards = () => {
     const [selectedSummary, setSelectedSummary] = useState({})
     const [showInvitations, setShowInvitations] = useState(false)
     const { 
+        fetchSeasonSummary,
         fetchUserInvites,
         fetchUserScorecards,
         isLoading,
         userInvites,
         userScorecardSummaries,
     } = useGlobalStore();
+    
     useEffect(() => {
         fetchUserScorecards()
         fetchUserInvites()
+        fetchSeasonSummary('active')
     },[])
 
     useEffect(() => {
@@ -161,7 +163,7 @@ export const Scorecards = () => {
                             </Flex>
                             { showInvitations
                                 ? 
-                                    <ScorecardsInvitationsBoard />
+                                    <ScorecardsInvitations />
                                 :
                                     <ScorecardSummary 
                                         selectedSummary={selectedSummary}

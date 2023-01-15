@@ -52,10 +52,15 @@ const Shows = () => {
 
     useEffect(() => {
         fetchSeasonSummary('active')
-        if(fightIdParam){
-            setSelectedFightSummary(fightIdParam)
-        }
     },[])
+    
+    useEffect(() => {
+        if(selectedSeasonSummary?.length > 0){
+            if(fightIdParam){
+                setSelectedFightSummary(fightIdParam)
+            }
+        }
+    },[selectedSeasonSummary])
 
     useEffect(() => {
         if(userFightReview){
@@ -149,7 +154,7 @@ const Shows = () => {
         // need logic to add another member, if members < 5.   
 
     };
-
+    console.log('selectedSeasonSummary: ', selectedSeasonSummary)
     return (
         <Flex 
             w={["100%"]} 
@@ -168,7 +173,7 @@ const Shows = () => {
                 handleCreateSeasonScorecard={handleCreateSeasonScorecard}
             />
                 {/* { isLoading && !selectedFightSummary?.fight?.fightId */}
-                { selectedSeasonSummary.length === 0
+                { !selectedSeasonSummary?.length > 0
                     ?
                         <SpinnerMain />
                     :

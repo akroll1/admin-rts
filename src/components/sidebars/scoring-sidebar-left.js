@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { 
     Collapse, 
     Flex, 
-    Skeleton,
     Text,
 } from '@chakra-ui/react'
 import { ScoringSidebarNavItem } from './scoring-sidebar-components/scoring-sidebar-nav-item'
@@ -35,14 +34,13 @@ import { ScoringFightersFaceoff } from '../scoring'
 export const ScoringSidebarLeft = () => {
     const {
         activeGroupScorecard,
-        availableGuestJudges,
         isLoading,
         setModals,
         scoringTransformedPrediction,
         tabs,
     } = useGlobalStore()
     
-    const [activeNavGroups, setActiveNavGroups] = useState({ ...resetScoringSidebarNavGroups });
+    const [activeNavGroups, setActiveNavGroups] = useState({ ...resetScoringSidebarNavGroups, [ScoringSidebarNavGroupsEnum.FIGHT]:  tabs[TabsEnum.ALL] ? true : false });
 
     const { isTitleFight, totalRounds, weightclass } = activeGroupScorecard?.fight ? activeGroupScorecard.fight : '';
     const { network, showTime } = activeGroupScorecard?.show ? activeGroupScorecard.show : '';

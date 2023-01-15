@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import { ScorecardsInvitationsBoard } from './scorecards-sidebar-components'
+import { ScorecardsInvitations } from './scorecards-sidebar-components'
 
 export const ScorecardsPageSidebar = () => { 
 
@@ -16,7 +16,7 @@ export const ScorecardsPageSidebar = () => {
             justifyContent="flex-start"
             boxSizing="border-box"
         >   
-            <ScorecardsInvitationsBoard />
+            <ScorecardsInvitations />
         </Flex>
     )
 }

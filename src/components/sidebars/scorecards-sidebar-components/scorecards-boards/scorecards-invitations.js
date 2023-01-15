@@ -1,7 +1,6 @@
 import { 
     Alert,
     AlertIcon,
-    Divider,
     Flex, 
     Heading,
     IconButton,
@@ -16,7 +15,7 @@ import { CheckIcon } from '@chakra-ui/icons'
 import { FiTrash2 } from 'react-icons/fi'
 import { GroupScorecardTypeEnum } from '../../../../stores'
 
-export const ScorecardsInvitationsBoard = () => {
+export const ScorecardsInvitations = () => {
 
     const { 
         acceptInvite,

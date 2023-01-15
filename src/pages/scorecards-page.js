@@ -8,7 +8,7 @@ import {
 import { useGlobalStore } from '../stores'
 import { ScorecardRow } from '../components/scorecards/scorecard-row'
 import { ScorecardSummary } from '../components/scorecards/scorecard-summary'
-import { ScorecardsInvitationsBoard } from '../components/sidebars'
+import { ScorecardsInvitations } from '../components/sidebars'
 
 export const Scorecards = () => {
     
@@ -127,7 +127,7 @@ export const Scorecards = () => {
                 </Flex>
                 { showInvitations
                     ? 
-                        <ScorecardsInvitationsBoard />
+                        <ScorecardsInvitations />
                     :
                         <ScorecardSummary 
                             selectedSummary={selectedSummary}

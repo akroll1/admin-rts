@@ -53,7 +53,6 @@ export const initialAuthStoreState = {
     isSuperAdmin: false,
     user: {} as User,
     userAccount: {} as UserAccount
-
 }
 
 const url = process.env.REACT_APP_API;
@@ -61,9 +60,9 @@ const url = process.env.REACT_APP_API;
 export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreState> = (set, get) => ({
     ...initialAuthStoreState,  
     createUser: async (user: UserAccount) => {
-        get().setIsSubmitting(true)
-        const res = await axios.put(`${url}/users`, user, await configureAccessToken() )
-        get().setIsSubmitting(false)
+        const res = await axios.post(`${url}/users`, user, await configureAccessToken() )
+        const userAccount = res.data as UserAccount
+        set({ userAccount })
         console.log('CREATE_USER: res: ', res.data)
     },
     fetchUserAccount: async () => {
@@ -101,9 +100,12 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             username: user.username,
         }
         set({ user: { ...userObj } })
+        get().createUser({ email: userObj.email, sub: userObj.sub, username: userObj.username })
     },
     updateUser: async (updateOptions: Partial<User>) => {
+        get().setIsSubmitting(true)
         const res = await axios.put(`${url}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
+        get().setIsSubmitting(false)
         console.log('UPDATE USER res: ', res)
     },  
 })
