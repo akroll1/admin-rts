@@ -3,13 +3,8 @@ import {
     Box,
     Button,
     Flex, 
-    IconButton, 
 } from '@chakra-ui/react'
 import { 
-    ArrowRightIcon, 
-    ArrowLeftIcon,
-    ChevronLeftIcon, 
-    ChevronRightIcon,
     TriangleUpIcon,
     TriangleDownIcon,
 } from '@chakra-ui/icons'

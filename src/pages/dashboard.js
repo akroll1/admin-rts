@@ -1,28 +1,10 @@
-import React, {useState, useEffect, useInsertionEffect} from 'react'
+import { useState } from 'react'
 import { Box, Divider, Flex, Link, Spacer, Stack } from '@chakra-ui/react'
 import { SettingsIcon } from '@chakra-ui/icons'
-import { FaListOl, FaEdit, FaRegBell, FaUser, FaUserFriends } from 'react-icons/fa'
+import { FaRegBell, FaUserFriends } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
 import { UserInfo } from '../chakra'
-import { CreateGroupScorecard } from './create-scorecard'
-import { 
-  MyAccountForm, 
-  BlogPostForm,
-  BroadcastForm, 
-  CreatePanelForm,
-  DiscussionsForm, 
-  FightForm, 
-  FightersForm, 
-  FightPropsForm,
-  FightResolutionForm,
-  GuestJudgeForm, 
-  PanelistForm,
-  MyPanelsForm,
-  PoundForm, 
-  SeasonsForm,
-  ShowForm 
-} from '../components/forms'
-import { MyPoundList } from '../components/lists'
+import { MyAccountForm } from '../components/forms'
 import { useParams } from 'react-router-dom'
 import { useGlobalStore } from '../stores'
 import { IoLogOutOutline } from 'react-icons/io5'
@@ -41,17 +23,6 @@ const Dashboard = () => {
     { value: "ACCOUNT", label:"Account", type: 'User', icon: SettingsIcon, link: '/dashboard/account' },
   ]);
 
-  useEffect(() => {
-    if(user.isSuperAdmin && user.isPanelist){
-      setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
-      return;
-    } else if(user.isPanelist){
-      setFormLinks([...formLinks, ...panelistOptions]);
-    } else if(user.isSuperAdmin){
-      setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-    }
-  },[user])
-
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
     setActive(e.currentTarget.id);
@@ -59,22 +30,6 @@ const Dashboard = () => {
 
   const panelistOptions = [
     { value: "PANELS_MEMBER", label:"Panel Member", type: 'User', icon: FaUserFriends, link: '/dashboard/panels' },
-  ];
-
-  const isSuperAdminFormOptions = [
-    { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
-    { value: "BLOG", label:"Blog Form", type: 'Blog Form', icon: FaEdit, link: '/dashboard/blog-form' },
-    { value: "CREATE_PANEL", label:"Create Panel Form", type: 'Create Panel', icon: FaEdit, link: '/dashboard/create-panel' },
-    { value: "DISCUSSIONS", label:"Discussions Form", type: 'Discussions', icon: FaEdit, link: '/dashboard/discussions' },
-    { value: "FIGHT-FORM", label:"Fight Form", type: 'Fights', icon: FaEdit, link: '/dashboard/fight-form' },
-    { value: "FIGHTERS", label:"Fighters Form", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
-    { value: "FIGHT-PROPS-FORM", label:"Fight Props", type: 'Fight Props', icon: FaEdit, link: '/dashboard/fight-props' },
-    { value: "FIGHT-RESOLUTION", label:"Fight Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/fight-resolution' },
-    { value: "GUEST-JUDGES", label:"Guest Judges Form", type: 'Guest Judges', icon: FaEdit, link: '/dashboard/guest-judges' },
-    { value: "PANELIST", label:"Panelist Form", type: 'User', icon: FaUser, link: '/dashboard/panelist' },
-    { value: "POUNDFORM", label:"P4P Form", type: 'P4P Form', icon: FaEdit, link: '/dashboard/pound-form' },
-    { value: "SEASON-FORM", label:"Season Form", type: 'Season Form', icon: FaEdit, link: '/dashboard/season' },
-    { value: "SHOW-FORM", label:"Show Form", type: 'Show Form', icon: FaEdit, link: '/dashboard/show-form' },
   ];
 
   const userFormLinks = () => {
@@ -161,22 +116,6 @@ const Dashboard = () => {
         mt={0}
       >
         { form === 'ACCOUNT' && <MyAccountForm /> }
-        { form === 'BLOG' && <BlogPostForm /> }
-        { form === 'BROADCAST' && <BroadcastForm /> }
-        { form === 'CREATE_PANEL' && <CreatePanelForm /> }
-        { form === 'CREATE-SCORECARD' && <CreateGroupScorecard /> }
-        { form === 'DISCUSSIONS' && <DiscussionsForm /> }
-        { form === 'FIGHTERS' && <FightersForm /> }
-        { form === 'FIGHT-FORM' && <FightForm /> }
-        { form === 'FIGHT-PROPS-FORM' && <FightPropsForm />}
-        { form === 'FIGHT-RESOLUTION' && <FightResolutionForm /> }
-        { form === 'GUEST-JUDGES' && <GuestJudgeForm /> }
-        { form === 'PANELS_MEMBER' && <MyPanelsForm /> }
-        { form === 'PANELIST' && <PanelistForm /> }
-        { form === 'POUND' && <MyPoundList /> }
-        { form === 'POUNDFORM' && <PoundForm /> }
-        { form === 'SEASON-FORM' && <SeasonsForm /> }
-        { form === 'SHOW-FORM' && <ShowForm /> }
       </Box>
     </Flex>
   )

@@ -10,11 +10,10 @@ import {
     Tr, 
     useColorModeValue as mode,
 } from '@chakra-ui/react'
-import { ScoringTableInfo } from './scoring-table-els'
+import { ScoringTableInfo } from './scoring-table-info'
 import { TabsEnum, useGlobalStore } from '../../stores'
-import { FightStats } from '../analytics'
-import { ScoringTableSwitches } from './table-els'
-import { Chart, SwingsGraph } from '../analytics'
+import { ScoringTableSwitches } from './scoring-table-switches'
+import { Chart } from '../analytics'
 
 export const ScoringTable = () => {
 

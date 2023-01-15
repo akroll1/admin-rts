@@ -1,4 +1,4 @@
-import { FighterInfoCard } from '../tables/shows-page-show-card/fighter-info-card'
+import { FighterInfoCard } from './fighter-info-card'
 import { 
   Flex
 } from '@chakra-ui/react'
@@ -6,9 +6,7 @@ import {
 export const ShowsFighterFaceoff = ({ 
   fighters
 }) => {
-  
-  
-  
+
   return (
       <Flex
         id="fighters_faceoff"

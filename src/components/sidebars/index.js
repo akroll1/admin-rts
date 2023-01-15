@@ -1,7 +1,4 @@
-export * from './analytics-sidebar'
 export * from './chat-sidebar'
-export * from './fighter-page-fighter-profile'
-export * from './fighters-sidebar'
 export * from './scorecards-sidebar-components'
 export * from './scorecards-page-sidebar'
 export * from './scoring-sidebar-left'

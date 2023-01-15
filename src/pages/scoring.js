@@ -11,7 +11,7 @@ import {
     PredictionModal 
 } from '../components/modals'
 import { ChatSidebar, ScoringSidebarLeft } from '../components/sidebars'
-import { ScoringMain, ScoringTabs } from '../components/scoring-main'
+import { ScoringMain, ScoringTabs } from '../components/scoring/scoring-main'
 import { TabsEnum, useGlobalStore } from '../stores'
 import { useWindowResize } from '../hooks'
 import { useParams } from 'react-router'

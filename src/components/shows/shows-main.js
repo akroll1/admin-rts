@@ -1,17 +1,17 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { 
     FightMetadata, 
     FightReviews, 
     FightStoryline, 
     ShowsCreateGroupScorecard,
     ShowsParticulars,
-} from '../shows-components'
+} from './shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
 import { ShowsCountdownTimer } from '../timers'
 import { DividerWithText } from '../../chakra'
 import { useGlobalStore } from '../../stores'
 import { ShowsArrows } from './shows-arrows'
-import { OfficialResultBanner } from '../shows-components'
+import { OfficialResultBanner } from './shows-components'
 
 export const ShowsMain = ({
     deleteInvite,
