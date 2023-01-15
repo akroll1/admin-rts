@@ -4,10 +4,9 @@ import {
     Flex, 
     Heading, 
 } from '@chakra-ui/react'
-import { FightStats } from '../sidebars/chat-sidebar-components'
 import { capFirstLetters } from '../../utils'
-import backgroundImage from '../../image/boxing-background.png'
-import { TabsEnum, useGlobalStore } from '../../stores'
+import backgroundImage  from '../utils/image/boxing-background.png'
+import { useGlobalStore } from '../../stores'
 
 export const ScoringFightersFaceoff = ({
     isSidebar

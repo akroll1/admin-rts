@@ -195,7 +195,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const show = res.data as Show
         set({ show })
     },
-    
     fetchUserScorecards: async () => {
         get().setIsLoading(true)
         const res = await axios.get(`${url}/me/scorecards/${get().user.sub}`, await configureAccessToken() )
