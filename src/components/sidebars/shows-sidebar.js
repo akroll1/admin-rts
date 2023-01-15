@@ -7,7 +7,6 @@ import {
 import { NavGroup } from './shows-sidebar/nav-group'
 import { UpcomingNavItem } from './shows-sidebar/nav-item'
 import { REVIEW_TYPE } from '../../utils'
-import { IoStarOutline } from "react-icons/io5";
 import { 
     InfoOutlineIcon,
     NotAllowedIcon,
@@ -24,7 +23,7 @@ export const ShowsSidebar = () => {
         setSelectedFightSummary,
         setSelectedSeasonSummary,
     } = useGlobalStore()
-    
+
     const [canceled, setCanceled] = useState([])
     const [complete, setComplete] = useState([])
     const [pending, setPending] = useState([])

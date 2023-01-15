@@ -4,6 +4,7 @@ import {
     ChatTokenEnum,
     Fight,
     Fighter,
+    FightProps,
     GroupScorecardSummary, 
     ModalsEnum,
     PanelProps,
@@ -19,11 +20,13 @@ export interface ScoringStoreState {
     analytics: any
     activeGroupScorecard: GroupScorecardSummary
     fetchGroupScorecardSummary(fightId: string, groupScorecardId: string): void
+    fetchFightProps(fightId: string): void
     fetchPanelProps(): void
+    fight: Fight
     fightChatKey: string | null
     fightChatToken: string | null
-    fight: Fight
     fighters: Fighter[]
+    fightProps: FightProps | null
     groupChatKey: string | null
     groupChatToken: string | null
     groupScorecards: Scorecard[]
@@ -47,10 +50,11 @@ export const initialScoringStoreState = {
     activeGroupScorecard: {} as GroupScorecardSummary,
     analytics: {},
     chatKey: null,
+    fight: {} as Fight,
     fightChatKey: 'hzdegD0vRhKO',
     fightChatToken: null,
-    fight: {} as Fight,
     fighters: [] as Fighter[],
+    fightProps: {} as FightProps,
     groupChatKey: null,
     groupChatToken: '',
     groupScorecards: [],
@@ -101,6 +105,11 @@ export const scoringStoreSlice: StateCreator<GlobalStoreState, [], [], ScoringSt
         get().setAnalyticsAndTableData(data.fighters, data.scorecards, data.fight.rounds);
         get().setScoringTransformedPrediction(userScorecard.prediction)
         get().fetchFightProps(data?.fight?.fightId)
+    },
+    fetchFightProps: async (fightId: string) => {
+        const res = await axios.get(`${url}/fight-props/${fightId}`, await configureAccessToken() )
+        const fightProps = res.data as FightProps
+        set({ fightProps })
     },
     fetchPanelProps: async () => {
         const res = await axios.get(`${url}/props/${get().activeGroupScorecard.fight.fightId}`, await configureAccessToken() )

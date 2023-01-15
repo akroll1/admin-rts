@@ -84,13 +84,13 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
         set({ fightReviews })
     }, 
     fetchSeasonSummary: async (seasonId: string) => {
-        get().setIsSubmitting(true)
+        get().setIsLoading(true)
         const res = await axios.get(`${url}/seasons/${seasonId}`)
         const data = res.data as SeasonSummary
         get().filterFights(data)
         set({ selectedSeason: data.season })
         // get().setTransformedResult(data.)
-        get().setIsSubmitting(false)
+        get().setIsLoading(false)
     },   
     filterFights: (selectedSeasonSummary: SeasonSummary) => {
         const obj: FightByStatus = {

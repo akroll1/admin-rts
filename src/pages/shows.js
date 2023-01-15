@@ -8,7 +8,7 @@ import {
     ReviewFormModal 
 } from '../components/modals'
 import { SpinnerMain } from '../components/utils'
-import { useGlobalStore } from '../stores'
+import { FightStatus, useGlobalStore } from '../stores'
 import { useNavigate, useParams } from 'react-router'
 
 const Shows = () => {
@@ -19,10 +19,11 @@ const Shows = () => {
     const { 
         createGroupScorecard,
         fetchSeasonSummary,
-        isSubmitting,
+        fightsByStatus,
         navigateTo,
         putUserFightReview,
         selectedFightSummary, 
+        selectedSeasonSummary,
         setSelectedFightSummary,
         setToast,
         user,
@@ -166,7 +167,8 @@ const Shows = () => {
             <CreateGroupModal 
                 handleCreateSeasonScorecard={handleCreateSeasonScorecard}
             />
-                {isSubmitting && !selectedFightSummary?.fight?.fightId
+                {/* { isLoading && !selectedFightSummary?.fight?.fightId */}
+                { selectedSeasonSummary.length === 0
                     ?
                         <SpinnerMain />
                     :

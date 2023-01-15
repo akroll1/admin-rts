@@ -32,7 +32,7 @@ export const ScorecardRowItemRight = ({
             navigateTo: '#'
         }
     ]
-    console.log('summary: ', summary)
+    // console.log('summary: ', summary)
     return (
         <Flex
             width="100%"
