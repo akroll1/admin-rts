@@ -1,7 +1,6 @@
-import React from 'react'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import ReactStars from 'react-rating-stars-component';
-import { capFirstLetters } from '../../utils/utils';
+import { capFirstLetters } from '../../../utils/utils';
 
 export const Stars = () => {
     const star = ['speed','power','defense','stamina','ringGeneralship'];

@@ -12,7 +12,7 @@ import {
     Scorecard 
 } from "../models";
 import axios from 'axios'
-import { configureAccessToken } from "./auth-store";
+import { configureAccessToken } from "./auth-account-store";
 import { generateAnaltyicsAndTableData } from "../../utils/analytics-utils";
 
 export interface ScoringStoreState {

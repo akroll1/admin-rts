@@ -2,18 +2,18 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     BlogPost,
-    CreateScorecard,
     Discussion,
     Fighter,
     FightPostObj,
     FightProps,
     FightResolution,
+    FightUpdateOptions,
     Panelist,
     Season,
     Show,
     User,
 } from '../models'
-import { configureAccessToken } from "./auth-store";
+import { configureAccessToken } from "./auth-account-store";
 import axios from 'axios'
 
 export interface AdminStoreState {
@@ -35,8 +35,13 @@ export interface AdminStoreState {
     fetchFightById(fightId: string): void
     fetchFightProps(fightId: string): void
     fightProps: FightProps | null
-    submitFightResolution(resolutionObj: FightResolution): void
+    updateFight(fightUpdateOptions: FightUpdateOptions): void
+    updateFighter(updateFighterObj: Partial<Fighter>): void
     updateFightProps(obj: Partial<FightProps>): void
+    submitFightResolution(resolutionObj: FightResolution): void
+    updatePanelist(updateObj: Partial<Panelist>): void
+    updateSeason(updateObj: Partial<Season>): void
+    updateShow(update: any): void
 }
 
 export const initialAdminStoreState = {
@@ -123,8 +128,28 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const data = res.data
         console.log('RESOLUTION put res: ', data)
     },
+    updateFight: async (fightUpdateOptions: FightUpdateOptions) => {
+        const res = await axios.put(`${url}/fights/${fightUpdateOptions.fightId}`, fightUpdateOptions, await configureAccessToken() )
+        console.log('res.data: ', res.data)
+    },
     updateFightProps: async (obj: Partial<FightProps>) => {
         const res = await axios.put(`${url}/fight-props`, obj, await configureAccessToken() )
         console.log('UPDATE_FIGHT_PROPS, res: ', res.data)
-    }
+    },
+    updateFighter: async (updateFighterObj: Partial<Fighter>) => {
+        const res = await axios.put(`${url}/fighters/${updateFighterObj.fighterId}`, updateFighterObj, await configureAccessToken() )
+        console.log('FIGHTER- update res.data: ', res.data)
+    },
+    updatePanelist: async (updateObj: Partial<Panelist>) => {
+        const res = await axios.put(`${url}/panelists/${updateObj.panelistId}`, updateObj, await configureAccessToken() )
+        console.log('PANELIST- update, res.data: ', res.data)
+    },
+    updateSeason: async (updateObj: Partial<Season>) => {
+        const res = await axios.put(`${url}/seasons/${updateObj.seasonId}`, updateObj, await configureAccessToken() )
+        get().fetchSeasons()
+    },
+    updateShow: async (update: any) => {
+        const res = await axios.put(`${url}/shows/${update.showId}`, update, await configureAccessToken() )
+        console.log('res.data: ', res.data)
+    },
 })

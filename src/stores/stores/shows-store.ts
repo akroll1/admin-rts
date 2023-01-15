@@ -11,7 +11,7 @@ import {
     Show
 } from '../models'
 import { FightStatus } from "../models/enums"
-import { configureAccessToken } from "./auth-store"
+import { configureAccessToken } from "./auth-account-store"
 import axios from 'axios'
 
 export interface ShowsStoreState {

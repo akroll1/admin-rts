@@ -7,7 +7,7 @@ import {
     ShowsParticulars,
 } from './shows-components'
 import { ShowsFighterFaceoff } from './shows-fighter-faceoff'
-import { ShowsCountdownTimer } from '../timers'
+import { ShowsCountdownTimer } from '../utils/timers'
 import { DividerWithText } from '../../chakra'
 import { useGlobalStore } from '../../stores'
 import { ShowsArrows } from './shows-arrows'

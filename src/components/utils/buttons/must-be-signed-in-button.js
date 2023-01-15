@@ -8,7 +8,7 @@ import {
     PopoverTrigger,
 } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { useGlobalStore } from '../../stores'
+import { useGlobalStore } from '../../../stores'
 
 export const MustBeSignedInButton = ({
     label,

@@ -3,7 +3,7 @@ import {
     Select,
     useColorModeValue as mode
 } from '@chakra-ui/react'
-import { ArrowLinkButton } from '../buttons'
+import { ArrowLinkButton } from '../utils/buttons'
 import { FaArrowRight } from 'react-icons/fa'
 import { CopyIcon } from '@chakra-ui/icons'
 

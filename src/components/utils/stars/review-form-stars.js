@@ -1,6 +1,4 @@
-import React from 'react'
 import ReactStars from 'react-rating-stars-component';
-import { Flex } from '@chakra-ui/react'
 
 export const ReviewFormStars = ({  stars, handleStarsClick }) => (
     <ReactStars

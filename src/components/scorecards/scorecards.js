@@ -11,7 +11,7 @@ import { ScorecardRow } from './scorecard-row'
 import { ScorecardSummary } from './scorecard-summary'
 import { ScorecardsHeading } from './scorecards-heading'
 import { ScorecardsInvitationsBoard } from '../sidebars/scorecards-sidebar-components/scorecards-boards'
-import { SpinnerMain } from '../spinner'
+import { SpinnerMain } from '../utils'
 import { useNavigate } from 'react-router'
 import { FaArrowLeft } from 'react-icons/fa'
 export const Scorecards = () => {

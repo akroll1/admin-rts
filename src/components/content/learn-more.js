@@ -14,7 +14,7 @@ import {
   import { useNavigate } from 'react-router'
   import { BiRightArrowAlt } from 'react-icons/bi'
   import { Testimonial } from '../../chakra'
-  import { GoToArrowButton } from '../buttons'
+  import { GoToArrowButton } from '../utils/buttons'
   import JWPlayer from '@jwplayer/jwplayer-react';
 
   const Feature = props => {

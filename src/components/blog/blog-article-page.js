@@ -7,7 +7,7 @@ import {
 import { useParams } from 'react-router'
 import { useGlobalStore } from '../../stores'
 import { replaceNewLineWithBreaks } from '../../stores/stores/utils-store'
-import { SpinnerMain } from '../spinner'
+import { SpinnerMain } from '../utils/spinner-main'
 import { parseEpoch } from '../../utils'
 
 export const BlogArticlePage = () => {

@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils'
 import { FightStatus } from '../../stores/models/enums'
-import { GoToArrowButton } from '../buttons'
+import { GoToArrowButton } from '../utils/buttons'
 
 const ScorecardItem = (props) => {
   const { label, value, children } = props

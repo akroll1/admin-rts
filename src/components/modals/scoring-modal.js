@@ -1,7 +1,7 @@
 import React,{ useState } from 'react'
 import { Heading, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Text, Box, Tag, ModalFooter, Button }  from '@chakra-ui/react'
 import { capFirstLetters } from '../../utils/utils';
-import { CustomOverlay } from '../custom-overlay';
+import { CustomOverlay } from '../utils/custom-overlay';
 
 export const ScoringModal = props => {
     const { submitScores, currentRound, scoringModal, toggleScoringModal, fighterA, fighterASlider, fighterB, fighterBSlider, handleReasonClick, reason } = props;

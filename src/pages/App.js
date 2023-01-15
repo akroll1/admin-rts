@@ -19,26 +19,25 @@ const App = () => {
         <Layout>
           <Routes>
             <Route exact path="/" element={<Home />} />
-            <Route exact path="/about" element={<About />} />
             <Route exact path="/signin" element={<SignIn />} />
-            <Route exact path="/learn-more" element={<LearnMore />} />
-            <Route exact path="/scoring/:groupScorecardId/:fightId" element={<Scoring />} />
-            <Route exact path="/scoring" element={<Scoring />} />
-            <Route exact path="/blog" element={<Blog />} />
-            <Route exact path="/blog/:blogId" element={<BlogArticlePage />} />
-            <Route exact path="/scorecards" element={
-              <PrivateRoute>
-                <Scorecards /> 
-              </PrivateRoute>
-            }/>
-            <Route exact path="/shows" element={<Shows />} />
-            <Route exact path="/shows/:fightIdParam" element={<Shows />} />
-            <Route exact path="/shows" element={<Shows />} />
             <Route exact path="/dashboard/:type" element={
               <PrivateRoute>
                 <Dashboard /> 
               </PrivateRoute>
             }/>
+            <Route exact path="/scorecards" element={
+              <PrivateRoute>
+                <Scorecards /> 
+              </PrivateRoute>
+            }/>
+            <Route exact path="/scoring/:groupScorecardId/:fightId" element={<Scoring />} />
+            <Route exact path="/scoring" element={<Scoring />} />
+            <Route exact path="/shows" element={<Shows />} />
+            <Route exact path="/shows/:fightIdParam" element={<Shows />} />
+            <Route exact path="/blog" element={<Blog />} />
+            <Route exact path="/blog/:blogId" element={<BlogArticlePage />} />
+            <Route exact path="/about" element={<About />} />
+            <Route exact path="/learn-more" element={<LearnMore />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

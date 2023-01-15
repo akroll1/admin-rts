@@ -9,7 +9,7 @@ import { Footer } from './footer'
 import { Navbar } from './navbar'
 import { ExpiredTokenModal } from '../modals'
 import { useGlobalStore } from '../../stores'
-import { GlobalNotification } from '../global-notification.js'
+import { GlobalNotification } from '../utils'
 
 export const Layout = ({ children }) => {
     

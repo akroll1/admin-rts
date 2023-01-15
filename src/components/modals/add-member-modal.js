@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Input, Modal, ModalBody, ModalContent, ModalCloseButton, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { isValidEmail } from '../../utils';
-import { CustomOverlay } from '../custom-overlay';
+import { CustomOverlay } from '../utils/custom-overlay';
 import { useGlobalStore } from '../../stores';
 
 export const AddMemberModal = ({ 

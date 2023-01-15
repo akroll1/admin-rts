@@ -4,7 +4,7 @@ import {
 } from '@chakra-ui/react'
 import { FaArrowRight } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
-import { useGlobalStore } from '../../stores';
+import { useGlobalStore } from '../../../stores';
 
 export const GoToArrowButton = ({
     label,

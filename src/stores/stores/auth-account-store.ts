@@ -2,6 +2,11 @@ import { StateCreator } from "zustand"
 import { Auth } from '@aws-amplify/auth'
 import { Amplify } from 'aws-amplify'
 import { GlobalStoreState } from './global-store'
+import { 
+    User, 
+    UserAccount
+} from '../models'
+import axios from 'axios'
 
 Amplify.configure({
     Auth: {
@@ -30,24 +35,51 @@ export const configureIDToken = async () => {
 }
 
 export interface AuthStoreState {
+    createUser(user: UserAccount): void
+    fetchUserAccount(): void
     isLoggedIn: boolean
     isPanelist: boolean
     isSuperAdmin: boolean
     setUser(): void
     signOut(): void
+    updateUser(updateOptions: Partial<User>): void
     user: any
+    userAccount: UserAccount
 }
 
 export const initialAuthStoreState = {
     isLoggedIn: false,
     isPanelist: false,
     isSuperAdmin: false,
-    user: {} as any,
+    user: {} as User,
+    userAccount: {} as UserAccount
 
 }
 
+const url = process.env.REACT_APP_API;
+
 export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreState> = (set, get) => ({
     ...initialAuthStoreState,  
+    createUser: async (user: UserAccount) => {
+        get().setIsSubmitting(true)
+        const res = await axios.put(`${url}/users`, user, await configureAccessToken() )
+        get().setIsSubmitting(false)
+        console.log('CREATE_USER: res: ', res.data)
+    },
+    fetchUserAccount: async () => {
+        const res = await axios.get(`${url}/users/${get().user.sub}`,await configureAccessToken() )
+        if(res.data === 'No user found.'){
+            const user = get().user
+            get().updateUser({
+                email: user.email, 
+                sub: user.sub,
+                username: user.username,
+            })
+            return
+        }
+        const userAccount = res.data as UserAccount
+        set({ userAccount })
+    },
     signOut: async () => {
         set({ 
             isLoggedIn: false,
@@ -70,4 +102,8 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
         }
         set({ user: { ...userObj } })
     },
+    updateUser: async (updateOptions: Partial<User>) => {
+        const res = await axios.put(`${url}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
+        console.log('UPDATE USER res: ', res)
+    },  
 })

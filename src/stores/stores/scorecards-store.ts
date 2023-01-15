@@ -19,27 +19,22 @@ import { Season, SeasonSummary } from '../models/season.model'
 import { Show } from "../models/show.model"
 import { User } from '../models/user.model'
 import { GlobalStoreState } from "./global-store"
-import { configureAccessToken, configureIDToken } from "./auth-store"
+import { configureAccessToken, configureIDToken } from "./auth-account-store"
 import { ModalsEnum } from "../models"
 
 export interface ScorecardStoreState {
     acceptInvite(groupScorecardId: string, inviteId: string): void
     blogPosts: BlogPost[]
     deleteInvite(inviteId: string): void
-    discussion: Discussion
-    discussions: Discussion[]
-    fetchAllDiscussions(): void
     fetchAllPanelists(): void
     fetchBlogPost(blogPostId: string): void
     fetchBlogPosts(): void
-    fetchDiscussion(discussionId: string): void
     fetchFighter(fighterId: string): void
     fetchFightSummary(fightId: string): void
     fetchList(listType: string): void
     fetchPanel(panelId: string): void
     fetchPanelist(panelistId: string): void
     fetchPanelSummaries(): void
-
     fetchSeasons(): void
     fetchShow(showId: string): void
     fetchUserInvites(): void
@@ -61,12 +56,6 @@ export interface ScorecardStoreState {
     setSeasonsOptions(): void
     stats: any[]
     submitList(list: List): void
-    updateDiscussion(discussionObj: Partial<Discussion>): void
-    updateFight(fightUpdateOptions: FightUpdateOptions): void
-    updateFighter(updateFighterObj: Partial<Fighter>): void
-    updatePanelist(updateObj: Partial<Panelist>): void
-    updateSeason(updateObj: Partial<Season>): void
-    updateShow(update: any): void
     userInvites: string[]
     userScorecardSummary: ScorecardSummary
     userScorecards: Scorecard[]
@@ -76,8 +65,6 @@ export interface ScorecardStoreState {
 
 export const initialScorecardsStoreState = {
     blogPosts: [],
-    discussion: {} as Discussion,
-    discussions: [],
     fight: {} as Fight,
     fighters: [],
     panelist: {} as Panelist,
@@ -126,11 +113,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         console.log('DELETE_INVITE data: ', data)
         get().fetchUserScorecards();
     },
-    fetchAllDiscussions: async () => {
-        const res = await axios.get(`${url}/discussions`,await configureAccessToken() )
-        const discussions = res.data as Discussion[]
-        set({ discussions })
-    },
     fetchAllPanelists: async () => {
         const res = await axios.get(`${url}/panelists`, await configureAccessToken() )
         const panelists = res.data as Panelist[]
@@ -149,11 +131,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         get().setIsLoading(false)
         const blogPosts = res.data as BlogPost[]
         set({ blogPosts })
-    },
-    fetchDiscussion: async (discussionId: string) => {
-        const res = await axios.get(`${url}/discussions/${discussionId}`, await configureAccessToken() )
-        const discussion = res.data as Discussion
-        set({ discussion })
     },
     fetchFighter: async (fighterId: string) => {
         const res = await axios.get(`${url}/fighters/${fighterId}`, await configureAccessToken() )
@@ -277,30 +254,5 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const res = await axios.put(`${url}/panels`, predictionObj, )
         const data = res.data
         console.log('DATA: ', data)
-    },
-    
-    updateDiscussion: async (updateObj: Partial<Discussion>) => {
-        const res = await axios.put(`${url}/discussions/${updateObj.discussionId}`, updateObj, await configureAccessToken() )
-        console.log('DISCUSSION- update res.data: ', res.data)
-    },
-    updateFight: async (fightUpdateOptions: FightUpdateOptions) => {
-        const res = await axios.put(`${url}/fights/${fightUpdateOptions.fightId}`, fightUpdateOptions, await configureAccessToken() )
-        console.log('res.data: ', res.data)
-    },
-    updateFighter: async (updateFighterObj: Partial<Fighter>) => {
-        const res = await axios.put(`${url}/fighters/${updateFighterObj.fighterId}`, updateFighterObj, await configureAccessToken() )
-        console.log('FIGHTER- update res.data: ', res.data)
-    },
-    updatePanelist: async (updateObj: Partial<Panelist>) => {
-        const res = await axios.put(`${url}/panelists/${updateObj.panelistId}`, updateObj, await configureAccessToken() )
-        console.log('PANELIST- update, res.data: ', res.data)
-    },
-    updateSeason: async (updateObj: Partial<Season>) => {
-        const res = await axios.put(`${url}/seasons/${updateObj.seasonId}`, updateObj, await configureAccessToken() )
-        get().fetchSeasons()
-    },
-    updateShow: async (update: any) => {
-        const res = await axios.put(`${url}/shows/${update.showId}`, update, await configureAccessToken() )
-        console.log('res.data: ', res.data)
     },
 })

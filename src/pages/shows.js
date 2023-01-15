@@ -7,7 +7,7 @@ import {
     CreateGroupModal,
     ReviewFormModal 
 } from '../components/modals'
-import { SpinnerMain } from '../components/spinner'
+import { SpinnerMain } from '../components/utils'
 import { useGlobalStore } from '../stores'
 import { useNavigate, useParams } from 'react-router'
 

@@ -1,6 +1,5 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import { Box, HStack, Text, useInterval } from '@chakra-ui/react'
-
 
 export const Timer = ({ showTime }) => {
     const expiresInSeconds = showTime;

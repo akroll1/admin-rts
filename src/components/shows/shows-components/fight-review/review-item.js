@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Flex, Heading, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa'
 import { parseEpoch} from '../../../../utils/utils'
-import { ReviewPostStars } from '../../../stars'
+import { ReviewPostStars } from '../../../utils/stars'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
 

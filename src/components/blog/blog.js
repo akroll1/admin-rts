@@ -8,7 +8,7 @@ import {
 import { useEffect } from 'react'
 import { BsArrowRight } from 'react-icons/bs'
 import { useGlobalStore } from '../../stores'
-import { SpinnerMain } from '../spinner'
+import { SpinnerMain } from '../utils'
 import { BlogPost } from './blog-post'
 
 export const Blog = () => {
