@@ -2,10 +2,10 @@
 set -ueo pipefail
 
 ENV=${1}
-BUCKET="${ENV}.fightsync.live-root"
+BUCKET="admin.fightsync.live-v3"
 
 if [ "$ENV" = "prod" ]; then
-    BUCKET="fightsync.live-root"
+    BUCKET="admin.fightsync.live-v3"
 fi
 
 aws s3 sync ./build s3://${BUCKET} --delete

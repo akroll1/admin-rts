@@ -42,7 +42,7 @@
     "zustand-persist": "^0.4.0"
   },
   "scripts": {
-    "start": "PORT=8080 react-scripts start",
+    "start": "PORT=8090 react-scripts start",
     "build": "GENERATE_SOURCEMAP=false CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

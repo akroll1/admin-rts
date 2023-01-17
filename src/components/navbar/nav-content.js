@@ -44,7 +44,7 @@ export const MobileNavContext = props => {
           cursor="pointer"
           onClick={() => navigate('/')}
         >
-          FightSync
+          Admin
         </Heading>
       </Flex>
       <NavMenu animate={isOpen ? 'open' : 'closed'}>
@@ -103,7 +103,7 @@ export const DesktopNavContent = props => {
         background="transparent"
         to="/"
       >
-        FightSync
+        Admin
       </Button>
       <HStack 
         as="ul" 
