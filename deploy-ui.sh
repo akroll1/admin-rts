@@ -9,5 +9,3 @@ if [ "$ENV" = "prod" ]; then
 fi
 
 aws s3 sync ./build s3://${BUCKET} --delete
-
-# testing prod $ENV, above.
