@@ -1,4 +1,14 @@
-import { Box, Button, Center, Divider, Flex, Heading, Img, SimpleGrid, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
+import { 
+  Box, 
+  Center, 
+  Divider, 
+  Flex, 
+  Heading, 
+  Img, 
+  SimpleGrid, 
+  Stack, 
+  Text
+} from '@chakra-ui/react'
 import { Feature } from '../chakra'
 import { GoToArrowButton } from '../components/utils/buttons'
 import { FaHandsHelping } from 'react-icons/fa'

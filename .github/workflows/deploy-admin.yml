@@ -1,4 +1,4 @@
-name: deploy-prod
+name: deploy-admin
 
 on:
   pull_request:
@@ -20,11 +20,11 @@ jobs:
       - name: Make deploy.sh executable
         run: chmod +x ./deploy-ui.sh
       - name: Deploy app build to S3 bucket
-        run: ./deploy-ui.sh prod
+        run: ./deploy-ui.sh dev2
       - name: Invalidate Cloudfront cache
         uses: chetan/invalidate-cloudfront-action@v2
         env: 
-          DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
+          DISTRIBUTION: ${{ secrets.DISTRIBUTION_ADMIN }}
           PATHS: "/*"
           AWS_REGION: us-east-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

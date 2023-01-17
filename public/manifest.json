@@ -1,7 +1,7 @@
 {
   "name": "FightSync.live. Can't get enough boxing? Here you go.",
   "short_name": "FightSync",
-  "description": "A real-time group scoring app for boxing fans.",
+  "description": "The official platform of fight fans!",
   "start_url": "./?utm_source=pwa",
   "orientation": "all",
   "theme_color": "#000000",
