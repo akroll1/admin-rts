@@ -20,7 +20,7 @@ jobs:
       - name: Make deploy.sh executable
         run: chmod +x ./deploy-ui.sh
       - name: Deploy app build to S3 bucket
-        run: ./deploy-ui.sh dev2
+        run: ./deploy-ui.sh admin
       - name: Invalidate Cloudfront cache
         uses: chetan/invalidate-cloudfront-action@v2
         env: 
