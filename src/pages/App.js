@@ -4,13 +4,10 @@ import Home from './home'
 import { ChakraProvider } from '@chakra-ui/react'
 import About from '../components/content/about'
 import Dashboard from './dashboard'
-import Scoring from './scoring'
 import { SignIn } from '../components/signin'
 import { LearnMore, NotFound } from '../components/content'
 import { PrivateRoute } from '../components/content/partials'
-import { Blog, BlogArticlePage } from '../components/blog'
 import Shows from './shows'
-import { Scorecards } from '../components/scorecards'
 import theme from '../theme'
 
 const App = () => {
@@ -25,17 +22,8 @@ const App = () => {
                 <Dashboard /> 
               </PrivateRoute>
             }/>
-            <Route exact path="/scorecards" element={
-              <PrivateRoute>
-                <Scorecards /> 
-              </PrivateRoute>
-            }/>
-            <Route exact path="/scoring/:groupScorecardId/:fightId" element={<Scoring />} />
-            <Route exact path="/scoring" element={<Scoring />} />
             <Route exact path="/shows" element={<Shows />} />
             <Route exact path="/shows/:fightIdParam" element={<Shows />} />
-            <Route exact path="/blog" element={<Blog />} />
-            <Route exact path="/blog/:blogId" element={<BlogArticlePage />} />
             <Route exact path="/about" element={<About />} />
             <Route exact path="/learn-more" element={<LearnMore />} />
             <Route path="*" element={<NotFound />} />
