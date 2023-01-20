@@ -1,5 +1,1 @@
-export * from './chat-sidebar'
-export * from './scorecards-sidebar-components'
-export * from './scorecards-page-sidebar'
-export * from './scoring-sidebar-left'
 export * from './shows-sidebar'

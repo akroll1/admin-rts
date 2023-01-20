@@ -83,7 +83,7 @@ export const SignIn = () => {
         })
       } else {
         setUser()
-        return navigate('/scorecards', { username });
+        return navigate('/dashboard/account', { username });
       }
     })
     .catch((err) => {
