@@ -13,12 +13,14 @@ export enum FightPropsEnum {
     OU = "OU"
 }
 
-export enum FightStatus {
+export enum Status {
 	ACTIVE = 'ACTIVE',
 	CANCELED = 'CANCELED',
 	COMPLETE = 'COMPLETE',
     FANTASY = 'FANTASY',
+	HISTORICAL = 'HISTORICAL',
 	PENDING = 'PENDING',
+	TESTING = 'TESTING'
 }
 
 export enum Network {
@@ -32,13 +34,6 @@ export enum Network {
 	FIGHTSYNC = 'FIGHTSYNC',
     FIGHTTV = 'FIGHTTV',
 	NONE = 'NONE'
-}
-
-export enum ShowStatus {
-	UPCOMING = 'PENDING',
-    CANCELED = 'CANCELED',
-	COMPLETE = 'COMPLETE',
-	HISTORICAL = 'HISTORICAL'
 }
 
 export enum WeightClass {

@@ -10,7 +10,10 @@ import {
   Text
 } from '@chakra-ui/react'
 import { Feature } from '../chakra'
-import { GoToArrowButton } from '../components/utils/buttons'
+import { 
+  GoToArrowButton, 
+  SlantBadge 
+} from '../components/utils'
 import { FaHandsHelping } from 'react-icons/fa'
 import { GiTrophy } from 'react-icons/gi'
 import { EditIcon } from '@chakra-ui/icons'
@@ -27,7 +30,10 @@ const Home = () => {
       py={["2", "4"]}
       pb='8'
       m="auto"
+      position="relative"
+      overflow="hidden"
     >
+      <SlantBadge />
       <Box 
         maxW={["100%"]} 
         m="auto"
@@ -36,7 +42,7 @@ const Home = () => {
           // p={["4"]} 
           spacing={['2', '4', '4', '8']} 
           direction={['column', 'column', 'row']}
-          >
+        >
           <Flex
             my="auto"
             flexDir="column"

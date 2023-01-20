@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/icons'
 import { SidebarsDividerWithText } from '../../chakra'
 import { useGlobalStore } from '../../stores'
-import { FightStatus } from '../../stores/models/enums'
+import { Status } from '../../stores/models/enums'
 
 export const ShowsSidebar = () => { 
     const { 
@@ -29,10 +29,10 @@ export const ShowsSidebar = () => {
     const [pending, setPending] = useState([])
 
     useEffect(() => {
-        if(fightsByStatus && (fightsByStatus[FightStatus.PENDING] || fightsByStatus[FightStatus.COMPLETE])){
-            setPending(fightsByStatus[FightStatus.PENDING])
-            setComplete(fightsByStatus[FightStatus.COMPLETE])
-            setCanceled(fightsByStatus[FightStatus.CANCELED])
+        if(fightsByStatus && (fightsByStatus[Status.PENDING] || fightsByStatus[Status.COMPLETE])){
+            setPending(fightsByStatus[Status.PENDING])
+            setComplete(fightsByStatus[Status.COMPLETE])
+            setCanceled(fightsByStatus[Status.CANCELED])
         }
     }, [fightsByStatus])
 

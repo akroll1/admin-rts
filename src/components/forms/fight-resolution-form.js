@@ -34,7 +34,7 @@ export const FightResolutionForm = () => {
     } = useGlobalStore()
 
     const [fightResolution, setFightResolution] = useState('')
-    const [resolvedFightStatus, setResolvedFightStatus] = useState('')
+    const [resolvedStatus, setResolvedStatus] = useState('')
     const [radio, setRadio] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [fightId, setFightId] = useState('')
@@ -92,7 +92,7 @@ export const FightResolutionForm = () => {
     const handleSubmitResolution = () => {
         
         if(!fightId) return alert('No fightId.');
-        if(!resolvedFightStatus) return alert('Select fight status.');
+        if(!resolvedStatus) return alert('Select fight status.');
         if(!fightResolution) return alert('Set fight resolution.');
         if(!radio) return alert('Select a winner.');
 
@@ -102,7 +102,7 @@ export const FightResolutionForm = () => {
         const resolutionObj = {
             fighterUpdates,
             fightId,
-            fightStatus: radio === `DR` ? 'COMPLETE' : resolvedFightStatus,
+            fightStatus: radio === `DR` ? 'COMPLETE' : resolvedStatus,
             officialResult,
             showId: selectedFightSummary.show.showId,
         }
@@ -185,7 +185,7 @@ export const FightResolutionForm = () => {
                                 { OFFICIAL_RESULTS_ENUM.map( result => <option key={result.value} value={result.value}>{result.label}</option> )}
                             </Select>
                             <Select 
-                                onChange={e => setResolvedFightStatus(e.currentTarget.value)}
+                                onChange={e => setResolvedStatus(e.currentTarget.value)}
                                 w="50%" 
                                 mt="4"
                             >

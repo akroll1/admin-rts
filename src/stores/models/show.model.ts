@@ -1,4 +1,4 @@
-import { Network, ShowStatus } from "./enums";
+import { Network, Status } from "./enums";
 
 export interface Show {
 	showId: string
@@ -9,7 +9,7 @@ export interface Show {
 	showStoryline: string
 	showTime: number
 	showName: string
-	showStatus: ShowStatus
+	showStatus: Status
 	isFeatured: boolean
 	createdAt?: number
 	updatedAt?: number

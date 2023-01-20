@@ -1,11 +1,11 @@
-import { FightStatus, Network, ShowStatus, WeightClass } from './enums'
+import { Status, Network, WeightClass } from './enums'
 import { Fighter, Show } from './index'
 
 export interface Fight {
 	fightId: string;
 	fighterIds: string[];
 	fightQuickTitle: string; 
-	fightStatus: FightStatus;
+	fightStatus: Status;
 	fightStoryline?: string | null;
 	guestJudgeIds: string[] | null;
 	isMainEvent: boolean;
@@ -24,6 +24,7 @@ export type FightByStatus = {
     CANCELED: FightSummary[]
     FANTASY: FightSummary[]
     PENDING: FightSummary[]
+	TESTING: FightSummary[]
 }
 
 export const fightSummaryStub = {
@@ -31,7 +32,7 @@ export const fightSummaryStub = {
 		fightId: '',
 		fighterIds: [],
 		fightQuickTitle: '',
-		fightStatus: FightStatus.PENDING,
+		fightStatus: Status.PENDING,
 		fightStoryline: '',
 		guestJudgeIds: null,
 		isMainEvent: true,
@@ -52,7 +53,7 @@ export const fightSummaryStub = {
 		showStoryline: '',
 		showTime: 0,
 		showName: '',
-		showStatus: ShowStatus.UPCOMING,
+		showStatus: Status.PENDING,
 		isFeatured: true,
 	}
 }
@@ -83,7 +84,7 @@ export interface FightPostObj {
 export interface FightUpdateOptions {
 	fightId: string
 	fightQuickTitle?: string; 
-	fightStatus?: FightStatus;
+	fightStatus?: Status;
 	fightStoryline?: string | null;
 	guestJudgeIds?: string[] | null;
 	isMainEvent?: boolean;

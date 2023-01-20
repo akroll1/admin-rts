@@ -8,7 +8,7 @@ import {
     ReviewFormModal 
 } from '../components/modals'
 import { SpinnerMain } from '../components/utils'
-import { FightStatus, useGlobalStore } from '../stores'
+import { Status, useGlobalStore } from '../stores'
 import { useNavigate, useParams } from 'react-router'
 
 const Shows = () => {

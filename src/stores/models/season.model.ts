@@ -1,4 +1,5 @@
 import { FightSummary } from "./fight.model"
+import { Status } from "./enums"
 
 export interface Season {
 	seasonId: string
@@ -6,6 +7,7 @@ export interface Season {
 	fightIds: string[] | null
 	seasonDescription: string | null
 	seasonName: string
+	seasonStatus: Status
 	seasonTagline: string | null
 	starts: number
 	createdAt?: number
@@ -25,10 +27,4 @@ export const seasonStub = {
 	seasonName: '',
 	seasonTagline: '',
 	starts: 0
-}
-
-export enum SeasonStatus {
-	ACTIVE = 'ACTIVE',
-	COMPLETE = 'COMPLETE',
-	PENDING = 'PENDING',
 }

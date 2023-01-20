@@ -12,9 +12,9 @@ import {
 import { capFirstLetters, parseEpoch } from '../../utils'
 import { DeleteIcon } from '@chakra-ui/icons'
 
-export const SelectedSeasonTable = ({ 
+export const SelectedSeasonFightTable = ({ 
   deleteFightFromSeason,
-  selectedSeason
+  selectedSeasonFights
 }) => {
   return (
     <Flex 
@@ -24,9 +24,9 @@ export const SelectedSeasonTable = ({
       mx="auto" 
       mb="4"
     >
-      <SelectedSeasonTableContent 
+      <SelectedSeasonFightsTableContent 
         deleteFightFromSeason={deleteFightFromSeason}
-        selectedSeason={selectedSeason} 
+        selectedSeasonFights={selectedSeasonFights} 
       />
     </Flex>
   )
@@ -55,9 +55,9 @@ const columns = [
     accessor: ''
   }
 ];
-const SelectedSeasonTableContent = ({ 
+const SelectedSeasonFightsTableContent = ({ 
   deleteFightFromSeason,
-  selectedSeason, 
+  selectedSeasonFights, 
 }) => {
 
   const handleDelete = e => {
@@ -73,7 +73,7 @@ const SelectedSeasonTableContent = ({
       overflow="scroll"
     >
       <Table minW="100%" mb="6" borderWidth="1px" fontSize="sm" overflowY="scroll">
-        <TableCaption fontSize="1.5rem" placement="top">{selectedSeason.season.seasonName} Fights</TableCaption> 
+        <TableCaption fontSize="1.5rem" placement="top">{selectedSeasonFights?.season?.seasonName} Fights</TableCaption> 
         <Thead bg={mode('gray.50', 'gray.800')}>
           <Tr>
             {columns.map((column, index) => (
@@ -89,7 +89,7 @@ const SelectedSeasonTableContent = ({
           </Tr>
         </Thead>
         <Tbody>
-          { selectedSeason?.fightSummaries.length > 0 && selectedSeason.fightSummaries.map( (row, _i) => {
+          { selectedSeasonFights?.fightSummaries?.length > 0 && selectedSeasonFights.fightSummaries.map( (row, _i) => {
 
             const { fight, fighters, show } = row
             return (

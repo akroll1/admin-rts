@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react'
+import { 
+    useState, 
+    useEffect 
+} from 'react'
 import { 
     Button, 
     ButtonGroup, 
@@ -6,6 +9,7 @@ import {
     Flex,
     FormControl, 
     FormLabel, 
+    HStack,
     Input,
     Select, 
     Stack, 
@@ -14,47 +18,57 @@ import {
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { SelectedSeasonTable, SeasonsTable } from '../tables';
-import { SeasonStatus, useGlobalStore } from '../../stores';
+import { 
+    SelectedSeasonFightTable, 
+    SeasonsTable 
+} from '../tables';
+import { 
+    Status, 
+    useGlobalStore 
+} from '../../stores';
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 
 export const SeasonsForm = () => {
+
     const {
+        allSeasonsSummaries,
         createSeason,
         deleteSeason,
         fetchSeasonSummary,
+        fetchAllSeasonsSummaries,
+        isSubmitting,
         seasons,
         updateSeason,
     } = useGlobalStore()
+    
     const resetForm = {
-        seasonId: '',
         ends: 0,
         fightIds: [],
         seasonDescription: '',
         seasonName: '',
-        seasonStatus: 'PENDING',
+        seasonStatus: '',
         seasonTagline: '',
         starts: 0,
     };
+
     const [seasonId, setSeasonId] = useState(null)
-    const [allSeasons, setAllSeasons] = useState([]);
-    const [selectedSeason, setSelectedSeason] = useState({})
+    const [selectedSeasonFights, setSelectedSeasonFights] = useState({})
+    const [selectedSeasonId, setSelectedSeasonId] = useState('')
     const [fightId, setFightId] = useState('')
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [form, setForm] = useState(resetForm)
 
     useEffect(() => {
-        fetchSeasonSummary('active')
+        // fetchSeasonSummary('active')
+        fetchAllSeasonsSummaries()
     },[])
 
     useEffect(() => {
         if(seasons.length > 0){
-            setAllSeasons(seasons)
-            setSelectedSeason(seasons[0])
+            setSelectedSeasonFights(seasons[0])
+            setSelectedSeasonId(seasons[0].seasonId)
             setForm(seasons[0].season)
-            setIsSubmitting(false)
             setFightId('')
         }
     },[seasons])
@@ -75,11 +89,16 @@ export const SeasonsForm = () => {
     }
     
     const handleSeasonSelect = (e, id) => {
-        const [season] = allSeasons.filter( season => season.season.seasonId === id);
-        console.log('season: ', season)
+        const [season] = allSeasonsSummaries.filter( season => season.season.seasonId === id);
+
         setForm(season.season); 
-        setSelectedSeason(season) 
-        setSeasonId(season.season.seasonId)
+        setSelectedSeasonFights(season) 
+        setSelectedSeasonId(season.season.seasonId)
+    }
+
+    const handleSearchForSeasonById = () => {
+        if(!seasonId) alert('No Season ID')
+        fetchSeasonSummary(seasonId)
     }
 
     const handleCreateSeason = () => {
@@ -92,7 +111,7 @@ export const SeasonsForm = () => {
     }
     
     const handleUpdateSeason = () => {
-        setIsSubmitting(true)
+        console.log('update form: ', form)
         updateSeason(form)
     }
 
@@ -103,9 +122,8 @@ export const SeasonsForm = () => {
             const [isDuplicate] = form.fightIds.filter( id => id === fightId)
             if(isDuplicate) return alert('Fight is in Season')
 
-            setIsSubmitting(true)
             Object.assign(form, {
-                seasonId: form.seasonId ? selectedSeason.season.seasonId : '',
+                seasonId: form?.seasonId ? setSelectedSeasonFights.season.seasonId : '',
                 fightIds: [ ...form.fightIds, fightId]
             })
             return
@@ -114,7 +132,7 @@ export const SeasonsForm = () => {
     }
 
     const deleteFightFromSeason = id => {
-        setIsSubmitting(true)
+
         setFightId(id)
         const removed = form.fightIds.filter( fightId => fightId !== id)
         setForm({ ...form, fightIds: removed })
@@ -123,17 +141,18 @@ export const SeasonsForm = () => {
     const seasonStatusOptions = [
         {
             label: 'Active',
-            value: SeasonStatus.ACTIVE
+            value: Status.ACTIVE
         },
         {
             label: 'Complete',
-            value: SeasonStatus.COMPLETE
+            value: Status.COMPLETE
         },
         {
             label: 'Pending',
-            value: SeasonStatus.PENDING
+            value: Status.PENDING
         },
     ]
+
     const { 
         ends, 
         seasonName, 
@@ -141,7 +160,6 @@ export const SeasonsForm = () => {
         seasonTagline, 
         starts 
     } = form
-
 
     return (
         <Flex
@@ -160,9 +178,10 @@ export const SeasonsForm = () => {
                     flexDir="column"
                 >
                     <SeasonsTable 
-                        allSeasons={allSeasons}
+                        allSeasonsSummaries={allSeasonsSummaries}
                         handleDeleteSeason={handleDeleteSeason}
                         handleSeasonSelect={handleSeasonSelect}
+                        selectedSeasonId={selectedSeasonId}
                     />
                     <Divider my="8"/>
                 </Flex>
@@ -170,6 +189,32 @@ export const SeasonsForm = () => {
                     id="seasons_form" 
                     onSubmit={e => e.preventDefault()}
                 >
+                    <Stack spacing="4" divider={<StackDivider />}>
+                        <FieldGroup title="Search for a Season">
+                            <VStack width="full" spacing="6">
+                                <FormControl id="seasonId">
+                                    <FormLabel htmlFor="seasonId">Season ID</FormLabel>
+                                    <Input 
+                                        value={seasonId} 
+                                        onChange={ ({ currentTarget: {value} }) => setSeasonId(value.length == 36 ? value : '')} 
+                                        type="text" 
+                                    />
+                                </FormControl>
+                                <HStack justifyContent="center" width="full">
+                                    <Button 
+                                        disabled={!seasonId}  
+                                        minW="33%" 
+                                        isLoading={isSubmitting} 
+                                        loadingText="Searching..." 
+                                        onClick={handleSearchForSeasonById} 
+                                        type="button" 
+                                        colorScheme="solid">
+                                        Search
+                                    </Button>
+                                </HStack>
+                            </VStack>
+                        </FieldGroup>
+                    </Stack>
                     <Stack spacing="4" divider={<StackDivider />}>
                         <FieldGroup title="Create or Update a Season">
                             <VStack width="full" spacing="6">
@@ -244,9 +289,9 @@ export const SeasonsForm = () => {
                 <Flex
                     minW="100%"
                 >
-                    <SelectedSeasonTable 
+                    <SelectedSeasonFightTable 
                         deleteFightFromSeason={deleteFightFromSeason}
-                        selectedSeason={selectedSeason}
+                        selectedSeasonFights={selectedSeasonFights}
                     />
                 </Flex>
             }
