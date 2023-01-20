@@ -27,6 +27,7 @@ export interface ScorecardStoreState {
     blogPosts: BlogPost[]
     deleteInvite(inviteId: string): void
     fetchAllPanelists(): void
+    fetchAllSeasonsSummaries(): void
     fetchBlogPost(blogPostId: string): void
     fetchBlogPosts(): void
     fetchFighter(fighterId: string): void
@@ -49,7 +50,7 @@ export interface ScorecardStoreState {
     poundListOfficial: List
     poundListUser: List
     seasons: Season[]
-    seasonSummaries: SeasonSummary[]
+    allSeasonsSummaries: SeasonSummary[]
     seasonsOptions: Record<string, string>[]
     selectedBlogPost: BlogPost
     selectedFighter: Fighter
@@ -75,7 +76,7 @@ export const initialScorecardsStoreState = {
     prediction: null,
     seasons: [] as Season[],
     seasonsOptions: [],
-    seasonSummaries: [] as SeasonSummary[],
+    allSeasonsSummaries: [] as SeasonSummary[],
     selectedBlogPost: {} as BlogPost,
     selectedFighter: {} as Fighter,
     selectedSeason: {} as Season,
@@ -117,6 +118,13 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const res = await axios.get(`${url}/panelists`, await configureAccessToken() )
         const panelists = res.data as Panelist[]
         set({ panelists })
+    },
+    fetchAllSeasonsSummaries: async () => {
+        const res = await axios.get(`${url}/seasons`)
+        const allSeasonsSummaries = res.data as SeasonSummary[]
+        // const filtered: FightSummary[] = filterFights(allSeasonsSummaries[0].fightSummaries)
+        set({ allSeasonsSummaries })
+        // get().setSeasonsOptions()
     },
     fetchBlogPost: async (blogPostId: string) => {
         get().setIsLoading(true)
@@ -171,19 +179,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const panelSummaries = res.data as PanelSummary[]
         set({ panelSummaries })
     },
-    // fetchSeasonSummaries: async () => {
-    //     const res = await axios.get(`${url}/seasons`)
-    //     const seasonSummaries = res.data as SeasonSummary[]
-    //     // const filtered: FightSummary[] = filterFights(seasonSummaries[0].fightSummaries)
-    //     set({ 
-    //         seasonSummaries, 
-    //         selectedSeasonSummary: seasonSummaries[0],
-    //         selectedSeasonFightSummaries: filtered,
-    //         selectedFightSummary: seasonSummaries[0].fightSummaries[0]
-    //     })d
-    //     get().setSeasonsOptions()
-    // },
-   
     fetchSeasons: async () => {
         const res = await axios.get(`${url}/seasons`,await configureAccessToken() )
         const seasons = res.data as Season[]
@@ -233,9 +228,9 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         }
     },
     setSeasonsOptions: () => {
-        const seasonSummaries = get().seasonSummaries;
-        if(seasonSummaries.length){
-            const seasonsOptions = seasonSummaries.map( (seasonSummary: SeasonSummary) => {
+        const allSeasonsSummaries = get().allSeasonsSummaries;
+        if(allSeasonsSummaries.length){
+            const seasonsOptions = allSeasonsSummaries.map( (seasonSummary: SeasonSummary) => {
                 return ({
                     value: seasonSummary.season.seasonId,
                     label: seasonSummary.season.seasonName

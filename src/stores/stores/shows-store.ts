@@ -10,7 +10,7 @@ import {
     SeasonSummary,
     Show
 } from '../models'
-import { FightStatus } from "../models/enums"
+import { Status } from "../models/enums"
 import { configureAccessToken } from "./auth-account-store"
 import axios from 'axios'
 
@@ -78,8 +78,13 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
             }
         }
     },
+    fetchAllSeasons: async () => {
+        const res = await axios.get(`${url}/seasons`)
+        const allSeasonsSummaries = res.data as SeasonSummary[]
+        set({ allSeasonsSummaries })
+    },
     fetchFightReviews: async (fightId: string) => {
-        const res = await axios.get(`${url}/reviews/${fightId}/fight`,await configureAccessToken() );
+        const res = await axios.get(`${url}/reviews/${fightId}/fight`, await configureAccessToken() );
         const fightReviews = res.data as Review[];
         set({ fightReviews })
     }, 
@@ -93,17 +98,18 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
         get().setIsLoading(false)
     },   
     filterFights: (selectedSeasonSummary: SeasonSummary) => {
-        const obj: FightByStatus = {
-            PENDING: [],
-            COMPLETE: [],
-            CANCELED: [],
+        const obj: any = {
             ACTIVE: [],
+            CANCELED: [],
+            COMPLETE: [],
             FANTASY: [],
+            PENDING: [],
+            TESTING: []
         }
        
         selectedSeasonSummary.fightSummaries.map( (summary: FightSummary) => {
     
-            let fightStatus: FightStatus = summary.fight.fightStatus;
+            let fightStatus: Status = summary.fight.fightStatus;
             if(obj[fightStatus]) {
                 obj[fightStatus].push(summary)
                 return obj
@@ -136,7 +142,7 @@ export const showsStoreSlice: StateCreator<GlobalStoreState, [], [], ShowsStoreS
         // clear out previous officialResult.
     },
     setSelectedSeasonSummary: (seasonId: string) => {
-        const [selectedSeasonSummary] = get().seasonSummaries.filter( (seasonSummary: SeasonSummary) => seasonSummary.season.seasonId === seasonId)
+        const [selectedSeasonSummary] = get().allSeasonsSummaries.filter( (seasonSummary: SeasonSummary) => seasonSummary.season.seasonId === seasonId)
         const { fightSummaries } = selectedSeasonSummary;
         get().setSelectedFightSummary(fightSummaries[0].fight.fightId)
         set({ 
