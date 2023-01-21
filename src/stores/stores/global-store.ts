@@ -36,10 +36,6 @@ export const useGlobalStore = create<GlobalStoreState>()(
                     fightsByStatus,
                     groupScorecards,
                     modals,
-                    seasons,
-                    allSeasonsSummaries,
-                    selectedFightSummary,
-                    selectedSeasonFightSummaries,
                     selectedSeasonSummary,
                     show,
                     user,
@@ -54,10 +50,6 @@ export const useGlobalStore = create<GlobalStoreState>()(
                     fightsByStatus,
                     groupScorecards,
                     modals,
-                    seasons,
-                    allSeasonsSummaries,
-                    selectedFightSummary,
-                    selectedSeasonFightSummaries,
                     selectedSeasonSummary,
                     show,
                     user,
@@ -66,7 +58,7 @@ export const useGlobalStore = create<GlobalStoreState>()(
             },
             getStorage: () => sessionStorage,
             name: 'fsl',
-            version: 2,
+            version: 4,
         }
     )
 )

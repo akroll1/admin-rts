@@ -17,7 +17,7 @@ import { Status } from '../../stores'
     allSeasonsSummaries,
     handleDeleteSeason,
     handleSeasonSelect,
-    selectedSeasonId
+    seasonId
   }) => {
     return (
       <Flex 
@@ -33,7 +33,7 @@ import { Status } from '../../stores'
             allSeasonsSummaries={allSeasonsSummaries}
             handleDeleteSeason={handleDeleteSeason}
             handleSeasonSelect={handleSeasonSelect}
-            selectedSeasonId={selectedSeasonId}
+            seasonId={seasonId}
         />
       </Flex>
     )
@@ -110,7 +110,7 @@ export const TableActions = () => {
     allSeasonsSummaries, 
     handleDeleteSeason,
     handleSeasonSelect,
-    selectedSeasonId
+    seasonId
   }) => {
     
     const deleteSeason = e => {
@@ -138,20 +138,20 @@ export const TableActions = () => {
         <Tbody>
           {allSeasonsSummaries?.length > 0 && allSeasonsSummaries.map( (row, _i) => {
               const { season } = row;
-              const { fightIds, seasonId, ends, seasonName, starts } = season;
-              const totalFights = fightIds.length;
+              const { ends, seasonName, starts } = season;
+              const totalFights = season.fightIds?.length > 0 ? season.fightIds.length : 0;
 
               return (
                   <Tr 
-                    bg={selectedSeasonId === season.seasonId ? 'gray.700' : 'inherit'}
-                    key={seasonId}
+                    bg={seasonId === season.seasonId ? 'gray.700' : 'inherit'}
+                    key={season.seasonId}
                     _hover={{cursor: 'pointer'}}  
-                    id={seasonId} 
+                    id={season.seasonId} 
                   >
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{seasonName}</Td>
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{new Date(starts).toString().slice(4,15)}</Td>
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{new Date(ends).toString().slice(4,15)}</Td>
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{totalFights}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{seasonName}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{new Date(starts).toString().slice(4,15)}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{new Date(ends).toString().slice(4,15)}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{totalFights}</Td>
                       <Td 
                           _hover={{cursor: 'pointer'}} 
                           textAlign="center" 

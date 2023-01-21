@@ -11,10 +11,9 @@ export const SlantBadge = () => {
       bg={useColorModeValue('blue.500', 'rgba(192, 22, 22, 0.8)')}
       overflow="hidden"
       position="absolute"
-      right="-35"
-      mr="-4"
-      top="35"
-      width="240px"
+      right="-3.5rem"
+      top={["3rem", "4rem"]}
+      width={["300px", "360px"]}
       transform="rotate(45deg)"
       py={2}
       justifyContent="center"
@@ -22,7 +21,8 @@ export const SlantBadge = () => {
       maxW="100%"
     >
       <Text
-        fontSize="xs"
+        textAlign="center"
+        fontSize={["md", "lg"]}
         textTransform="uppercase"
         fontWeight="bold"
         letterSpacing="wider"

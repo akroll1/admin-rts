@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react'
+import { 
+    useState, 
+    useEffect 
+} from 'react'
 import { 
     Box, 
     Button, 
@@ -11,7 +14,6 @@ import {
     StackDivider, 
     VStack, 
     Flex, 
-    useToast 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
 import { useGlobalStore } from '../../stores'
@@ -21,12 +23,12 @@ export const FightersForm = () => {
         createFighter,
         deleteFighter,
         fetchFighter,
-        fighter,
+        selectedFighter,
+        isSubmitting,
+        setIsSubmitting,
         updateFighter,
     } = useGlobalStore()
 
-    const toast = useToast();
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
     const [searchFighterId, setSearchFighterId] = useState('');
     const [form, setForm] = useState({
@@ -44,11 +46,14 @@ export const FightersForm = () => {
     });
 
     useEffect(() => {
-        if(fighter?.fighterId){
-            setIsSubmitting(false)
-            setForm(fighter)
+        if(selectedFighter?.fighterId){
+            setForm(selectedFighter)
         }
-    },[fighter])
+    },[selectedFighter])
+
+    const searchForFighter = e => {
+        fetchFighter(searchFighterId)
+    }
 
     const handleFormChange = e => {
         const { id, name, value } = e.currentTarget;
@@ -61,7 +66,6 @@ export const FightersForm = () => {
     }
 
     const handleUpdateFighter = () => {
-        setIsSubmitting(true)
         Object.assign(form, {
             fighterId: searchFighterId
         })
@@ -69,13 +73,8 @@ export const FightersForm = () => {
     }
     
     const handleCreateFighter = () => {
-        setIsSubmitting(true)
         createFighter(form)
     }    
-    
-    const searchForFighter = e => {
-        fetchFighter(searchFighterId)
-    }
 
     const handleDeleteFighter = e => {
         deleteFighter(searchFighterId)
