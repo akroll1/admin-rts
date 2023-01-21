@@ -26,11 +26,11 @@ export const ShowForm = () => {
         createShow,
         deleteShow,
         fetchShow,
+        isSubmitting,
         show,
         updateShow,
     } = useGlobalStore()
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
     // showId is kept out of the form for put/post logic.
     const [showId, setShowId] = useState(null);
     const [form, setForm] = useState({
@@ -47,7 +47,8 @@ export const ShowForm = () => {
         if(show?.showId){
             setForm({ 
                 ...form, 
-                ...show 
+                ...show,
+                fightId: show.fightIds[0]
             })
             setShowId(show.showId)
         }
@@ -206,7 +207,7 @@ export const ShowForm = () => {
                         <Button 
                             minW="33%" 
                             disabled={!showId} 
-                            isLoading={isSubmitting} 
+                            // isLoading={isSubmitting} 
                             loadingText="Deleting" 
                             onClick={handleDeleteShow} 
                             variant="outline"

@@ -39,6 +39,7 @@ export const SeasonsForm = () => {
         fetchAllSeasonsSummaries,
         isSubmitting,
         seasons,
+        patchRemoveFightFromSeason,
         updateSeason,
     } = useGlobalStore()
     
@@ -54,7 +55,6 @@ export const SeasonsForm = () => {
 
     const [seasonId, setSeasonId] = useState(null)
     const [selectedSeasonFights, setSelectedSeasonFights] = useState({})
-    const [selectedSeasonId, setSelectedSeasonId] = useState('')
     const [fightId, setFightId] = useState('')
 
     const [form, setForm] = useState(resetForm)
@@ -67,17 +67,11 @@ export const SeasonsForm = () => {
     useEffect(() => {
         if(seasons.length > 0){
             setSelectedSeasonFights(seasons[0])
-            setSelectedSeasonId(seasons[0].seasonId)
+            setSeasonId(seasons[0].seasonId)
             setForm(seasons[0].season)
             setFightId('')
         }
     },[seasons])
-
-    useEffect(() => {
-        if(fightId){
-            handleUpdateSeason()
-        }
-    },[form.fightIds])
 
     const clearForm = () => {
         setForm(resetForm)
@@ -93,7 +87,7 @@ export const SeasonsForm = () => {
 
         setForm(season.season); 
         setSelectedSeasonFights(season) 
-        setSelectedSeasonId(season.season.seasonId)
+        setSeasonId(season.season.seasonId)
     }
 
     const handleSearchForSeasonById = () => {
@@ -102,40 +96,44 @@ export const SeasonsForm = () => {
     }
 
     const handleCreateSeason = () => {
+        Object.assign(form, {
+            fightIds: form.fightIds?.length === 0 ? null : form.fightIds
+        })
         createSeason(form)
     }
     
-    const handleDeleteSeason = id => {
-        alert('Uncomment to delete- Season ID: ', id)
-        // deleteSeason(selectedSeason.season.seasonId)
+    const handleDeleteSeason = () => {
+        deleteSeason(seasonId)
     }
     
     const handleUpdateSeason = () => {
-        console.log('update form: ', form)
         updateSeason(form)
     }
 
     const addFightToSeason = () => {
         if(fightId.length === 36){
-            
             if(!form.seasonName) return alert('Select a Season')
-            const [isDuplicate] = form.fightIds.filter( id => id === fightId)
-            if(isDuplicate) return alert('Fight is in Season')
+            if(form.fightIds){
+                const [isDuplicate] = form.fightIds.filter( id => id === fightId)
+                if(isDuplicate) return alert('Fight is in this Season')
+            }
 
             Object.assign(form, {
-                seasonId: form?.seasonId ? setSelectedSeasonFights.season.seasonId : '',
-                fightIds: [ ...form.fightIds, fightId]
+                seasonId,
+                fightIds: form.fightIds?.length > 0 ? [ ...form.fightIds, fightId] : [fightId]
             })
+            updateSeason(form)
             return
         }
-        alert('No fight ID.')
+        alert('Not a fight ID.')
     }
 
-    const deleteFightFromSeason = id => {
+    const deleteFightFromSeason = fightId => {
 
-        setFightId(id)
-        const removed = form.fightIds.filter( fightId => fightId !== id)
+        setFightId(fightId)
+        const removed = form.fightIds.filter( id => id !== fightId)
         setForm({ ...form, fightIds: removed })
+        patchRemoveFightFromSeason(fightId, seasonId)
     }
 
     const seasonStatusOptions = [
@@ -150,6 +148,10 @@ export const SeasonsForm = () => {
         {
             label: 'Pending',
             value: Status.PENDING
+        },
+        {
+            label: 'Testing',
+            value: Status.TESTING
         },
     ]
 
@@ -181,7 +183,7 @@ export const SeasonsForm = () => {
                         allSeasonsSummaries={allSeasonsSummaries}
                         handleDeleteSeason={handleDeleteSeason}
                         handleSeasonSelect={handleSeasonSelect}
-                        selectedSeasonId={selectedSeasonId}
+                        seasonId={seasonId}
                     />
                     <Divider my="8"/>
                 </Flex>
@@ -305,7 +307,7 @@ export const SeasonsForm = () => {
                         <VStack width="full" spacing="6">
                             <FormControl id="fightId">
                                 <FormLabel htmlFor="fightId">
-                                    Add Fights by ID
+                                    Add Fight by ID
                                 </FormLabel>
                                 <Input 
                                     value={fightId} 
@@ -317,7 +319,7 @@ export const SeasonsForm = () => {
                             </FormControl>
                             <ButtonGroup>
                                 <Button
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !fightId}
                                     loadingText="Submitting..." 
                                     minW="40%"
                                     onClick={addFightToSeason}

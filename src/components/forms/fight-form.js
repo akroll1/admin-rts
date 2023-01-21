@@ -1,8 +1,33 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Button, ButtonGroup, Checkbox, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, InputGroup, InputRightElement, Select, Stack, StackDivider, Textarea, useToast, VStack } from '@chakra-ui/react'
+import { 
+    useState, 
+    useEffect 
+} from 'react'
+import { 
+    Box, 
+    Button, 
+    ButtonGroup, 
+    Checkbox, 
+    FormControl, 
+    FormHelperText, 
+    FormLabel, 
+    Heading, 
+    HStack, 
+    Input, 
+    InputGroup,  
+    Select, 
+    Stack, 
+    StackDivider, 
+    Textarea, 
+    useToast, 
+    VStack 
+} from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { DeleteIcon } from '@chakra-ui/icons'
-import { FIGHT_STATUS_SELECT_CONSTANTS, OFFICIAL_RESULTS_ENUM, ROUND_LENGTH_ENUMS, WEIGHTCLASS_ENUMS } from '../../utils'
+import { 
+    FIGHT_STATUS_SELECT_CONSTANTS, 
+    OFFICIAL_RESULTS_ENUM, 
+    ROUND_LENGTH_ENUMS, 
+    WEIGHTCLASS_ENUMS 
+} from '../../utils'
 import { useGlobalStore } from '../../stores'
 
 export const FightForm = () => {
@@ -10,11 +35,11 @@ export const FightForm = () => {
         createFight,
         deleteFight,
         fetchFightSummary,
+        isSubmitting,
         selectedFightSummary,
         updateFight,
     } = useGlobalStore()
 
-    const toast = useToast();
     const [fighterAId, setFighterAId] = useState('');
     const [fighterBId, setFighterBId] = useState('');
     const [fightId, setFightId] = useState(null);
@@ -215,7 +240,7 @@ export const FightForm = () => {
                                 onClick={fightId ? handleUpdateFight : handlePostFight} 
                                 type="button" 
                                 colorScheme="solid"
-                                // isLoading={isSubmitting}
+                                isLoading={isSubmitting}
                                 loadingText="Submitting..."
                             >
                                 Submit
@@ -223,7 +248,7 @@ export const FightForm = () => {
                             <Button 
                                 minW="33%" 
                                 disabled={!fightId} 
-                                // isLoading={isSubmitting} 
+                                isLoading={isSubmitting} 
                                 loadingText="Deleting" 
                                 onClick={handleDeleteFight} 
                                 variant="outline"
