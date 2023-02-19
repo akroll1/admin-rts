@@ -1,5 +1,7 @@
 export * from './blog-post.model'
+export * from './bracket.model'
 export * from './discussion.model'
+export * from './event.model'
 export * from './enums'
 export * from './fight.model'
 export * from './fighter.model'

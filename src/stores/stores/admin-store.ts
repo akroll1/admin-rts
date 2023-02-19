@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     BlogPost,
+    Bracket,
     Discussion,
     Fight,
     Fighter,
@@ -11,7 +12,6 @@ import {
     Panelist,
     Season,
     Show,
-    User,
 } from '../models'
 import { configureAccessToken } from './auth-account-store'
 import axios from 'axios'
@@ -47,6 +47,7 @@ export const initialAdminStoreState = {
 }
 
 const url = process.env.REACT_APP_API;
+const v2_api = process.env.REACT_APP_API_FSL;
 
 export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreState> = (set, get) => ({
     ...initialAdminStoreState,
@@ -55,6 +56,12 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const res = await axios.post(`${url}/blog`, blogPostObj, await configureAccessToken() )
         console.log('CREATE-BLOGPOST: ', res.data)
         get().setIsSubmitting(false)
+    },
+    createBracket: async (bracketObj: Partial<Bracket>) => {
+        console.log('bracketObj: ', bracketObj);
+        const res = await axios.post(`${v2_api}/brackets`, bracketObj, await configureAccessToken() );
+        const selectedBracket = res.data as Bracket;
+        console.log('res: ', res);
     },
     createDiscussion: async (discussionObj: Partial<Discussion>) => {
         get().setIsSubmitting(true)
