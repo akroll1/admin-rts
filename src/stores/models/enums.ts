@@ -1,13 +1,7 @@
 export enum EventType {
 	FIGHT = "FIGHT",
 	SHOW = "SHOW",
-	SEASON_FIGHTS = "SEASON_FIGHTS",
-	SEASON_SHOWS = "SEASON_SHOWS",
-}
-  
-export enum GroupScorecardTypeEnum {
-	FIGHT = "FIGHT",
-	SEASON = "SEASON"
+	SEASON = "SEASON",
 }
 
 export enum ChatTokenEnum {

@@ -18,7 +18,9 @@ import axios from 'axios'
 
 export interface AdminStoreState {
     createBlogPost(blogPostObj: Partial<BlogPost>): void
+    createBracket(bracketObj: Partial<Bracket>): void
     createDiscussion(discussionObj: Partial<Discussion>): void
+    createEvent(eventObj: Partial<Event>): void
     createFight(createFightObj: FightPostObj): void
     createFighter(createFighterObj: Fighter): void
     createFightProps(obj: Partial<FightProps>): void
@@ -32,10 +34,14 @@ export interface AdminStoreState {
     deletePanelist(panelistId: string): void
     deleteSeason(seasonId: string): void
     deleteShow(showId: string): void
+    fetchEvent(eventId: string): void
     fetchFightById(fightId: string): void
     fetchFightProps(fightId: string): void
     fightProps: FightProps | null
+    selectedBracket: Bracket
+    selectedEvent: Event
     submitFightResolution(resolutionObj: FightResolution): void
+    updateEvent(updateObj: Partial<Event>): void
     updateFight(update: Partial<Fight>): void
     updateFighter(update: Partial<Fighter>): void
     updateFightProps(obj: Partial<FightProps>): void
@@ -43,7 +49,9 @@ export interface AdminStoreState {
 }
 
 export const initialAdminStoreState = {
-    fightProps: {} as FightProps
+    fightProps: {} as FightProps,
+    selectedBracket: {} as Bracket,
+    selectedEvent: {} as Event,
 }
 
 const url = process.env.REACT_APP_API;
@@ -61,13 +69,18 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('bracketObj: ', bracketObj);
         const res = await axios.post(`${v2_api}/brackets`, bracketObj, await configureAccessToken() );
         const selectedBracket = res.data as Bracket;
-        console.log('res: ', res);
+        set({ selectedBracket })
     },
     createDiscussion: async (discussionObj: Partial<Discussion>) => {
         get().setIsSubmitting(true)
         const res = await axios.post(`${url}/discussions`, discussionObj, await configureAccessToken() )
         console.log('DISCUSSION- create res.data: ', discussionObj)
         get().setIsSubmitting(false)
+    },
+    createEvent: async (eventObj) => {
+        const res = await axios.post(`${v2_api}/events`, eventObj, await configureAccessToken() );
+        const selectedEvent = res.data as Event;
+        set({ selectedEvent })
     },
     createFight: async (createObj: FightPostObj) => {
         get().setIsSubmitting(true)
@@ -149,6 +162,11 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('res.data: ', res.data)
         get().setIsSubmitting(false)
     },
+    fetchEvent: async (eventId: string) => {
+        const res = await axios.get(`${v2_api}/events/${eventId}`, await configureAccessToken() );
+        const selectedEvent = res.data as Event;
+        set({ selectedEvent })
+    },
     fetchFightById: async (fightId: string) => {
         get().setIsSubmitting(true)
         const res = await axios.get(`${url}/fights/${fightId}`)
@@ -173,6 +191,10 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const data = res.data
         console.log('RESOLUTION put res: ', data)
         get().setIsSubmitting(false)
+    },
+    updateEvent: async (updateObj: Partial<Event>) => {
+        const res = await axios.put(`${v2_api}/events`, updateObj, await configureAccessToken() );
+        console.log('UPDATE: ', res.data)
     },
     updateFight: async (update: Partial<Fight>) => {
         get().setIsSubmitting(true)

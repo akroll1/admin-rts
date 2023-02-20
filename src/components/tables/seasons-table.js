@@ -136,10 +136,10 @@ export const TableActions = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {allSeasonsSummaries?.length > 0 && allSeasonsSummaries.map( (row, _i) => {
-              const { season } = row;
-              const { ends, seasonName, starts } = season;
-              const totalFights = season.fightIds?.length > 0 ? season.fightIds.length : 0;
+          {allSeasonsSummaries?.length > 0 && allSeasonsSummaries.map( (season, _i) => {
+            console.log('season: ', season)
+              const { ends, fightIds, fightSummaries, seasonId, seasonName, starts } = season;
+              const totalFights = fightSummaries?.length > 0 ? fightSummaries.length : 0;
 
               return (
                   <Tr 
@@ -148,10 +148,10 @@ export const TableActions = () => {
                     _hover={{cursor: 'pointer'}}  
                     id={season.seasonId} 
                   >
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{seasonName}</Td>
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{new Date(starts).toString().slice(4,15)}</Td>
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{new Date(ends).toString().slice(4,15)}</Td>
-                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, season.seasonId)}>{totalFights}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{seasonName}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{new Date(starts).toString().slice(4,15)}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{new Date(ends).toString().slice(4,15)}</Td>
+                      <Td textAlign="center" onClick={e => handleSeasonSelect(e, seasonId)}>{totalFights}</Td>
                       <Td 
                           _hover={{cursor: 'pointer'}} 
                           textAlign="center" 

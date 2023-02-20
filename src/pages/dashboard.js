@@ -174,11 +174,11 @@ const Dashboard = () => {
         { form === 'ACCOUNT' && <MyAccountForm /> }
         { form === 'BLOG' && <BlogPostForm /> }
         { form === 'BROADCAST' && <BroadcastForm /> }
-        { form === 'CREATE_EVENT' && <CreateEventForm />}
+        { form === 'CREATE_EVENT' && <CreateEventForm /> }
         { form === 'CREATE_PANEL' && <CreatePanelForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
         { form === 'FIGHT-FORM' && <FightForm /> }
-        { form === 'FIGHT-PROPS-FORM' && <FightPropsForm />}
+        { form === 'FIGHT-PROPS-FORM' && <FightPropsForm /> }
         { form === 'FIGHT-RESOLUTION' && <FightResolutionForm /> }
         { form === 'GUEST-JUDGES' && <GuestJudgeForm /> }
         { form === 'PANELS_MEMBER' && <MyPanelsForm /> }

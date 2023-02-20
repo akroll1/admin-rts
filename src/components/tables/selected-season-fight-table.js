@@ -32,11 +32,6 @@ export const SelectedSeasonFightTable = ({
   )
 }
  
-const badgeEnum = {
-  completed: 'green',
-  active: 'orange',
-  // declined: 'red',
-}
 const columns = [
   {
     Header: 'Scheduled',
