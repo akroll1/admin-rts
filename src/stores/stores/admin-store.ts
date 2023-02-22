@@ -37,7 +37,7 @@ export interface AdminStoreState {
     deletePanelist(panelistId: string): void
     deleteSeason(seasonId: string): void
     deleteShow(showId: string): void
-    distancesByStatus: any[]
+    distancesByStatusSummaries: any[]
     fetchDistance(distanceId: string): void
     fetchDistancesByStatus(status: Status): void
     fetchFightById(fightId: string): void
@@ -54,7 +54,7 @@ export interface AdminStoreState {
 }
 
 export const initialAdminStoreState = {
-    distancesByStatus: [],
+    distancesByStatusSummaries: [],
     fightProps: {} as FightProps,
     selectedCorner: {} as Corner,
     selectedDistance: {} as Distance,
@@ -140,8 +140,8 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const res = await axios.delete(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken())
         console.log('DELETE_DISTANCE, RES: ', res)
         if(res.data.message.includes('Distance deleted.')){
-            const remainingShows = get().distancesByStatus.filter( distance => distance.distanceId !== distanceId)
-            set({ distancesByStatus: remainingShows })
+            const remainingSummaries = get().distancesByStatusSummaries.filter( summary => summary.distanceId !== distanceId)
+            set({ distancesByStatusSummaries: remainingSummaries })
         }
     },
     deleteFight: async (fightId: string) => {
@@ -183,9 +183,9 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
     },
     fetchDistancesByStatus: async (status: Status) => {
         const res = await axios.get(`${ADMIN_API}/distances/status/${status}`, await configureAccessToken() )
-        const distancesByStatus = res.data;
-        console.log('DISTANCES_RES: ', res.data)
-        set({ distancesByStatus })
+        const distancesByStatusSummaries = res.data;
+        console.log('distancesByStatusSummaries: ', distancesByStatusSummaries)
+        set({ distancesByStatusSummaries })
     },
     fetchFightById: async (fightId: string) => {
         get().setIsSubmitting(true)

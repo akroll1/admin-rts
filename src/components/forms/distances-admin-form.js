@@ -20,7 +20,8 @@ import {
 import { FieldGroup } from '../../chakra'
 import { 
     DistancesTable, 
-    SeasonsTable 
+    DistanceShowsTable, 
+    SelectedShowFightTable
 } from '../tables';
 import { 
     DistanceType,
@@ -34,7 +35,7 @@ export const DistancesAdminForm = () => {
 
     const {
         deleteDistance,
-        distancesByStatus,
+        distancesByStatusSummaries,
         fetchDistancesByStatus,
         updateDistance,
     } = useGlobalStore()
@@ -52,21 +53,29 @@ export const DistancesAdminForm = () => {
     };
 
     const [selectedDistance, setSelectedDistance] = useState(resetDistance)
+    const [selectedDistanceShows, setSelectedDistanceShows] = useState([])
+    const [selectedShowFights, setSelectedShowFights] = useState([])
     useEffect(() => {
         fetchDistancesByStatus(Status.PENDING)
     },[])
 
     useEffect(() => {
-        if(distancesByStatus?.length > 0){
+        if(distancesByStatusSummaries?.length > 0){
             setSelectedDistance({
-                ...distancesByStatus[0],
-                ends: new Date(selectedDistance.ends),
-                starts: new Date(selectedDistance.starts)
+                ...distancesByStatusSummaries[0].distance,
+                ends: new Date(distancesByStatusSummaries[0].distance.ends),
+                starts: new Date(distancesByStatusSummaries[0].distance.starts)
             })
-            document.getElementById("distanceType").value = distancesByStatus[0].distanceType;
-            document.getElementById("status").value = distancesByStatus[0].status;
+            document.getElementById("distanceType").value = distancesByStatusSummaries[0].distance.distanceType;
+            document.getElementById("status").value = distancesByStatusSummaries[0].distance.status;
+        
+            setSelectedDistanceShows(distancesByStatusSummaries[0].shows)
+            setSelectedShowFights(distancesByStatusSummaries[0]?.shows[0]?.fightSummaries.length > 0 
+                ? distancesByStatusSummaries[0].shows[0].fightSummaries
+                : []
+            )
         }
-    },[distancesByStatus])
+    },[distancesByStatusSummaries])
    
     const clearDistance = () => {
         setSelectedDistance(resetDistance)
@@ -78,14 +87,19 @@ export const DistancesAdminForm = () => {
     }
     
     const handleDistanceSelect = (e, distanceId) => {
-        const [distance] = distancesByStatus.filter( distance => distance.distanceId === distanceId);
+        const [distance] = distancesByStatusSummaries.filter( distance => distance.distance.distanceId === distanceId);
         setSelectedDistance({ 
-            ...distance,
-            starts: new Date(distance.starts),
-            ends: new Date(distance.ends),
+            ...distance.distance,
+            starts: new Date(distance.distance.starts),
+            ends: new Date(distance.distance.ends),
         })
-        document.getElementById("distanceType").value = distance.distanceType;
-        document.getElementById("status").value = distance.status;
+        document.getElementById("distanceType").value = distance.distance.distanceType;
+        document.getElementById("status").value = distance.distance.status;
+        setSelectedDistanceShows(distance.shows)
+        setSelectedShowFights(distancesByStatusSummaries[0]?.shows[0]?.fightSummaries.length > 0 
+            ? distancesByStatusSummaries[0].shows[0].fightSummaries
+            : []
+        )    
     }
     
     const handleDeleteDistance = distanceId => {
@@ -123,12 +137,22 @@ export const DistancesAdminForm = () => {
 
     const handleStatusSelect = e => {
         const { value } = e.currentTarget;
-        console.log('value: ', value)
         fetchDistancesByStatus(value)
     }
 
+    const handleDeleteShow = (e, id) => {
+        console.log('id: ', id)
+        const removed = selectedDistanceShows.filter( selectedShow => selectedShow.show.showId !== id)
+        setSelectedDistanceShows(removed)
+        setSelectedShowFights([])
+    }
+    const handleShowSelect = (e, id) => {
+        console.log('id: ', id)
+        // setSelectedShowFights()
+    }
     const distanceTypeLabels = Object.keys(DistanceType).map( type => type)
     const distanceStatusLabels = Object.keys(Status).map( status => status);
+    console.log("selectedDistanceShows: ", selectedDistanceShows)
 
     return (
         <Flex
@@ -147,13 +171,32 @@ export const DistancesAdminForm = () => {
                     flexDir="column"
                 >
                     <DistancesTable 
-                        distancesByStatus={distancesByStatus}
+                        distancesByStatusSummaries={distancesByStatusSummaries}
                         handleDeleteDistance={handleDeleteDistance}
                         handleDistanceSelect={handleDistanceSelect}
                         handleStatusSelect={handleStatusSelect}
                         selectedDistanceId={selectedDistance?.distanceId ? selectedDistance.distanceId : ''}
                     />
                     <Divider my="8"/>
+
+                    { selectedDistanceShows.length > 0 && 
+                        <>
+                            <DistanceShowsTable 
+                                handleDeleteShow={handleDeleteShow}
+                                handleShowSelect={handleShowSelect}
+                                selectedDistanceShows={selectedDistanceShows}
+                            />
+                            <Divider my="8"/>
+                        </>
+                    }
+                    { selectedShowFights.length > 0 &&  
+                        <>
+                            <SelectedShowFightTable
+                                selectedShowFights={selectedShowFights}
+                            />
+                            <Divider my="8"/>
+                        </>
+                    }
                 </Flex>
                 <form 
                     id="seasons_form" 
