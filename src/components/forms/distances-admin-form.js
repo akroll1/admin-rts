@@ -195,7 +195,7 @@ export const DistancesAdminForm = () => {
                                 selectedShowFights={selectedShowFights}
                             />
                             <Divider my="8"/>
-                        </>
+                    </>
                     }
                 </Flex>
                 <form 
