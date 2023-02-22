@@ -1,14 +1,12 @@
-
-export interface Bracket {
-    bracketId: string;
+export interface Corner {
+    cornerId: string;
     admin: string;
-    bracketName: string;
-    bracketNotes: string | null;
+    cornerName: string;
+    cornerNotes: string | null;
     chatKey: string | null;
-    eventId: string;
+    distanceId: string;
     members: string[]; // each member scorecard sub + eventId,
     createdAt: string;
     updatedAt: string;
   }
-  
   

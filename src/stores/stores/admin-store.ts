@@ -2,8 +2,9 @@ import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global-store";
 import { 
     BlogPost,
-    Bracket,
+    Corner,
     Discussion,
+    Distance,
     Fight,
     Fighter,
     FightPostObj,
@@ -15,12 +16,13 @@ import {
 } from '../models'
 import { configureAccessToken } from './auth-account-store'
 import axios from 'axios'
+import { Status } from "@chakra-ui/react";
 
 export interface AdminStoreState {
     createBlogPost(blogPostObj: Partial<BlogPost>): void
-    createBracket(bracketObj: Partial<Bracket>): void
+    createCorner(cornerObj: Partial<Corner>): void
     createDiscussion(discussionObj: Partial<Discussion>): void
-    createEvent(eventObj: Partial<Event>): void
+    createDistance(distanceObj: Partial<Distance>): void
     createFight(createFightObj: FightPostObj): void
     createFighter(createFighterObj: Fighter): void
     createFightProps(obj: Partial<FightProps>): void
@@ -29,19 +31,22 @@ export interface AdminStoreState {
     createSeason(createObj: Partial<Season>): void
     createShow(createShowObj: Partial<Show>): void
     deleteDiscussion(discussionId: string): void
+    deleteDistance(distanceId: string): void
     deleteFight(fightId: string): void
     deleteFighter(fighterId: string): void
     deletePanelist(panelistId: string): void
     deleteSeason(seasonId: string): void
     deleteShow(showId: string): void
-    fetchEvent(eventId: string): void
+    distancesByStatus: any[]
+    fetchDistance(distanceId: string): void
+    fetchDistancesByStatus(status: Status): void
     fetchFightById(fightId: string): void
     fetchFightProps(fightId: string): void
     fightProps: FightProps | null
-    selectedBracket: Bracket
-    selectedEvent: Event
+    selectedCorner: Corner
+    selectedDistance: Distance
     submitFightResolution(resolutionObj: FightResolution): void
-    updateEvent(updateObj: Partial<Event>): void
+    updateDistance(distanceObj: Partial<Distance>): void
     updateFight(update: Partial<Fight>): void
     updateFighter(update: Partial<Fighter>): void
     updateFightProps(obj: Partial<FightProps>): void
@@ -49,13 +54,14 @@ export interface AdminStoreState {
 }
 
 export const initialAdminStoreState = {
+    distancesByStatus: [],
     fightProps: {} as FightProps,
-    selectedBracket: {} as Bracket,
-    selectedEvent: {} as Event,
+    selectedCorner: {} as Corner,
+    selectedDistance: {} as Distance,
 }
 
 const url = process.env.REACT_APP_API;
-const v2_api = process.env.REACT_APP_API_FSL;
+const ADMIN_API = process.env.REACT_APP_ADMIN_API;
 
 export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreState> = (set, get) => ({
     ...initialAdminStoreState,
@@ -65,11 +71,11 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('CREATE-BLOGPOST: ', res.data)
         get().setIsSubmitting(false)
     },
-    createBracket: async (bracketObj: Partial<Bracket>) => {
-        console.log('bracketObj: ', bracketObj);
-        const res = await axios.post(`${v2_api}/brackets`, bracketObj, await configureAccessToken() );
-        const selectedBracket = res.data as Bracket;
-        set({ selectedBracket })
+    createCorner: async (cornerObj: Partial<Corner>) => {
+        console.log('cornerObj: ', cornerObj);
+        const res = await axios.post(`${ADMIN_API}/corners`, cornerObj, await configureAccessToken() );
+        const selectedCorner = res.data as Corner;
+        set({ selectedCorner })
     },
     createDiscussion: async (discussionObj: Partial<Discussion>) => {
         get().setIsSubmitting(true)
@@ -77,10 +83,10 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('DISCUSSION- create res.data: ', discussionObj)
         get().setIsSubmitting(false)
     },
-    createEvent: async (eventObj) => {
-        const res = await axios.post(`${v2_api}/events`, eventObj, await configureAccessToken() );
-        const selectedEvent = res.data as Event;
-        set({ selectedEvent })
+    createDistance: async (distanceObj) => {
+        const res = await axios.post(`${ADMIN_API}/distances`, distanceObj, await configureAccessToken() );
+        const selectedDistance = res.data as Distance;
+        set({ selectedDistance })
     },
     createFight: async (createObj: FightPostObj) => {
         get().setIsSubmitting(true)
@@ -130,6 +136,14 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('DISCUSSION- delete res.data: ', res.data)
         get().setIsSubmitting(false)
     },
+    deleteDistance: async (distanceId: string) => {
+        const res = await axios.delete(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken())
+        console.log('DELETE_DISTANCE, RES: ', res)
+        if(res.data.message.includes('Distance deleted.')){
+            const remainingShows = get().distancesByStatus.filter( distance => distance.distanceId !== distanceId)
+            set({ distancesByStatus: remainingShows })
+        }
+    },
     deleteFight: async (fightId: string) => {
         get().setIsSubmitting(true)
         const res = await axios.delete(`${url}/fights/${fightId}`, await configureAccessToken() )
@@ -162,10 +176,16 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('res.data: ', res.data)
         get().setIsSubmitting(false)
     },
-    fetchEvent: async (eventId: string) => {
-        const res = await axios.get(`${v2_api}/events/${eventId}`, await configureAccessToken() );
-        const selectedEvent = res.data as Event;
-        set({ selectedEvent })
+    fetchDistance: async (distanceId: string) => {
+        const res = await axios.get(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken() );
+        const selectedDistance = res.data as Distance;
+        set({ selectedDistance })
+    },
+    fetchDistancesByStatus: async (status: Status) => {
+        const res = await axios.get(`${ADMIN_API}/distances/status/${status}`, await configureAccessToken() )
+        const distancesByStatus = res.data;
+        console.log('DISTANCES_RES: ', res.data)
+        set({ distancesByStatus })
     },
     fetchFightById: async (fightId: string) => {
         get().setIsSubmitting(true)
@@ -192,9 +212,9 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('RESOLUTION put res: ', data)
         get().setIsSubmitting(false)
     },
-    updateEvent: async (updateObj: Partial<Event>) => {
-        const res = await axios.put(`${v2_api}/events`, updateObj, await configureAccessToken() );
-        console.log('UPDATE: ', res.data)
+    updateDistance: async (distanceObj: Partial<Distance>) => {
+        const res = await axios.put(`${ADMIN_API}/distances`, distanceObj, await configureAccessToken() );
+        console.log('res: ', res)
     },
     updateFight: async (update: Partial<Fight>) => {
         get().setIsSubmitting(true)

@@ -1,4 +1,4 @@
-export enum EventType {
+export enum DistanceType {
 	FIGHT = "FIGHT",
 	SHOW = "SHOW",
 	SEASON = "SEASON",

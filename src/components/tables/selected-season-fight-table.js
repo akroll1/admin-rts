@@ -12,9 +12,9 @@ import {
 import { capFirstLetters, parseEpoch } from '../../utils'
 import { DeleteIcon } from '@chakra-ui/icons'
 
-export const SelectedSeasonFightTable = ({ 
-  deleteFightFromSeason,
-  selectedSeasonFights
+export const SelectedShowFightTable = ({ 
+  deleteFightFromShow,
+  selectedShowFights
 }) => {
   return (
     <Flex 
@@ -24,9 +24,9 @@ export const SelectedSeasonFightTable = ({
       mx="auto" 
       mb="4"
     >
-      <SelectedSeasonFightsTableContent 
-        deleteFightFromSeason={deleteFightFromSeason}
-        selectedSeasonFights={selectedSeasonFights} 
+      <SelectedShowFightsTableContent 
+        deleteFightFromShow={deleteFightFromShow}
+        selectedShowFights={selectedShowFights} 
       />
     </Flex>
   )
@@ -34,8 +34,8 @@ export const SelectedSeasonFightTable = ({
  
 const columns = [
   {
-    Header: 'Scheduled',
-    accessor: 'start'
+    Header: 'Date',
+    accessor: 'starts'
   },
   {
       Header: 'Fighter A',
@@ -50,14 +50,14 @@ const columns = [
     accessor: ''
   }
 ];
-const SelectedSeasonFightsTableContent = ({ 
-  deleteFightFromSeason,
-  selectedSeasonFights, 
+const SelectedShowFightsTableContent = ({ 
+  deleteFightFromShow,
+  selectedShowFights, 
 }) => {
 
   const handleDelete = e => {
     const { id } = e.currentTarget;
-    deleteFightFromSeason(id)
+    deleteFightFromShow(id)
   }
 
   return (
@@ -68,7 +68,7 @@ const SelectedSeasonFightsTableContent = ({
       overflow="scroll"
     >
       <Table minW="100%" mb="6" borderWidth="1px" fontSize="sm" overflowY="scroll">
-        <TableCaption fontSize="1.5rem" placement="top">{selectedSeasonFights?.season?.seasonName} Fights</TableCaption> 
+        {/* <TableCaption fontSize="1.5rem" placement="top">{selectedShowFights?.season?.seasonName} Fights</TableCaption>  */}
         <Thead bg={mode('gray.50', 'gray.800')}>
           <Tr>
             {columns.map((column, index) => (
@@ -84,7 +84,8 @@ const SelectedSeasonFightsTableContent = ({
           </Tr>
         </Thead>
         <Tbody>
-          { selectedSeasonFights?.fightSummaries?.length > 0 && selectedSeasonFights.fightSummaries.map( (row, _i) => {
+          { selectedShowFights?.fightSummaries?.length > 0 
+            && selectedShowFights.fightSummaries.map( (row, _i) => {
 
             const { fight, fighters, show } = row
             return (

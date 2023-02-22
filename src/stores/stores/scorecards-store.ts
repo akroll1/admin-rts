@@ -27,7 +27,6 @@ export interface ScorecardStoreState {
     blogPosts: BlogPost[]
     deleteInvite(inviteId: string): void
     fetchAllPanelists(): void
-    fetchAllSeasonsSummaries(): void
     fetchBlogPost(blogPostId: string): void
     fetchBlogPosts(): void
     fetchFighter(fighterId: string): void
@@ -118,13 +117,6 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const res = await axios.get(`${url}/panelists`, await configureAccessToken() )
         const panelists = res.data as Panelist[]
         set({ panelists })
-    },
-    fetchAllSeasonsSummaries: async () => {
-        const res = await axios.get(`${url}/seasons`)
-        const allSeasonsSummaries = res.data as SeasonSummary[]
-        // const filtered: FightSummary[] = filterFights(allSeasonsSummaries[0].fightSummaries)
-        set({ allSeasonsSummaries })
-        // get().setSeasonsOptions()
     },
     fetchBlogPost: async (blogPostId: string) => {
         get().setIsLoading(true)

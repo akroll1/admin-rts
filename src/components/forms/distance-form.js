@@ -19,65 +19,65 @@ import {
 import { FieldGroup } from '../../chakra'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import { EventType, Status, useGlobalStore } from '../../stores'
+import { DistanceType, Status, useGlobalStore } from '../../stores'
 
-export const CreateEventForm = () => {
+export const DistanceForm = () => {
     const { 
         isSubmitting,
-        selectedEvent,
-        createEvent,
-        deleteEvent,
-        fetchEvent,
-        updateEvent,
+        selectedDistance,
+        createDistance,
+        deleteDistance,
+        fetchDistance,
+        updateDistance,
     } = useGlobalStore()
 
     // showId is kept out of the form for put/post logic.
-    const [eventId, setEventId] = useState(null);
-    const [showId, setShowId] = useState(null)
+    const [distanceId, setDistanceId] = useState(null);
     const [form, setForm] = useState({
         description: "",
-        eventName: "",
-        eventType: "",
+        distanceName: "",
+        distanceType: "FIGHT",
         showIds: [],
-        status: "",
+        status: "PENDING",
         storyline: "",
         starts: "",
         ends: "",
     })    
 
     useEffect(() => {
-        if(selectedEvent?.eventId){
-            console.log('SELECTED_EVENT')
+        if(selectedDistance?.distanceId){
+            console.log('SELECTED_DISTANCE')
             setForm({ 
                 ...form, 
-                ...selectedEvent,
-                showIds: selectedEvent.showIds?.length ? selectedEvent.showIds : [],
-                ends: new Date(selectedEvent.ends),
-                starts: new Date(selectedEvent.starts)
+                ...selectedDistance,
+                showIds: selectedDistance.showIds?.length ? selectedDistance.showIds : [],
+                ends: new Date(selectedDistance.ends),
+                starts: new Date(selectedDistance.starts)
             })
-            setEventId(selectedEvent.eventId)
-            document.getElementById("eventType").value = selectedEvent.eventType;
-            document.getElementById("status").value = selectedEvent.status;
+            setDistanceId(selectedDistance.distanceId)
+            document.getElementById("distanceType").value = selectedDistance.distanceType;
+            document.getElementById("status").value = selectedDistance.status;
         }
-    },[selectedEvent])
+    },[selectedDistance])
 
-    const searchForEvent = () => {
-        fetchEvent(eventId)
+    const searchForDistance = () => {
+        fetchDistance(distanceId)
     };
     
-    const handleUpdateEvent = () => {
+    const handleUpdateDistance = () => {
         const putObj = {
             ...form,
             showIds: form.showId.length ? form.showIds : null,
             starts: new Date(form.starts).toISOString(),
             ends: new Date(form.ends).toISOString(),
         }
-        updateEvent(putObj)
+        updateDistance(putObj)
     }
-    const handleDeleteEvent = e => {
-        deleteEvent(eventId)
+    const handleDeleteDistance = e => {
+        const { id } = e.currentTarget;
+        deleteDistance(form.distanceId)
     }
-    const handlePostEvent = () => {
+    const handlePostDistance = () => {
         const postObj = {
             ...form,
             showIds: form.showIds.length ? form.showIds : null,
@@ -85,7 +85,7 @@ export const CreateEventForm = () => {
             ends: new Date(form.ends).toISOString(),
         };
         console.log('postObj: ', postObj);
-        createEvent(postObj)
+        createDistance(postObj)
     }
 
     const handleFormChange = (e, type) => {
@@ -94,61 +94,35 @@ export const CreateEventForm = () => {
         setForm({...form, [id]: value});
     };
 
-     const addFightToEvent = () => {
-        if(showId.length === 36){
-            if(!form.eventName) return alert('Select an Event')
-            if(form.showIds){
-                const [isDuplicate] = form.showIds.filter( id => id === showId)
-                if(isDuplicate) return alert('Fight is in this Season')
-            }
-
-            Object.assign(form, {
-                eventId,
-                showIds: form.showIds?.length > 0 ? [ ...form.showIds, showId] : [showId]
-            })
-            updateEvent(form)
-            return
-        }
-        alert('Not a fight ID.')
-    }
-
-    const deleteFightFromEvent = showId => {
-
-        setShowId(showId)
-        const removed = form.showIds.filter( id => id !== showId)
-        setForm({ ...form, showIds: removed })
-        // patchRemoveFightFromEvent(showId, eventId)
-    }
-
-    const eventTypeLabels = Object.keys(EventType).map( type => type)
-    const eventStatusLabels = Object.keys(Status).map( status => status);
+    const distanceTypeLabels = Object.keys(DistanceType).map( type => type)
+    const distanceStatusLabels = Object.keys(Status).map( status => status);
     console.log('form: ', form)
-    console.log('eventId: ', eventId)
+    console.log('distanceId: ', distanceId)
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
             <form id="show_form" onSubmit={(e) => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
-                        Event (Target) Form
+                        Create Distance Form
                     </Heading>
-                    <FieldGroup title="Search for an Event">
+                    <FieldGroup title="Search for a Distance">
                         <VStack width="full" spacing="6">
-                            <FormControl id="eventId">
-                                <FormLabel htmlFor="eventId">Event ID</FormLabel>
+                            <FormControl id="distanceId">
+                                <FormLabel htmlFor="distanceId">Distance ID</FormLabel>
                                 <Input 
-                                    value={eventId} 
-                                    onChange={ ({ currentTarget: {value} }) => setEventId(value.length === 36 ? value : '')} 
+                                    value={distanceId} 
+                                    onChange={ ({ currentTarget: {value} }) => setDistanceId(value.length === 36 ? value : '')} 
                                     type="text" 
                                 />
                             </FormControl>
                             <HStack justifyContent="center" width="full">
                                 <Button 
-                                    disabled={!eventId}  
                                     minW="33%" 
+                                    disabled={!distanceId}  
                                     isLoading={isSubmitting} 
                                     loadingText="Searching..." 
-                                    onClick={searchForEvent} 
+                                    onClick={searchForDistance} 
                                     type="button" 
                                     colorScheme="solid">
                                     Search
@@ -156,18 +130,18 @@ export const CreateEventForm = () => {
                             </HStack>
                         </VStack>
                     </FieldGroup>
-                    <FieldGroup title="Event Information">
+                    <FieldGroup title="Distance Information">
                         <VStack width="full" spacing="6">
-                            <FormControl isRequired id="eventName">
-                                <FormLabel htmlFor="eventName">Event Name</FormLabel>
-                                <Input value={form.eventName} onChange={handleFormChange}  type="text" maxLength={255} />
+                            <FormControl isRequired id="distanceName">
+                                <FormLabel htmlFor="distanceName">Distance Name</FormLabel>
+                                <Input value={form.distanceName} onChange={handleFormChange}  type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="storyline">
-                                <FormLabel htmlFor="storyline">Event Storyline</FormLabel>
+                                <FormLabel htmlFor="storyline">Distance Storyline</FormLabel>
                                     <Textarea value={form.storyline} onChange={handleFormChange} rows={4} />
                                 <FormHelperText>
-                                    Brief description of the EVENT's significance. URLs are hyperlinked.
+                                    Brief description of the Distance's significance. URLs are hyperlinked.
                                 </FormHelperText>
                             </FormControl>
 
@@ -176,10 +150,10 @@ export const CreateEventForm = () => {
                                     <Textarea value={form.description} onChange={handleFormChange} rows={4} />
                             </FormControl>
 
-                            <FormControl id="eventType">
-                                <FormLabel htmlFor="eventType">Event Type</FormLabel>
+                            <FormControl id="distanceType">
+                                <FormLabel htmlFor="distanceType">Distance Type</FormLabel>
                                 <Select onChange={handleFormChange}>
-                                    { eventTypeLabels.map( type => {
+                                    { distanceTypeLabels.map( type => {
                                         return (
                                             <option 
                                                 placeholder='Type' 
@@ -193,9 +167,9 @@ export const CreateEventForm = () => {
                                 </Select>                            
                             </FormControl>
                             <FormControl id="status">
-                                <FormLabel htmlFor="status">Event Status</FormLabel>
+                                <FormLabel htmlFor="status">Distance Status</FormLabel>
                                 <Select onChange={handleFormChange}>
-                                    { eventStatusLabels.map( status => {
+                                    { distanceStatusLabels.map( status => {
                                         return (
                                             <option 
                                                 placeholder='Type' 
@@ -222,7 +196,6 @@ export const CreateEventForm = () => {
                             <FormControl>
                                 <FormLabel htmlFor="date-picker">End time</FormLabel>
                                 <Datepicker 
-                                    // onSelect={date => setForm({ ...form, ends: new Date().toISOString() })}
                                     id="date-picker"
                                     dateFormat="MM/dd/yyyy"                                    
                                     selected={form.ends}
@@ -237,7 +210,7 @@ export const CreateEventForm = () => {
                     <ButtonGroup w="100%">
                         <Button 
                             minW="33%"
-                            onClick={eventId ? handleUpdateEvent : handlePostEvent } 
+                            onClick={distanceId ? handleUpdateDistance : handlePostDistance } 
                             type="button" 
                             colorScheme="solid"
                             isLoading={isSubmitting}
@@ -247,10 +220,10 @@ export const CreateEventForm = () => {
                         </Button>
                         <Button 
                             minW="33%" 
-                            disabled={!eventId} 
+                            disabled={!distanceId} 
                             // isLoading={isSubmitting} 
                             loadingText="Deleting" 
-                            onClick={handleDeleteEvent} 
+                            onClick={handleDeleteDistance} 
                             variant="outline"
                         >
                             Delete
@@ -258,18 +231,6 @@ export const CreateEventForm = () => {
                     </ButtonGroup>
                 </FieldGroup>
             </form>
-
-            {/* { form.eventId &&
-                <Flex
-                    minW="100%"
-                >
-                    <SelectedSeasonFightTable 
-                        deleteFightFromSeason={deleteFightFromSeason}
-                        selectedSeasonFights={selectedSeasonFights}
-                    />
-                </Flex>
-            } */}
-
         </Box>
     )
 }
