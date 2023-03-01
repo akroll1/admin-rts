@@ -1,4 +1,4 @@
-import { FightPropsEnum } from "./enums"
+import { FightPropsEnum } from "../enums"
 
 export interface FightProps {
     fightId: string

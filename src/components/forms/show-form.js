@@ -18,7 +18,7 @@ import {
 import { FieldGroup } from '../../chakra'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import { NETWORK_ENUMS, FIGHT_STATUS_SELECT_CONSTANTS, createTimestamp } from '../../utils'
+import { NetworkEnum, Status, formattedShowTime } from '../../stores'
 import { useGlobalStore } from '../../stores'
 
 export const ShowForm = () => {
@@ -60,7 +60,7 @@ export const ShowForm = () => {
 
     const handlePostShow = () => {
         const postObj = Object.assign(form, { 
-            showTime: createTimestamp(showTime), 
+            showTime: formattedShowTime(showTime), 
             fightIds: [fightId],
             showId: null
         })
@@ -115,7 +115,7 @@ export const ShowForm = () => {
                                 <FormLabel htmlFor="showId">Show ID</FormLabel>
                                 <Input 
                                     value={showId} 
-                                    onChange={ ({ currentTarget: {value} }) => setShowId(value.length == 36 ? value : '')} 
+                                    onChange={ ({ currentTarget: {value} }) => setShowId(value.length === 36 ? value : '')} 
                                     type="text" 
                                 />
                             </FormControl>
@@ -158,7 +158,7 @@ export const ShowForm = () => {
                             <FormControl id="network">
                                 <FormLabel htmlFor="network">Network</FormLabel>
                                 <Select placeholder={form.network || 'Network'} onChange={handleFormChange}>
-                                    { NETWORK_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                    { Object.keys(NetworkEnum).map( network => <option key={network} value={network}>{network}</option>)}
                                 </Select>                            
                             </FormControl>
 
@@ -166,7 +166,7 @@ export const ShowForm = () => {
                                 <FormControl id="showStatus">
                                     <FormLabel htmlFor="showStatus">Show Status</FormLabel>
                                     <Select onChange={handleFormChange}>
-                                        { FIGHT_STATUS_SELECT_CONSTANTS.map( status => <option placeholder='hey' key={status.value} value={status.value}>{status.label}</option>)}
+                                        { Status.map( status => <option placeholder='hey' key={status.value} value={status.value}>{status.label}</option>)}
                                     </Select>                            
                                 </FormControl>
                             }

@@ -9,7 +9,7 @@ import {
   Tr, 
   useColorModeValue as mode 
 } from '@chakra-ui/react'
-import { capFirstLetters, parseEpoch } from '../../utils'
+import { capFirstLetters } from '../../stores'
 import { DeleteIcon } from '@chakra-ui/icons'
 
 export const SelectedShowFightTable = ({ 

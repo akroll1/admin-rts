@@ -1,10 +1,15 @@
-import { Network, Status } from "./enums";
+import { 
+	NetworkEnum, 
+	Status 
+} from "../enums"
+import { ShowSummary } from "./summaries.model"
 
 export interface Show {
 	showId: string
+	chatKey: string | null
 	fightIds: string[]
 	location: string
-	network: Network 
+	network: NetworkEnum 
 	promoter: string
 	showStoryline: string
 	showTime: number
@@ -15,12 +20,4 @@ export interface Show {
 	updatedAt?: number
 }
 
-export interface ShowCreate {
-	showName: string
-    fightIds: string[]
-    location: string
-    network: string
-    promoter: string
-    showStoryline: string
-    showTime: number
-}
+export type ShowsByStatus = Record<Status, ShowSummary[]>

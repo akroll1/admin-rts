@@ -2,10 +2,10 @@ import {
     Avatar, 
     Center, 
     Flex, 
-    Heading, s
+    Heading, 
 } from '@chakra-ui/react'
-import { capFirstLetters } from '../../../utils'
-import backgroundImage from '../../utils/image/boxing-background.png'
+import { capFirstLetters } from "../../../stores"
+// import backgroundImage from '../../utils/image/boxing-background.png'
 
 export const FighterSelectionSwipe = ({ 
     fighter,
@@ -54,7 +54,7 @@ export const FighterSelectionSwipe = ({
             position="relative"
             _before={{
                 content: "''",
-                background: `url(${backgroundImage})`,
+                // background: `url(${backgroundImage})`,
                 opacity: "0.3",
                 top: "0",
                 bottom: "0",

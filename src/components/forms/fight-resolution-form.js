@@ -20,10 +20,10 @@ import {
 import { DividerWithText, FieldGroup } from '../../chakra'
 import { 
     capFirstLetters, 
-    FIGHT_STATUS_SELECT_CONSTANTS, 
-    OFFICIAL_RESULTS_ENUM 
-} from '../../utils'
-import { useGlobalStore } from '../../stores'
+    OfficialResults,
+    Status, 
+    useGlobalStore,
+} from '../../stores'
 
 export const FightResolutionForm = () => {
 
@@ -182,14 +182,14 @@ export const FightResolutionForm = () => {
                                 w="50%" 
                                 mt="4"
                             >
-                                { OFFICIAL_RESULTS_ENUM.map( result => <option key={result.value} value={result.value}>{result.label}</option> )}
+                                { Object.keys(OfficialResults).map( result => <option key={result} value={result}>{result}</option> )}
                             </Select>
                             <Select 
                                 onChange={e => setResolvedStatus(e.currentTarget.value)}
                                 w="50%" 
                                 mt="4"
                             >
-                                { FIGHT_STATUS_SELECT_CONSTANTS.map( ({ value, label }) => <option key={value} value={value}>{label}</option> )}
+                                { Status.map( ({ value, label }) => <option key={value} value={value}>{label}</option> )}
                             </Select>
                         </>
                     }

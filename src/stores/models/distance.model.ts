@@ -1,26 +1,18 @@
-import { DistanceType, Status } from "./enums";
-import { FightSummary, Show } from "./index";
+import { 
+    DistanceType,    
+    Status,
+} from '../index'
 
 export interface Distance {
-  distanceId: string;
-  description: string | null;
-  distanceName: string;
-  distanceType: DistanceType;
-  showIds: string[] | null;
-  status: Status;
-  storyline?: string | null;
-  starts: string;
-  ends: string | null; // if not a season type.
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface DistanceSummary {
-  distance: Distance | null;
-  shows: ShowSummary[] | null;
-}
-
-export interface ShowSummary {
-  show: Show;
-  fightSummaries: FightSummary[] | null;
+    distanceId: string;
+    description: string | null;
+    showIds: string[] | null;
+    distanceName: string;
+    distanceType: DistanceType;
+    status: Status;
+    storyline?: string | null;
+    starts: string;
+    ends: string | null; // if not a season type.
+    createdAt?: string;
+    updatedAt?: string;
 }

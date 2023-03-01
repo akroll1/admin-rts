@@ -1,5 +1,7 @@
-import { Status, Network, WeightClass } from './enums'
-import { Fighter, Show } from './index'
+import { 
+	Status,
+	WeightclassEnum,
+} from '../index'
 
 export interface Fight {
 	fightId: string;
@@ -13,56 +15,10 @@ export interface Fight {
 	officialResult: string | null;
 	rounds: number;
 	showId: string | null;
-	weightclass: WeightClass;
+	weightclass: WeightclassEnum;
 	createdAt?: number;
 	updatedAt?: number;
 }
-
-export type FightByStatus = {
-    ACTIVE: FightSummary[]
-    COMPLETE: FightSummary[]
-    CANCELED: FightSummary[]
-    FANTASY: FightSummary[]
-    PENDING: FightSummary[]
-	TESTING: FightSummary[]
-}
-
-export const fightSummaryStub = {
-	fight: {
-		fightId: '',
-		fighterIds: [],
-		fightQuickTitle: '',
-		fightStatus: Status.PENDING,
-		fightStoryline: '',
-		guestJudgeIds: null,
-		isMainEvent: true,
-		isTitleFight: true,
-		odds: '',
-		officialResult: null,
-		rounds: 12,
-		showId: '',
-		weightclass: WeightClass.HEAVYWEIGHT,
-	}, 
-	fighters: [],
-	show: {
-		showId: '',
-		fightIds: [],
-		location: '',
-		network: Network.SHOWTIME,
-		promoter: '',
-		showStoryline: '',
-		showTime: 0,
-		showName: '',
-		showStatus: Status.PENDING,
-		isFeatured: true,
-	}
-}
-export interface FightSummary {
-    fight: Fight,
-    fighters: Fighter[],
-    show: Show
-}
-
 export interface FightResolution {
     fighterUpdates: Record<string, string[]>[]
     fightId: string
@@ -78,7 +34,7 @@ export interface FightPostObj {
 	isMainEvent: boolean;
 	isTitleFight: boolean;
 	rounds: number;
-	weightclass: WeightClass;
+	weightclass: WeightclassEnum;
 }
 
 export interface FightUpdateOptions {
@@ -92,5 +48,5 @@ export interface FightUpdateOptions {
 	officialResult?: string | null;
 	rounds?: number;
 	showId?: string | null;
-	weightclass?: WeightClass;
+	weightclass?: WeightclassEnum;
 }

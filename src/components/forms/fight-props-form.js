@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { 
     Box, 
     Button, 
-    Flex, 
     FormControl, 
     FormLabel, 
     Heading, 
@@ -10,7 +9,6 @@ import {
     Input, 
     Stack, 
     StackDivider, 
-    Textarea,  
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'

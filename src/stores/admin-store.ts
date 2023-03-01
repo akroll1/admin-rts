@@ -11,9 +11,8 @@ import {
     FightProps,
     FightResolution,
     Panelist,
-    Season,
     Show,
-} from '../models'
+} from './index'
 import { configureAccessToken } from './auth-account-store'
 import axios from 'axios'
 import { Status } from "@chakra-ui/react";
@@ -28,14 +27,12 @@ export interface AdminStoreState {
     createFightProps(obj: Partial<FightProps>): void
     createPanel(panelId: string): void
     createPanelist(panelistObj: Partial<Panelist>): void
-    createSeason(createObj: Partial<Season>): void
     createShow(createShowObj: Partial<Show>): void
     deleteDiscussion(discussionId: string): void
     deleteDistance(distanceId: string): void
     deleteFight(fightId: string): void
     deleteFighter(fighterId: string): void
     deletePanelist(panelistId: string): void
-    deleteSeason(seasonId: string): void
     deleteShow(showId: string): void
     distancesByStatusSummaries: any[]
     fetchDistance(distanceId: string): void
@@ -50,7 +47,6 @@ export interface AdminStoreState {
     updateFight(update: Partial<Fight>): void
     updateFighter(update: Partial<Fighter>): void
     updateFightProps(obj: Partial<FightProps>): void
-    updateSeason(options: Partial<Season>): void
 }
 
 export const initialAdminStoreState = {
@@ -118,11 +114,6 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('CREATE_PROPS, res: ', res.data)
         get().setIsSubmitting(false)
     },
-    createSeason: async (createObj: Partial<Season>) => {
-        get().setIsSubmitting(true)
-        const res = await axios.post(`${url}/seasons`, createObj, await configureAccessToken() )
-        get().setIsSubmitting(false)
-    },
     createShow: async (createShowObj: Partial<Show>) => {
         get().setIsSubmitting(true)
         const res = await axios.post(`${url}/shows`, createShowObj, await configureAccessToken() )
@@ -163,13 +154,6 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('PANELIST- delete res.data: ', res.data)
         get().setIsSubmitting(false)
     },
-    deleteSeason: async (seasonId: string) => {
-        get().setIsSubmitting(true)
-        const res = await axios.delete(`${url}/seasons/${seasonId}`, await configureAccessToken() )
-        console.log('DELETE- season: ' , res.data)
-        get().setIsSubmitting(false)
-        get().fetchSeasons()
-    },
     deleteShow: async (showId: string) => {
         get().setIsSubmitting(true)
         const res = await axios.delete(`${url}/shows/${showId}`, await configureAccessToken() )
@@ -177,12 +161,12 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         get().setIsSubmitting(false)
     },
     fetchDistance: async (distanceId: string) => {
-        const res = await axios.get(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken() );
+        const res = await axios.get(`${ADMIN_API}/distances/${distanceId}/id`, await configureAccessToken() );
         const selectedDistance = res.data as Distance;
         set({ selectedDistance })
     },
     fetchDistancesByStatus: async (status: Status) => {
-        const res = await axios.get(`${ADMIN_API}/distances/status/${status}`, await configureAccessToken() )
+        const res = await axios.get(`${ADMIN_API}/distances/${status}/status`, await configureAccessToken() )
         const distancesByStatusSummaries = res.data;
         console.log('distancesByStatusSummaries: ', distancesByStatusSummaries)
         set({ distancesByStatusSummaries })
@@ -230,12 +214,6 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         get().setIsSubmitting(true)
         const res = await axios.put(`${url}/fight-props`, obj, await configureAccessToken() )
         console.log('UPDATE_FIGHT_PROPS, res: ', res.data)
-        get().setIsSubmitting(false)
-    },
-    updateSeason: async (options: Partial<Season>) => {
-        get().setIsSubmitting(true)
-        const res = await axios.put(`${url}/seasons/${options.seasonId}`, options, await configureAccessToken() )
-        console.log('UPDATE_SEASON: ', res.data)
         get().setIsSubmitting(false)
     },
     updateShow: async (update: Partial<Show>) => {

@@ -5,7 +5,7 @@ import { GlobalStoreState } from './global-store'
 import { 
     User, 
     UserAccount
-} from '../models'
+} from './index'
 import axios from 'axios'
 
 Amplify.configure({

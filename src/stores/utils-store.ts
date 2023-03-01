@@ -1,6 +1,7 @@
 import { StateCreator } from "zustand"
 import { GlobalStoreState } from "./global-store"
 import { 
+    capFirstLetters,
     Fighter,
     ChatMessage,
     Modals,
@@ -10,9 +11,8 @@ import {
     Tabs,
     Toast,
     TabsEnum,
-} from '../models'
+} from './index'
 import axios from 'axios'
-import { capFirstLetters } from "../../utils"
 
 export interface UtilsStoreState {
     isLoading: boolean
@@ -23,16 +23,13 @@ export interface UtilsStoreState {
     navigateTo: string
     scoringTransformedPrediction: string | null
     setGlobalNotification(chatMessage: ChatMessage): void
-    setScoringTransformedPrediction(rawPrediction: string | null): void
     setIsLoading(loadingState: boolean): void
     setIsSubmitting(submittingState: boolean): void
     setIsSubmittingForm(submittingState: boolean): void
     setModals(modal: string, modalState: boolean): void
-    setNavigateTo(path: string): void
     setTabs(tab: TabsEnum): void
     setToast(toast: Toast): void
     setTokenExpired(state: boolean): void
-    setTransformedPrediction(rawPrediction: string | null): void
     setTransformedResult(officialResult: string): void
     subscribeToNewsletter(email: string): void
     tabs: Tabs
@@ -50,7 +47,7 @@ export const initialUtilsStoreState = {
     modals: {} as Modals,
     navigateTo: '',
     scoringTransformedPrediction: null,
-    tabs: { ...resetTabs, [TabsEnum.ALL]: true } as Tabs,
+    tabs: { [TabsEnum.ALL]: true } as Tabs,
     toast: {} as Toast,
     tokenExpired: false,
     transformedPrediction: '',
@@ -86,39 +83,9 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
         })
         set({ modals })
     },
-    setNavigateTo: (path: string) => {
-        set({ navigateTo: path })
-    },
-    setScoringTransformedPrediction: (rawPrediction: string) => {
-        if(rawPrediction){
-            const predictionId = rawPrediction.slice(0, 36)
-            const [fighter] = get().activeGroupScorecard.fighters.filter( (fighter: Fighter) => fighter.fighterId === predictionId)
-            const scoringTransformedPrediction = `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
-            set({ scoringTransformedPrediction })
-        }
-        if(!rawPrediction){
-            set({ scoringTransformedPrediction: 'Not Set' })
-        }
-    },
     setTabs: (tab: TabsEnum) => {
         const tabs = { ...resetTabs, [tab]: true }
         set({ tabs })
-    },
-    setTransformedPrediction: (rawPrediction: string | null) => {
-        if(!rawPrediction && (Date.now() > get().show.showTime) ){
-            set({ transformedPrediction: `Predictions Locked!` })
-            return
-        }
-        if(!rawPrediction){
-            set({ transformedPrediction: `Make a Prediction` })
-            return
-        }
-        if(rawPrediction){
-            const predictionId = rawPrediction.slice(0, 36)
-            const [fighter] = get().activeGroupScorecard?.fighters?.filter( (fighter: Fighter) => fighter.fighterId === predictionId)
-            const transformedPrediction = `${capFirstLetters(fighter.lastName)}- ${rawPrediction.split(',')[1]}`
-            set({ transformedPrediction })
-        }
     },
     setToast: (toast: Toast) => {
         set({ toast })

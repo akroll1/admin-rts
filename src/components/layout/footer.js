@@ -7,7 +7,7 @@ import {
   Copyright, 
   SocialMediaLinks, 
   LinkGrid, 
-  SubscribeForm 
+  // SubscribeForm 
 } from '../../chakra'
 
 export const Footer = () => (
@@ -41,9 +41,9 @@ export const Footer = () => (
             spacing={['10', '20', '28']} 
             flex="1" 
           />
-          <SubscribeForm 
+          {/* <SubscribeForm 
             width={['full', 'sm']} 
-          />
+          /> */}
         </Stack>
       </Stack>
       <Stack

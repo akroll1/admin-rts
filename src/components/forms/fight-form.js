@@ -21,13 +21,13 @@ import {
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { 
-    FIGHT_STATUS_SELECT_CONSTANTS, 
-    OFFICIAL_RESULTS_ENUM, 
-    ROUND_LENGTH_ENUMS, 
-    WEIGHTCLASS_ENUMS 
-} from '../../utils'
-import { useGlobalStore } from '../../stores'
+import {
+    OfficialResults,
+    ROUND_LENGTH_ENUMS,
+    Status,
+    useGlobalStore,
+    WeightclassEnum,
+} from '../../stores'
 
 export const FightForm = () => {
     const { 
@@ -115,7 +115,13 @@ export const FightForm = () => {
         const filtered = guestJudgeIds.filter( judge => judge !== id)
         setGuestJudgeIds(filtered)
     }
-    const { fightQuickTitle, isMainEvent, isTitleFight, fightStoryline, rounds } = form;
+    const { 
+        fightQuickTitle, 
+        isMainEvent, 
+        isTitleFight, 
+        fightStoryline, 
+        rounds 
+    } = form;
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
@@ -162,14 +168,23 @@ export const FightForm = () => {
                             <FormControl isRequired id="weightclass">
                                 <FormLabel isRequired htmlFor="weightclass">Weight Class</FormLabel>
                                 <Select placeholder={form.weightclass || 'Weight Class'} onChange={e => handleFormChange(e,'FIGHT')}>
-                                    { WEIGHTCLASS_ENUMS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                    { Object.keys(WeightclassEnum).map( (weightclass, _i) => {
+                                        return (
+                                            <option 
+                                                key={_i} 
+                                                value={weightclass}
+                                            >
+                                                {weightclass}
+                                            </option>
+                                        )
+                                    })}
                                 </Select>
                             </FormControl>
                            
                             <FormControl isRequired id="rounds">
                                 <FormLabel htmlFor="rounds">Total Rounds</FormLabel>
                                 <Select placeholder={form.rounds || 'Rounds'} onChange={e => handleFormChange(e,'ROUNDS')}>
-                                    { ROUND_LENGTH_ENUMS.map(round => <option key={round} value={round}>{round}</option>)}
+                                    { ROUND_LENGTH_ENUMS.map( round => <option key={round} value={round}>{round}</option>)}
                                 </Select>
                             </FormControl>
                             <FormControl id="fightStoryline">
@@ -193,13 +208,22 @@ export const FightForm = () => {
                                 <FormControl id="fightStatus">
                                     <FormLabel htmlFor="fightStatus">Fight Status</FormLabel>
                                     <Select placeholder={form.fightStatus || 'Fight Status'} onChange={handleFormChange}>
-                                        { FIGHT_STATUS_SELECT_CONSTANTS.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                        { Status.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
                                     </Select>
                                 </FormControl>
                                 <FormControl id="officialResult">
                                     <FormLabel htmlFor="officialResult">Official Result</FormLabel>
                                     <Select placeholder={form.officialResult || 'Official Result'} onChange={handleFormChange}>
-                                        { OFFICIAL_RESULTS_ENUM.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
+                                        { Object.keys(OfficialResults).map( (result) => {
+                                            return (
+                                                <option 
+                                                    key={result} 
+                                                    value={result}
+                                                >
+                                                    {result}
+                                                </option>
+                                            )
+                                        })}
                                     </Select>
                                 </FormControl>
                                     <FormControl id="winnderId">
