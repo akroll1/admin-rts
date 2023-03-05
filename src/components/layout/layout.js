@@ -7,7 +7,6 @@ import {
 } from '@chakra-ui/react'
 import { Footer } from './footer'
 import { Navbar } from './navbar'
-import { ExpiredTokenModal } from '../modals'
 import { useGlobalStore } from '../../stores'
 import { GlobalNotification } from '../utils'
 
@@ -32,7 +31,6 @@ export const Layout = ({ children }) => {
             minH={["100vh", "100vh"]}
         >  
             <Navbar />
-            <ExpiredTokenModal />
             <GlobalNotification />
             <Box 
                 mt="4rem"

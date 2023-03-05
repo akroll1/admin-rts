@@ -21,7 +21,7 @@ export const ShowsArrows = () => {
 
     useEffect(() => {
         if(selectedSeasonFightSummaries?.length > 0){
-            setCurrentFightId(selectedSeasonFightSummaries[0].fight.fightId)
+            setCurrentFightId(selectedSeasonFightSummaries[0].fight.id)
         }
     },[selectedSeasonFightSummaries])
 
@@ -31,7 +31,7 @@ export const ShowsArrows = () => {
         const calculateNextIndex = (currentFightId, arrow) => {
             const direction = arrow === 'right' ? 1 : -1;
             const length = selectedSeasonSummary.length;
-            const currentIndex = selectedSeasonFightSummaries.findIndex( summary => summary.fight.fightId === currentFightId)
+            const currentIndex = selectedSeasonFightSummaries.findIndex( summary => summary.fight.id === currentFightId)
 
             let nextIndex = currentIndex + direction;
             if(nextIndex < 0){
@@ -46,8 +46,8 @@ export const ShowsArrows = () => {
         
         const nextFightIndex = calculateNextIndex(currentFightId, id)
         const nextFightSummary = selectedSeasonFightSummaries[nextFightIndex]
-        setCurrentFightId(nextFightSummary.fight.fightId)
-        setSelectedFightSummary(nextFightSummary.fight.fightId)
+        setCurrentFightId(nextFightSummary.fight.id)
+        setSelectedFightSummary(nextFightSummary.fight.id)
     }
 
 

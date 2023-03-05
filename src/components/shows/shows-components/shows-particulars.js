@@ -31,7 +31,7 @@ export const ShowsParticulars = ({
         moneyline2: ''
     })
     const { fight, fightProps } = selectedFightSummary?.fighters?.length === 2 ? selectedFightSummary : [];
-    const { fightId, isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
+    const { id, isTitleFight, rounds, weightclass } = selectedFightSummary?.fight ? selectedFightSummary.fight : '';
     const { location, network, showTime } = selectedFightSummary?.show ? selectedFightSummary.show : '';
 
     useEffect(() => {
@@ -58,12 +58,12 @@ export const ShowsParticulars = ({
         }
 
         // Temporary for Predictions.
-        if(selectedFightSummary?.fight?.fightId){
+        if(selectedFightSummary?.fight?.id){
 
-            if(selectedFightSummary.fight.fightId === "7b1cec1d-04ef-4fb0-891d-7d2e7da5c035"){
+            if(selectedFightSummary.fight.id === "7b1cec1d-04ef-4fb0-891d-7d2e7da5c035"){
                 setPrediction(`Tank KO7`)
                 return
-            } else if(selectedFightSummary.fight.fightId === "8479a912-2d13-4993-a431-5c154a9e331f"){
+            } else if(selectedFightSummary.fight.id === "8479a912-2d13-4993-a431-5c154a9e331f"){
                 setPrediction(`Boots KO3`)
                 return
             } else {
@@ -111,7 +111,7 @@ export const ShowsParticulars = ({
                         icon={
                                 <FaTrophy opacity="0.7" />
                             } 
-                        label={ `${selectedFightSummary?.fight?.fightId 
+                        label={ `${selectedFightSummary?.fight?.id 
                             ? isTitleFight 
                                 ? `Title Fight` 
                                 : `No Belts` : ``}`

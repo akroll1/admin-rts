@@ -10,9 +10,12 @@ import {
   OrderedList 
 } from '@chakra-ui/react'
 import { DragHandleIcon } from '@chakra-ui/icons'
-import { capFirstLetters, PANELIST_PREDICTIONS_OPTIONS } from '../../utils'
+import { 
+  capFirstLetters, 
+  PANELIST_PREDICTIONS_OPTIONS,
+  useGlobalStore,
+} from '../../stores'
 import { MyPanelsFormTable } from '../tables'
-import { useGlobalStore } from '../../stores'
 import { FighterSelection } from './my-panels-form-els'
 
 const initialDnDState = {

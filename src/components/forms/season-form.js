@@ -18,41 +18,36 @@ import {
 import { FieldGroup } from '../../chakra'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import { Networks, Status, formattedShowTime } from '../../stores'
+import { Networks, SeasonType, Status } from '../../stores'
 import { useGlobalStore } from '../../stores'
 
-export const ShowForm = () => {
+export const SeasonForm = () => {
     const { 
-        createShow,
-        deleteShow,
-        fetchShow,
+        createSeason,
+        deleteSeason,
+        fetchSeason,
         isSubmitting,
-        show,
-        updateShow,
+        selectedSeason,
+        updateSeason,
     } = useGlobalStore()
 
-    // showId is kept out of the form for put/post logic.
-    const [showId, setShowId] = useState(null);
     const [form, setForm] = useState({
         id: '', 
-        fightIds: null,
-        location: '',
-        network: '',
-        promoter: '',
-        description: '',
         chatKey: null,
+        description: '',
         distanceIds: null,
         distanceName: '',
-        distanceType: "SHOW",
+        distanceType: "SEASON",
+        status: "PENDING",
         starts: new Date(),
-        status: "PENDING"
+        ends: new Date(),
     })    
 
-    const searchForShow = e => {
-        fetchShow(showId)
+    const fetchSeasonById = e => {
+        fetchSeason(form.id)
     };
 
-    const handlePostShow = () => {
+    const handlePostSeason = () => {
         
         const distance = {
             id: form.id ? form.id : null, // not sure how to handle yet, form and distance.
@@ -62,32 +57,29 @@ export const ShowForm = () => {
             distanceName: form.distanceName,
             distanceType: "SHOW",
             starts: new Date(form.starts).toISOString(),
+            ends: new Date(form.ends).toISOString(),
             status: form.status ? form.status: null,
         };
         
-        const show = {
+        const season = {
             id: form.id ? form.id : null,
-            fightIds: null,
-            location: form.location,
-            network: form.network,
-            promoter: form.promoter,        
+            type: SeasonType.MONTH,
         }
-        const showWithDistanceObj = {
+        const seasonWithDistanceObj = {
             distance,
-            show,
+            season,
         }
 
-        // console.log('showWithDistanceObj: ', showWithDistanceObj);
+        console.log('seasonWithDistanceObj: ', seasonWithDistanceObj);
 
-        createShow(showWithDistanceObj)
+        createSeason(seasonWithDistanceObj)
     }
     
-    const handleUpdateShow = () => {
-        updateShow(form)
+    const handleUpdateSeason = () => {
+        updateSeason(form)
     }
-
-    const handleDeleteShow = e => {
-        deleteShow(form.id)
+    const handleDeleteSeason = e => {
+        deleteSeason(form.id)
     }
 
     const handleFormChange = (e, type) => {
@@ -100,12 +92,12 @@ export const ShowForm = () => {
             <form id="show_form" onSubmit={(e) => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
-                        Show Form
+                        Season Form
                     </Heading>
-                    <FieldGroup title="Search for a Show">
+                    <FieldGroup title="Search for a Season">
                         <VStack width="full" spacing="6">
                             <FormControl id="id">
-                                <FormLabel htmlFor="id">Show ID</FormLabel>
+                                <FormLabel htmlFor="id">Season ID</FormLabel>
                                 <Input 
                                     value={form.id} 
                                     onChange={ ({ currentTarget: {value} }) => handleFormChange(value.length === 36 ? value : '')} 
@@ -118,7 +110,7 @@ export const ShowForm = () => {
                                     minW="33%" 
                                     isLoading={isSubmitting} 
                                     loadingText="Searching..." 
-                                    onClick={searchForShow} 
+                                    // onClick={searchForSeason} 
                                     type="button" 
                                     colorScheme="solid">
                                     Search
@@ -129,34 +121,16 @@ export const ShowForm = () => {
                     <FieldGroup title="Show Information">
                         <VStack width="full" spacing="6">
                             <FormControl isRequired id="id">
-                                <FormLabel htmlFor="id">Show ID</FormLabel>
+                                <FormLabel htmlFor="id">Season ID</FormLabel>
                                 <Input value={form.id} onChange={handleFormChange}  type="text" maxLength={255} />
                             </FormControl>
                             <FormControl isRequired id="distanceName">
-                                <FormLabel htmlFor="distanceName">Show Name</FormLabel>
+                                <FormLabel htmlFor="distanceName">Season Name</FormLabel>
                                 <Input value={form.distanceName} onChange={handleFormChange}  type="text" maxLength={255} />
                             </FormControl>
 
-                            
-                            <FormControl id="location">
-                                <FormLabel htmlFor="location">Location</FormLabel>
-                                <Input value={form.location} onChange={handleFormChange}  type="text" maxLength={255} />
-                            </FormControl>
-                            <FormControl id="network">
-                                <FormLabel htmlFor="network">Network</FormLabel>
-                                <Select placeholder={form.network || 'Network'} onChange={handleFormChange}>
-                                    { Object.keys(Networks).map( network => <option key={network} value={network}>{network}</option>)}
-                                </Select>                            
-                            </FormControl>
-                            <FormControl id="promoter">
-                                <FormLabel htmlFor="promoter">Promoter</FormLabel>
-                                <Select placeholder={form.promoter || 'Promoter'} onChange={handleFormChange}>
-                                    { Object.keys(Networks).map( promoter => <option key={promoter} value={promoter}>{promoter}</option>)}
-                                </Select>                              
-                            </FormControl>
-
                             <FormControl id="status">
-                                <FormLabel htmlFor="status">Show/Distance Status</FormLabel>
+                                <FormLabel htmlFor="status">Season/Distance Status</FormLabel>
                                 <Select onChange={handleFormChange}>
                                     { Object.keys(Status).map( status => <option key={status} value={status}>{status}</option>)}
                                 </Select>                            
@@ -168,7 +142,7 @@ export const ShowForm = () => {
                             <FormControl>
                                 <FormLabel htmlFor="date-picker">Starts</FormLabel>
                                 <Datepicker 
-                                    id="date-picker"
+                                    id="starts"
                                     dateFormat="Pp"     
                                     timeFormat="p"    
                                     showTimeSelect                           
@@ -177,12 +151,21 @@ export const ShowForm = () => {
                                     onChange={time => setForm({ ...form, starts: time })}
                                 />
                             </FormControl>
+                            <FormControl>
+                                <FormLabel htmlFor="date-picker">Starts</FormLabel>
+                                <Datepicker 
+                                    id="ends"
+                                    dateFormat="Pp"     
+                                    timeFormat="p"    
+                                    showTimeSelect                           
+                                    selected={form.ends}
+                                    style={{background: '#FFF', color: '#333 !important'}}
+                                    onChange={time => setForm({ ...form, ends: time })}
+                                />
+                            </FormControl>
                             <FormControl id="description">
                                 <FormLabel htmlFor="description">Distance Description</FormLabel>
                                     <Textarea value={form.description} onChange={handleFormChange} rows={5} />
-                                <FormHelperText>
-                                    Brief description of the fight significance. URLs are hyperlinked.
-                                </FormHelperText>
                             </FormControl>
                         </VStack>
                     </FieldGroup>
@@ -191,7 +174,7 @@ export const ShowForm = () => {
                     <ButtonGroup w="100%">
                         <Button 
                             minW="33%"
-                            onClick={handlePostShow} 
+                            onClick={handlePostSeason} 
                             type="button" 
                             colorScheme="solid"
                             isLoading={isSubmitting}
@@ -201,10 +184,10 @@ export const ShowForm = () => {
                         </Button>
                         <Button 
                             minW="33%" 
-                            disabled={!showId} 
+                            disabled={!form.id} 
                             // isLoading={isSubmitting} 
                             loadingText="Deleting" 
-                            onClick={handleDeleteShow} 
+                            onClick={handleDeleteSeason} 
                             variant="outline"
                         >
                             Delete

@@ -1,6 +1,6 @@
 import { Box, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue as mode, IconButton } from '@chakra-ui/react'
 import { DeleteIcon } from '@chakra-ui/icons'
-import { capFirstLetters } from '../../utils'
+import { capFirstLetters } from '../../stores'
 
 export const FightersTable = ({ fighters, deleteFighter, selectFighter }) => {
   return (
