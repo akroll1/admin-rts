@@ -1,8 +1,6 @@
 import { StateCreator } from "zustand"
 import { GlobalStoreState } from "./global-store"
 import { 
-    capFirstLetters,
-    Fighter,
     ChatMessage,
     Modals,
     ModalsEnum,
