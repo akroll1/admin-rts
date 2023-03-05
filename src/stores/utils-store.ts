@@ -1,16 +1,14 @@
 import { StateCreator } from "zustand"
 import { GlobalStoreState } from "./global-store"
 import { 
-    capFirstLetters,
-    Fighter,
     ChatMessage,
     Modals,
     ModalsEnum,
     resetModals,
     resetTabs,
     Tabs,
-    Toast,
     TabsEnum,
+    Toast,
 } from './index'
 import axios from 'axios'
 
