@@ -1,14 +1,14 @@
 import { 
-    NetworkEnum,
+    Networks,
     Status,
-    WeightclassEnum,
+    WeightClass,
 } from "./enums"
 export const blankScorecard = {
 	scorecardId: "BLANK",
 	corners: [],
 	displayName: "",
 	distanceId: "",
-	fightId: "",
+	id: "",
 	finalScore: 0,
 	ownerId: "",
 	scores: null,
@@ -21,7 +21,7 @@ export const blankScorecardWithCorners = {
 
 export const fightSummaryStub = {
 	fight: {
-		fightId: '',
+		id: '',
 		fighterIds: [],
 		fightQuickTitle: '',
 		fightStatus: Status.PENDING,
@@ -33,14 +33,14 @@ export const fightSummaryStub = {
 		officialResult: null,
 		rounds: 12,
 		showId: '',
-		weightclass: WeightclassEnum.HEAVYWEIGHT,
+		weightclass: WeightClass.HEAVYWEIGHT,
 	}, 
 	fighters: [],
 	show: {
 		showId: '',
 		fightIds: [],
 		location: '',
-		network: NetworkEnum.SHOWTIME,
+		network: Networks.SHOWTIME,
 		promoter: '',
 		showStoryline: '',
 		showTime: 0,

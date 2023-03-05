@@ -21,12 +21,13 @@ import {
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
+import Datepicker from 'react-datepicker'
 import {
     OfficialResults,
     ROUND_LENGTH_ENUMS,
     Status,
     useGlobalStore,
-    WeightclassEnum,
+    WeightClass,
 } from '../../stores'
 
 export const FightForm = () => {
@@ -39,26 +40,33 @@ export const FightForm = () => {
         updateFight,
     } = useGlobalStore()
 
-    const [fighterAId, setFighterAId] = useState('');
-    const [fighterBId, setFighterBId] = useState('');
-    const [fightId, setFightId] = useState(null);
-    const [guestJudge, setGuestJudge] = useState('');
-    const [guestJudgeIds, setGuestJudgeIds] = useState([]);
+    const [id, setFightId] = useState(null);
+    const [fighterIds, setFighterIds] = useState({
+        a: '',
+        b: ''
+    })
     const [form, setForm] = useState({
+        id: null,
+        description: '',
         fighterIds: [],
-        fightQuickTitle: '',
-        fightStoryline: null,
         isMainEvent: false,
         isTitleFight: false,
+        officialResult: null,
+        parent: null,
         rounds: 0,
+        status: "PENDING",
+        starts: new Date(),
         weightclass: '',
     });
 
     useEffect(() => {
         if(selectedFightSummary?.fight?.fighterIds?.length === 2){
-            setForm(selectedFightSummary.fight)
-            setFighterAId(selectedFightSummary.fight.fighterIds[0])
-            setFighterBId(selectedFightSummary.fight.fighterIds[1])
+            setForm({
+                ...form,
+                ...selectedFightSummary.fight,
+
+                
+            })
         }
     },[selectedFightSummary])
     
@@ -73,67 +81,73 @@ export const FightForm = () => {
     // rounds is being cast in places.
     const handleUpdateFight = () => {
         const fightObj = Object.assign(Object.create({}), {
-                fightId: form.fightId,
-                fightQuickTitle: form.fightQuickTitle,
-                fightStatus: form.fightStatus,
+                id: form.id ? form.id : null,
+                fighterIds: [fighterIds.a, fighterIds.b],
                 isMainEvent: form.isMainEvent,
                 isTitleFight: form.isTitleFight,
-                officialResult: form.officialResult,
-                rounds: parseInt(form.rounds)
+                officialResult: form.officialResult ? form.officialResult : null,
+                parent: form.parent ? form.parent : null,
+                rounds: parseInt(form.rounds),
+                status: form.status,
+                weightclass: form.weightclass,
         })
-        updateFight(fightObj)
+        // updateFight(fightObj)
     };
     
     const handlePostFight = () => {
-        const postObj = Object.assign(form, {
-            fighterIds: [fighterAId, fighterBId], 
-            rounds: parseInt(form.rounds)
+       
+        const distance = {
+            id: form.id ? form.id : null, // not sure how to handle yet, form and distance.
+            chatKey: null,
+            description: form.description ? form.description : null,
+            distanceIds: null, // will be null for fight. 
+            distanceName: form.distanceName,
+            distanceType: "FIGHT",
+            starts: new Date(form.starts).toISOString(),
+            status: form.status ? form.status: null,
+        }
+
+        const fight = Object.assign(Object.create({}), {
+            id: form.id ? form.id : null,
+            fighterIds: [fighterIds.a, fighterIds.b],
+            isMainEvent: form.isMainEvent,
+            isTitleFight: form.isTitleFight,
+            officialResult: form.officialResult ? form.officialResult : null,
+            parent: form.parent ? form.parent : null,
+            rounds: parseInt(form.rounds),
+            weightclass: form.weightclass,
         })
-        // console.log('postObj: ', postObj)
+        // console.log('fightObj: ', fightObj)
+        // console.log("distanceObj:  ", distanceObj)
+        const postObj = {
+            fight,
+            distance
+        }
+        console.log('postObj: ', postObj)
         createFight(postObj)
     };
     
     const searchForFight = () => {
-        if(fightId){
-            fetchFightSummary(fightId)
+        if(id){
+            fetchFightSummary(id)
         }
     }
 
     const handleDeleteFight = e => {
-        deleteFight(fightId)
+        deleteFight(id)
     }
-
-    const handleAddGuestJudge = () => {
-        if(guestJudge.length === 36){
-            setGuestJudgeIds( prev => ([...prev, guestJudge]));
-            return setGuestJudge('');
-        }
-        return alert('Not a valid UUID');
-    }
-    const deleteJudge = e => {
-        const { id } = e.currentTarget;
-        const filtered = guestJudgeIds.filter( judge => judge !== id)
-        setGuestJudgeIds(filtered)
-    }
-    const { 
-        fightQuickTitle, 
-        isMainEvent, 
-        isTitleFight, 
-        fightStoryline, 
-        rounds 
-    } = form;
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
              <FieldGroup title="Search for a Fight">
                 <VStack width="full" spacing="6">
-                    <FormControl isRequired id="fightId">
-                        <FormLabel htmlFor="fightId">Fight ID</FormLabel>
-                        <Input value={fightId} onChange={({currentTarget: {value}}) => setFightId(value.length === 36 ? value : '')} type="text" maxLength={36} />
+                    <FormControl isRequired id="id">
+                        <FormLabel htmlFor="id">Fight ID</FormLabel>
+                        <Input value={id} onChange={({currentTarget: {value}}) => setFightId(value.length === 36 ? value : '')} type="text" maxLength={36} />
                     </FormControl>
                     <HStack justifyContent="center" width="full">
                         <Button 
-                            disabled={!fightId} 
+                            disabled={!id} 
                             minW="33%" 
                             // isLoading={isSubmitting} 
                             loadingText="Searching..." 
@@ -153,106 +167,74 @@ export const FightForm = () => {
                     </Heading>
                     <FieldGroup title="Fight Info">
                         <VStack width="full" spacing="6">
-                            <FormControl isRequired id="fightQuickTitle">
-                                <FormLabel htmlFor="fightQuickTitle">Fight Quick Title</FormLabel>
-                                <Input value={fightQuickTitle} onChange={handleFormChange} type="text" maxLength={150} />
+                            
+                            <FormControl isRequired id="a">
+                                <FormLabel htmlFor="a">Fighter A ID</FormLabel>
+                                <Input value={fighterIds.a} onChange={ ({ currentTarget: {value}}) => setFighterIds(prev => ({ ...prev, a: value.length === 36 ? value : '' }))} type="text" maxLength={36} />
                             </FormControl>
-                            <FormControl isRequired id="fighterAId">
-                                <FormLabel htmlFor="fighterAId">Fighter A ID</FormLabel>
-                                <Input value={fighterAId} onChange={ ({currentTarget: {value}}) => setFighterAId(value.length === 36 ? value : '')} type="text" maxLength={36} />
+
+                            <FormControl isRequired id="b">
+                                <FormLabel htmlFor="b">Fighter B ID</FormLabel>
+                                <Input value={fighterIds.b} onChange={ ({ currentTarget: {value}}) => setFighterIds(prev => ({ ...prev, b: value.length === 36 ? value : '' }))} type="text" maxLength={36} />
                             </FormControl>
-                            <FormControl isRequired id="fighterBId">
-                                <FormLabel htmlFor="fighterBId">Fighter B ID</FormLabel>
-                                <Input value={fighterBId} onChange={ ({ currentTarget: {value}}) => setFighterBId(value.length == 36 ? value : '')} type="text" maxLength={36} />
+
+                            <FormControl id="parent">
+                                <FormLabel htmlFor="parent">Parent ID</FormLabel>
+                                <Input value={form.parent} onChange={ ({ currentTarget: {value}}) => handleFormChange(value.length === 36 ? value : '')} type="text" maxLength={36} />
                             </FormControl>
-                            <FormControl isRequired id="weightclass">
-                                <FormLabel isRequired htmlFor="weightclass">Weight Class</FormLabel>
-                                <Select placeholder={form.weightclass || 'Weight Class'} onChange={e => handleFormChange(e,'FIGHT')}>
-                                    { Object.keys(WeightclassEnum).map( (weightclass, _i) => {
-                                        return (
-                                            <option 
-                                                key={_i} 
-                                                value={weightclass}
-                                            >
-                                                {weightclass}
-                                            </option>
-                                        )
-                                    })}
-                                </Select>
-                            </FormControl>
-                           
+
+                            <Stack width="full" spacing="4">
+                                <Checkbox name="checkbox" isChecked={form.isMainEvent} id="isMainEvent" onChange={e => handleFormChange(e, 'FIGHT')}>Main Event</Checkbox>
+                            </Stack>
+
+                            <Stack width="full" spacing="4">
+                                <Checkbox name="checkbox" isChecked={form.isTitleFight} id="isTitleFight" onChange={e => handleFormChange(e, 'FIGHT')}>Title Fight</Checkbox>
+                            </Stack>
+
                             <FormControl isRequired id="rounds">
                                 <FormLabel htmlFor="rounds">Total Rounds</FormLabel>
                                 <Select placeholder={form.rounds || 'Rounds'} onChange={e => handleFormChange(e,'ROUNDS')}>
                                     { ROUND_LENGTH_ENUMS.map( round => <option key={round} value={round}>{round}</option>)}
                                 </Select>
                             </FormControl>
-                            <FormControl id="fightStoryline">
-                                <FormLabel htmlFor="fightStoryline">Storyline</FormLabel>
-                                    <Textarea value={fightStoryline} onChange={e => handleFormChange(e,'FIGHT')} rows={5} />
-                                <FormHelperText>
-                                    Brief description of the fight significance. URLs are hyperlinked.
-                                </FormHelperText>
+
+                            <FormControl isRequired id="weightclass">
+                                <FormLabel isRequired htmlFor="weightclass">Weight Class</FormLabel>
+                                <Select placeholder={form.weightclass || 'Weight Class'} onChange={e => handleFormChange(e,'FIGHT')}>
+                                    { Object.keys(WeightClass).map( weightclass => <option key={weightclass} value={weightclass}>{weightclass}</option>)}
+                                </Select>
                             </FormControl>
-                            <Stack width="full" spacing="4">
-                                <Checkbox name="checkbox" isChecked={isMainEvent} id="isMainEvent" onChange={e => handleFormChange(e, 'FIGHT')}>Main Event</Checkbox>
-                            </Stack>
-                            <Stack width="full" spacing="4">
-                                <Checkbox name="checkbox" isChecked={isTitleFight} id="isTitleFight" onChange={e => handleFormChange(e, 'FIGHT')}>Title Fight</Checkbox>
-                            </Stack>
-                        </VStack>
-                    </FieldGroup>
-                    { fightId &&
-                        <FieldGroup title="Update Results">
-                            <VStack width="full" spacing="6">
-                                <FormControl id="fightStatus">
-                                    <FormLabel htmlFor="fightStatus">Fight Status</FormLabel>
-                                    <Select placeholder={form.fightStatus || 'Fight Status'} onChange={handleFormChange}>
-                                        { Status.map( ({value, label}) => <option key={value} value={value}>{label}</option>)}
-                                    </Select>
-                                </FormControl>
-                                <FormControl id="officialResult">
-                                    <FormLabel htmlFor="officialResult">Official Result</FormLabel>
-                                    <Select placeholder={form.officialResult || 'Official Result'} onChange={handleFormChange}>
-                                        { Object.keys(OfficialResults).map( (result) => {
-                                            return (
-                                                <option 
-                                                    key={result} 
-                                                    value={result}
-                                                >
-                                                    {result}
-                                                </option>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                                    <FormControl id="winnderId">
-                                    <FormLabel htmlFor="winnerId">Winner ID</FormLabel>
-                                    <Input value={form.winnerId} onChange={handleFormChange} type="text" maxLength={255} />
-                                </FormControl>
-                            </VStack>
-                        </FieldGroup>
-                    }
-                    <FieldGroup title="Guest Judges">
-                        <VStack width="full" spacing="6">
-                            <FormControl id="guestJudge">
-                                <FormLabel htmlFor="guestJudge">Guest Judge ID's</FormLabel>
-                                <Input value={guestJudge} placeholder="Guest Judge ID" onChange={e => setGuestJudge(e.currentTarget.value)}></Input>
+
+                            <FormControl id="description">
+                                <FormLabel htmlFor="description">Description</FormLabel>
+                                    <Textarea value={form.description} onChange={handleFormChange} rows={4} />
                             </FormControl>
-                            <FieldGroup mt="8">
-                                <HStack width="full">
-                                <Button minW="33%" onClick={handleAddGuestJudge} type="button" colorScheme="blue">
-                                    Add Guest Judge
-                                </Button>
-                                </HStack>
-                            </FieldGroup>
-                            { guestJudgeIds.map( (judge, i) => {
-                                return (
-                                    <InputGroup>
-                                        <Input id={judge} onClick={deleteJudge} value={judge} key={judge} placeholder="Guest Judge ID" />
-                                    </InputGroup>
-                                )
-                            })}
+
+                            <FormControl isRequired id="distanceName">
+                                <FormLabel htmlFor="distanceName">Fight/Distance Name</FormLabel>
+                                <Input value={form.distanceName} onChange={handleFormChange}  type="text" maxLength={255} />
+                            </FormControl>
+
+                            <FormControl id="status">
+                                <FormLabel htmlFor="status">Distance Status</FormLabel>
+                                <Select onChange={handleFormChange}>
+                                    { Object.keys(Status).map( status => <option key={status} value={status}>{status}</option>)}
+                                </Select>                            
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel htmlFor="date-picker">Starts</FormLabel>
+                                <Datepicker 
+                                    id="date-picker"
+                                    dateFormat="Pp"     
+                                    timeFormat="p"    
+                                    showTimeSelect                           
+                                    selected={form.starts}
+                                    style={{background: '#FFF', color: '#333 !important'}}
+                                    onChange={time => setForm({ ...form, starts: time })}
+                                />
+                            </FormControl>
+
                         </VStack>
                     </FieldGroup>
 
@@ -260,17 +242,17 @@ export const FightForm = () => {
                         <ButtonGroup w="100%">
                             <Button 
                                 minW="33%"
-                                onClick={fightId ? handleUpdateFight : handlePostFight} 
+                                onClick={id ? handleUpdateFight : handlePostFight} 
                                 type="button" 
                                 colorScheme="solid"
                                 isLoading={isSubmitting}
                                 loadingText="Submitting..."
                             >
-                                Submit
+                                {id ? 'Update Fight' : 'Create Fight'}
                             </Button>
                             <Button 
                                 minW="33%" 
-                                disabled={!fightId} 
+                                disabled={!id} 
                                 isLoading={isSubmitting} 
                                 loadingText="Deleting" 
                                 onClick={handleDeleteFight} 

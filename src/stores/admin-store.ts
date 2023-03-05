@@ -7,11 +7,10 @@ import {
     Distance,
     Fight,
     Fighter,
-    FightPostObj,
     FightProps,
-    FightResolution,
-    Panelist,
+    Season,
     Show,
+    DistanceType,
 } from './index'
 import { configureAccessToken } from './auth-account-store'
 import axios from 'axios'
@@ -22,27 +21,27 @@ export interface AdminStoreState {
     createCorner(cornerObj: Partial<Corner>): void
     createDiscussion(discussionObj: Partial<Discussion>): void
     createDistance(distanceObj: Partial<Distance>): void
-    createFight(createFightObj: FightPostObj): void
+    createFight(createFightObj: Partial<Fight>): void
     createFighter(createFighterObj: Fighter): void
     createFightProps(obj: Partial<FightProps>): void
     createPanel(panelId: string): void
-    createPanelist(panelistObj: Partial<Panelist>): void
     createShow(createShowObj: Partial<Show>): void
+    createSummary(distanceId: string, type: DistanceType): void
     deleteDiscussion(discussionId: string): void
     deleteDistance(distanceId: string): void
-    deleteFight(fightId: string): void
+    deleteFight(id: string): void
     deleteFighter(fighterId: string): void
     deletePanelist(panelistId: string): void
     deleteShow(showId: string): void
     distancesByStatusSummaries: any[]
     fetchDistance(distanceId: string): void
     fetchDistancesByStatus(status: Status): void
-    fetchFightById(fightId: string): void
-    fetchFightProps(fightId: string): void
+    fetchFightById(id: string): void
+    fetchFightProps(id: string): void
     fightProps: FightProps | null
     selectedCorner: Corner
     selectedDistance: Distance
-    submitFightResolution(resolutionObj: FightResolution): void
+    submitFightResolution(resolutionObj: any): void
     updateDistance(distanceObj: Partial<Distance>): void
     updateFight(update: Partial<Fight>): void
     updateFighter(update: Partial<Fighter>): void
@@ -84,17 +83,17 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const selectedDistance = res.data as Distance;
         set({ selectedDistance })
     },
-    createFight: async (createObj: FightPostObj) => {
-        get().setIsSubmitting(true)
-        const res = await axios.post(`${url}/fights`, createObj, await configureAccessToken() )
+    createFight: async (postObj: any) => {
+        // get().setIsSubmitting(true)
+        const res = await axios.post(`${ADMIN_API}/fights`, postObj, await configureAccessToken() )
         console.log('res.data: ', res.data)
         get().setIsSubmitting(false)
     },
     createFighter: async (createFighterObj: Fighter) => {
-        get().setIsSubmitting(true)
+        // get().setIsSubmitting(true)
         const res = await axios.post(`${url}/fighters`, createFighterObj, await configureAccessToken() )
         console.log('FIGHTER- create res.data: ', res.data);
-        get().setIsSubmitting(false)
+        // get().setIsSubmitting(false)
     },
     createPanel: async (panelId: string) => {
         get().setIsSubmitting(true)
@@ -102,7 +101,7 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('res.data: ', res.data)
         get().setIsSubmitting(false)
     },
-    createPanelist: async (panelistObj: Partial<Panelist>) => {
+    createPanelist: async (panelistObj: Partial<any>) => {
         get().setIsSubmitting(true)
         const res = await axios.post(`${url}/panelists/`, panelistObj, await configureAccessToken() )
         console.log('PANELIST- create res.data: ', res.data)
@@ -114,12 +113,23 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('CREATE_PROPS, res: ', res.data)
         get().setIsSubmitting(false)
     },
-    createShow: async (createShowObj: Partial<Show>) => {
-        get().setIsSubmitting(true)
-        const res = await axios.post(`${url}/shows`, createShowObj, await configureAccessToken() )
+    createSeason: async (seasonWithDistanceObj: Partial<Season & Distance>) => {
+        // get().setIsSubmitting(true)
+        const res = await axios.post(`${ADMIN_API}/seasons`, seasonWithDistanceObj, await configureAccessToken() )
+        const season = res.data
+        console.log('SHOW-post: res: ', season)
+        get().setIsSubmitting(false)
+    },
+    createShow: async (showWithDistanceObj: Partial<Show & Distance>) => {
+        // get().setIsSubmitting(true)
+        const res = await axios.post(`${ADMIN_API}/shows`, showWithDistanceObj, await configureAccessToken() )
         const show = res.data as Show
         console.log('SHOW-post: res: ', show)
         get().setIsSubmitting(false)
+    },
+    createSummary: async (id: string, type: DistanceType) => {
+        const res = await axios.post(`${ADMIN_API}/summaries`, { id, type }, await configureAccessToken() );
+        console.log('CREATE_SUMMARY: ', res.data)
     },
     deleteDiscussion: async (discussionId: string) => {
         get().setIsSubmitting(true)
@@ -135,9 +145,9 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
             set({ distancesByStatusSummaries: remainingSummaries })
         }
     },
-    deleteFight: async (fightId: string) => {
+    deleteFight: async (id: string) => {
         get().setIsSubmitting(true)
-        const res = await axios.delete(`${url}/fights/${fightId}`, await configureAccessToken() )
+        const res = await axios.delete(`${url}/fights/${id}`, await configureAccessToken() )
         console.log('FIGHT- deleted res.data: ', res.data)
         get().setIsSubmitting(false)
     },
@@ -171,27 +181,27 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('distancesByStatusSummaries: ', distancesByStatusSummaries)
         set({ distancesByStatusSummaries })
     },
-    fetchFightById: async (fightId: string) => {
+    fetchFightById: async (id: string) => {
         get().setIsSubmitting(true)
-        const res = await axios.get(`${url}/fights/${fightId}`)
+        const res = await axios.get(`${url}/fights/${id}`)
         get().setIsSubmitting(false)
     },
-    fetchFightProps: async (fightId: string) => {
+    fetchFightProps: async (id: string) => {
         get().setIsSubmitting(true)
-        const res = await axios.get(`${url}/fight-props/${fightId}`, await configureAccessToken() )
+        const res = await axios.get(`${url}/fight-props/${id}`, await configureAccessToken() )
         const fightProps = res.data as FightProps
         set({ fightProps })
         get().setIsSubmitting(false)
     },
-    patchRemoveFightFromSeason: async (fightId: string, seasonId: string) => {
+    patchRemoveFightFromSeason: async (id: string, seasonId: string) => {
         get().setIsSubmitting(true)
-        const res = await axios.patch(`${url}/seasons/${fightId}/${seasonId}`, { fightId, seasonId }, await configureAccessToken() )
+        const res = await axios.patch(`${url}/seasons/${id}/${seasonId}`, { id, seasonId }, await configureAccessToken() )
         console.log('patchRemoveFightFromSeason: ', res.data)
         get().setIsSubmitting(false)
     },
-    submitFightResolution: async (resolutionObj: FightResolution) => {
+    submitFightResolution: async (resolutionObj: any) => {
         get().setIsSubmitting(true)
-        const res = await axios.put(`${url}/resolutions/${resolutionObj.fightId}`, resolutionObj, await configureAccessToken() )
+        const res = await axios.put(`${url}/resolutions/${resolutionObj.id}`, resolutionObj, await configureAccessToken() )
         const data = res.data
         console.log('RESOLUTION put res: ', data)
         get().setIsSubmitting(false)
@@ -202,7 +212,7 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
     },
     updateFight: async (update: Partial<Fight>) => {
         get().setIsSubmitting(true)
-        const res = await axios.put(`${url}/fights/${update.fightId}`, update, await configureAccessToken() )
+        const res = await axios.put(`${url}/fights/${update.id}`, update, await configureAccessToken() )
         get().setIsSubmitting(false)
     },
     updateFighter: async (update: Partial<Fighter>) => {
@@ -218,7 +228,7 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
     },
     updateShow: async (update: Partial<Show>) => {
         get().setIsSubmitting(true)
-        const res = await axios.put(`${url}/shows/${update.showId}`, update, await configureAccessToken() )
+        const res = await axios.put(`${url}/shows/${update.id}`, update, await configureAccessToken() )
         get().setIsSubmitting(false)
     }
 })

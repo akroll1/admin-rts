@@ -113,14 +113,14 @@ export const DistancesAdminForm = () => {
     }
 
     // const addFightToDistance = () => {
-    //     if(fightId.length === 36){
+    //     if(id.length === 36){
     //         if(form.fightIds){
-    //             const [isDuplicate] = form.fightIds.filter( id => id === fightId)
+    //             const [isDuplicate] = form.fightIds.filter( id => id === id)
     //             if(isDuplicate) return alert('Fight is in this Season')
     //         }
 
     //         Object.assign(form, {
-    //             fightIds: form.fightIds?.length > 0 ? [ ...form.fightIds, fightId] : [fightId]
+    //             fightIds: form.fightIds?.length > 0 ? [ ...form.fightIds, id] : [id]
     //         })
     //         // updateSeason(form)
     //         return
@@ -132,7 +132,7 @@ export const DistancesAdminForm = () => {
 
         const removed = selectedDistance.showIds.filter( id => id !== showId)
         setSelectedDistance(prev => ({ ...prev, showIds: removed }))
-        // patchRemoveFightFromSeason(fightId, seasonId)
+        // patchRemoveFightFromSeason(id, seasonId)
     }
 
     const handleStatusSelect = e => {
@@ -313,12 +313,12 @@ export const DistancesAdminForm = () => {
                 <Stack spacing="4" divider={<StackDivider />}>
                     <FieldGroup title="Add Fight">
                         <VStack width="full" spacing="6">
-                            <FormControl id="fightId">
-                                <FormLabel htmlFor="fightId">
+                            <FormControl id="id">
+                                <FormLabel htmlFor="id">
                                     Add Fight by ID
                                 </FormLabel>
                                 <Input 
-                                    value={fightId} 
+                                    value={id} 
                                     onChange={e => setFightId(e.currentTarget.value)} 
                                     type="text" 
                                     minLength={36}
@@ -327,7 +327,7 @@ export const DistancesAdminForm = () => {
                             </FormControl>
                             <ButtonGroup>
                                 <Button
-                                    disabled={isSubmitting || !fightId}
+                                    disabled={isSubmitting || !id}
                                     loadingText="Submitting..." 
                                     minW="40%"
                                     onClick={addFightToDistance}

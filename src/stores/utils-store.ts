@@ -99,10 +99,10 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
             if(officialResult === 'CANCELED'){
                 return set({ transformedResult: `Canceled`})
             }
-            const fightWinnerId = officialResult.slice(0, 36)
-            const [fighter] = get().selectedFightSummary.fighters.filter( (fighter: Fighter) => fighter.fighterId === fightWinnerId)
-            const transformedResult = `${capFirstLetters(fighter.lastName)} - ${officialResult.split(',')[1]}`
-            set({ transformedResult })
+            // const fightWinnerId = officialResult.slice(0, 36)
+            // const [fighter] = get().selectedFightSummary.fighters.filter( (fighter: Fighter) => fighter.fighterId === fightWinnerId)
+            // const transformedResult = `${capFirstLetters(fighter.lastName)} - ${officialResult.split(',')[1]}`
+            // set({ transformedResult })
         }
     },
     subscribeToNewsletter: async (email: string) => {

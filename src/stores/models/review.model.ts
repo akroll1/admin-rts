@@ -2,7 +2,7 @@ import { ReviewType } from "../enums"
 
 export interface Review {
 	reviewId: string;
-	fightId: string;
+	id: string;
 	likes: number;
 	ownerId: string;
 	rating: number;

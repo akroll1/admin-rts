@@ -37,7 +37,7 @@ export const FightResolutionForm = () => {
     const [resolvedStatus, setResolvedStatus] = useState('')
     const [radio, setRadio] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [fightId, setFightId] = useState('')
+    const [id, setFightId] = useState('')
     const [form, setForm] = useState({
         fight: {
             fightQuickTitle: '',
@@ -91,7 +91,7 @@ export const FightResolutionForm = () => {
 
     const handleSubmitResolution = () => {
         
-        if(!fightId) return alert('No fightId.');
+        if(!id) return alert('No id.');
         if(!resolvedStatus) return alert('Select fight status.');
         if(!fightResolution) return alert('Set fight resolution.');
         if(!radio) return alert('Select a winner.');
@@ -101,13 +101,13 @@ export const FightResolutionForm = () => {
         const fighterUpdates = resolveFighterUpdates(officialResult)
         const resolutionObj = {
             fighterUpdates,
-            fightId,
+            id,
             fightStatus: radio === `DR` ? 'COMPLETE' : resolvedStatus,
             officialResult,
             showId: selectedFightSummary.show.showId,
         }
         // console.log('resolutionObj: ', resolutionObj);
-        submitFightResolution(resolutionObj, fightId)
+        submitFightResolution(resolutionObj, id)
     }
 
     const setOfficalResult = () => {
@@ -118,7 +118,7 @@ export const FightResolutionForm = () => {
         return `${winner}: ${wonHow}`;
     }
     const handleFetchSelectedFightSummary = () => {
-        fetchFightSummary(fightId)
+        fetchFightSummary(id)
     }
 
     const { fightQuickTitle, fightStatus, officialResult, rounds, weightclass } = form.fight;
@@ -134,13 +134,13 @@ export const FightResolutionForm = () => {
                     </Heading>
                     <FieldGroup title="Search for Fight">
                         <VStack width="full" spacing="6">
-                            <FormControl id="fightId">
+                            <FormControl id="id">
                                 <FormLabel htmlFor="showId">Fight ID</FormLabel>
-                                <Input value={fightId} onChange={ ({ currentTarget: {value} }) => setFightId(value.length == 36 ? value : '')} type="text" maxLength={36} />
+                                <Input value={id} onChange={ ({ currentTarget: {value} }) => setFightId(value.length == 36 ? value : '')} type="text" maxLength={36} />
                             </FormControl>
                             <HStack justifyContent="center" width="full">
                                 <Button 
-                                    disabled={!fightId}  
+                                    disabled={!id}  
                                     minW="33%" 
                                     isLoading={isSubmitting} 
                                     loadingText="Searching..." 

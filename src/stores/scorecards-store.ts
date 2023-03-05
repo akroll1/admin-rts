@@ -19,7 +19,7 @@ export interface ScorecardStoreState {
     fetchBlogPost(blogPostId: string): void
     fetchBlogPosts(): void
     fetchFighter(fighterId: string): void
-    fetchFightSummary(fightId: string): void
+    fetchFightSummary(id: string): void
     fight: Fight
     fighters: Fighter[]
     selectedBlogPost: BlogPost
@@ -61,8 +61,8 @@ export const scorecardStoreSlice: StateCreator<GlobalStoreState, [], [], Scoreca
         const selectedFighter = res.data as Fighter
         set({ selectedFighter })
     },
-    fetchFightSummary: async (fightId: string) => {
-        const res = await axios.get(`${url}/fights/${fightId}/summary`, await configureAccessToken() )
+    fetchFightSummary: async (id: string) => {
+        const res = await axios.get(`${url}/fights/${id}/summary`, await configureAccessToken() )
         const selectedFightSummary = res.data as FightSummary
         set({ selectedFightSummary })
     },

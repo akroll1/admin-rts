@@ -1,36 +1,64 @@
-import { 
-    Corner,
-    Distance,
-    Fight,
-    Fighter,
-    Scorecard,
-    Show,
+import { DistanceType } from "../enums";
+import type {
+  Corner,
+  Distance, 
+  Fight, 
+  Fighter,
+  Season,
+  Show,
 } from "./index";
-import {
-    Status
-} from '../enums'
+
+export interface Summary {
+  id: string;
+  distance: Distance | Corner;
+  instance: Corner | Season | Show | Fight;
+  summary:
+    | DistanceSummary[]
+    | ShowSummary[]
+    | FightSummary[]
+    | FightSummary[]
+    | Fighter[];
+  type: DistanceType;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 export interface CornerSummary {
   id: string;
-  corner: Corner;
-  distanceSummary: DistanceSummary[];
-  scorecards: Scorecard[];
+  distance: Corner;
+  instance: Corner;
+  summary: DistanceSummary[];
+  type: DistanceType;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface DistanceSummary {
   id: string;
   distance: Distance;
-  showSummaries: ShowSummary[];
+  instance: Season | Show;
+  summary: ShowSummary[] | FightSummary[];
+  type: DistanceType;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ShowSummary {
   id: string;
-  fightSummaries: FightSummary[];
-  show: Show;
+  distance: Distance;
+  instance: Show;
+  summary: FightSummary[];
+  type: DistanceType;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface FightSummary {
   id: string;
-  fight: Fight;
-  fighters: Fighter[];
+  distance: Distance;
+  instance: Fight;
+  summary: Fighter[];
+  type: DistanceType;
+  createdAt?: string;
+  updatedAt?: string;
 }

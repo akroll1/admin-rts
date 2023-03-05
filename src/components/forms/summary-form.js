@@ -1,31 +1,45 @@
-import { useState, useEffect } from 'react'
+import { 
+    useEffect,
+    useState,
+} from 'react'
 import { 
     Box, 
     Button, 
-    Flex, 
     FormControl, 
     FormLabel, 
     Heading, 
     HStack, 
     Input, 
+    Select,
     Stack, 
     StackDivider, 
-    Textarea,  
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { useGlobalStore } from '../../stores';
+import { 
+    DistanceType,
+    useGlobalStore, 
+} from '../../stores';
 
 export const SummaryForm = () => {
     const {
+        createSummary,
+        deleteSummary,
+        fetchSummaryById,
+        selectedSummary,
     } = useGlobalStore()
 
-    const [summaryId, setSummaryId] = useState(null)
-
     const [form, setForm] = useState({
-       type: '',
-       summary: {}
+        id: '',
+        summary: {},
+        type: '',
     });
+
+    useEffect(() => {
+        if(selectedSummary?.id){
+            setForm(selectedSummary)
+        }
+    },[selectedSummary])
 
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
@@ -33,29 +47,25 @@ export const SummaryForm = () => {
     }
 
     const handleFetchSummary = () => {
-        // fetchSummaryById(summaryId)
-    }
-    
-    const handleUpdateBlogPost = () => {
-        console.log('form: ', form)
+        fetchSummaryById(form.id)
     }
 
     const handleDelete = e => { 
         // hold on, this is fast...
-
+        deleteSummary(e.currentTarget.id)
     }
 
     const handleCreateSummary = e => {
-        Object.assign(form, {
-            imgs: imgs?.length ? imgs : null,
-        })
         console.log('form- create: ', form)
-
-        createSummary()
+        if(form.id.length !== 36 || !DistanceType[form.type]){
+            alert('Bad summary values!')
+            return;
+        }
+        createSummary(form.id, form.type)
     }
     
-    const { author, body, imgs, published, subtitle, summary, title } = blogPost?.summaryId ? blogPost : form
-    // console.log('form: ', form)
+    console.log('form: ', form)
+
     return (
         <Box 
             px={{base: '4', md: '10'}} 
@@ -66,77 +76,46 @@ export const SummaryForm = () => {
             <form id="blog_post_form" onSubmit={(e) => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4" mt="3rem">
-                        Blog Form
+                        Summary Form
                     </Heading>
-                    <FieldGroup title="Search for a post">
+                    <FieldGroup title="Summary Form">
                         <VStack width="full" spacing="6">
-                            <FormControl id="summaryId">
-                                <FormLabel htmlFor="summaryId">Search by ID</FormLabel>
+                            <FormControl id="id">
+                                <FormLabel htmlFor="id">Summary ID</FormLabel>
                                 <Input 
-                                    value={summaryId} 
-                                    onChange={ ({ currentTarget: {value} }) => setSummaryId(value.length == 36 ? value : '')} 
+                                    value={form.id} 
+                                    onChange={handleFormChange} 
                                     type="text" 
                                 />
                             </FormControl>
-                            <HStack justifyContent="center" width="full">
-                                <Button 
-                                    disabled={!summaryId}  
-                                    minW="33%" 
-                                    // isLoading={isSubmitting} 
-                                    loadingText="Searching..." 
-                                    onClick={handleFetchSummary} 
-                                    type="button" 
-                                    colorScheme="solid">
-                                    Search
-                                </Button>
-                            </HStack>
-                        </VStack>
-                    </FieldGroup>
-                    <FieldGroup title="Blog Post Info">
-                        <VStack width="full" spacing="6">
-                            <FormControl id="author">
-                                <FormLabel>Author Display Name</FormLabel>
-                                <Input required value={author} onChange={handleFormChange} type="text" maxLength={100} />
+                            <FormControl id="type">
+                                <FormLabel htmlFor="type">Distance Type</FormLabel>
+                                <Select onChange={handleFormChange}>
+                                    { Object.keys(DistanceType).map( type => <option key={type} value={type}>{type}</option>)}
+                                </Select>                            
                             </FormControl>
-
-                            <FormControl id="title">
-                                <FormLabel>Title</FormLabel>
-                                <Input required value={title} onChange={handleFormChange} type="text" maxLength={100} />
-                            </FormControl>
-                            
-                            <FormControl id="subtitle">
-                                <FormLabel>Subtitle</FormLabel>
-                                <Input value={subtitle} onChange={handleFormChange} type="text" maxLength={100} />
-                            </FormControl>
-                            
-                            <FormControl id="summary">
-                                <FormLabel>Summary</FormLabel>
-                                <Input value={summary} onChange={handleFormChange} type="text" maxLength={255} />
-                            </FormControl>
-                            <FormControl id="body">
-                                <FormLabel>Body</FormLabel>
-                                <Textarea
-                                    required
-                                    placeholder="Body..."
-                                    value={body}
-                                    onChange={handleFormChange}
-                                    type="text"
-                                    size='md'
-                                    rows="6"
-                                />
-                            </FormControl>
+                            <Button 
+                                disabled={!form.id}  
+                                minW="33%" 
+                                // isLoading={isSubmitting} 
+                                loadingText="Searching..." 
+                                onClick={handleFetchSummary} 
+                                type="button" 
+                                colorScheme="solid">
+                                Search
+                            </Button>
                         </VStack>
                     </FieldGroup>
                 </Stack>
                 <FieldGroup mt="8">
                     <HStack width="full">
                     <Button 
-                        onClick={summaryId ? handleUpdateBlogPost : handleCreateSummary} 
+                        onClick={handleCreateSummary} 
                         type="submit" 
                         colorScheme="solid"
                         minW="40%"
                     >
-                        { summaryId ? `Update Post` : `Create Post` }
+                        Create
                     </Button>
                     <Button 
                         minW="40%"

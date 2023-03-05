@@ -84,12 +84,12 @@ const SelectedShowFightsTableContent = ({
             const { fight, fighters, show } = row
             return (
               <Tr   
-                id={fight.fightId} 
-                key={fight.fightId}
+                id={fight.id} 
+                key={fight.id}
               >
-                <Td id={fight.fightId} textAlign="center">{capFirstLetters(`${fighters[0].firstName} ${fighters[0].lastName}`)}</Td>
-                <Td id={fight.fightId} textAlign="center">{capFirstLetters(`${fighters[1].firstName} ${fighters[1].lastName}`)}</Td>
-                <Td _hover={{cursor: 'pointer'}} textAlign="center" onClick={handleDelete} id={fight.fightId} zIndex={10000}>{<DeleteIcon />}</Td>
+                <Td id={fight.id} textAlign="center">{capFirstLetters(`${fighters[0].firstName} ${fighters[0].lastName}`)}</Td>
+                <Td id={fight.id} textAlign="center">{capFirstLetters(`${fighters[1].firstName} ${fighters[1].lastName}`)}</Td>
+                <Td _hover={{cursor: 'pointer'}} textAlign="center" onClick={handleDelete} id={fight.id} zIndex={10000}>{<DeleteIcon />}</Td>
               </Tr>
             )
           })}

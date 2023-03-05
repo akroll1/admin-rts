@@ -1,6 +1,6 @@
 import { 
     Networks, 
-    WeightclassEnum 
+    WeightClass 
 } from "../stores/index";
 
 // export const enumToObject = (enum: ) => {
@@ -70,7 +70,7 @@ export const isValidEmail = (email: string) => {
     return regex.test(email);
 }
 
-export const transformedWeightclass = (weightclass: WeightclassEnum) => {
+export const transformedWeightclass = (weightclass: WeightClass) => {
     if(weightclass){
         
         let temp;
