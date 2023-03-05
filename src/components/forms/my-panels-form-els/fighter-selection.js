@@ -1,6 +1,6 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { FighterSelectionSwipe } from "./fighter-selection-swipe"
-import image from '../../utils/image/boxing-background.png'
+// import image from '../../utils/image/boxing-background.png'
 
 export const FighterSelection = ({ 
     fighters,
@@ -27,7 +27,7 @@ export const FighterSelection = ({
             h="auto"
             _before={{
                 content: "''",
-                background: `url(${image})`,
+                // background: `url(${image})`,
                 opacity: "0.3",
                 top: "0",
                 bottom: "0",

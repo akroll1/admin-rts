@@ -8,7 +8,7 @@ import {
   Tr, 
   useColorModeValue as mode 
 } from '@chakra-ui/react'
-import { capFirstLetters } from '../../utils'
+import { capFirstLetters } from '../../stores'
 
 export const MyPanelsFormTable = ({ 
   handlePanelSelect, 

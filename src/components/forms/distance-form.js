@@ -34,14 +34,14 @@ export const DistanceForm = () => {
     // showId is kept out of the form for put/post logic.
     const [distanceId, setDistanceId] = useState(null);
     const [form, setForm] = useState({
+        id: "",
+        chatKey: null,
         description: "",
         distanceName: "",
         distanceType: "FIGHT",
-        showIds: [],
         status: "PENDING",
-        storyline: "",
-        starts: "",
-        ends: "",
+        starts: new Date(),
+        ends: new Date(),
     })    
 
     useEffect(() => {
@@ -67,7 +67,11 @@ export const DistanceForm = () => {
     const handleUpdateDistance = () => {
         const putObj = {
             ...form,
-            showIds: form.showId.length ? form.showIds : null,
+            description: form.description,
+            distanceIds: form?.distanceIds?.length ? form.distanceIds : null,
+            distanceName: form.distanceName,
+            distanceType: form.distanceType,
+            status: form.status,
             starts: new Date(form.starts).toISOString(),
             ends: new Date(form.ends).toISOString(),
         }
@@ -80,7 +84,12 @@ export const DistanceForm = () => {
     const handlePostDistance = () => {
         const postObj = {
             ...form,
-            showIds: form.showIds.length ? form.showIds : null,
+            id: form.id ? form.id : null,
+            description: form.description,
+            distanceIds: form?.distanceIds?.length ? form.distanceIds : null,
+            distanceName: form.distanceName,
+            distanceType: form.distanceType,
+            status: form.status,
             starts: new Date(form.starts).toISOString(),
             ends: new Date(form.ends).toISOString(),
         };
@@ -108,10 +117,10 @@ export const DistanceForm = () => {
                     </Heading>
                     <FieldGroup title="Search for a Distance">
                         <VStack width="full" spacing="6">
-                            <FormControl id="distanceId">
-                                <FormLabel htmlFor="distanceId">Distance ID</FormLabel>
+                            <FormControl id="id">
+                                <FormLabel htmlFor="id">Distance ID</FormLabel>
                                 <Input 
-                                    value={distanceId} 
+                                    value={form.id} 
                                     onChange={ ({ currentTarget: {value} }) => setDistanceId(value.length === 36 ? value : '')} 
                                     type="text" 
                                 />
@@ -135,14 +144,6 @@ export const DistanceForm = () => {
                             <FormControl isRequired id="distanceName">
                                 <FormLabel htmlFor="distanceName">Distance Name</FormLabel>
                                 <Input value={form.distanceName} onChange={handleFormChange}  type="text" maxLength={255} />
-                            </FormControl>
-                            
-                            <FormControl id="storyline">
-                                <FormLabel htmlFor="storyline">Distance Storyline</FormLabel>
-                                    <Textarea value={form.storyline} onChange={handleFormChange} rows={4} />
-                                <FormHelperText>
-                                    Brief description of the Distance's significance. URLs are hyperlinked.
-                                </FormHelperText>
                             </FormControl>
 
                             <FormControl id="description">

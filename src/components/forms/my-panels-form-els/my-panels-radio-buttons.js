@@ -1,6 +1,6 @@
 import { Container, Flex, Text } from '@chakra-ui/react'
 import { RadioCard, MyPanelsRadioCardGroup } from './who-wins-radio-card'
-import { capFirstLetters } from '../../../utils'
+import { capFirstLetters } from '../../../stores'
 
 export const MyPanelsRadioButtons = ({ setWinner, selectedPanel }) => {
     const { fighters } = selectedPanel?.fighters ? selectedPanel : [];
