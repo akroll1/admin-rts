@@ -20,19 +20,15 @@ import { useGlobalStore } from '../../stores'
 
 export const FightersForm = () => {
     const { 
-        createFighter,
         deleteFighter,
-        fetchFighter,
+        fetchFighterById,
         selectedFighter,
         isSubmitting,
-        setIsSubmitting,
         updateFighter,
     } = useGlobalStore()
 
-    const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
-    const [searchFighterId, setSearchFighterId] = useState('');
     const [form, setForm] = useState({
-        fighterId: '',
+        id: '',
         firstName: '',
         lastName: '',
         ringname: '',
@@ -42,70 +38,55 @@ export const FightersForm = () => {
         kos: 0,
         dq: 0,
         socials: null,
-        home: null
+        home: null,
+        profileImg: null
     });
 
     useEffect(() => {
-        if(selectedFighter?.fighterId){
+        if(selectedFighter?.id){
             setForm(selectedFighter)
         }
     },[selectedFighter])
 
     const searchForFighter = e => {
-        fetchFighter(searchFighterId)
+        fetchFighterById(form.id)
     }
 
     const handleFormChange = e => {
-        const { id, name, value } = e.currentTarget;
-
-        if(name === 'stats'){
-            setForm({ ...form, [id]: parseInt(value) });
-            return;
-        }
+        const { id, value } = e.currentTarget;
         setForm({ ...form, [id]: value });
     }
 
     const handleUpdateFighter = () => {
         Object.assign(form, {
-            fighterId: searchFighterId
+            wins: parseInt(form.wins),
+            losses: parseInt(form.losses),
+            draws: parseInt(form.draws),
+            dq: parseInt(form.dq),
+            kos: parseInt(form.kos),
         })
         updateFighter(form)
     }
     
-    const handleCreateFighter = () => {
-        createFighter(form)
-    }    
 
     const handleDeleteFighter = e => {
-        deleteFighter(searchFighterId)
+        deleteFighter(form.id)
     }
 
-    const { 
-        firstName, 
-        lastName, 
-        ringname, 
-        wins, 
-        losses, 
-        draws, 
-        kos, 
-        dq, 
-        socials, 
-        home 
-    } = form;
-
+    // console.log('form: ', form)
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto" height="auto">
             <FieldGroup title="Search for a Fight">
                 <VStack width="full" spacing="6">
-                    <FormControl id="searchFighterId">
-                        <FormLabel htmlFor="searchFighterId">Fighter ID</FormLabel>
-                        <Input value={searchFighterId} onChange={({currentTarget: {value}}) => setSearchFighterId(value.length === 36 ? value : '')} type="text" maxLength={36} />
+                    <FormControl id="id">
+                        <FormLabel htmlFor="id">Fighter ID</FormLabel>
+                        <Input value={form.id} onChange={handleFormChange} type="text" maxLength={36} />
                     </FormControl>
                     <HStack justifyContent="center" width="full">
                         <Button 
-                            disabled={!searchFighterId} 
+                            disabled={!form.id} 
                             minW="33%" 
-                            isLoading={isSubmittingSearch} 
+                            isLoading={isSubmitting} 
                             loadingText="Searching..." 
                             onClick={searchForFighter} 
                             type="button" 
@@ -126,27 +107,32 @@ export const FightersForm = () => {
                         <VStack width="full" spacing="6">
                             <FormControl id="firstName">
                                 <FormLabel>First Name</FormLabel>
-                                <Input value={firstName?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
+                                <Input value={form.firstName?.toLowerCase()} required onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="lastName">
                                 <FormLabel>Last Name</FormLabel>
-                                <Input value={lastName?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
+                                <Input value={form.lastName?.toLowerCase()} required onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="ringname">
                                 <FormLabel>Ring Name</FormLabel>
-                                <Input value={ringname?.toLowerCase()} required onChange={e => handleFormChange(e)} type="text" maxLength={255} />
+                                <Input value={form.ringname?.toLowerCase()} required onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
                             
                             <FormControl id="home">
                                 <FormLabel>Home</FormLabel>
-                                <Input value={home} onChange={handleFormChange} type="text" maxLength={255} />
+                                <Input value={form.home} onChange={handleFormChange} type="text" maxLength={255} />
+                            </FormControl>
+
+                            <FormControl id="profileImg">
+                                <FormLabel>Profile Image</FormLabel>
+                                <Input value={form.profileImg} onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
             
                             <FormControl id="socials">
                                 <FormLabel>Socials</FormLabel>
-                                <Input value={socials} onChange={handleFormChange} type="text" maxLength={255} />
+                                <Input value={form.socials} onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
                         </VStack>
                     </FieldGroup>
@@ -155,23 +141,23 @@ export const FightersForm = () => {
                             <Flex flexDirection="row" flexWrap="wrap">
                                 <FormControl m="3" style={{width: '25%'}} id="wins">
                                     <FormLabel>Wins</FormLabel>
-                                    <Input name="stats" value={wins} required onChange={handleFormChange} type="number" maxLength={3} />
+                                    <Input value={form.wins} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="losses">
                                     <FormLabel>Losses</FormLabel>
-                                    <Input name="stats" value={losses} required onChange={handleFormChange} type="number" maxLength={3} />
+                                    <Input value={form.losses} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="draws">
                                     <FormLabel>Draws</FormLabel>
-                                    <Input name="stats" value={draws} required onChange={handleFormChange} type="number" maxLength={3} />
+                                    <Input value={form.draws} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="kos">
                                     <FormLabel>KO's</FormLabel>
-                                    <Input name="stats" value={kos} required onChange={handleFormChange} type="number" maxLength={3} />
+                                    <Input value={form.kos} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                                 <FormControl m="3" style={{width: '25%'}} id="dq">
                                     <FormLabel>DQ's</FormLabel>
-                                    <Input name="stats" value={dq} required onChange={handleFormChange} type="number" maxLength={3} />
+                                    <Input value={form.dq} required onChange={handleFormChange} type="number" maxLength={3} />
                                 </FormControl>
                             </Flex>
                         </HStack>
@@ -180,14 +166,14 @@ export const FightersForm = () => {
                 <FieldGroup mt="8">
                     <HStack width="full">
                     <Button 
-                        onClick={searchFighterId ? handleUpdateFighter : handleCreateFighter} 
+                        onClick={handleUpdateFighter} 
                         isLoading={isSubmitting} 
                         loadingText="Submitting..." 
                         type="submit" 
                         colorScheme="solid"
                         minW="33%"
                     >
-                        {searchFighterId ? `Update Fighter` : `Create Fighter`}
+                        {form.id ? `Update Fighter` : `Create Fighter`}
                     </Button>
                     <Button 
                         minW="33%"

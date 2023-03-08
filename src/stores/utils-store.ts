@@ -61,9 +61,7 @@ export const replaceNewLineWithBreaks = (text: string) => {
 export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreState> = (set, get) => ({
     ...initialUtilsStoreState,
     setGlobalNotification: (chatMessage: ChatMessage) => {
-        set({
-            chatMessage
-        })
+        set({ chatMessage })
     },
     setIsLoading: (loadingState: boolean) => {
         set({ isLoading: loadingState })
