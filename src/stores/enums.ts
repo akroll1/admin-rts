@@ -39,6 +39,7 @@ export enum ModalsEnum {
 }
 
 export enum Networks {
+  NONE = 'NONE',
   BLKPRIME = 'BLKPRIME', 
   DAZN = 'DAZN',
   ESPN = 'ESPN',
@@ -51,7 +52,6 @@ export enum Networks {
   HBOPPV = 'HBOPPV',
   SHOWTIME = 'SHOWTIME',
   SHOWTIMEPPV = 'SHOWTIMEPPV',
-  NONE = 'NONE',
 }
 
 export enum OfficialResults {
