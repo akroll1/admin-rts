@@ -58,6 +58,7 @@ export const DistanceForm = () => {
         location: '',
         network: '',
         promoter: '',
+        seasonType: '',
         status: '',
         type: '',
         typeId: '',
@@ -94,7 +95,7 @@ export const DistanceForm = () => {
                 promoter: instance.promoter ? instance.promoter : '',
                 status: instance.status ? instance.status : "PENDING",
                 type,
-                seasonType: '',
+                seasonType: instance.seasonType ? instance.seasonType : '',
                 typeId: '',
                 typeIds: metas.typeIds ? metas.typeIds : [],
             })
@@ -109,7 +110,7 @@ export const DistanceForm = () => {
                 document.getElementById("rounds").value = instance.rounds
             }
             if(type === "SEASON" && document.getElementById("seasonType")){
-                document.getElementById("seasonType").value = instance.type
+                document.getElementById("seasonType").value = instance.seasonType
             }
         }
     },[selectedDistance])
@@ -150,39 +151,17 @@ export const DistanceForm = () => {
             network: form.network ? form.network : null,
             promoter: form.promoter ? form.promoter : null,
         };
-        const season = {
-            type: form.seasonType,
-        } 
         
         const createUpdateObj = () => {
-            if(!form.type 
-                || !form.status
-                || !form.starts 
-                || !form.title 
-                || !form.typeIds.length > 0
-            ){
-                alert('Missing distance properties.')
-                return;
-            }
             let instance;
             if(form.type === "FIGHT"){
-                if(!form.typeIds === 2
-                    || !form.rounds  
-                    || !form.weightclass
-                ){
-                    alert('Missing FIGHT properties.')
-                    return;
-                }
                 instance = fight;
             }
             if(form.type === "SHOW"){
                 instance = show;
             }
             if(form.type === "SEASON"){
-                if(!form.seasonType){
-                    alert('Missing SEASON properties.')
-                }
-                instance = season;
+                instance = { seasonType: form.seasonType };
             }
             return Object.assign({}, {
                 ...distance,
@@ -387,7 +366,7 @@ export const DistanceForm = () => {
                                     <FormControl>
                                         <FormLabel htmlFor="seasonType">Season Type</FormLabel>
                                         <Select id="seasonType" placeholder={form.seasonType || 'Season Type'} onChange={handleFormChange}>
-                                            { Object.keys(SeasonType).map( seasonType => <option key={seasonType} value={form.seasonType}>{seasonType}</option>)}
+                                            { Object.keys(SeasonType).map( seasonType => <option key={seasonType} value={seasonType}>{seasonType}</option>)}
                                         </Select>                            
                                     </FormControl>
                                 </>
