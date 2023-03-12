@@ -69,36 +69,3 @@ export const isValidEmail = (email: string) => {
     const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(email);
 }
-
-export const transformedWeightclass = (weightclass: WeightClass) => {
-    if(weightclass){
-        
-        let temp;
-        if(weightclass.includes('SUPERLIGHTWEIGHT')){
-            return `Super Lightweight`
-        }
-        if(weightclass.includes('LIGHT')){
-            if(weightclass.includes('LIGHTWEIGHT')){
-                return `${weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
-            }
-            temp = weightclass
-            .slice(5).
-            toLowerCase();
-            return `Light ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
-        }
-        if(weightclass.includes('SUPER')){
-            console.log('super')
-            temp = weightclass
-            .slice(5)
-            .toLowerCase();
-            return `Super ${temp.charAt(0).toUpperCase() + temp.slice(1)}`;
-        }
-        return `${ weightclass.charAt(0).toUpperCase() + weightclass.slice(1).toLowerCase()}`
-    }
-}
-
-export const transformedNetwork = (networkValue: Networks) => {
-    if(!networkValue) return;
-    if(networkValue === 'SHOWTIMEPPV') return 'Showtime PPV'
-    return networkValue
-}

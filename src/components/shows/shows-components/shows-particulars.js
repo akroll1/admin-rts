@@ -7,13 +7,12 @@ import {
     capFirstLetters, 
     FIGHT_STATUS_CONSTANTS, 
     parseEpoch, 
-    transformedWeightclass 
 } from '../../../utils'
 import { IoScaleOutline } from 'react-icons/io5'
 import { ShowsNavItem } from './shows-nav-item'
 import { GiMoneyStack } from 'react-icons/gi'
 import { VscWand } from 'react-icons/vsc'
-import { FightPropsEnum, useGlobalStore } from '../../../stores'
+import { useGlobalStore } from '../../../stores'
 import { NotAllowedIcon } from '@chakra-ui/icons'
 import { predictionsList } from '../../../utils/predictions'
 
@@ -105,7 +104,7 @@ export const ShowsParticulars = ({
                     alignItems="flex-start"
                 >
                     <ShowsNavItem icon={<BiChevronRightCircle />} label={ rounds ? rounds + ' Rounds' : '' } />
-                    <ShowsNavItem icon={<IoScaleOutline />} color="fsl-text" label={ transformedWeightclass(weightclass) } />
+                    <ShowsNavItem icon={<IoScaleOutline />} color="fsl-text" label={weightclass} />
                     <ShowsNavItem 
                         id="trophy"
                         icon={

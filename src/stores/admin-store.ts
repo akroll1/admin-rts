@@ -115,10 +115,6 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
     deleteDistance: async (distanceId: string) => {
         const res = await axios.delete(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken())
         console.log('DELETE_DISTANCE, RES: ', res)
-        if(res.data.message.includes('Distance deleted.')){
-            const remainingSummaries = get().distancesByStatusSummaries.filter( summary => summary.distanceId !== distanceId)
-            set({ distancesByStatusSummaries: remainingSummaries })
-        }
     },
     deleteFighter: async (fighterId: string) => {
         // get().setIsSubmitting(true)

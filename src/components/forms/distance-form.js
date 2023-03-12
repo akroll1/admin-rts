@@ -33,6 +33,7 @@ import {
 
 export const DistanceForm = () => {
     const { 
+        deleteDistance,
         fetchDistanceById,
         isSubmitting,
         updateDistance,
@@ -59,7 +60,7 @@ export const DistanceForm = () => {
         network: '',
         promoter: '',
         seasonType: '',
-        status: '',
+        status: 'PENDING',
         type: '',
         typeId: '',
         typeIds: [],
@@ -68,7 +69,7 @@ export const DistanceForm = () => {
 
     useEffect(() => {
         if(selectedDistance?.id){
-            // console.log('selectedDistance: ', selectedDistance)
+            console.log('selectedDistance: ', selectedDistance)
             const { id, instance, metas, status, type } = selectedDistance
             setForm({
                 ...form,
@@ -171,6 +172,10 @@ export const DistanceForm = () => {
         };
         const putObj = createUpdateObj();
         console.log('postObj: ', putObj)
+        if(!form.typeIds.length > 0){
+            alert('Missing typeIds!')
+            return
+        }
         updateDistance(putObj)
     };
     
@@ -181,7 +186,7 @@ export const DistanceForm = () => {
     }
 
     const handleDeleteDistance = e => {
-        // deleteFight(form.id)
+        deleteDistance(form.id)
     }
 
     const handleIds = () => {
@@ -336,7 +341,7 @@ export const DistanceForm = () => {
                                     <FormControl isRequired id="weightclass">
                                         <FormLabel isRequired htmlFor="weightclass">Weight Class</FormLabel>
                                         <Select id="weightclass" placeholder={form.weightclass || 'Weight Class'} onChange={handleFormChange}>
-                                            { Object.keys(WeightClass).map( weightclass => <option key={weightclass} value={weightclass}>{weightclass}</option>)}
+                                            { Object.values(WeightClass).map( weightclass => <option key={weightclass} value={weightclass}>{weightclass}</option>)}
                                         </Select>
                                     </FormControl>
                                 </>
@@ -350,13 +355,13 @@ export const DistanceForm = () => {
                                     <FormControl>
                                         <FormLabel htmlFor="network">Network</FormLabel>
                                         <Select id="network" placeholder={form?.network || 'Network'} onChange={handleFormChange}>
-                                            { Object.keys(Networks).map( network => <option key={network} value={network}>{network}</option>)}
+                                            { Object.values(Networks).map( network => <option key={network} value={network}>{network}</option>)}
                                         </Select>                            
                                     </FormControl>
                                     <FormControl>
                                         <FormLabel htmlFor="promoter">Promoter</FormLabel>
                                         <Select id="promoter" placeholder={form.promoter || 'Promoter'} onChange={handleFormChange}>
-                                            { Object.keys(Networks).map( promoter => <option key={promoter} value={promoter}>{promoter}</option>)}
+                                            { Object.values(Networks).map( promoter => <option key={promoter} value={promoter}>{promoter}</option>)}
                                         </Select>                              
                                     </FormControl>
                                 </>
@@ -366,7 +371,7 @@ export const DistanceForm = () => {
                                     <FormControl>
                                         <FormLabel htmlFor="seasonType">Season Type</FormLabel>
                                         <Select id="seasonType" placeholder={form.seasonType || 'Season Type'} onChange={handleFormChange}>
-                                            { Object.keys(SeasonType).map( seasonType => <option key={seasonType} value={seasonType}>{seasonType}</option>)}
+                                            { Object.values(SeasonType).map( seasonType => <option key={seasonType} value={seasonType}>{seasonType}</option>)}
                                         </Select>                            
                                     </FormControl>
                                 </>
