@@ -100,8 +100,12 @@ export const DistanceForm = () => {
                 typeId: '',
                 typeIds: metas.typeIds ? metas.typeIds : [],
             })
-            document.getElementById("type").value = type;
-            document.getElementById("status").value = status;
+            if(document.getElementById("type")){
+                document.getElementById("type").value = type;
+            }
+            if(document.getElementById("status")){
+                document.getElementById("status").value = status;
+            }
             if(type === "SHOW" && instance && document.getElementById("network") && document.getElementById("promoter")){
                 document.getElementById("network").value = instance.network ? instance.network : "NONE";
                 document.getElementById("promoter").value = instance.promoter ? instance.promoter : "NONE";
@@ -343,6 +347,10 @@ export const DistanceForm = () => {
                                         <Select id="weightclass" placeholder={form.weightclass || 'Weight Class'} onChange={handleFormChange}>
                                             { Object.values(WeightClass).map( weightclass => <option key={weightclass} value={weightclass}>{weightclass}</option>)}
                                         </Select>
+                                    </FormControl>
+                                    <FormControl id="officialResult">
+                                        <FormLabel htmlFor="officialResult">Offiical Result</FormLabel>
+                                        <Input value={form.officialResult} onChange={handleFormChange} type="text" maxLength={255} />
                                     </FormControl>
                                 </>
                             }

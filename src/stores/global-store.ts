@@ -20,14 +20,10 @@ export const useGlobalStore = create<GlobalStoreState>()(
         {
             partialize: state => {
                 const { 
-                    fightProps,
-                    modals,
                     user,
                 } = state;
 
                 return ({ 
-                    fightProps,
-                    modals,
                     user,
                 })
             },

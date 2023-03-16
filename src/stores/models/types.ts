@@ -28,6 +28,16 @@ export interface Distance {
     type: DistanceType;
 }
 
+export interface DistanceMetas {
+    id: string;
+    officialJudges?: string[] | null;
+    predictions?: string[] | null;
+    props?: string[] | null;
+    syncs?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+}  
+
 export interface DistanceSummary {
     id: string; // same as the base schema ID.
     distance: Distance;

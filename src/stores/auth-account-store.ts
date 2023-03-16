@@ -55,18 +55,18 @@ export const initialAuthStoreState = {
     userAccount: {} as UserAccount
 }
 
-const url = process.env.REACT_APP_API;
+const ADMIN_API = process.env.REACT_APP_ADMIN_API;
 
 export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreState> = (set, get) => ({
     ...initialAuthStoreState,  
     createUser: async (user: UserAccount) => {
-        const res = await axios.post(`${url}/users`, user, await configureAccessToken() )
+        const res = await axios.post(`${ADMIN_API}/users`, user, await configureAccessToken() )
         const userAccount = res.data as UserAccount
         set({ userAccount })
-        console.log('CREATE_USER: res: ', res.data)
+        // console.log('CREATE_USER: res: ', res.data)
     },
     fetchUserAccount: async () => {
-        const res = await axios.get(`${url}/users/${get().user.sub}`,await configureAccessToken() )
+        const res = await axios.get(`${ADMIN_API}/users/${get().user.sub}`,await configureAccessToken() )
         if(res.data === 'No user found.'){
             const user = get().user
             get().updateUser({
@@ -104,8 +104,8 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
     },
     updateUser: async (updateOptions: Partial<User>) => {
         get().setIsSubmitting(true)
-        const res = await axios.put(`${url}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
+        const res = await axios.put(`${ADMIN_API}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
         get().setIsSubmitting(false)
-        console.log('UPDATE USER res: ', res)
+        // console.log('UPDATE USER res: ', res)
     },  
 })
