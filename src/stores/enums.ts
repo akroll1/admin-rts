@@ -55,6 +55,7 @@ export enum Networks {
 
 
 export enum OfficialResults {
+  CANCELED = "CANCELED",
   DECISION = 'DECISION',
   DRAW = 'DRAW', 
   UD = 'UD',
