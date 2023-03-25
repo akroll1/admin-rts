@@ -350,7 +350,7 @@ export const DistanceForm = () => {
                                         </Select>
                                     </FormControl>
                                     <FormControl id="officialResult">
-                                        <FormLabel htmlFor="officialResult">Offiical Result</FormLabel>
+                                        <FormLabel htmlFor="officialResult">Offiicial Result</FormLabel>
                                         <Input value={form.officialResult} onChange={handleFormChange} type="text" maxLength={255} />
                                     </FormControl>
                                 </>

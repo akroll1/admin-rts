@@ -78,12 +78,12 @@ export enum OfficialResults {
   KO13 = "KO13",
   KO14 = "KO14",
   KO15 = "KO15",
-  RDS_12_0 = "RDS_12_0",
-  RDS_11_1 = "RDS_11_1",
-  RDS_10_2 = "RDS_10_2",
-  RDS_9_3 = "RDS_9_3",
-  RDS_8_4 = "RDS_8_4",
-  RDS_7_5 = "RDS_7_5",
+  R12 = "R12",
+  R11 = "R11",
+  R10 = "R10",
+  R9 = "R9",
+  R8 = "R8",
+  R7 = "R7",
 }
 
 export enum ReviewType {
