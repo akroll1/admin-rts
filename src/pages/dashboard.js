@@ -75,7 +75,7 @@ const Dashboard = () => {
     { value: "CREATE_PANEL", label:"Panel Form", type: 'Create Panel', icon: FaEdit, link: '/dashboard/create-panel' },
     { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
     { value: "PROPS_FORM", label:"Props", type: 'Props', icon: FaEdit, link: '/dashboard/props' },
-    { value: "FIGHT_RESOLUTION", label:"Fight Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/FIGHT_RESOLUTION' },
+    // { value: "FIGHT_RESOLUTION", label:"Fight Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/FIGHT_RESOLUTION' },
     { value: "PANELIST", label:"Panelist Form", type: 'User', icon: FaUser, link: '/dashboard/panelist' },
     { value: "SUMMARY_FORM", label:"Summary Form", type: 'Summary Form', icon: FaEdit, link: '/dashboard/SUMMARY_FORM' },
   ];
@@ -171,7 +171,7 @@ const Dashboard = () => {
         {/* { form === 'DISTANCES_ADMIN_FORM' && <DistancesAdminForm /> } */}
         { form === 'DISTANCE_METAS_FORM' && <DistanceMetasForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
-        { form === 'FIGHT_RESOLUTION' && <FightResolutionForm /> }
+        {/* { form === 'FIGHT_RESOLUTION' && <FightResolutionForm /> } */}
         { form === 'PROPS_FORM' && <PropsForm /> }
       </Box>
     </Flex>

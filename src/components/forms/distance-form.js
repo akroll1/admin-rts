@@ -190,6 +190,7 @@ export const DistanceForm = () => {
     }
 
     const handleDeleteDistance = e => {
+        return
         deleteDistance(form.id)
     }
 
