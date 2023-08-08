@@ -46,13 +46,19 @@ export const DistanceMetasForm = () => {
     }
 
     const handlePutDistanceMetas = () => {
-        // DOING THIS FOR DEMO!!!
-        console.log('form: ', form)
-        const obj = {
+
+        const updateObj = {
             id: form.id,
+            props: {
+                moneyline: {
+                    [form.fighter1Id]: form.fighter1ML,
+                    [form.fighter2Id]: form.fighter2ML,
+                }
+            },
         }
-        // console.log('obj: ', obj)
-        updateDistanceMetas(obj)
+
+        console.log('updateObj: ', updateObj)
+        updateDistanceMetas(updateObj)
 
     }
 
@@ -61,7 +67,7 @@ export const DistanceMetasForm = () => {
         return setForm({ ...form, [id]: value })
     }
 
-    console.log('form: ', form)
+    // console.log('form: ', form)
 
     return (
         <Box 
@@ -103,10 +109,23 @@ export const DistanceMetasForm = () => {
                     <FieldGroup title="Distance Metas">
                         <VStack width="full" spacing="6">
 
-                            {/* <FormControl id="fighter1Id">
-                                <FormLabel>Fighter 1</FormLabel>
+                            <FormControl id="fighter1Id">
+                                <FormLabel>Fighter 1 ID</FormLabel>
                                 <Input required value={form.fighter1Id} onChange={handleFormChange} type="text" maxLength={100} />
-                            </FormControl> */}
+                            </FormControl>
+                            <FormControl id="fighter2Id">
+                                <FormLabel>Fighter 2 ID</FormLabel>
+                                <Input required value={form.fighter2Id} onChange={handleFormChange} type="text" maxLength={100} />
+                            </FormControl>
+                           
+                            <FormControl id="fighter1ML">
+                                <FormLabel>Fighter 1 Moneyline</FormLabel>
+                                <Input required value={form.fighter1ML} onChange={handleFormChange} type="text" maxLength={100} />
+                            </FormControl>
+                            <FormControl id="fighter2ML">
+                                <FormLabel>Fighter 2 Moneyline</FormLabel>
+                                <Input required value={form.fighter2ML} onChange={handleFormChange} type="text" maxLength={100} />
+                            </FormControl>
                            
                         </VStack>
                     </FieldGroup>

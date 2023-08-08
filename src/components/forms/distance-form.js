@@ -75,7 +75,7 @@ export const DistanceForm = () => {
                 ...form,
                 id: id ? id : '',
                 description: metas.description ? metas.description : '',
-                parent: metas.parent ? metas.parent : '',
+                parent: metas.parent,
                 storyline: metas.storyline ? metas.storyline : '',
                 subtitle: metas.subtitle ? metas.subtitle : '',
                 syncs: metas.syncs ? metas.syncs : '',
@@ -135,7 +135,7 @@ export const DistanceForm = () => {
         }
         const metas = {
             description: form.description ? form.description : null,
-            parent: form.parent ? form.parent : null,
+            parent: form.parent,
             storyline: form.storyline ? form.storyline : null,
             subtitle: form.subtitle ? form.subtitle : null,
             syncs: null,
@@ -176,8 +176,8 @@ export const DistanceForm = () => {
         };
         const putObj = createUpdateObj();
         console.log('postObj: ', putObj)
-        if(!form.typeIds.length > 0){
-            alert('Missing typeIds!')
+        if(!form.typeIds.length > 0 || !form.parent){
+            alert('Missing typeIds or parent!')
             return
         }
         updateDistance(putObj)
@@ -264,7 +264,7 @@ export const DistanceForm = () => {
                         <VStack width="full" spacing="6">
 
                             <FormControl id="parent">
-                                <FormLabel htmlFor="parent">Parent ID</FormLabel>
+                                <FormLabel htmlFor="parent">Parent/Season ID</FormLabel>
                                 <Input value={form.parent} onChange={handleFormChange} type="text" maxLength={36} />
                             </FormControl>
                             <FormControl id="title">
