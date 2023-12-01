@@ -167,7 +167,7 @@ export const FightersForm = () => {
                     <HStack width="full">
                     <Button 
                         onClick={handleUpdateFighter} 
-                        isLoading={isSubmitting} 
+                        // isLoading={isSubmitting} 
                         loadingText="Submitting..." 
                         type="submit" 
                         colorScheme="solid"

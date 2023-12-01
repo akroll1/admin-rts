@@ -17,7 +17,6 @@ export enum CookieSelectionEnum {
 }
 
 export enum DistanceType {
-  CORNER = "CORNER",
   FIGHT = "FIGHT",
   SHOW = "SHOW",
   SEASON = "SEASON",
@@ -106,17 +105,16 @@ export enum ScoringNavGroupEnum {
 
 export enum SeasonType {
   ANNUAL = "ANNUAL",
-  FANTASY = "FANTASY",
   MONTH = "MONTH",
   QUARTER = "QUARTER",
+  FANTASY = "FANTASY",
+  HISTORICAL = "HISTORICAL",
 }
 
 export enum Status {
   ACTIVE = "ACTIVE",
   CANCELED = "CANCELED",
   COMPLETE = "COMPLETE",
-  FANTASY = "FANTASY",
-  HISTORICAL = "HISTORICAL",
   PENDING = "PENDING",
   TESTING = "TESTING",
 }

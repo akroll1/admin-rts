@@ -34,6 +34,7 @@ export interface AdminStoreState {
     updateDistanceMetas(dmObj: Partial<DistanceMetas>): void
     updateFighter(update: Partial<Fighter>): void
     updateFightProps(obj: Partial<FightProps>): void
+    updateFightResolution(resolutionObj: { resolution: string, fightId: string }): void
     blogPosts: BlogPost[]
     distancesByStatusSummaries: any[]
     distanceMetas: DistanceMetas
@@ -170,4 +171,8 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('UPDATE_FIGHT_PROPS, res: ', res.data)
         // get().setIsSubmitting(false)
     },
+    updateFightResolution: async (resolutionObj: { resolution: string, fightId: string }) => {
+        const res = await axios.put(`${ADMIN_API}/resolutions`, resolutionObj, await configureAccessToken() )
+        console.log('RESOLUTION put res: ', res.data)
+    }
 })

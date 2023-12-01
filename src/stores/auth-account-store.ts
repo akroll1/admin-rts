@@ -104,7 +104,7 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
     },
     updateUser: async (updateOptions: Partial<User>) => {
         get().setIsSubmitting(true)
-        const res = await axios.put(`${ADMIN_API}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
+        await axios.put(`${ADMIN_API}/users/${get().user.sub}`, updateOptions, await configureAccessToken() )
         get().setIsSubmitting(false)
         // console.log('UPDATE USER res: ', res)
     },  

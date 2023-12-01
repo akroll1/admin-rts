@@ -1,6 +1,7 @@
 export * from './blog-post.model'
 export * from './discussion.model'
 export * from './fight-props.model'
+export * from './interfaces'
 export * from './invite.model'
 export * from './lists.model'
 export * from './types'
