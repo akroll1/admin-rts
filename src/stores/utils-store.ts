@@ -7,8 +7,8 @@ import {
     resetModals,
     resetTabs,
     Tabs,
-    Toast,
     TabsEnum,
+    Toast,
 } from './index'
 import axios from 'axios'
 
