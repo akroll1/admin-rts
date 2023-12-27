@@ -23,13 +23,10 @@ import {
   CreatePanelForm,
   DistanceForm,
   DistancesAdminForm,
+  DistanceMetasForm,
   FightersForm, 
-  FightPropsForm,
   FightResolutionForm,
-  PanelistForm,
-  MyPanelsForm,
-  PoundForm, 
-  SummaryForm
+  PropsForm,
 } from '../components/forms'
 import { useParams } from 'react-router-dom'
 import { useGlobalStore } from '../stores'
@@ -71,15 +68,16 @@ const Dashboard = () => {
 
   const isSuperAdminFormOptions = [
     { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
-    { value: "BLOG", label:"Blog Form", type: 'Blog Form', icon: FaEdit, link: '/dashboard/blog-form' },
+    // { value: "BLOG", label:"Blog Form", type: 'Blog Form', icon: FaEdit, link: '/dashboard/blog-form' },
+    // { value: "CREATE_PANEL", label:"Panel Form", type: 'Create Panel', icon: FaEdit, link: '/dashboard/create-panel' },
     { value: "DISTANCE_FORM", label:"Distance Form", type: 'Distance Form', icon: FaEdit, link: '/dashboard/distance' },
-    { value: "DISTANCES_ADMIN_FORM", label:"Distances ADMIN Form", type: 'Distances Admin Form', icon: FaEdit, link: '/dashboard/distances-admin' },
-    { value: "CREATE_PANEL", label:"Panel Form", type: 'Create Panel', icon: FaEdit, link: '/dashboard/create-panel' },
+    { value: "DISTANCE_METAS_FORM", label:"Distance Metas Form", type: 'Distance Metas Form', icon: FaEdit, link: '/dashboard/distance-metas' },
+    // { value: "DISTANCES_ADMIN_FORM", label:"Distances ADMIN Form", type: 'Distances Admin Form', icon: FaEdit, link: '/dashboard/distances-admin' },
     { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
-    { value: "FIGHT-PROPS-FORM", label:"Fight Props", type: 'Fight Props', icon: FaEdit, link: '/dashboard/fight-props' },
-    { value: "FIGHT-RESOLUTION", label:"Fight Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/fight-resolution' },
-    { value: "PANELIST", label:"Panelist Form", type: 'User', icon: FaUser, link: '/dashboard/panelist' },
-    { value: "SUMMARY-FORM", label:"Summary Form", type: 'Summary Form', icon: FaEdit, link: '/dashboard/summary-form' },
+    // { value: "PANELIST", label:"Panelist Form", type: 'User', icon: FaUser, link: '/dashboard/panelist' },
+    { value: "PROPS_FORM", label:"Props", type: 'Props', icon: FaEdit, link: '/dashboard/props' },
+    { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/resolutions' },
+    // { value: "SUMMARY_FORM", label:"Summary Form", type: 'Summary Form', icon: FaEdit, link: '/dashboard/SUMMARY_FORM' },
   ];
 
   const userFormLinks = () => {
@@ -170,14 +168,11 @@ const Dashboard = () => {
         { form === 'BROADCAST' && <BroadcastForm /> }
         { form === 'CREATE_PANEL' && <CreatePanelForm /> }
         { form === 'DISTANCE_FORM' && <DistanceForm /> }
-        { form === 'DISTANCES_ADMIN_FORM' && <DistancesAdminForm /> }
+        {/* { form === 'DISTANCES_ADMIN_FORM' && <DistancesAdminForm /> } */}
+        { form === 'DISTANCE_METAS_FORM' && <DistanceMetasForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
-        { form === 'FIGHT-PROPS-FORM' && <FightPropsForm /> }
-        { form === 'FIGHT-RESOLUTION' && <FightResolutionForm /> }
-        { form === 'PANELS_MEMBER' && <MyPanelsForm /> }
-        { form === 'PANELIST' && <PanelistForm /> }
-        { form === 'POUNDFORM' && <PoundForm /> }
-        { form === 'SUMMARY-FORM' && <SummaryForm /> }
+        { form === 'RESOLUTIONS' && <FightResolutionForm /> }
+        { form === 'PROPS_FORM' && <PropsForm /> }
       </Box>
     </Flex>
   )

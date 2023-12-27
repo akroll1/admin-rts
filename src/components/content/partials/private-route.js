@@ -7,6 +7,8 @@ export const PrivateRoute = ({ children }) => {
         user
     } = useGlobalStore()
 
-    return user.isLoggedIn ? children : <Navigate to="/signin" />;
+    return user.isLoggedIn 
+        ? children 
+        : <Navigate to="/signin" />;
 }
 

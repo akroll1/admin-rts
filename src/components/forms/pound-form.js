@@ -21,13 +21,10 @@ export const PoundForm = () => {
   const {
     fetchFighter,
     fetchOfficialList,
-    poundListOfficial,
-    poundListUser,
     selectedFighter,
     submitList,
   } = useGlobalStore();
 
-  const toast = useToast();
   const [poundList, setPoundList] = useState([]);
   const [fighterId, setFighterId] = useState('');
   const [fighterIdsList, setFighterIdsList] = useState([]);

@@ -37,7 +37,7 @@ export const GlobalNotification = () => {
     }
 
     return (    
-        <Fade initialScale={0.9} in={displayNotification} unmountOnExit>
+        <Fade initialscale={0.9} in={displayNotification} unmountOnExit>
             <Flex
                 id="globalNotification"
                 position="fixed"

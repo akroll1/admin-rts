@@ -33,6 +33,7 @@ import {
 
 export const DistanceForm = () => {
     const { 
+        deleteDistance,
         fetchDistanceById,
         isSubmitting,
         updateDistance,
@@ -58,7 +59,8 @@ export const DistanceForm = () => {
         location: '',
         network: '',
         promoter: '',
-        status: '',
+        seasonType: '',
+        status: 'PENDING',
         type: '',
         typeId: '',
         typeIds: [],
@@ -67,7 +69,7 @@ export const DistanceForm = () => {
 
     useEffect(() => {
         if(selectedDistance?.id){
-            // console.log('selectedDistance: ', selectedDistance)
+            console.log('selectedDistance: ', selectedDistance)
             const { id, instance, metas, status, type } = selectedDistance
             setForm({
                 ...form,
@@ -94,12 +96,16 @@ export const DistanceForm = () => {
                 promoter: instance.promoter ? instance.promoter : '',
                 status: instance.status ? instance.status : "PENDING",
                 type,
-                seasonType: '',
+                seasonType: instance.seasonType ? instance.seasonType : '',
                 typeId: '',
                 typeIds: metas.typeIds ? metas.typeIds : [],
             })
-            document.getElementById("type").value = type;
-            document.getElementById("status").value = status;
+            if(document.getElementById("type")){
+                document.getElementById("type").value = type;
+            }
+            if(document.getElementById("status")){
+                document.getElementById("status").value = status;
+            }
             if(type === "SHOW" && instance && document.getElementById("network") && document.getElementById("promoter")){
                 document.getElementById("network").value = instance.network ? instance.network : "NONE";
                 document.getElementById("promoter").value = instance.promoter ? instance.promoter : "NONE";
@@ -109,7 +115,7 @@ export const DistanceForm = () => {
                 document.getElementById("rounds").value = instance.rounds
             }
             if(type === "SEASON" && document.getElementById("seasonType")){
-                document.getElementById("seasonType").value = instance.type
+                document.getElementById("seasonType").value = instance.seasonType
             }
         }
     },[selectedDistance])
@@ -150,39 +156,17 @@ export const DistanceForm = () => {
             network: form.network ? form.network : null,
             promoter: form.promoter ? form.promoter : null,
         };
-        const season = {
-            type: form.seasonType,
-        } 
         
         const createUpdateObj = () => {
-            if(!form.type 
-                || !form.status
-                || !form.starts 
-                || !form.title 
-                || !form.typeIds.length > 0
-            ){
-                alert('Missing distance properties.')
-                return;
-            }
             let instance;
             if(form.type === "FIGHT"){
-                if(!form.typeIds === 2
-                    || !form.rounds  
-                    || !form.weightclass
-                ){
-                    alert('Missing FIGHT properties.')
-                    return;
-                }
                 instance = fight;
             }
             if(form.type === "SHOW"){
                 instance = show;
             }
             if(form.type === "SEASON"){
-                if(!form.seasonType){
-                    alert('Missing SEASON properties.')
-                }
-                instance = season;
+                instance = { seasonType: form.seasonType };
             }
             return Object.assign({}, {
                 ...distance,
@@ -191,7 +175,12 @@ export const DistanceForm = () => {
             })
         };
         const putObj = createUpdateObj();
-        console.log('postObj: ', putObj)
+        // console.log('postObj: ', putObj)
+        if(!form.typeIds.length > 0){
+            alert('Missing typeIds!')
+            return
+        }
+        console.log('putObj: ', putObj)
         updateDistance(putObj)
     };
     
@@ -202,12 +191,13 @@ export const DistanceForm = () => {
     }
 
     const handleDeleteDistance = e => {
-        // deleteFight(form.id)
+        return
+        deleteDistance(form.id)
     }
 
     const handleIds = () => {
         if(form.typeIds.some( id => id === form.typeId))return
-        setForm(prev => ({ ...form, typeIds: [...prev.typeIds, form.typeId], typeId: '' })) 
+        setForm( prev => ({ ...form, typeIds: [...prev.typeIds, form.typeId], typeId: '' })) 
     }
     
     const handleRemoveId = e => {
@@ -357,8 +347,12 @@ export const DistanceForm = () => {
                                     <FormControl isRequired id="weightclass">
                                         <FormLabel isRequired htmlFor="weightclass">Weight Class</FormLabel>
                                         <Select id="weightclass" placeholder={form.weightclass || 'Weight Class'} onChange={handleFormChange}>
-                                            { Object.keys(WeightClass).map( weightclass => <option key={weightclass} value={weightclass}>{weightclass}</option>)}
+                                            { Object.values(WeightClass).map( weightclass => <option key={weightclass} value={weightclass}>{weightclass}</option>)}
                                         </Select>
+                                    </FormControl>
+                                    <FormControl id="officialResult">
+                                        <FormLabel htmlFor="officialResult">Offiicial Result</FormLabel>
+                                        <Input value={form.officialResult} onChange={handleFormChange} type="text" maxLength={255} />
                                     </FormControl>
                                 </>
                             }
@@ -371,13 +365,13 @@ export const DistanceForm = () => {
                                     <FormControl>
                                         <FormLabel htmlFor="network">Network</FormLabel>
                                         <Select id="network" placeholder={form?.network || 'Network'} onChange={handleFormChange}>
-                                            { Object.keys(Networks).map( network => <option key={network} value={network}>{network}</option>)}
+                                            { Object.values(Networks).map( network => <option key={network} value={network}>{network}</option>)}
                                         </Select>                            
                                     </FormControl>
                                     <FormControl>
                                         <FormLabel htmlFor="promoter">Promoter</FormLabel>
                                         <Select id="promoter" placeholder={form.promoter || 'Promoter'} onChange={handleFormChange}>
-                                            { Object.keys(Networks).map( promoter => <option key={promoter} value={promoter}>{promoter}</option>)}
+                                            { Object.values(Networks).map( promoter => <option key={promoter} value={promoter}>{promoter}</option>)}
                                         </Select>                              
                                     </FormControl>
                                 </>
@@ -387,7 +381,7 @@ export const DistanceForm = () => {
                                     <FormControl>
                                         <FormLabel htmlFor="seasonType">Season Type</FormLabel>
                                         <Select id="seasonType" placeholder={form.seasonType || 'Season Type'} onChange={handleFormChange}>
-                                            { Object.keys(SeasonType).map( seasonType => <option key={seasonType} value={form.seasonType}>{seasonType}</option>)}
+                                            { Object.values(SeasonType).map( seasonType => <option key={seasonType} value={seasonType}>{seasonType}</option>)}
                                         </Select>                            
                                     </FormControl>
                                 </>

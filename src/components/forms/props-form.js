@@ -14,58 +14,62 @@ import {
 import { FieldGroup } from '../../chakra'
 import { useGlobalStore } from '../../stores';
 
-export const FightPropsForm = () => {
+export const PropsForm = () => {
     const {
-        createFightProps,
         fetchFightProps,
         fightProps,
-        updateFightProps
+        updateFightProps,
+        selectedFightProps,
     } = useGlobalStore()
 
-    const [id, setFightId] = useState(null)
-
     const [form, setForm] = useState({
-        props: {
-            //FightPropsEnum: {
-                //fighterId: prop
-            // }
-        }
+        id: '',
+        fighter1Id: '',
+        fighter2Id: '',
+        fighter1ML: '',
+        fighter2ML: '',
+        overUnder: '',
+        over: '',
+        under: '',    
     });
 
     useEffect(() => {
-        if(fightProps?.fighter1Id){
-            setForm({ ...form, ...fightProps })
+        if(selectedFightProps?.id){
+            console.log("selectedFightProps: ", selectedFightProps)
+            setForm({ 
+                ...selectedFightProps, 
+            })
         }
-    },[fightProps])
+    },[selectedFightProps])
 
     const handleFetchProps = () => {
-        fetchFightProps(id)
+        fetchFightProps(form.id)
     }
 
     const handlePutProps = () => {
+        console.log('form: ', form)
         const obj = {
-            ...form,
-            id
+            id: form.id,
+            moneyline: form.fighter1Id 
+                ? [
+                    {
+                        [form.fighter1Id]: form.fighter1ML,
+                    },
+                    {
+                        [form.fighter2Id]: form.fighter2ML
+                    }
+                ] 
+                : null,
+            overUnder: form.overUnder 
+                ? {
+                    ou: form.overUnder,
+                    over: form.over,
+                    under: form.under,
+                }
+                : null
         }
         console.log('obj: ', obj)
         updateFightProps(obj)
-    }
-
-    const handlepostProps = () => {
-        // const obj = {
-        //     ...form,
-        //     id
-        // }
-        const obj = {
-            id: '8479a912-2d13-4993-a431-5c154a9e331f',
-            fightProps: {
-                MONEYLINE: {
-                    'd2e6ca30-4bc7-47a5-a9fb-a3bb51197403': '-4500',
-                    'd5eb3ce2-d1f7-4c9f-8a40-4b9d5f8e2ee1': '+1600'
-                }
-            }
-        }
-        createFightProps(obj)
 
     }
 
@@ -74,15 +78,8 @@ export const FightPropsForm = () => {
         return setForm({ ...form, [id]: value })
     }
 
-    const { 
-        fighter1Id,
-        fighter2Id,
-        fighter1Moneyline,
-        fighter2Moneyline,
-    } = form;
-    const fightQuickTitle = 'still testing'
     console.log('form: ', form)
-    console.log('id: ', id)
+
     return (
         <Box 
             px={['4', '8']} 
@@ -95,23 +92,23 @@ export const FightPropsForm = () => {
                     <Heading size="lg" as="h1" paddingBottom="4">
                         Props Form
                     </Heading>
-                    <FieldGroup title="Find Fight Props">
+                    <FieldGroup title="Search Fight Props">
                         <VStack width="full" spacing="6">
                             <FormControl id="id">
-                                <FormLabel htmlFor="id">Search Props by Fight ID</FormLabel>
+                                <FormLabel htmlFor="id">Fight ID</FormLabel>
                                 <Input 
-                                    value={id} 
-                                    onChange={ ({ currentTarget: {value} }) => setFightId(value.length == 36 ? value : '')} 
+                                    value={form.id} 
+                                    onChange={handleFormChange} 
                                     type="text" 
                                 />
                             </FormControl>
                             <HStack justifyContent="center" width="full">
                                 <Button 
-                                    disabled={!id}  
+                                    disabled={!form.id}  
                                     minW="33%" 
                                     // isLoading={isSubmitting} 
                                     loadingText="Searching..." 
-                                    onClick={() => handleFetchProps()} 
+                                    onClick={handleFetchProps} 
                                     type="button" 
                                     colorScheme="solid"
                                 >
@@ -122,29 +119,40 @@ export const FightPropsForm = () => {
                     </FieldGroup>
                     <FieldGroup title="Fight Props">
                         <VStack width="full" spacing="6">
-                            <FormControl id="fightQuickTitle">
-                                <FormLabel></FormLabel>
-                                <Input required value={fightQuickTitle} onChange={handleFormChange} type="text" maxLength={100} />
-                            </FormControl>
 
                             <FormControl id="fighter1Id">
                                 <FormLabel>Fighter 1</FormLabel>
-                                <Input required value={fighter1Id} onChange={handleFormChange} type="text" maxLength={100} />
+                                <Input required value={form.fighter1Id} onChange={handleFormChange} type="text" maxLength={100} />
                             </FormControl>
                             
-                            <FormControl id="fighter1Moneyline">
+                            <FormControl id="fighter1ML">
                                 <FormLabel>Fighter1 Moneyline</FormLabel>
-                                <Input value={fighter1Moneyline} onChange={handleFormChange} type="text" maxLength={100} />
+                                <Input value={form.fighter1Moneyline} onChange={handleFormChange} type="text" maxLength={100} />
                             </FormControl>
                             
                             <FormControl id="fighter2Id">
                                 <FormLabel>Fighter2</FormLabel>
-                                <Input value={fighter2Id} onChange={handleFormChange} type="text" maxLength={255} />
+                                <Input value={form.fighter2Id} onChange={handleFormChange} type="text" maxLength={255} />
                             </FormControl>
 
-                            <FormControl id="fighter2Moneyline">
+                            <FormControl id="fighter2ML">
                                 <FormLabel>Fighter2 Moneyline</FormLabel>
-                                <Input value={fighter2Moneyline} onChange={handleFormChange} type="text" maxLength={100} />
+                                <Input value={form.fighter2Moneyline} onChange={handleFormChange} type="text" maxLength={100} />
+                            </FormControl>
+                            
+                            <FormControl id="overUnder">
+                                <FormLabel>OverUnder</FormLabel>
+                                <Input value={form.overUnder} onChange={handleFormChange} type="text" maxLength={100} />
+                            </FormControl>
+
+                            <FormControl id="over">
+                                <FormLabel>Over</FormLabel>
+                                <Input value={form.over} onChange={handleFormChange} type="text" maxLength={100} />
+                            </FormControl>
+                            
+                            <FormControl id="under">
+                                <FormLabel>Under</FormLabel>
+                                <Input value={form.under} onChange={handleFormChange} type="text" maxLength={100} />
                             </FormControl>
                            
                         </VStack>
@@ -153,12 +161,12 @@ export const FightPropsForm = () => {
                 <FieldGroup mt="8">
                     <Button 
                         // onClick={id ? handlePutProps : handlepostProps} 
-                        onClick={handlepostProps} 
+                        onClick={handlePutProps} 
                         type="submit" 
                         colorScheme="solid"
                         minW="40%"
                     >
-                        Update
+                        Submit
                     </Button>
                 </FieldGroup>
             </form>

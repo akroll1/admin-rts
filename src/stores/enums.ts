@@ -17,7 +17,6 @@ export enum CookieSelectionEnum {
 }
 
 export enum DistanceType {
-  CORNER = "CORNER",
   FIGHT = "FIGHT",
   SHOW = "SHOW",
   SEASON = "SEASON",
@@ -39,69 +38,51 @@ export enum ModalsEnum {
 }
 
 export enum Networks {
-  NONE = 'NONE',
-  BLKPRIME = 'BLKPRIME', 
-  DAZN = 'DAZN',
-  ESPN = 'ESPN',
-  FIGHTSYNC = 'FIGHTSYNC',
-  ESPNP = 'ESPNP',
-  FITETV = 'FITETV',
-  FIGHTTV = 'FIGHTTV',
-  FOXSPORTS = 'FOXSPORTS',
-  HBO = 'HBO',
-  HBOPPV = 'HBOPPV',
-  SHOWTIME = 'SHOWTIME',
-  SHOWTIMEPPV = 'SHOWTIMEPPV',
+  BLKPRIME = "BLKPRIME",
+  DAZN = "DAZN",
+  ESPN = "ESPN",
+  ESPNPLUS = "ESPN+",
+  FSL = "FSL",
+  FIGHTTV = "FIGHT TV",
+  FITETV = "FITE TV",
+  HBO = "HBO",
+  HBOPPV = "HBO PPV",
+  SHOWTIME = "ShowTime",
+  SHOWTIMEPPV = "ShowTime PPV",
+  NONE = "NONE",
 }
 
 export enum OfficialResults {
-  DECISION = 'DECISION',
-  DRAW = 'DRAW', 
-  UD = 'UD',
-  MD = 'MD',
-  MDD = 'MDD',
-  SD = 'SD', 
-  SDD = 'SDD',
-  DQ = 'DQ',
-  KO1 = 'KO1', 
-  KO2 = 'KO2', 
-  KO3 = 'KO3', 
-  KO4 = 'KO4', 
-  KO5 = 'KO5', 
-  KO6 = 'KO6', 
-  KO7 = 'KO7', 
-  KO8 = 'KO8', 
-  KO9 = 'KO9', 
-  KO10 = 'KO10', 
-  KO11 = 'KO11', 
-  KO12 = 'KO12', 
-  KO13 = 'KO13', 
-  KO14 = 'KO14', 
-  KO15 = 'KO15', 
-}
-
-export enum OfficialResultsPredictionDecisions {
-  ROUNDS_12_0 = "ROUNDS_12_0",
-  ROUNDS_11_1 = "ROUNDS_11_1",
-  ROUNDS_10_2 = "ROUNDS_10_2",
-  ROUNDS_9_3 = "ROUNDS_9_3",
-  ROUNDS_8_4 = "ROUNDS_8_4",
-  ROUNDS_7_5 = "ROUNDS_7_5",
-}
-
-export enum OfficialResultsPredictionKOs {
-  KO1 = 'KO1', 
-  KO2 = 'KO2', 
-  KO3 = 'KO3', 
-  KO4 = 'KO4', 
-  KO5 = 'KO5', 
-  KO6 = 'KO6', 
-  KO7 = 'KO7', 
-  KO8 = 'KO8', 
-  KO9 = 'KO9', 
-  KO10 = 'KO10', 
-  KO11 = 'KO11', 
-  KO12 = 'KO12', 
+  CANCELED = "CANCELED",
+  DECISION = "DECISION",
+  DRAW = "DRAW",
+  UD = "UD",
+  MD = "MD",
+  MDD = "MDD",
+  SD = "SD",
+  SDD = "SDD",
+  DQ = "DQ",
+  KO1 = "KO1",
+  KO2 = "KO2",
+  KO3 = "KO3",
+  KO4 = "KO4",
+  KO5 = "KO5",
+  KO6 = "KO6",
+  KO7 = "KO7",
+  KO8 = "KO8",
+  KO9 = "KO9",
+  KO10 = "KO10",
+  KO11 = "KO11",
+  KO12 = "KO12",
+  KO13 = "KO13",
+  KO14 = "KO14",
+  KO15 = "KO15",
+  R12 = "R12",
+  R11 = "R11",
+  R10 = "R10",
+  R9 = "R9",
+  R8 = "R8",
+  R7 = "R7",
 }
 
 export enum ReviewType {
@@ -124,17 +105,16 @@ export enum ScoringNavGroupEnum {
 
 export enum SeasonType {
   ANNUAL = "ANNUAL",
-  FANTASY = "FANTASY",
   MONTH = "MONTH",
   QUARTER = "QUARTER",
+  FANTASY = "FANTASY",
+  HISTORICAL = "HISTORICAL",
 }
 
 export enum Status {
   ACTIVE = "ACTIVE",
   CANCELED = "CANCELED",
   COMPLETE = "COMPLETE",
-  FANTASY = "FANTASY",
-  HISTORICAL = "HISTORICAL",
   PENDING = "PENDING",
   TESTING = "TESTING",
 }
@@ -147,26 +127,6 @@ export enum TabsEnum {
   FOLLOWING = "FOLLOWING",
   ALL = "ALL",
 }
-
-export enum WeightClass {
-  HEAVYWEIGHT = 'HEAVYWEIGHT',
-  CRUISERWEIGHT = 'CRUISERWEIGHT',
-  LIGHTHEAVYWEIGHT = 'LIGHTHEAVYWEIGHT',
-  SUPERMIDDLEWEIGHT = 'SUPERMIDDLEWEIGHT',
-  MIDDLEWEIGHT = 'MIDDLEWEIGHT',
-  SUPERWELTERWEIGHT = 'SUPERWELTERWEIGHT',
-  WELTERWEIGHT = 'WELTERWEIGHT',
-  SUPERLIGHTWEIGHT = 'SUPERLIGHTWEIGHT',
-  LIGHTWEIGHT = 'LIGHTWEIGHT',
-  SUPERFEATHERWEIGHT = 'SUPERFEATHERWEIGHT',
-  FEATHERWEIGHT = 'FEATHERWEIGHT',
-  SUPERBANTAMWEIGHT = 'SUPERBANTAMWEIGHT',
-  BANTAMWEIGHT = 'BANTAMWEIGHT',
-  SUPERFLYWEIGHT = 'SUPERFLYWEIGHT',
-  FLYWEIGHT = 'FLYWEIGHT',
-  JRFLYWEIGHT = 'JRFLYWEIGHT'
-}
-
 export const PANELIST_PREDICTIONS_OPTIONS = [
   { value: 'DC', label: 'UD' },
   { value: 'SD', label: 'SD' },
@@ -177,3 +137,23 @@ export const PANELIST_PREDICTIONS_OPTIONS = [
 ];
 
 export const ROUND_LENGTH_ENUMS = [3,4,6,8,10,12,15];
+
+export enum WeightClass {
+  HEAVYWEIGHT = "Heavyweight",
+  CRUISERWEIGHT = "Cruiserweight",
+  LIGHTHEAVYWEIGHT = "Light Heavyweight",
+  SUPERMIDDLEWEIGHT = "Super Middleweight",
+  MIDDLEWEIGHT = "Middleweight",
+  SUPERWELTERWEIGHT = "Super Welterweight",
+  WELTERWEIGHT = "Welterwieght",
+  JRWELTERWEIGHT = "Jr Welterweight",
+  SUPERLIGHTWEIGHT = "Super Lightweight",
+  LIGHTWEIGHT = "Lightweight",
+  SUPERFEATHERWEIGHT = "Super Featherweight",
+  FEATHERWEIGHT = "Featherweight",
+  SUPERBANTAMWEIGHT = "Super Bantamweight",
+  BANTAMWEIGHT = "Bantamweight",
+  SUPERFLYWEIGHT = "Super Flyweight",
+  FLYWEIGHT = "Flyweight",
+  JRFLYWEIGHT = "Jr Flyweight",
+}
