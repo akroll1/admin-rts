@@ -56,14 +56,18 @@ export const FightResolutionForm = () => {
         fetchDistanceById,
         isSubmitting,
         selectedDistance,
-        submitDistanceResolution,
         updateFightResolution,
     } = useGlobalStore()
 
     useEffect(() => {
         if(selectedDistance?.id){
             const { id, instance, metas, status, type } = selectedDistance
-          
+            if(type === 'SHOW'){
+                console.log('SHOW ID: ', id)
+                console.log('FIGHT ID: ', metas?.typeIds?.toString())
+                alert(`SHOW: ${metas.title} \n\nFIGHT ID: \n${metas?.typeIds?.toString()}`)
+                return
+            }
             setForm({
                 ...form,
                 id: id ? id : '',
@@ -99,10 +103,11 @@ export const FightResolutionForm = () => {
         fetchDistanceById(searchId)
     }
     const handleSubmitResolution = () => {
-        updateFightResolution({
-            resolution: `${officialResultForm.winnerId}:${officialResultForm.resolution}`,
-            fightId: form.id,
-        })
+        /**
+        * @params resolution: `${officialResultForm.winnerId}:${officialResultForm.resolution}`, fightId: form.id, rounds: form.rounds 
+        */
+        const resolution = `${officialResultForm.winnerId}:${officialResultForm.resolution}`;
+        updateFightResolution(form?.id, resolution, form?.rounds)
     }
     const handleFormChange = e => {
         const { id, value } = e.currentTarget;
@@ -113,9 +118,8 @@ export const FightResolutionForm = () => {
         setOfficialResultForm({ ...officialResultForm, [id]: value });
     }
 
-    // 1b5fa76d-240f-44ff-8cad-f87ab4b3aec5
     // console.log('form: ', form)
-    console.log('officialResultForm: ', officialResultForm)
+    // console.log('officialResultForm: ', officialResultForm)
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
@@ -186,11 +190,11 @@ export const FightResolutionForm = () => {
                         <FieldGroup title="Resolution">
                             <VStack width="full" spacing="6">
                                 <FormControl>
-                                    <FormLabel htmlFor="winnerId">winner ID</FormLabel>
+                                    <FormLabel htmlFor="winnerId">Winner ID</FormLabel>
                                     <Select 
                                         id="winnerId" 
                                         onChange={handleOfficialResultChange}
-                                        placeholder="winnerId"
+                                        placeholder="ID"
                                     >
                                         {form.typeIds.map((fighterId,i) => <option key={fighterId} value={fighterId}>{fighterId}</option>)}
                                     </Select>
