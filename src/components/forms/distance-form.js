@@ -308,7 +308,7 @@ export const DistanceForm = () => {
                                     onChange={time => setForm({ ...form, ends: time })}
                                 />
                             </FormControl>
-                            <FormControl isRequired id="typeId">
+                            <FormControl required id="typeId">
                                 <FormLabel htmlFor="typeId">Type IDs</FormLabel>
                                 <Input value={form.typeId} onChange={handleFormChange}  type="text" maxLength={255} />
                                 <Button 
@@ -337,15 +337,15 @@ export const DistanceForm = () => {
                                         <Checkbox isChecked={form.isTitleFight} id="isTitleFight" onChange={e => setForm( prev => ({ ...prev, isTitleFight: !prev.isTitleFight }))}>Title Fight</Checkbox>
                                     </Stack>
 
-                                    <FormControl isRequired>
+                                    <FormControl required>
                                         <FormLabel htmlFor="rounds">Total Rounds</FormLabel>
                                         <Select id="rounds" placeholder={form.rounds || 'Rounds'} onChange={handleFormChange}>
                                             { ROUND_LENGTH_ENUMS.map( round => <option key={round} value={round}>{round}</option>)}
                                         </Select>
                                     </FormControl>
 
-                                    <FormControl isRequired id="weightclass">
-                                        <FormLabel isRequired htmlFor="weightclass">Weight Class</FormLabel>
+                                    <FormControl required id="weightclass">
+                                        <FormLabel required htmlFor="weightclass">Weight Class</FormLabel>
                                         <Select id="weightclass" placeholder={form.weightclass || 'Weight Class'} onChange={handleFormChange}>
                                             { Object.values(WeightClass).map( weightclass => <option key={weightclass} value={weightclass}>{weightclass}</option>)}
                                         </Select>
