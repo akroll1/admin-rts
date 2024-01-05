@@ -124,7 +124,7 @@ export const FightResolutionForm = () => {
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
             <Heading size="lg" as="h1" paddingBottom="4">
-                Distance Form
+                Resolutions Form
             </Heading>
             <FieldGroup title="Search Distances">
                 <VStack width="full" spacing="6">
