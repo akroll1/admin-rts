@@ -39,7 +39,7 @@
     "uuid": "^8.3.2",
     "victory": "^36.6.8",
     "web-vitals": "^0.2.4",
-    "zustand": "^4.0.0-rc.1",
+    "zustand": "^4.4.7",
     "zustand-persist": "^0.4.0"
   },
   "scripts": {
