@@ -2,17 +2,18 @@ import React, { useEffect, createRef } from 'react'
 import { chakra, Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
 import { PasswordField } from './password-field'
 import { Card } from '../../chakra'
+import { FormHeading } from './form-heading'
 
 export const SubmitNewPasswordForm = ({ 
   form,
   formState,
-  renderForgotPasswordForm,
+  handleRenderForgotPWForm,
   handleFormChange,
   handleSubmitNewPassword,
-  resendVerificationCode
+  resendVerificationCode,
+  setFormState,
 }) => {
   const inputRef = createRef();
-  const { username, email, password, code } = form;
 
   useEffect(() => {
     inputRef.current.focus();
@@ -20,6 +21,13 @@ export const SubmitNewPasswordForm = ({
 
     return (
         <>
+            <FormHeading
+                buttonLabel="Sign-in here!"
+                headingLabel="Create New Password"
+                label="Already have an account?"
+                setFormState={setFormState}
+                renderForm="isSignin"
+            />
             <Heading mb="12" textAlign="center" size="xl" fontWeight="extrabold">
                 Create New Password
             </Heading>    
@@ -50,7 +58,8 @@ export const SubmitNewPasswordForm = ({
                         <PasswordField 
                             formState={formState}
                             handleFormChange={handleFormChange} 
-                            renderForgotPasswordForm={renderForgotPasswordForm} 
+                            password={form.password}
+                            setFormState={setFormState}
                         />
                         <Button 
                             id="request_new_pw_button"

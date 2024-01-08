@@ -22,7 +22,6 @@ import {
   BroadcastForm, 
   CreatePanelForm,
   DistanceForm,
-  DistancesAdminForm,
   DistanceMetasForm,
   FightersForm, 
   FightResolutionForm,
@@ -47,7 +46,8 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    if(user.isSuperAdmin && user.isPanelist){
+    if(true){
+    // if(user.isSuperAdmin && user.isPanelist){
       setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
       return;
     } else if(user.isPanelist){

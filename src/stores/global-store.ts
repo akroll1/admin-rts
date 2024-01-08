@@ -1,7 +1,7 @@
-import create from "zustand"
+import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 import { adminStoreSlice, AdminStoreState } from "./admin-store"
-import { authStoreSlice, AuthStoreState } from "./auth-account-store"
+import { authStoreSlice, AuthStoreState } from "./auth-store"
 import { utilsStoreSlice, UtilsStoreState } from "./utils-store"
 
 export type GlobalStoreState = 

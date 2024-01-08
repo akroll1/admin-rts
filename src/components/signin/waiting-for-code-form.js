@@ -2,16 +2,18 @@ import React,  { createRef, useEffect } from 'react'
 import { Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
 import { Card } from '../../chakra'
 
-export const WaitingForCode = ({
+export const WaitingForCodeForm = ({
     form, 
     handleConfirmCode,
     handleFormChange,
     resendVerificationCode
 }) => {
     const waitingForCodeRef = createRef();
+    
     useEffect(() => {
         waitingForCodeRef.current.focus();
     },[])
+
     return (
         <>
         
@@ -44,7 +46,18 @@ export const WaitingForCode = ({
                     </Button>
                     <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
                     <Text as="span">Didn&apos;t receive a code?</Text>
-                    <Text onClick={resendVerificationCode} _hover={{cursor: 'pointer'}} style={{marginLeft: '0.5rem', color: '#FCFCFC' }}>Resend code!</Text>
+                    <Button 
+                        onClick={resendVerificationCode} 
+                        variant="link"
+                        textDecor="underline"
+                        color="blue.300"
+                        ml="2"
+                        _hover={{
+                            color: 'blue.400'
+                        }}
+                    >
+                        Resend code!
+                    </Button>
                     </Text>
                 </Stack>
             </Card>

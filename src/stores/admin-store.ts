@@ -11,8 +11,9 @@ import {
     DistanceSummary,
     DistanceMetas,
 } from './index'
-import { configureAccessToken } from './auth-account-store'
+import { configureAccessToken, handleServiceAction } from './auth-store'
 import axios from 'axios'
+
 
 export interface AdminStoreState {
     fetchBlogPost(blogPostId: string): void
@@ -120,7 +121,10 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         // get().setIsSubmitting(false)
     },
     fetchDistanceById: async (distanceId: string) => {
-        const res = await axios.get(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken() );
+        const url = `${ADMIN_API}/distances/${distanceId}`
+        const res = await handleServiceAction(url, 'get')
+        console.log('RES: ', res)
+        // const res = await axios.get(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken() );
         const selectedDistance = res.data as Distance;
         set({ selectedDistance })
     },

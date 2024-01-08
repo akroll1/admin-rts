@@ -26,7 +26,7 @@ export const MyAccountForm = () => {
   const { 
     fetchUserAccount,
     isSubmitting,
-    updateUser,
+    updateUserAccount,
     user,
     userAccount,
   } = useGlobalStore()
@@ -76,7 +76,7 @@ export const MyAccountForm = () => {
       lastName: form.lastName,
       isPublic: form.isPublic,
     }
-    updateUser(options)
+    updateUserAccount(options)
   }
 
   const { bio, email, fightCoins, firstName, isPublic, lastName, username } = form;

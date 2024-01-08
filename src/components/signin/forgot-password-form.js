@@ -1,13 +1,25 @@
-import React, { useEffect, createRef } from 'react'
-import { Button, FormControl, FormLabel, Heading, Input, Stack } from '@chakra-ui/react'
+import { useEffect, createRef } from 'react'
+import { 
+    Button, 
+    Flex, 
+    FormControl, 
+    FormLabel, 
+    Heading, 
+    Input, 
+    Stack,
+    Text,
+} from '@chakra-ui/react'
 import { PasswordField } from './password-field'
 import { Card } from '../../chakra'
+import { FormHeading } from './form-heading'
 
 export const ForgotPasswordForm = ({ 
     handleForgotPassword,
     handleFormChange, 
+    setFormState,
     username
 }) => {
+
     const inputRef = createRef();
     useEffect(() => {
         inputRef.current.focus();
@@ -20,9 +32,14 @@ export const ForgotPasswordForm = ({
     }
     return (
         <>
-            <Heading mb="12" textAlign="center" size="xl" fontWeight="extrabold">
-                Request Recovery Code
-            </Heading>
+            <FormHeading
+                buttonLabel="Sign-up now!"
+                headingLabel="Request Recovery Code"
+                label="Don't have an account?"
+                setFormState={setFormState}
+                renderForm="isSignup"
+            />
+       
             <Card>
                 <Stack spacing="6">
                     <FormControl id="username">
