@@ -15,7 +15,8 @@ export const SignUpForm = ({
   form,
   formState, 
   handleFormChange, 
-  handleSignUp, 
+  handleSignUpUser, 
+  isError,
   isSubmitting,
   handleRenderForgotPWForm,
   setFormState
@@ -71,7 +72,7 @@ export const SignUpForm = ({
             id="signup_button" 
             isLoading={isSubmitting}
             loadingText="Submitting..."
-            onClick={handleSignUp} 
+            onClick={handleSignUpUser} 
             type="button" 
             colorScheme="solid" 
             size="lg" 

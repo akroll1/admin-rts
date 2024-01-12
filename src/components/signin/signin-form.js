@@ -2,14 +2,12 @@ import { useEffect, createRef } from 'react'
 import { 
   Box, 
   Button, 
-  Flex,
   FormControl, 
-  FormLabel, 
-  Heading, 
+  FormErrorMessage,
+  FormLabel,  
   Input, 
   SimpleGrid, 
   Stack, 
-  Text, 
   VisuallyHidden 
 } from '@chakra-ui/react'
 import { Card, DividerWithText } from '../../chakra'
@@ -19,20 +17,22 @@ import { FaGoogle } from "react-icons/fa6";
 import { FormHeading } from './form-heading'
 
 export const SignInForm = ({ 
+  federateGoogleUser,
   form,
   formState, 
   handleFormChange, 
   handleSignIn, 
   isSubmitting,
-  setFormState
+  setFormState,
+  isError,
 }) => {
   
   const inputRef = createRef();
   
   useEffect(() => {
     inputRef.current.focus();
-  },[]);
-
+  },[]);  
+  
   return (
     <Box>
       <FormHeading
@@ -44,7 +44,7 @@ export const SignInForm = ({
       />
       <Card>
         <Stack spacing="6">
-          <FormControl id="username">
+          <FormControl id="username" isInvalid={isError}>
             <FormLabel>Username</FormLabel>
             <Input 
               ref={inputRef} 
@@ -59,6 +59,7 @@ export const SignInForm = ({
             formState={formState}
             handleFormChange={handleFormChange} 
             setFormState={setFormState}
+            isError={isError}
           />
           <Button 
             isLoading={isSubmitting}
@@ -79,7 +80,11 @@ export const SignInForm = ({
             <VisuallyHidden>Login with Facebook</VisuallyHidden>
             <FaFacebook />
           </Button>
-          <Button color="currentColor" variant="outline">
+          <Button 
+            color="currentColor" 
+            variant="outline"
+            onClick={() => federateGoogleUser()}
+          >
             <VisuallyHidden>Login with Google</VisuallyHidden>
             <FaGoogle />
           </Button>

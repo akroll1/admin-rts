@@ -27,7 +27,7 @@ export const MessageCenter = ({
         user,
     } = useGlobalStore()
 
-    const { username } = user
+    const username = "username"
     const [chatMessage, setChatMessage] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
 
@@ -148,7 +148,7 @@ export const MessageCenter = ({
     )}
     
     const renderMessages = () => {
-        return chatMessages.map( (message, i) => renderMessage(message, i))
+        return chatMessages?.map( (message, i) => renderMessage(message, i))
     };
 
     return (
@@ -177,16 +177,14 @@ export const MessageCenter = ({
                 fontSize="sm"
                 w="100%"
             >    
-                {chatMessages.length > 0 ? renderMessages() : 'Welcome'}
+                {chatMessages?.length > 0 ? renderMessages() : 'Welcome'}
             </Flex>
-            { !user.isCoach && 
-                <Input
-                    size="sm"
-                    onChange={handleSetChatMessage}
-                    onKeyDown={handleSendMessage}
-                    value={chatMessage}
-                />
-            }
+            <Input
+                size="sm"
+                onChange={handleSetChatMessage}
+                onKeyDown={handleSendMessage}
+                value={chatMessage}
+            />
         </Flex>
     )
 }

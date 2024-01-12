@@ -4,8 +4,8 @@ import { useGlobalStore } from "../stores"
 
 export const BroadcastCenter = () => {  
 
-    const {
-    } = useGlobalStore()
+    // const {
+    // } = useGlobalStore()
     
     const handleSendPushNotification = () => {
         console.log('send push notification')
@@ -17,6 +17,9 @@ export const BroadcastCenter = () => {
             flexDir="column"
         >
             <Button
+                w="10%"
+                variant="solid"
+                size="lg"
                 onClick={handleSendPushNotification}
             >
                 Test User Auth

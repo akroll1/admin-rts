@@ -1,5 +1,5 @@
-export enum ChatMessageEnum {
-  CALLING_IT = "CALLING_IT",
+
+export enum ChatMessage {
   FSL = "FSL",
   GROUP = "GROUP",
   FIGHT = "FIGHT",
@@ -7,8 +7,10 @@ export enum ChatMessageEnum {
 }
 
 export enum ChatEnums {
+  COACHES = "COACHES",
   CORNER = "CORNER",
-  SHOW = "SHOW"
+  FSL = "FSL",
+  CALLING_IT = "CALLING_IT",
 }
 
 export enum CookieSelectionEnum {
@@ -27,15 +29,27 @@ export enum FightPropsEnum {
     OU = "OU"
 }
 
+
 export enum ModalsEnum {
-  ADD_MEMBER_MODAL =  "ADD_MEMBER_MODAL",
-  CREATE_GROUP_MODAL = "CREATE_GROUP_MODAL",
-  EXPIRED_TOKEN_MODAL =  "EXPIRED_TOKEN_MODAL",
-  FIGHT_REVIEW_FORM_MODAL =  "FIGHT_REVIEW_FORM_MODAL",
-  GUEST_JUDGE_MODAL =  "GUEST_JUDGE_MODAL",
-  MONEYLINE_MODAL =  "MONEYLINE_MODAL",
-  PREDICTION_MODAL =  "PREDICTION_MODAL",
+  ADD_MEMBER = "ADD_MEMBER",
+  CREATE_CORNER = "CREATE_CORNER",
+  FIGHT_REVIEW_FORM = "FIGHT_REVIEW_FORM",
+  GUEST_JUDGE = "GUEST_JUDGE",
+  MONEYLINE = "MONEYLINE",
+  NEXT_ROUND_PREDICTION_MODAL = "NEXT_ROUND_PREDICTION_MODAL",
+  OUTSTANDING_INVITES = "OUTSTANDING_INVITES",
+  PAYMENT = "PAYMENT",
+  PLAY_FANTASY_MODAL = "PLAY_FANTASY_MODAL",
+  PREDICTION = "PREDICTION",
+  SEASON_IS_OVER = "SEASON_IS_OVER",
+  SET_SCORECARD_DISPLAY_NAME_MODAL = "SET_SCORECARD_DISPLAY_NAME_MODAL",
+  SET_CORNER_DISPLAY_NAME_MODAL = "SET_CORNER_DISPLAY_NAME_MODAL",
+  SET_USERNAME = "SET_USERNAME",  
+  SIGN_IN_MODAL = "SIGN_IN_MODAL",
+  START_SCORING = "START_SCORING",
+  SEASON_PICKS = "SEASON_PICKS",
 }
+
 
 export enum Networks {
   BLKPRIME = "BLKPRIME",
@@ -92,6 +106,8 @@ export enum ReviewType {
   REVIEW = 'REVIEW',
 }
 
+export const ROUND_LENGTH_ENUMS = [3,4,6,8,10,12,15];
+
 export enum ScoringNavGroupEnum {
   ANALYTICS = "ANALYTICS",
   BRACKETS = "BRACKETS",
@@ -111,6 +127,12 @@ export enum SeasonType {
   HISTORICAL = "HISTORICAL",
 }
 
+export enum SignInErrors {
+  EMAIL = "EMAIL",
+  USERNAME = "USERNAME",
+  PASSWORD = "PASSWORD",
+} 
+
 export enum Status {
   ACTIVE = "ACTIVE",
   CANCELED = "CANCELED",
@@ -119,7 +141,7 @@ export enum Status {
   TESTING = "TESTING",
 }
 
-export enum TabsEnum {
+export enum Tabs {
   INFO = "INFO",
   SCORING = "SCORING",
   ANALYTICS = "ANALYTICS",
@@ -127,16 +149,11 @@ export enum TabsEnum {
   FOLLOWING = "FOLLOWING",
   ALL = "ALL",
 }
-export const PANELIST_PREDICTIONS_OPTIONS = [
-  { value: 'DC', label: 'UD' },
-  { value: 'SD', label: 'SD' },
-  { value: 'KO13' , label: 'KO 1-3' },
-  { value: 'KO46' , label: 'KO 4-6' },
-  { value: 'KO79' , label: 'KO 7-9' },
-  { value: 'KO10' , label: 'KO 10-12' }
-];
 
-export const ROUND_LENGTH_ENUMS = [3,4,6,8,10,12,15];
+export enum Token {
+  ID = "id_token",
+  ACCESS = "access_token",
+}
 
 export enum WeightClass {
   HEAVYWEIGHT = "Heavyweight",
@@ -157,3 +174,32 @@ export enum WeightClass {
   FLYWEIGHT = "Flyweight",
   JRFLYWEIGHT = "Jr Flyweight",
 }
+
+export const officialResultOptions = [
+  "KO1",
+  "KO2",
+  "KO3",
+  "KO4",
+  "KO5",
+  "KO6",
+  "KO7",
+  "KO8",
+  "KO9",
+  "KO10",
+  "KO11",
+  "KO12",
+  "KO13",
+  "KO14",
+  "KO15",
+  "10-0",
+  "9-1",
+  "8-2",
+  "7-3",
+  "6-4",
+  "12-0", 
+  "11-1", 
+  "10-2", 
+  "9-3", 
+  "8-4", 
+  "7-5", 
+]

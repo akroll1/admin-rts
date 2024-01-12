@@ -66,7 +66,7 @@ export const MobileNavContext = props => {
         )}
           <ProfileButton 
             isMobile={true}
-            isLoggedIn={user.isLoggedIn}
+            isLoggedIn={user?.isLoggedIn}
             isOpen={isOpen}
             onToggle={onToggle}
           />

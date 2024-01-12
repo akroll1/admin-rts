@@ -28,7 +28,6 @@ export const MyAccountForm = () => {
     isSubmitting,
     updateUserAccount,
     user,
-    userAccount,
   } = useGlobalStore()
 
   const [form, setForm] = useState({
@@ -45,29 +44,29 @@ export const MyAccountForm = () => {
   },[])
   
   useEffect(() => {
-    if(userAccount?.sub){
+    if(user?.sub){
       setForm({
         ...form,
-        bio: userAccount.bio,
-        email: userAccount.email ? userAccount.email : user.email,
-        fightCoins: userAccount.fightCoins,
-        firstName: userAccount.firstName,
-        lastName: userAccount.lastName,
-        isPublic: userAccount.isPublic,
-        sub: userAccount.sub ? userAccount.sub : user.sub,
-        username: userAccount.username ? userAccount.username : user.username,
+        bio: user.bio,
+        email: user?.email || "",
+        fightCoins: user?.fightCoins || "",
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
+        isPublic: user?.isPublic || "",
+        sub: user?.sub || "",
+        username: user?.username || "",
       })
     }
-  },[userAccount])
+  },[user])
 
-  const handleFormInput = e => {
+  const handleFormChange = e => {
     const {id, value} = e.currentTarget;
+    if(id === 'isPublic'){
+      setForm( prev => ({ ...prev, [id]: !prev.isPublic }))
+      return
+    }
     setForm({...form, [id]: value})
   }
-
-  const handleCheckbox = () => {
-    setForm({ ...form, isPublic: !isPublic });
-  };
 
   const handleUpdateUser = () => {
     const options = {
@@ -79,8 +78,6 @@ export const MyAccountForm = () => {
     updateUserAccount(options)
   }
 
-  const { bio, email, fightCoins, firstName, isPublic, lastName, username } = form;
-
   return (
     <Box px={{ base: '4', md: '10' }} py="8" maxWidth="3xl" mx="auto">
       <form id="account_settings_form" onSubmit={e => e.preventDefault()}>
@@ -91,34 +88,34 @@ export const MyAccountForm = () => {
           <FieldGroup title="FightCoins">
             <FormControl id="fightCoins">
               <FormLabel>Total</FormLabel>
-              <Input w={["40%","25%"]} readOnly type="number" value={fightCoins} />
+              <Input w={["40%","25%"]} readOnly type="number" value={form?.fightCoins} />
             </FormControl>
           </FieldGroup>
           <FieldGroup title="Personal Info">
             <VStack width="full" spacing="6">
               <FormControl id="email">
                 <FormLabel>Email</FormLabel>
-                <Input readOnly type="email" value={email} />
+                <Input readOnly type="email" value={form?.email} />
               </FormControl>
 
               <FormControl id="username">
                 <FormLabel>User Name</FormLabel>
-                <Input readOnly type="text" maxLength={255} value={username} />
+                <Input readOnly type="text" maxLength={255} value={form?.username} />
               </FormControl>
 
               <FormControl id="firstName">
                 <FormLabel>First Name</FormLabel>
-                <Input onChange={handleFormInput} type="text" maxLength={255} value={firstName} />
+                <Input onChange={handleFormChange} type="text" maxLength={255} value={form?.firstName} />
               </FormControl>
               
               <FormControl id="lastName">
                 <FormLabel>Last Name</FormLabel>
-                <Input onChange={handleFormInput} type="text" maxLength={255} value={lastName} />
+                <Input onChange={handleFormChange} type="text" maxLength={255} value={form?.lastName} />
               </FormControl>
   
               <FormControl id="bio">
                 <FormLabel>Bio</FormLabel>
-                <Textarea value={bio} onChange={handleFormInput} rows={5} />
+                <Textarea value={form?.bio} onChange={handleFormChange} rows={5} />
                 <FormHelperText>
                   Brief description for your profile. URLs are hyperlinked.
                 </FormHelperText>
@@ -129,9 +126,9 @@ export const MyAccountForm = () => {
             <Stack width="full" spacing="4">
               <Checkbox 
                 defaultChecked
-                isChecked={isPublic} 
+                isChecked={form?.isPublic} 
                 id="isPublic" 
-                onChange={handleCheckbox}
+                onChange={handleFormChange}
               >
                 Allow your account to be public.
               </Checkbox>

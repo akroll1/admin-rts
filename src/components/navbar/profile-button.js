@@ -21,7 +21,7 @@ export const ProfileButton = ({
     } = useGlobalStore();
 
     const handleClick = () => {
-        if(user.isLoggedIn){
+        if(user?.isLoggedIn){
             navigate('/dashboard/account')
             onToggle()
             return
@@ -46,7 +46,7 @@ export const ProfileButton = ({
                     fontWeight="600"
                     onClick={handleClick}
                 >
-                    {user.isLoggedIn ? `Profile` : `Sign In`}
+                    {user?.isLoggedIn ? `Profile` : `Sign In`}
                 </MenuButton>
                 {/* {!isMobile && isLoggedIn &&
                     <MenuList>

@@ -15,6 +15,7 @@ import {
   FaUserFriends 
 } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
+import { IoLogOutOutline } from 'react-icons/io5'
 import { UserInfo } from '../chakra'
 import { 
   MyAccountForm, 
@@ -29,7 +30,6 @@ import {
 } from '../components/forms'
 import { useParams } from 'react-router-dom'
 import { useGlobalStore } from '../stores'
-import { IoLogOutOutline } from 'react-icons/io5'
 
 const Dashboard = () => {
   const { type } = useParams();
@@ -38,6 +38,8 @@ const Dashboard = () => {
     user, 
   } = useGlobalStore()
 
+  console.log('user', user)
+  
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
   const [formLinks, setFormLinks] = useState([
@@ -118,8 +120,8 @@ const Dashboard = () => {
               <UserInfo 
                 setForm={setForm} 
                 setActive={setActive} 
-                name={user?.username ? user.username : ''} 
-                email={user?.email ? user.email : ''} 
+                name={user?.username} 
+                email={user?.email} 
               />
             </Link>
           </Box>

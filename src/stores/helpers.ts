@@ -1,14 +1,3 @@
-import { 
-    Networks, 
-    WeightClass 
-} from "../stores/index";
-
-// export const enumToObject = (enum: ) => {
-//     if(enum){
-//         return 
-//     }
-// }
-
 export const sanitizeUrl = (str: string) => {
     const map: any = {
         '&': '&amp;',
@@ -50,7 +39,6 @@ export const parseUrls = (userInput: string) => {
     });
     return formattedMessage;
 };
-
 
 export const capFirstLetters = (word: string) => {
     if(word === undefined || word.length === 0){

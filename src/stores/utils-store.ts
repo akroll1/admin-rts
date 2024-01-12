@@ -7,7 +7,6 @@ import {
     resetModals,
     resetTabs,
     Tabs,
-    TabsEnum,
     Toast,
 } from './index'
 import axios from 'axios'
@@ -25,12 +24,10 @@ export interface UtilsStoreState {
     setIsSubmitting(submittingState: boolean): void
     setIsSubmittingForm(submittingState: boolean): void
     setModals(modal: string, modalState: boolean): void
-    setTabs(tab: TabsEnum): void
     setToast(toast: Toast): void
     setTokenExpired(state: boolean): void
     setTransformedResult(officialResult: string): void
     subscribeToNewsletter(email: string): void
-    tabs: Tabs
     toast: Toast
     tokenExpired: boolean,
     transformedPrediction: string
@@ -45,7 +42,6 @@ export const initialUtilsStoreState = {
     modals: {} as Modals,
     navigateTo: '',
     scoringTransformedPrediction: null,
-    tabs: { [TabsEnum.ALL]: true } as Tabs,
     toast: {} as Toast,
     tokenExpired: false,
     transformedPrediction: '',
@@ -78,10 +74,6 @@ export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreS
             [ModalsEnum[modal]]: modalState 
         })
         set({ modals })
-    },
-    setTabs: (tab: TabsEnum) => {
-        const tabs = { ...resetTabs, [tab]: true }
-        set({ tabs })
     },
     setToast: (toast: Toast) => {
         set({ toast })

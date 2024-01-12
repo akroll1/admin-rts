@@ -17,7 +17,7 @@ import {
 import { FieldGroup } from '../../chakra'
 import { useGlobalStore } from '../../stores'
 import Datepicker from 'react-datepicker'
-import { officialResultOptions } from '../../stores/models/enums/resolution-enums'
+import { officialResultOptions } from '../../stores'
 
 export const FightResolutionForm = () => {
     const [searchId, setSearchId] = useState('')    

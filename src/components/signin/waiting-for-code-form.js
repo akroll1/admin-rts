@@ -6,7 +6,7 @@ export const WaitingForCodeForm = ({
     form, 
     handleConfirmCode,
     handleFormChange,
-    resendVerificationCode
+    handleResendConfirmationCode
 }) => {
     const waitingForCodeRef = createRef();
     
@@ -45,19 +45,19 @@ export const WaitingForCodeForm = ({
                         Verify Code
                     </Button>
                     <Text mt="4" mb="8" align="center" textAlign="center" maxW="md" fontWeight="medium" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-                    <Text as="span">Didn&apos;t receive a code?</Text>
-                    <Button 
-                        onClick={resendVerificationCode} 
-                        variant="link"
-                        textDecor="underline"
-                        color="blue.300"
-                        ml="2"
-                        _hover={{
-                            color: 'blue.400'
-                        }}
-                    >
-                        Resend code!
-                    </Button>
+                        <Text as="span">Didn&apos;t receive a code?</Text>
+                        <Button 
+                            onClick={handleResendConfirmationCode} 
+                            variant="link"
+                            textDecor="underline"
+                            color="blue.300"
+                            ml="2"
+                            _hover={{
+                                color: 'blue.400'
+                            }}
+                        >
+                            Resend code!
+                        </Button>
                     </Text>
                 </Stack>
             </Card>

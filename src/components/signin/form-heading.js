@@ -4,7 +4,7 @@ import {
     Flex,
     Text,
 } from '@chakra-ui/react'
-import { signinResets } from './resets'
+import { signinPageResets } from '../../stores'
 
 export const FormHeading = ({
     headingLabel,
@@ -33,7 +33,7 @@ export const FormHeading = ({
             >
                 <Text color="#cacaca">{label}</Text>
                 <Button 
-                    onClick={() => setFormState({ ...signinResets, [renderForm]: true })} 
+                    onClick={() => setFormState({ password: '', ...signinPageResets, [renderForm]: true })} 
                     variant="link"  
                     ml="2" 
                     color="blue.300"

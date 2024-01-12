@@ -1,41 +1,31 @@
 import { StateCreator } from "zustand"
 import { GlobalStoreState } from './global-store'
 import { 
-    User, 
-    http
+    SignInErrors,
+    Token,
+    User,
 } from './index'
-import axios from 'axios'
-import * as Cognito from "amazon-cognito-identity-js"
+import { signInErrorResets } from "./resets"
+import axios, { AxiosRequestHeaders } from 'axios'
+import { 
+    AuthenticationDetails,
+    CognitoAccessToken,
+    CognitoIdToken,
+    CognitoRefreshToken,
+    CognitoUser, 
+    CognitoUserAttribute,
+    CognitoUserPool,
+    CognitoUserSession,
+} from "amazon-cognito-identity-js"
 
-console.log('Cognito: ', Cognito)
-
+let cognitoUser: CognitoUser | void;
 const poolData = {
     UserPoolId: process.env.REACT_APP_USER_POOL_ID || "",
     ClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID || "",
 }
-
-const userpool = new Cognito.CognitoUserPool(poolData)
-let cognitoUser: Cognito.CognitoUser | void;
-
-export const getSession = () => {
-    const cognitoUser = userpool.getCurrentUser();
-    return new Promise((resolve, reject) => {
-        if (!cognitoUser) {
-            reject(new Error("No user found"))
-            return
-        }
-        cognitoUser.getSession((err: any, session: Cognito.CognitoUserSession) => {
-            if (err) {
-            reject(err)
-            return
-            }
-            resolve(session)
-        })
-    })
-}
+const userpool = new CognitoUserPool(poolData)
 
 export const configureAccessToken = async () => {
-    // const accessToken: any = await (await getCurrentUser());
     const accessToken = "access_token"
     console.log('accessToken: ', accessToken)
     return ({
@@ -55,28 +45,23 @@ export const configureIDToken = async () => {
     })
 }
 
-export const handleServiceAction = async (url: string, fetchType: http , options?: Record<string, string>) => {
-    const session = await getSession() as Cognito.CognitoUserSession;
-    const accessToken = session.getAccessToken().getJwtToken();
-
-    const headers = {
-        headers: {
-            Authorization : `Bearer ${accessToken}`
-        }
-    }
-    return await axios[fetchType](url, headers)
-}
 export interface AuthStoreState {
+    authenticateUser(username: string, password: string): void
     confirmPassword(username: string, confirmationCode: string, newPassword: string): void
-    signUp(username: string, email: string, password: string): void
-    createUserAccount(user: User): void
+    federateGoogleUser(credentials: Record<string, string>): void
     fetchUserAccount(): void
     forgotPassword(username: string): void
-    setUser(user: Partial<User>): void
+    resendConfirmationCode(username: string): void
+    setHeaders(type: Token): Promise<AxiosRequestHeaders>
+    setUser(accessToken: string, idToken: string): void
     signOut(): void
+    signUpUser(email: string, password: string, username: string): void
+    submitNewPassword(username: string, confirmationCode: string, newPassword: string): void
     updateUserAccount(updateOptions: Partial<User>): void
+    verifyCode(username: string, confirmationCode: string): void
     isLoggedIn: boolean
     isPanelist: boolean
+    signInErrors: Record<string, boolean>
     user: User | null
     userAccount: User
 }
@@ -84,6 +69,7 @@ export interface AuthStoreState {
 export const initialAuthStoreState = {
     isLoggedIn: false,
     isPanelist: false,
+    signInErrors: { ...signInErrorResets },
     user: null,
     userAccount: {} as User
 }
@@ -94,35 +80,44 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
     ...initialAuthStoreState,  
     authenticateUser: async (username: string, password: string) => {
         get().setIsSubmitting(true)
-        cognitoUser = new Cognito.CognitoUser({
+        
+        console.log('isSubmitting: ', get().isSubmitting)
+
+        cognitoUser = new CognitoUser({
             Username: username,
             Pool: userpool,
         })
-        const authDetails = new Cognito.AuthenticationDetails({
+        const authDetails = new AuthenticationDetails({
             Username: username,
             Password: password,
         })
         cognitoUser = cognitoUser.authenticateUser(authDetails, {
             onSuccess: data => {
-                // set the user in-memory here.
-                TODO:// set the user in-memory here.
-                get().setUser({})
+                set({ signInErrors: { ...signInErrorResets } })
                 window.location.href = "/dashboard/distances"
             },
             onFailure: (err) => {
                 console.log('onFailure: ', err)
                 get().setIsSubmitting(false)
+                const obj = {
+                    ...signInErrorResets,
+                    [SignInErrors.USERNAME]: true, 
+                    [SignInErrors.PASSWORD]: true,
+                }
+                set({ signInErrors: obj })
             }
         })
         get().setIsSubmitting(false)
     },
+    federateGoogleUser: async (credentials: Record<string, string>) => {
+        return window.location.href = `https://fsl-admin.auth.us-east-1.amazoncognito.com/authorize/?identity_provider=Google&redirect_uri=http://localhost:8090/auth&response_type=token&client_id=${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}&scope=email+openid+profile`;    
+    },
     confirmPassword: async (username: string, confirmationCode: string, newPassword: string) => {
         return new Promise((resolve, reject) => {
-            const cognitoUser = new Cognito.CognitoUser({
+            const cognitoUser = new CognitoUser({
                 Username: username,
                 Pool: userpool,
             })
-        
             cognitoUser.confirmPassword(confirmationCode, newPassword, {
                 onSuccess: data => {
                     console.log(', confirmPassword: ', data)
@@ -136,30 +131,37 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             })
         })
     },
-    createUserAccount: async (user: User) => {
-        const res = await axios.post(`${ADMIN_API}/users`, user, await configureAccessToken() )
-        const userAccount = res.data as User
-        set({ userAccount })
-        // console.log('CREATE_USER: res: ', res.data)
+    confirmRegistration: async (username: string, confirmationCode: string) => {
+        const cognitoUser = new CognitoUser({
+            Username: username,
+            Pool: userpool,
+        })
+        return new Promise((resolve, reject) => {
+            cognitoUser.confirmRegistration(confirmationCode, true, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    console.log('confirmRegistration: result: ', result);
+                    resolve(result);
+                }
+            });
+        });
     },
     fetchUserAccount: async () => {
-        const res = await axios.get(`${ADMIN_API}/users/${get().user?.sub}`,await configureAccessToken() )
-        if(res.data === 'No user found.'){
-            const user = get().user
-            // If not username, render Username Modal.
-            get().updateUserAccount({
-                email: user?.email, 
-                sub: user?.sub,
-                username: user?.username, 
-            })
-            return
-        }
+        const headers = await get().setHeaders(Token.ID) as AxiosRequestHeaders
+        const url = `${ADMIN_API}/users/${get().user?.sub}`;
+        const res = await axios({
+            method: 'get',
+            url,
+            headers,
+        })
         const userAccount = res.data as User
         set({ userAccount })
     },
     forgotPassword: async (username: string) => {
         return new Promise((resolve, reject) => {
-            const cognitoUser = new Cognito.CognitoUser({
+            const cognitoUser = new CognitoUser({
                 Username: username,
                 Pool: userpool,
             })
@@ -175,6 +177,83 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             })
         })
     },
+    resendConfirmationCode: async (username: string) => {
+        const userData = {
+            Username: username,
+            Pool: userpool,
+        }
+        const cognitoUser = new CognitoUser(userData)
+        cognitoUser.resendConfirmationCode((err, result) => {
+            if (err) {
+                console.log('err: ', err);
+                return;
+            }
+            console.log('result: ', result);
+        });
+    },
+    setHeaders: async (type: Token): Promise<AxiosRequestHeaders> => {
+        const poolData = {
+            UserPoolId: process.env.REACT_APP_USER_POOL_ID || "",
+            ClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID || "",
+        }
+        const userpool = new CognitoUserPool(poolData)
+        const cognitoUser = userpool.getCurrentUser();
+        console.log('cognitoUser: ', cognitoUser)
+
+        return new Promise((resolve, reject) => {
+            if (!cognitoUser) {
+                reject(new Error("No user found"))
+                return
+            }
+            cognitoUser.getSession((err: any, session: CognitoUserSession) => {
+                if (err) {
+                    reject(err)
+                    return
+                }
+                const jwt = session.getIdToken().getJwtToken()
+                const headers = {
+                    Authorization : `Bearer ${jwt}`,
+                    accept: 'application/json',
+                }
+                resolve(headers)
+            })
+        })
+    },
+    setUser: async (accessToken: string, idToken: string) => {
+        const IdToken = new CognitoIdToken({ IdToken: idToken })
+        const AccessToken = new CognitoAccessToken({ AccessToken: accessToken })
+        const RefreshToken = new CognitoRefreshToken({ RefreshToken: idToken })
+        const sessionData = {
+            IdToken,
+            AccessToken,
+            RefreshToken,
+        } as any
+        const userSession = new CognitoUserSession(sessionData)
+        console.log('userSession: ', userSession)
+        const userData = {
+            Username: userSession.getIdToken().payload['cognito:username'],
+            Pool: userpool,
+        }
+        const cognitoUser = new CognitoUser(userData)
+        cognitoUser.setSignInUserSession(userSession)   
+
+        cognitoUser.getSession((err: any, session: CognitoUserSession) => {
+            if (err) {
+                console.log('err: ', err)
+                return
+            }
+            const user = session.getIdToken().payload
+            set({ 
+                user: { 
+                    ...get().user, 
+                    email: user?.email, 
+                    groups: user['cognito:groups'],
+                    sub: user?.sub,
+                } 
+            })
+            get().fetchUserAccount()
+        })
+    },
     signOut: async () => {
         const cognitoUser = userpool.getCurrentUser();
         if (cognitoUser) {
@@ -182,38 +261,40 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
           set({ ...get().user, isLoggedIn: false })
         }
     },  
-    signUp: async (username: string, email: string, password: string) => {
-        return new Promise((resolve, reject) => {
-            const attribute = new Cognito.CognitoUserAttribute({
+    signUpUser: async (email: string, password: string, username: string) => {
+
+        const userAttributes = [
+            {
                 Name: "email",
                 Value: email
-            });
-
-            userpool.signUp(
-                username,
-                password,
-                [attribute],
-                [],
-                (err, result) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    const user = result?.user;
-                    console.log('user: ', user)
-                    resolve();
-                }
-            );
+            },
+        ];
+        const cognitoUserAttributes = userAttributes.map(attr => new CognitoUserAttribute(attr));
+        userpool.signUp(username, email, cognitoUserAttributes, [], (err, result) => {
+            if (err) {
+                console.log('err: ', err);
+                return;
+            }
+            console.log('result: ', result);
         });
-    },  
-    setUser: async (user: Partial<User>) => {
-        // const groups = user?.signInUserSession?.accessToken?.payload['cognito:groups'] ? user.signInUserSession.accessToken.payload['cognito:groups'] : [];
-        // const isPanelist = groups.some( (group: string) => group.includes('panelist')) ? true : false;
-        Object.assign(user, { 
-            isLoggedIn: true,
+
+    },    
+    submitNewPassword: async (username: string, confirmationCode: string, newPassword: string) => {
+        const userData = {
+            Username: username,
+            Pool: userpool,
+        }
+        const cognitoUser = new CognitoUser(userData)
+        cognitoUser.confirmPassword(confirmationCode, newPassword, {
+            onSuccess: data => {
+                console.log('onSuccess, confirmPassword: ', data)
+                // Going to /resolutions for testing.
+                window.location.href = "/dashboard/resolutions"
+            },
+            onFailure: (err) => {
+                console.log('onFailure: ', err)
+            },
         })
-        set({ user })
-        get().fetchUserAccount()
     },
     updateUserAccount: async (updateOptions: Partial<User>) => {
         get().setIsSubmitting(true)
@@ -221,4 +302,21 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
         get().setIsSubmitting(false)
         console.log('UPDATE USER')
     }, 
+    verifyCode: async (username: string, confirmationCode: string) => {
+        const userData = {
+            Username: username,
+            Pool: userpool,
+        }
+        const cognitoUser = new CognitoUser(userData)
+        cognitoUser.confirmRegistration(confirmationCode, true, function(err, result) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (result === "SUCCESS") {
+                window.location.href = "/dashboard/account"
+            }
+            console.log('result: ', result);
+        });
+    },
 })

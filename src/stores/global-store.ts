@@ -2,11 +2,13 @@ import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 import { adminStoreSlice, AdminStoreState } from "./admin-store"
 import { authStoreSlice, AuthStoreState } from "./auth-store"
+import { chatStoreSlice, ChatStoreState } from "./chat.store"
 import { utilsStoreSlice, UtilsStoreState } from "./utils-store"
 
 export type GlobalStoreState = 
     & AuthStoreState 
     & AdminStoreState
+    & ChatStoreState
     & UtilsStoreState;
 
 export const useGlobalStore = create<GlobalStoreState>()(
@@ -14,6 +16,7 @@ export const useGlobalStore = create<GlobalStoreState>()(
         (set, get, api) => ({
             ...adminStoreSlice(set, get, api),
             ...authStoreSlice(set, get, api),
+            ...chatStoreSlice(set, get, api),
             ...utilsStoreSlice(set, get, api),
         }),
         // reset: () => set( state => initialScorecardsStoreState)
@@ -28,7 +31,7 @@ export const useGlobalStore = create<GlobalStoreState>()(
                 })
             },
             storage: createJSONStorage(() => sessionStorage),
-            name: 'fsl',
+            name: 'fsl-admin',
             version: 4,
         }
     )

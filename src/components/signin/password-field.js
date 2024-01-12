@@ -1,12 +1,26 @@
 import * as React from 'react'
-import { Box, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, useDisclosure, useMergeRefs, useColorModeValue as mode } from '@chakra-ui/react'
+import { 
+  Box, 
+  Flex, 
+  FormControl, 
+  FormErrorMessage,
+  FormLabel, 
+  IconButton, 
+  Input, 
+  InputGroup, 
+  InputRightElement, 
+  useDisclosure, 
+  useMergeRefs, 
+  useColorModeValue as mode 
+} from '@chakra-ui/react'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
-import { signinResets } from './resets'
+import { signinPageResets } from '../../stores'
 
 export const PasswordField = React.forwardRef((props, ref) => {
   const { 
     formState, 
     handleFormChange, 
+    isError,
     password,
     setFormState,
   } = props;
@@ -30,12 +44,12 @@ export const PasswordField = React.forwardRef((props, ref) => {
   }
   
   return (
-    <FormControl id="password">
+    <FormControl id="password" isInvalid={isError}>
       <Flex justify="space-between">
         <FormLabel>{formState.isForcedPasswordChange ? `New Password` : `Password`}</FormLabel>
         { (formState.isSignin || formState.isSignup || formState.isWaitingForCode) &&
           <Box 
-            onClick={() => setFormState({ ...signinResets, isForgotPassword: true })}
+            onClick={() => setFormState({ ...signinPageResets, isForgotPassword: true })}
             color={mode('blue.600', '#FCFCFC')} 
             fontWeight="semibold" 
             fontSize="sm"
@@ -67,6 +81,7 @@ export const PasswordField = React.forwardRef((props, ref) => {
           required
         />
       </InputGroup>
+      {isError && <FormErrorMessage>Username or Password is incorrect.</FormErrorMessage>}
     </FormControl>
   )
 })

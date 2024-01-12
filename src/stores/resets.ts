@@ -78,3 +78,18 @@ export const resetTabs = {
     FOLLOWING: false,
     ALL: false,
 }
+
+export const signInErrorResets = {
+	EMAIL: false,
+	USERNAME: false,
+	PASSWORD: false,
+}
+
+export const signinPageResets = {
+    isSignin: false, 
+    isSignup: false, 
+    isForgotPassword: false, 
+    isForcedPasswordChange: false, 
+    isWaitingForCode: false,
+    isWaitingForNewPasswordCode: false
+}
