@@ -3,6 +3,7 @@ import {
     Status,
     WeightClass,
 } from "./enums"
+
 export const blankScorecard = {
 	scorecardId: "BLANK",
 	corners: [],

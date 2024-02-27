@@ -35,6 +35,39 @@ export type CornerWithPicks = {
     corner: Corner | null;
     teamPicks: UserPick[];
 };
+  
+export type CreatePoundList = {
+    id: string;
+    list: string[];
+    type: "LIST";
+    comment: string;
+}
+
+export type Distance = {
+    id: string; 
+    instance: Season | Show | Fight;
+    metas: Metas;
+    status: Status;
+    type: DistanceType;
+}
+
+export type DistanceMetas = {
+    id: string;
+    officialJudges?: OfficialJudge[] | null;
+    predictions?: string[] | null;
+    props?: Props | null;
+    syncs?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export type DistanceSummary = {
+    id: string; // same as the base schema ID.
+    distance: Distance;
+    summary: DistanceSummary[] | Fighter[];
+    type: DistanceType;
+    createdAt?: string;
+}
 
 export type FightProps = {
     id: string
@@ -130,34 +163,6 @@ export type UserCorner = {
     createdAt?: string;
     updatedAt?: string;
 }
-  
-
-export type Distance = {
-    id: string; 
-    instance: Season | Show | Fight;
-    metas: Metas;
-    status: Status;
-    type: DistanceType;
-}
-
-export type DistanceMetas = {
-    id: string;
-    officialJudges?: OfficialJudge[] | null;
-    predictions?: string[] | null;
-    props?: Props | null;
-    syncs?: string | null;
-    createdAt?: string;
-    updatedAt?: string;
-}
-
-
-export type DistanceSummary = {
-    id: string; // same as the base schema ID.
-    distance: Distance;
-    summary: DistanceSummary[] | Fighter[];
-    type: DistanceType;
-    createdAt?: string;
-}
 
 export type Fight = {
     isMainEvent: boolean;
@@ -221,6 +226,12 @@ export type Review = {
 	updatedAt?: string;
 }
 
+export type RoundSwingsChart = {
+    id: string
+    notes?: string
+    roundScores?: Record<string, number>[]
+}
+
 export type Scorecard = {
     id: string; // sub+distanceId.
     cornerIds?: string[] | null;
@@ -239,13 +250,6 @@ export type Show = {
     location: string | null;
     network: Networks | null;
     promoter: string | null;
-}
-
-
-export type RoundSwingsChart = {
-    id: string
-    notes?: string
-    roundScores?: Record<string, number>[]
 }
 
 export type UISummary = {

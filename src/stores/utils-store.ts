@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand"
 import { GlobalStoreState } from "./global-store"
 import { 
-    ChatMessage,
+    ChatMessageType,
     Modals,
     ModalsEnum,
     resetModals,
@@ -12,14 +12,9 @@ import {
 import axios from 'axios'
 
 export interface UtilsStoreState {
-    isLoading: boolean
-    isSubmitting: boolean
-    isSubmittingForm: boolean,
-    chatMessage: ChatMessage | null
-    modals: Modals
-    navigateTo: string
-    scoringTransformedPrediction: string | null
-    setGlobalNotification(chatMessage: ChatMessage): void
+    performKBTest(): void
+    sendNewsletterBlast(fightId: string): void
+    setGlobalNotification(chatMessage: ChatMessageType): void
     setIsLoading(loadingState: boolean): void
     setIsSubmitting(submittingState: boolean): void
     setIsSubmittingForm(submittingState: boolean): void
@@ -28,6 +23,13 @@ export interface UtilsStoreState {
     setTokenExpired(state: boolean): void
     setTransformedResult(officialResult: string): void
     subscribeToNewsletter(email: string): void
+    isLoading: boolean
+    isSubmitting: boolean
+    isSubmittingForm: boolean,
+    chatMessage: ChatMessageType | null
+    modals: Modals
+    navigateTo: string
+    scoringTransformedPrediction: string | null
     toast: Toast
     tokenExpired: boolean,
     transformedPrediction: string
@@ -35,7 +37,7 @@ export interface UtilsStoreState {
 }
 
 export const initialUtilsStoreState = {
-    chatMessage: {} as ChatMessage,
+    chatMessage: {} as ChatMessageType,
     isLoading: false,
     isSubmitting: false,
     isSubmittingForm: false,
@@ -54,9 +56,20 @@ export const replaceNewLineWithBreaks = (text: string) => {
     return text.replace(/\n/g, "<br />")
 }
 
+const ADMIN_API = process.env.REACT_APP_ADMIN_API;
+
 export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreState> = (set, get) => ({
     ...initialUtilsStoreState,
-    setGlobalNotification: (chatMessage: ChatMessage) => {
+    performKBTest: async () => {    
+        const res = await axios.post(`http://localhost:9000/dev/knowledge-base`, { text: 'Describe the fighting style of the boxer Gervonta "Tank" Davis' })
+        console.log('KBTEST: res.data: ', res.data)
+    },
+    sendNewsletterBlast: async () => {
+        console.log('sendNewsletterBlast: ')
+        const res = await axios.get(`${ADMIN_API}/subscribe`)
+        console.log('CREATE-LEADERBOARD: res.data: ', res.data)
+    },
+    setGlobalNotification: (chatMessage: ChatMessageType) => {
         set({ chatMessage })
     },
     setIsLoading: (loadingState: boolean) => {

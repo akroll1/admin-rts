@@ -15,6 +15,7 @@ import { PasswordField } from './password-field'
 import { FaFacebook } from 'react-icons/fa'
 import { FaGoogle } from "react-icons/fa6";
 import { FormHeading } from './form-heading'
+import { useNavigate } from 'react-router'
 
 export const SignInForm = ({ 
   federateGoogleUser,
@@ -27,11 +28,17 @@ export const SignInForm = ({
   isError,
 }) => {
   
+  const navigate = useNavigate(); 
+
   const inputRef = createRef();
   
   useEffect(() => {
     inputRef.current.focus();
   },[]);  
+
+  const handleHostedUI = () => {
+    window.location.href = 'https://fsl-admins.auth.us-east-1.amazoncognito.com/authorize?response_type=token&client_id=4ue3ppcjpdrqtpgj29mnb659ev&redirect_uri=http://localhost:8090/auth';
+  }
   
   return (
     <Box>
@@ -65,7 +72,7 @@ export const SignInForm = ({
             isLoading={isSubmitting}
             loadingText="...Submitting" 
             id="signin_button" 
-            onClick={handleSignIn} 
+            onClick={handleHostedUI} 
             type="button" 
             colorScheme="solid" 
             size="lg" 

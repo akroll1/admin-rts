@@ -1,12 +1,17 @@
 import { StateCreator } from "zustand"
 import { GlobalStoreState } from './global-store'
 import { 
+    ModalsEnum,
     SignInErrors,
     Token,
     User,
 } from './index'
 import { signInErrorResets } from "./resets"
-import axios, { AxiosRequestHeaders } from 'axios'
+import axios, { 
+    AxiosHeaders, 
+    AxiosRequestHeaders, 
+    AxiosResponse 
+} from 'axios'
 import { 
     AuthenticationDetails,
     CognitoAccessToken,
@@ -18,7 +23,7 @@ import {
     CognitoUserSession,
 } from "amazon-cognito-identity-js"
 
-let cognitoUser: CognitoUser | void;
+
 const poolData = {
     UserPoolId: process.env.REACT_APP_USER_POOL_ID || "",
     ClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID || "",
@@ -47,23 +52,23 @@ export const configureIDToken = async () => {
 
 export interface AuthStoreState {
     authenticateUser(username: string, password: string): void
+    axiosServiceCall(url: string, method: string, data?: any, tokenType?: Token,): Promise<AxiosResponse<any>>
     confirmPassword(username: string, confirmationCode: string, newPassword: string): void
     federateGoogleUser(credentials: Record<string, string>): void
     fetchUserAccount(): void
     forgotPassword(username: string): void
     resendConfirmationCode(username: string): void
-    setHeaders(type: Token): Promise<AxiosRequestHeaders>
+    setHeaders(tokenType?: Token): Promise<AxiosRequestHeaders>
     setUser(accessToken: string, idToken: string): void
     signOut(): void
     signUpUser(email: string, password: string, username: string): void
     submitNewPassword(username: string, confirmationCode: string, newPassword: string): void
-    updateUserAccount(updateOptions: Partial<User>): void
+    updateUser(updateOptions: Partial<User>): void
     verifyCode(username: string, confirmationCode: string): void
     isLoggedIn: boolean
     isPanelist: boolean
     signInErrors: Record<string, boolean>
     user: User | null
-    userAccount: User
 }
 
 export const initialAuthStoreState = {
@@ -71,7 +76,6 @@ export const initialAuthStoreState = {
     isPanelist: false,
     signInErrors: { ...signInErrorResets },
     user: null,
-    userAccount: {} as User
 }
 
 const ADMIN_API = process.env.REACT_APP_ADMIN_API;
@@ -80,10 +84,8 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
     ...initialAuthStoreState,  
     authenticateUser: async (username: string, password: string) => {
         get().setIsSubmitting(true)
-        
-        console.log('isSubmitting: ', get().isSubmitting)
 
-        cognitoUser = new CognitoUser({
+        const cognitoUser = new CognitoUser({
             Username: username,
             Pool: userpool,
         })
@@ -91,7 +93,7 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             Username: username,
             Password: password,
         })
-        cognitoUser = cognitoUser.authenticateUser(authDetails, {
+        await cognitoUser.authenticateUser(authDetails, {
             onSuccess: data => {
                 set({ signInErrors: { ...signInErrorResets } })
                 window.location.href = "/dashboard/distances"
@@ -109,8 +111,13 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
         })
         get().setIsSubmitting(false)
     },
-    federateGoogleUser: async (credentials: Record<string, string>) => {
-        return window.location.href = `https://fsl-admin.auth.us-east-1.amazoncognito.com/authorize/?identity_provider=Google&redirect_uri=http://localhost:8090/auth&response_type=token&client_id=${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}&scope=email+openid+profile`;    
+    axiosServiceCall: async (url: string, method: string, data?: any, tokenType?: Token,) => {
+        return await axios({
+            url,
+            method,
+            data,
+            headers: await get().setHeaders(tokenType || Token.ACCESS) as AxiosRequestHeaders,
+        }) as AxiosResponse<any>
     },
     confirmPassword: async (username: string, confirmationCode: string, newPassword: string) => {
         return new Promise((resolve, reject) => {
@@ -148,16 +155,48 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             });
         });
     },
-    fetchUserAccount: async () => {
-        const headers = await get().setHeaders(Token.ID) as AxiosRequestHeaders
-        const url = `${ADMIN_API}/users/${get().user?.sub}`;
-        const res = await axios({
-            method: 'get',
-            url,
-            headers,
+    federateGoogleUser: async (credentials: Record<string, string>) => {
+        return window.location.href = `https://fsl-admin.auth.us-east-1.amazoncognito.com/authorize/?identity_provider=Google&redirect_uri=http://localhost:8090/auth&response_type=token&client_id=${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}&scope=email+openid+profile`;    
+    },
+    setHeaders: async (tokenType?: Token): Promise<AxiosRequestHeaders> => {
+        const cognitoUser = userpool.getCurrentUser();
+        return new Promise((resolve, reject) => {
+            if (!cognitoUser) {
+                reject(new Error("No user found"))
+                return
+            }
+            cognitoUser.getSession((err: any, session: CognitoUserSession) => {
+                if (err) {
+                    reject(err)
+                    return
+                }
+                if (!session.isValid()) {
+                    get().setModals(ModalsEnum.SIGN_IN_MODAL, true)
+                    reject(new Error("Session is invalid"))
+                    return
+                }
+                const jwt = tokenType === Token.ID 
+                    ? session.getIdToken().getJwtToken()
+                    : session.getAccessToken().getJwtToken();
+
+                    const headers = new AxiosHeaders({
+                        "Authorization" : `Bearer ${jwt}`,
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    })
+                resolve(headers)
+            })
         })
-        const userAccount = res.data as User
-        set({ userAccount })
+    },
+    fetchUserAccount: async () => {
+        const url = `${ADMIN_API}/users/${get().user?.sub}`;
+        const res = await get().axiosServiceCall(url, 'get')
+        const user = res.data as User
+        if(res?.data?.includes("No user found")) {
+            get().updateUser(get().user as User)
+            return;
+        }
+        set({ user })
     },
     forgotPassword: async (username: string) => {
         return new Promise((resolve, reject) => {
@@ -191,34 +230,6 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             console.log('result: ', result);
         });
     },
-    setHeaders: async (type: Token): Promise<AxiosRequestHeaders> => {
-        const poolData = {
-            UserPoolId: process.env.REACT_APP_USER_POOL_ID || "",
-            ClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID || "",
-        }
-        const userpool = new CognitoUserPool(poolData)
-        const cognitoUser = userpool.getCurrentUser();
-        console.log('cognitoUser: ', cognitoUser)
-
-        return new Promise((resolve, reject) => {
-            if (!cognitoUser) {
-                reject(new Error("No user found"))
-                return
-            }
-            cognitoUser.getSession((err: any, session: CognitoUserSession) => {
-                if (err) {
-                    reject(err)
-                    return
-                }
-                const jwt = session.getIdToken().getJwtToken()
-                const headers = {
-                    Authorization : `Bearer ${jwt}`,
-                    accept: 'application/json',
-                }
-                resolve(headers)
-            })
-        })
-    },
     setUser: async (accessToken: string, idToken: string) => {
         const IdToken = new CognitoIdToken({ IdToken: idToken })
         const AccessToken = new CognitoAccessToken({ AccessToken: accessToken })
@@ -229,15 +240,13 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             RefreshToken,
         } as any
         const userSession = new CognitoUserSession(sessionData)
-        console.log('userSession: ', userSession)
         const userData = {
             Username: userSession.getIdToken().payload['cognito:username'],
             Pool: userpool,
         }
         const cognitoUser = new CognitoUser(userData)
-        cognitoUser.setSignInUserSession(userSession)   
-
-        cognitoUser.getSession((err: any, session: CognitoUserSession) => {
+        await cognitoUser.setSignInUserSession(userSession)   
+        await cognitoUser.getSession((err: any, session: CognitoUserSession) => {
             if (err) {
                 console.log('err: ', err)
                 return
@@ -247,7 +256,6 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
                 user: { 
                     ...get().user, 
                     email: user?.email, 
-                    groups: user['cognito:groups'],
                     sub: user?.sub,
                 } 
             })
@@ -296,11 +304,12 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             },
         })
     },
-    updateUserAccount: async (updateOptions: Partial<User>) => {
+    updateUser: async (updateOptions: Partial<User>) => {
         get().setIsSubmitting(true)
-        await axios.put(`${ADMIN_API}/users/${get().user?.sub}`, updateOptions, await configureAccessToken() )
+        const res = await get().axiosServiceCall(`${ADMIN_API}/users`, 'put', updateOptions)
         get().setIsSubmitting(false)
-        console.log('UPDATE USER')
+        const user = res.data as User
+        set({ user: { ...get().user, ...user } })
     }, 
     verifyCode: async (username: string, confirmationCode: string) => {
         const userData = {

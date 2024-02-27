@@ -24,9 +24,8 @@ import { useGlobalStore } from '../../stores'
 export const MyAccountForm = () => {
 
   const { 
-    fetchUserAccount,
     isSubmitting,
-    updateUserAccount,
+    updateUser,
     user,
   } = useGlobalStore()
 
@@ -38,10 +37,6 @@ export const MyAccountForm = () => {
     isPublic: false,
     lastName: '',
   })
-
-  useEffect(() => {
-    fetchUserAccount()
-  },[])
   
   useEffect(() => {
     if(user?.sub){
@@ -51,6 +46,7 @@ export const MyAccountForm = () => {
         email: user?.email || "",
         fightCoins: user?.fightCoins || "",
         firstName: user?.firstName || "",
+        groups: user?.groups || [],
         lastName: user?.lastName || "",
         isPublic: user?.isPublic || "",
         sub: user?.sub || "",
@@ -70,12 +66,13 @@ export const MyAccountForm = () => {
 
   const handleUpdateUser = () => {
     const options = {
+      sub: form.sub,
       bio: form.bio,
       firstName: form.firstName,
       lastName: form.lastName,
       isPublic: form.isPublic,
     }
-    updateUserAccount(options)
+    updateUser(options)
   }
 
   return (

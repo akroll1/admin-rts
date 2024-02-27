@@ -8,6 +8,7 @@ import { ForcedPasswordChange } from './forced-password-change'
 import { WaitingForCodeForm } from './waiting-for-code-form'
 import { 
   isValidEmail, 
+  SigninPage,
   signinPageResets,
   useGlobalStore 
 } from '../../stores'
@@ -22,7 +23,7 @@ export const SignInPage = () => {
   });
 
   const [formState, setFormState] = useState({
-    ...signinPageResets
+    ...signinPageResets, [signinPageResets]: true
   })
 
   const { 

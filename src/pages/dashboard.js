@@ -26,7 +26,7 @@ import {
   DistanceMetasForm,
   FightersForm, 
   FightResolutionForm,
-  PropsForm,
+  PoundListForm,
 } from '../components/forms'
 import { useParams } from 'react-router-dom'
 import { useGlobalStore } from '../stores'
@@ -38,7 +38,7 @@ const Dashboard = () => {
     user, 
   } = useGlobalStore()
 
-  console.log('user', user)
+  // console.log('user', user)
   
   const [active, setActive] = useState(type.toUpperCase());
   const [form, setForm] = useState(type.toUpperCase());
@@ -73,7 +73,7 @@ const Dashboard = () => {
     { value: "DISTANCE_FORM", label:"Distance Form", type: 'Distance Form', icon: FaEdit, link: '/dashboard/distance' },
     { value: "DISTANCE_METAS_FORM", label:"Distance Metas Form", type: 'Distance Metas Form', icon: FaEdit, link: '/dashboard/distance-metas' },
     { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
-    { value: "PROPS_FORM", label:"Props", type: 'Props', icon: FaEdit, link: '/dashboard/props' },
+    { value: "P4P_LIST", label:"P4P List Form ", type: 'P4P', icon: FaEdit, link: '/dashboard/pound-list' },
     { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/resolutions' },
   ];
 
@@ -165,11 +165,10 @@ const Dashboard = () => {
         { form === 'BROADCAST' && <BroadcastForm /> }
         { form === 'CREATE_PANEL' && <CreatePanelForm /> }
         { form === 'DISTANCE_FORM' && <DistanceForm /> }
-        {/* { form === 'DISTANCES_ADMIN_FORM' && <DistancesAdminForm /> } */}
         { form === 'DISTANCE_METAS_FORM' && <DistanceMetasForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
+        { form === 'P4P_LIST' && <PoundListForm /> }
         { form === 'RESOLUTIONS' && <FightResolutionForm /> }
-        { form === 'PROPS_FORM' && <PropsForm /> }
       </Box>
     </Flex>
   )

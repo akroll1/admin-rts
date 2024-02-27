@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { 
     Box, 
     Button, 
-    Flex, 
     FormControl, 
     FormLabel, 
     Heading, 
@@ -60,7 +59,6 @@ export const BlogPostForm = () => {
             imgs: imgs?.length ? imgs : null,
         })
         console.log('form- create: ', form)
-
         createBlogPost(form)
     }
     

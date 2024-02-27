@@ -1,16 +1,24 @@
-
-export enum ChatMessage {
-  FSL = "FSL",
-  GROUP = "GROUP",
-  FIGHT = "FIGHT",
-  ROUND_SCORE = "ROUND_SCORE",
-}
-
 export enum ChatEnums {
   COACHES = "COACHES",
   CORNER = "CORNER",
   FSL = "FSL",
   CALLING_IT = "CALLING_IT",
+}
+
+export enum ChatMessageType {
+  CALLING_IT = "CALLING_IT",
+  CORNER = "CORNER",
+  ERROR = "ERROR",
+  FIGHT = "FIGHT",
+  FSL = "FSL",
+  GLOBAL = "GLOBAL",
+  SCORE_UPDATE = "SCORE_UPDATE",
+}
+
+export enum ChatPermissions {
+  SEND_MESSAGE = "SEND_MESSAGE",
+  DELETE_MESSAGE = "DELETE_MESSAGE",
+  DISCONNECT_USER = "DISCONNECT_USER",
 }
 
 export enum CookieSelectionEnum {
@@ -61,6 +69,7 @@ export enum Networks {
   FITETV = "FITE TV",
   HBO = "HBO",
   HBOPPV = "HBO PPV",
+  PRIME = "PRIME",
   SHOWTIME = "ShowTime",
   SHOWTIMEPPV = "ShowTime PPV",
   NONE = "NONE",
@@ -162,7 +171,7 @@ export enum WeightClass {
   SUPERMIDDLEWEIGHT = "Super Middleweight",
   MIDDLEWEIGHT = "Middleweight",
   SUPERWELTERWEIGHT = "Super Welterweight",
-  WELTERWEIGHT = "Welterwieght",
+  WELTERWEIGHT = "Welterweight",
   JRWELTERWEIGHT = "Jr Welterweight",
   SUPERLIGHTWEIGHT = "Super Lightweight",
   LIGHTWEIGHT = "Lightweight",
@@ -173,6 +182,9 @@ export enum WeightClass {
   SUPERFLYWEIGHT = "Super Flyweight",
   FLYWEIGHT = "Flyweight",
   JRFLYWEIGHT = "Jr Flyweight",
+  MINIMUMWEIGHT = "Minimumweight",
+  STRAWWEIGHT = "Strawweight",
+  CATCHWEIGHT = "Catchweight",
 }
 
 export const officialResultOptions = [

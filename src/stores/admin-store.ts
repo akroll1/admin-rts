@@ -11,7 +11,7 @@ import {
     DistanceMetas,
 } from './index'
 import { configureAccessToken } from './auth-store'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 
 export interface AdminStoreState {
@@ -24,7 +24,7 @@ export interface AdminStoreState {
     deleteDiscussion(discussionId: string): void
     deleteDistance(distanceId: string): void
     deleteFighter(fighterId: string): void
-    // fetchDistanceById(distanceId: string): void
+    fetchDistanceById(distanceId: string): void
     fetchDistanceMetas(id: string): void
     fetchFighterById(id: string): void
     fetchFightProps(id: string): void
@@ -119,14 +119,12 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('FIGHTER- delete res.data: ', res.data)
         // get().setIsSubmitting(false)
     },
-    // fetchDistanceById: async (distanceId: string) => {
-    //     const url = `${ADMIN_API}/distances/${distanceId}`
-    //     const res = await handleServiceAction(url, 'get')
-    //     console.log('RES: ', res)
-    //     const res = await axios.get(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken() );
-    //     const selectedDistance = res as Distance;
-    //     set({ selectedDistance })
-    // },
+    fetchDistanceById: async (distanceId: string) => {
+        // const url = `${ADMIN_API}/distances/${distanceId}`
+        const res = await axios.get(`${ADMIN_API}/distances/${distanceId}`, await configureAccessToken() ) as AxiosResponse<Distance>;
+        const selectedDistance = res.data as Distance;
+        set({ selectedDistance })
+    },
     fetchDistanceMetas: async (id: string) => {
         const res = await axios.get(`${ADMIN_API}/metas/${id}`, await configureAccessToken())
         const distanceMetas = res.data as DistanceMetas
