@@ -116,6 +116,17 @@ export type Props = {
     createdAt?: string;
     updatedAt?: string;
 }
+
+export type ResolveFightDistance = {
+    fighter1: string;
+    fighter2: string;
+    fightId: string;
+    resolution: string;
+    rounds: number;
+    f1Knockdowns: number;
+    f2Knockdowns: number;
+};
+
 export type RoundScore = {
     [key: string]: string | number
 }

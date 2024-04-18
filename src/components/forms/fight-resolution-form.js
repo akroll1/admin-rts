@@ -21,6 +21,7 @@ import { officialResultOptions } from '../../stores'
 
 export const FightResolutionForm = () => {
     const [searchId, setSearchId] = useState('')    
+    const [knockdowns, setKnockdowns] = useState({})
     const [officialResultForm, setOfficialResultForm] = useState({
         winnerId: '',
         resolution: '',
@@ -61,7 +62,7 @@ export const FightResolutionForm = () => {
 
     useEffect(() => {
         if(selectedDistance?.id){
-            const { id, instance, metas, status, type } = selectedDistance
+            const { id, instance, metas, type } = selectedDistance
             if(type === 'SHOW'){
                 console.log('SHOW ID: ', id)
                 console.log('FIGHT ID: ', metas?.typeIds?.toString())
@@ -106,13 +107,35 @@ export const FightResolutionForm = () => {
         /**
         * @params resolution: `${officialResultForm.winnerId}:${officialResultForm.resolution}`, fightId: form.id, rounds: form.rounds 
         */
+        if(!officialResultForm.winnerId || !officialResultForm.resolution) return alert('Missing official result!')
         const resolution = `${officialResultForm.winnerId}:${officialResultForm.resolution}`;
-        updateFightResolution(form?.id, resolution, form?.rounds)
+        const fighter1 = form?.typeIds[0]   
+        const fighter2 = form?.typeIds[1]
+        const f1Knockdowns = knockdowns[form?.typeIds[0]]
+        const f2Knockdowns = knockdowns[form?.typeIds[1]]
+        if(!fighter1 || !fighter2 || !f1Knockdowns || !f2Knockdowns) return alert('Missing fighter(s) or knockdown(s)!')
+        const resolutionObj = {
+            fightId: form.id,
+            fighter1,
+            fighter2,
+            f1Knockdowns,
+            f2Knockdowns,
+            resolution,
+            rounds: form?.rounds
+        }
+        updateFightResolution(resolutionObj)
     }
     const handleFormChange = e => {
+
         const { id, value } = e.currentTarget;
         setForm({ ...form, [id]: value });
     };
+
+    const handleKnockdownsChange = e => {
+        const { id, value } = e.currentTarget;
+        setKnockdowns( prev => ({ ...prev, [id]: value }));
+    }
+
     const handleOfficialResultChange = e => {
         const { id, value } = e.currentTarget;
         setOfficialResultForm({ ...officialResultForm, [id]: value });
@@ -120,6 +143,7 @@ export const FightResolutionForm = () => {
 
     // console.log('form: ', form)
     // console.log('officialResultForm: ', officialResultForm)
+    // console.log('knockdowns: ', knockdowns)
 
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto">
@@ -209,24 +233,35 @@ export const FightResolutionForm = () => {
                                         {officialResultOptions.map( option => <option key={option} value={option}>{option}</option>)}
                                     </Select>
                                 </FormControl>
+                                
                                 <FormControl id="resolution">
                                     <FormLabel htmlFor="resolution">Official result</FormLabel>
                                     <Input value={`${officialResultForm?.winnerId}:${officialResultForm?.resolution}`} readOnly type="text" />
                                 </FormControl>
+
+                                <FormControl>
+                                    <FormLabel htmlFor="f1Knockdowns">Fighter 1 Knockdowns</FormLabel>
+                                    <Select 
+                                        id={`${form.typeIds[0]}`} 
+                                        onChange={handleKnockdownsChange}
+                                    >
+                                        {["0","1","2","3","4","5","6","7","8","9"].map( option => <option key={option} value={option}>{option}</option>)}
+                                    </Select>
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel htmlFor="f2Knockdowns">Fighter 2 Knockdowns</FormLabel>
+                                    <Select 
+                                        id={`${form.typeIds[1]}`} 
+                                        onChange={handleKnockdownsChange}
+                                    >
+                                        {["0","1","2","3","4","5","6","7","8","9"].map( option => <option key={option} value={option}>{option}</option>)}
+                                    </Select>
+                                </FormControl>
+
                             </VStack>
                         </FieldGroup>
                         <FieldGroup mt="8">
                             <ButtonGroup w="100%">
-                                <Button 
-                                    minW="33%" 
-                                    disabled={!form.id} 
-                                    isLoading={isSubmitting} 
-                                    loadingText="Deleting" 
-                                    // onClick={handleDeleteDistance} 
-                                    variant="outline"
-                                >
-                                    Delete
-                                </Button>
                                 <Button 
                                     minW="33%"
                                     onClick={handleSubmitResolution} 
@@ -235,7 +270,7 @@ export const FightResolutionForm = () => {
                                     isLoading={isSubmitting}
                                     loadingText="Submitting..."
                                 >
-                                    {form.id ? 'Update' : 'Create'}
+                                   Resolve Fight
                                 </Button>
                             </ButtonGroup>
                         </FieldGroup></>

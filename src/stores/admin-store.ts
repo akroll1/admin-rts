@@ -9,6 +9,7 @@ import {
     DistanceType,
     DistanceSummary,
     DistanceMetas,
+    ResolveFightDistance,
 } from './index'
 import { configureAccessToken } from './auth-store'
 import axios, { AxiosResponse } from 'axios'
@@ -34,7 +35,7 @@ export interface AdminStoreState {
     updateDistanceMetas(dmObj: Partial<DistanceMetas>): void
     updateFighter(update: Partial<Fighter>): void
     updateFightProps(obj: Partial<FightProps>): void
-    updateFightResolution(fightId: string, resolution: string, rounds: number): void
+    updateFightResolution(options: ResolveFightDistance): void
     blogPosts: BlogPost[]
     distancesByStatusSummaries: any[]
     distanceMetas: DistanceMetas
@@ -172,8 +173,9 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         console.log('UPDATE_FIGHT_PROPS, res: ', res.data)
         // get().setIsSubmitting(false)
     },
-    updateFightResolution: async (fightId: string, resolution: string, rounds: number) => {
-        const res = await axios.put(`${ADMIN_API}/resolutions`, { fightId, resolution, rounds }, await configureAccessToken() )
+    updateFightResolution: async (options: ResolveFightDistance) => {
+        console.log('options: ', options)
+        const res = await axios.put(`${ADMIN_API}/resolutions`, options, await configureAccessToken() )
         console.log('RESOLUTION put res: ', res.data)
     }
 })

@@ -61,7 +61,7 @@ const ADMIN_API = process.env.REACT_APP_ADMIN_API;
 export const utilsStoreSlice: StateCreator<GlobalStoreState, [], [], UtilsStoreState> = (set, get) => ({
     ...initialUtilsStoreState,
     performKBTest: async () => {    
-        const res = await axios.post(`http://localhost:9000/dev/knowledge-base`, { text: 'Describe the fighting style of the boxer Gervonta "Tank" Davis' })
+        const res = await axios.post(`http://localhost:25000/dev/welcome`, { text: 'andrew.kroll@yahoo.com' })
         console.log('KBTEST: res.data: ', res.data)
     },
     sendNewsletterBlast: async () => {
