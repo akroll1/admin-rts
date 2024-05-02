@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from '../components/layout'
 import Home from './home'
+import { Dashboards } from './dashboards'
 import { ChakraProvider } from '@chakra-ui/react'
 import About from '../components/content/about'
-import Dashboard from './dashboard'
+import { Forms } from './forms'
 import { SignInPage } from '../components/signin'
 import { LearnMore, NotFound } from '../components/content'
-import { PrivateRoute } from '../components/content/partials'
 import theme from '../theme'
 import { BroadcastCenter } from './broadcast-center'
 import { Auth } from './auth'
@@ -22,8 +22,11 @@ const App = () => {
               <Route exact path="/auth" element={<Auth />} />
               <Route exact path="/broadcast" element={<BroadcastCenter />} />
               <Route exact path="/signin" element={<SignInPage />} />
-              <Route exact path="/dashboard/:type" element={
-                  <Dashboard /> 
+              <Route exact path="/dashboards/:type" element={
+                  <Dashboards /> 
+              }/>
+              <Route exact path="/forms/:type" element={
+                  <Forms /> 
               }/>
               <Route exact path="/about" element={<About />} />
               <Route exact path="/learn-more" element={<LearnMore />} />

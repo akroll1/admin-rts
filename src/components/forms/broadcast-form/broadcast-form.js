@@ -138,13 +138,6 @@ export const BroadcastForm = () => {
 
     return (
         <>
-            <Button
-                m="4"
-                onClick={handleKBTest}
-            >
-                Knowledge Base Test                  
-            </Button>
-
             <Flex
                 id="chat_tab"
                 ref={connectionRef}

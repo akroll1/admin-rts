@@ -7,31 +7,24 @@ import {
   Spacer, 
   Stack 
 } from '@chakra-ui/react'
-import { SettingsIcon } from '@chakra-ui/icons'
 import { 
   FaEdit, 
   FaRegBell, 
-  FaUser, 
-  FaUserFriends 
 } from 'react-icons/fa'
 import { NavLinkDashboard } from '../components/navbar'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { UserInfo } from '../chakra'
 import { 
-  MyAccountForm, 
-  BlogPostForm,
   BroadcastForm, 
-  CreatePanelForm,
   DistanceForm,
   DistanceMetasForm,
   FightersForm, 
   FightResolutionForm,
-  PoundListForm,
 } from '../components/forms'
 import { useParams } from 'react-router-dom'
 import { useGlobalStore } from '../stores'
 
-const Dashboard = () => {
+export const Forms = () => {
   const { type } = useParams();
   const { 
     signOut,
@@ -41,40 +34,19 @@ const Dashboard = () => {
   // console.log('user', user)
   
   const [active, setActive] = useState(type.toUpperCase());
-  const [form, setForm] = useState(type.toUpperCase());
-  const [formLinks, setFormLinks] = useState([
-    // { value: "POUND", label:"My P4P List", type: 'P4P-List', icon: FaListOl, link: '/dashboard/pound-list' },
-    { value: "ACCOUNT", label:"Account", type: 'User', icon: SettingsIcon, link: '/dashboard/account' },
-  ]);
-
-  useEffect(() => {
-    if(true){
-    // if(user.isSuperAdmin && user.isPanelist){
-      setFormLinks([...formLinks, ...panelistOptions, ...isSuperAdminFormOptions]);
-      return;
-    } else if(user.isPanelist){
-      setFormLinks([...formLinks, ...panelistOptions]);
-    } else if(user.isSuperAdmin){
-      setFormLinks([...formLinks, ...isSuperAdminFormOptions]);
-    }
-  },[user])
+  const [form, setForm] = useState(type.toUpperCase())
 
   const handleFormSelect = e => {
     setForm(e.currentTarget.id);
     setActive(e.currentTarget.id);
   };
 
-  const panelistOptions = [
-    { value: "PANELS_MEMBER", label:"Panel Member", type: 'User', icon: FaUserFriends, link: '/dashboard/panels' },
-  ];
-
-  const isSuperAdminFormOptions = [
-    { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/dashboard/broadcast' },
-    { value: "DISTANCE_FORM", label:"Distance Form", type: 'Distance Form', icon: FaEdit, link: '/dashboard/distance' },
-    { value: "DISTANCE_METAS_FORM", label:"Distance Metas Form", type: 'Distance Metas Form', icon: FaEdit, link: '/dashboard/distance-metas' },
-    { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/dashboard/fighters' },
-    { value: "P4P_LIST", label:"P4P List Form ", type: 'P4P', icon: FaEdit, link: '/dashboard/pound-list' },
-    { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, link: '/dashboard/resolutions' },
+  const formLinks = [
+    { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/forms/broadcast' },
+    { value: "DISTANCE_FORM", label:"Distance Form", type: 'Distance Form', icon: FaEdit, link: '/forms/distance' },
+    { value: "DISTANCE_METAS_FORM", label:"Distance Metas Form", type: 'Distance Metas Form', icon: FaEdit, link: '/forms/distance-metas' },
+    { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/forms/fighters' },
+    { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, lisnk: '/forms/resolutions' },
   ];
 
   const userFormLinks = () => {
@@ -107,7 +79,7 @@ const Dashboard = () => {
           <Box fontSize="sm" lineHeight="tall">
             <Link  
               as="button" 
-              to="/dashboard/account" 
+              to="/forms/account" 
               p="2"
               pl="0"
               w="100%" 
@@ -160,17 +132,12 @@ const Dashboard = () => {
         borderRadius="md" 
         mt={0}
       >
-        { form === 'ACCOUNT' && <MyAccountForm /> }
-        { form === 'BLOG' && <BlogPostForm /> }
         { form === 'BROADCAST' && <BroadcastForm /> }
-        { form === 'CREATE_PANEL' && <CreatePanelForm /> }
         { form === 'DISTANCE_FORM' && <DistanceForm /> }
         { form === 'DISTANCE_METAS_FORM' && <DistanceMetasForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
-        { form === 'P4P_LIST' && <PoundListForm /> }
         { form === 'RESOLUTIONS' && <FightResolutionForm /> }
       </Box>
     </Flex>
   )
 }
-export default Dashboard

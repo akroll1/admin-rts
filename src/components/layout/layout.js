@@ -10,7 +10,6 @@ import { Navbar } from './navbar'
 import { useGlobalStore } from '../../stores'
 import { GlobalNotification } from '../utils'
 import { FSLChat } from './fsl-chat'
-import { SignInModal } from '../modals'
 
 export const Layout = ({ children }) => {
     
@@ -20,7 +19,7 @@ export const Layout = ({ children }) => {
     } = useGlobalStore()
     
     useEffect(() => {
-        if(toast.title){
+        if(toast?.title){
             toaster(toast)
         }
     },[toast])
@@ -35,7 +34,6 @@ export const Layout = ({ children }) => {
             <Navbar />
             <FSLChat />
             <GlobalNotification />
-            <SignInModal />
             <Box 
                 mt="4rem"
                 minW="100%" 

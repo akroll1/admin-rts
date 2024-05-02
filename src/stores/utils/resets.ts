@@ -2,7 +2,7 @@ import {
     Networks,
     Status,
     WeightClass,
-} from "./enums"
+} from "../models/enums"
 
 export const blankScorecard = {
 	scorecardId: "BLANK",

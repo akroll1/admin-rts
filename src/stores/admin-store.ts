@@ -30,6 +30,7 @@ export interface AdminStoreState {
     fetchFighterById(id: string): void
     fetchFightProps(id: string): void
     fetchFightSummary(id: string): void
+    setIsSubmitting(isSubmitting: boolean): void
     submitFightResolution(resolutionObj: any): void
     updateDistance(distanceObj: Partial<Distance>): void
     updateDistanceMetas(dmObj: Partial<DistanceMetas>): void
@@ -39,6 +40,7 @@ export interface AdminStoreState {
     blogPosts: BlogPost[]
     distancesByStatusSummaries: any[]
     distanceMetas: DistanceMetas
+    isSubmitting: boolean   
     selectedBlogPost: BlogPost
     selectedCorner: Corner
     selectedDistance: Distance
@@ -51,6 +53,7 @@ export const initialAdminStoreState = {
     blogPosts: [] as BlogPost[],
     distancesByStatusSummaries: [],
     distanceMetas: {} as DistanceMetas,
+    isSubmitting: false,
     selectedBlogPost: {} as BlogPost,
     selectedCorner: {} as Corner,
     selectedDistance: {} as Distance,
@@ -70,16 +73,16 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         get().setIsSubmitting(false)
     },
     fetchBlogPost: async (blogPostId: string) => {
-        get().setIsLoading(true)
+        get().setIsSubmitting(true)
         const res = await axios.get(`${ADMIN_API}/blog/${blogPostId}`)
-        get().setIsLoading(false)
+        get().setIsSubmitting(false)
         const selectedBlogPost = res.data as BlogPost
         set({ selectedBlogPost })
     },
     fetchBlogPosts: async () => {
-        get().setIsLoading(true)
+        get().setIsSubmitting(true)
         const res = await axios.get(`${ADMIN_API}/blog`)
-        get().setIsLoading(false)
+        get().setIsSubmitting(false)
         const blogPosts = res.data as BlogPost[]
         set({ blogPosts })
     },
@@ -140,6 +143,9 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const res = await axios.get(`${ADMIN_API}/props/${id}`, await configureAccessToken() )
         const selectedFightProps = res.data as FightProps
         set({ selectedFightProps })
+    },
+    setIsSubmitting: (isSubmitting: boolean) => {
+        set({ isSubmitting })
     },
     submitFightResolution: async (resolutionObj: any) => {
         get().setIsSubmitting(true)

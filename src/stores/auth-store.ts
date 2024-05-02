@@ -6,7 +6,7 @@ import {
     Token,
     User,
 } from './index'
-import { signInErrorResets } from "./resets"
+import { signInErrorResets } from "./utils/resets"
 import axios, { 
     AxiosHeaders, 
     AxiosRequestHeaders, 
@@ -171,7 +171,6 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
                     return
                 }
                 if (!session.isValid()) {
-                    get().setModals(ModalsEnum.SIGN_IN_MODAL, true)
                     reject(new Error("Session is invalid"))
                     return
                 }
