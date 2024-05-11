@@ -154,7 +154,7 @@ export const FightResolutionForm = () => {
                 <VStack width="full" spacing="6">
                     <FormControl id="searchId">
                         <FormLabel htmlFor="searchId">Distance ID</FormLabel>
-                        <Input value={searchId} onChange={e => setSearchId(e.currentTarget.value)} type="text"  />
+                        <Input value={searchId.trim()} onChange={e => setSearchId(e.currentTarget.value)} type="text" maxLength={36} minLength={36} />
                     </FormControl>
                     <HStack justifyContent="center" width="full">
                         <Button 

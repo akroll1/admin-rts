@@ -10,7 +10,6 @@ import {
     modalsReset,
 } from './index'
 
-
 export interface AdminStoreState {
     deleteDistance(distanceId: string): void
     deleteFighter(fighterId: string): void
