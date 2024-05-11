@@ -15,7 +15,6 @@ import { PasswordField } from './password-field'
 import { FaFacebook } from 'react-icons/fa'
 import { FaGoogle } from "react-icons/fa6";
 import { FormHeading } from './form-heading'
-import { useNavigate } from 'react-router'
 
 export const SignInForm = ({ 
   federateGoogleUser,
@@ -27,8 +26,6 @@ export const SignInForm = ({
   setFormState,
   isError,
 }) => {
-  
-  const navigate = useNavigate(); 
 
   const inputRef = createRef();
   
@@ -37,7 +34,7 @@ export const SignInForm = ({
   },[]);  
 
   const handleHostedUI = () => {
-    window.location.href = 'https://fsl-admins.auth.us-east-1.amazoncognito.com/authorize?response_type=token&client_id=4ue3ppcjpdrqtpgj29mnb659ev&redirect_uri=http://localhost:8090/auth';
+    window.location.href = 'https://fsl-admin.auth.us-east-1.amazoncognito.com/authorize?response_type=token&client_id=26ch9q3pbs5nqkigti1ck94ujs&redirect_uri=http://localhost:8090/auth';
   }
   
   return (
@@ -62,12 +59,12 @@ export const SignInForm = ({
               required 
             />
           </FormControl>
-          <PasswordField 
+          {/* <PasswordField 
             formState={formState}
             handleFormChange={handleFormChange} 
             setFormState={setFormState}
             isError={isError}
-          />
+          /> */}
           <Button 
             isLoading={isSubmitting}
             loadingText="...Submitting" 
@@ -88,6 +85,7 @@ export const SignInForm = ({
             <FaFacebook />
           </Button>
           <Button 
+            disabled
             color="currentColor" 
             variant="outline"
             onClick={() => federateGoogleUser()}

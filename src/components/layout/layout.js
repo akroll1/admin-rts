@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { 
     Box, 
     Flex, 
@@ -10,6 +10,7 @@ import { Navbar } from './navbar'
 import { useGlobalStore } from '../../stores'
 import { GlobalNotification } from '../utils'
 import { FSLChat } from './fsl-chat'
+import { SignInModal } from '../modals'
 
 export const Layout = ({ children }) => {
     
@@ -31,6 +32,7 @@ export const Layout = ({ children }) => {
             position="relative"
             minH={["100vh", "100vh"]}
         >  
+            <SignInModal />
             <Navbar />
             <FSLChat />
             <GlobalNotification />

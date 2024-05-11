@@ -1,24 +1,9 @@
 import { 
+	ModalsEnum,
     Networks,
     Status,
     WeightClass,
 } from "../models/enums"
-
-export const blankScorecard = {
-	scorecardId: "BLANK",
-	corners: [],
-	displayName: "",
-	distanceId: "",
-	id: "",
-	finalScore: 0,
-	ownerId: "",
-	scores: null,
-}
-
-export const blankScorecardWithCorners = {
-	scorecard: blankScorecard,
-	cornerIds: null,
-}
 
 export const fightSummaryStub = {
 	fight: {
@@ -51,33 +36,8 @@ export const fightSummaryStub = {
 	}
 }
 
-export const resetModals = {
-    ADD_MEMBER_MODAL: false,
-    CREATE_GROUP_MODAL: false,
-    EXPIRED_TOKEN_MODAL: false,
-    FIGHT_REVIEW_FORM_MODAL: false,
-    GUEST_JUDGE_MODAL: false,
-    MONEYLINE_MODAL: false,
-    PREDICTION_MODAL: false,
-}
-export const resetScoringNavGroups = {
-    ANALYTICS: false,
-    BRACKET: false,
-    CHAT: false,
-    FIGHT: false,
-    MONEYLINE: false,
-    PANELISTS: false,
-    PROPS: false,
-    ROUNDPROP: false,
-}
-
-export const resetTabs = {
-    INFO: false,
-    SCORING: false,
-    ANALYTICS: false,
-    BRACKET: false,
-    FOLLOWING: false,
-    ALL: false,
+export const modalsReset = {
+    ...Object.keys(ModalsEnum).reduce((acc, curr) => ({ ...acc, [curr]: false }), {})
 }
 
 export const signInErrorResets = {

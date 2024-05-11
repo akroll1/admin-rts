@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { GlobalStoreState } from "./global-store";
+import { GlobalStoreState } from "./global.store";
 import axios from 'axios'
 import { Corner } from "./models/types";
 

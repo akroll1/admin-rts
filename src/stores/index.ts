@@ -1,5 +1,5 @@
 export * from './models/enums'
-export * from './global-store'
+export * from './global.store'
 export * from './utils/helpers'
 export * from './utils/resets'
 export * from './models/types'

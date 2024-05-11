@@ -21,20 +21,22 @@ export const DistanceMetasForm = () => {
         distanceMetas,
     } = useGlobalStore()
 
-    const [form, setForm] = useState({
-        id: '',
-        fighter1Id: '',
-        fighter2Id: '',
-        fighter1ML: '',
-        fighter2ML: '',
-        overUnder: '',
-        over: '',
-        under: '',    
-    });
+    const [f1, setF1] = useState(null)
+    const [f2, setF2] = useState(null)
+    const [f1Moneyline, setF1Moneyline] = useState(null)
+    const [f2Moneyline, setF2Moneyline] = useState(null)
+    const [fightId, setFightId] = useState(null)
+    const [form, setForm] = useState({})
 
     useEffect(() => {
         if(distanceMetas?.id){
-            console.log("distanceMetas: ", distanceMetas)
+            setFightId(distanceMetas.id)
+            const { props } = distanceMetas
+            const [f1, f2] = Object.keys(props.moneyline)
+            setF1Moneyline(props.moneyline[f1])
+            setF2Moneyline(props.moneyline[f2])
+            setF1(f1)
+            setF2(f2)
             setForm({ 
                 ...distanceMetas, 
             })
@@ -42,32 +44,28 @@ export const DistanceMetasForm = () => {
     },[distanceMetas])
 
     const handleFetchDistanceMetas = () => {
+        if(form?.id?.length !== 36) return alert("FightId must be 36 characters")
         fetchDistanceMetas(form.id)
     }
 
-    const handlePutDistanceMetas = () => {
+    const handleSubmit = e => {
+        e.preventDefault()
+        
+        if(fightId?.length !== 36 || f1?.length !== 36 || f2?.length !== 36) return alert("FightId and fighters must be 36 characters")
+        if(!f1Moneyline || !f2Moneyline) return alert("Moneyline must be a number")
 
         const updateObj = {
-            id: form.id,
+            id: fightId,
             props: {
                 moneyline: {
-                    [form.fighter1Id]: form.fighter1ML,
-                    [form.fighter2Id]: form.fighter2ML,
+                    [f1]: f1Moneyline,
+                    [f2]: f2Moneyline,
                 }
             },
         }
-
         console.log('updateObj: ', updateObj)
         updateDistanceMetas(updateObj)
-
     }
-
-    const handleFormChange = e => {
-        const { id, value } = e.currentTarget;
-        return setForm({ ...form, [id]: value })
-    }
-
-    // console.log('form: ', form)
 
     return (
         <Box 
@@ -87,7 +85,7 @@ export const DistanceMetasForm = () => {
                                 <FormLabel htmlFor="id">Fight ID</FormLabel>
                                 <Input 
                                     value={form.id} 
-                                    onChange={handleFormChange} 
+                                    onChange={e => setForm({ ...form, id: e.currentTarget.value })} 
                                     type="text" 
                                 />
                             </FormControl>
@@ -109,22 +107,22 @@ export const DistanceMetasForm = () => {
                     <FieldGroup title="Distance Metas">
                         <VStack width="full" spacing="6">
 
-                            <FormControl id="fighter1Id">
+                            <FormControl id={f1 || null}>
                                 <FormLabel>Fighter 1 ID</FormLabel>
-                                <Input required value={form.fighter1Id} onChange={handleFormChange} type="text" maxLength={100} />
+                                <Input required value={f1 || ""} onChange={e => setF1(e.currentTarget.value)} type="text" maxLength={36} />
                             </FormControl>
-                            <FormControl id="fighter2Id">
+                            <FormControl id={f2 || null}>
                                 <FormLabel>Fighter 2 ID</FormLabel>
-                                <Input required value={form.fighter2Id} onChange={handleFormChange} type="text" maxLength={100} />
+                                <Input required value={f2 ||""} onChange={e => setF2(e.currentTarget.value)} type="text" maxLength={36} />
                             </FormControl>
                            
-                            <FormControl id="fighter1ML">
+                            <FormControl id={f1 || null}>
                                 <FormLabel>Fighter 1 Moneyline</FormLabel>
-                                <Input required value={form.fighter1ML} onChange={handleFormChange} type="text" maxLength={100} />
+                                <Input required value={f1Moneyline} onChange={e => setF1Moneyline(e.currentTarget.value)} type="text" maxLength={10} />
                             </FormControl>
-                            <FormControl id="fighter2ML">
+                            <FormControl id={f2 || null}>
                                 <FormLabel>Fighter 2 Moneyline</FormLabel>
-                                <Input required value={form.fighter2ML} onChange={handleFormChange} type="text" maxLength={100} />
+                                <Input required value={f2Moneyline} onChange={e => setF2Moneyline(e.currentTarget.value)} type="text" maxLength={10} />
                             </FormControl>
                            
                         </VStack>
@@ -133,7 +131,7 @@ export const DistanceMetasForm = () => {
                 <FieldGroup mt="8">
                     <Button 
                         // onClick={id ? handlePutDistanceMetas : handlepostProps} 
-                        onClick={handlePutDistanceMetas} 
+                        onClick={handleSubmit} 
                         type="submit" 
                         colorScheme="solid"
                         minW="40%"

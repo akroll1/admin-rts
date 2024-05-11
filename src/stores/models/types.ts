@@ -290,17 +290,19 @@ export type UISummary = {
     updatedAt?: string;
 }
   
-export type User = {
+export interface User {
     sub?: string;
+    accessToken?: string;
+    idToken?: string;
+    isAdmin?: boolean;
+    isBetaA?: boolean;
+    refreshToken?: string;
     bio?: string | null;
-    email?: string | undefined;
+    email?: string;
     fightCoins?: number;
     firstName?: string | null;
-    groups?: string[] | null;
-    isAdmin?: boolean;
     isPublic?: boolean;
-    isSignedIn?: boolean;
-    isUserAccount?: boolean;
+    isLoggedIn?: boolean;
     lastName?: string | null;
     username?: string;
     createdAt?: string;
