@@ -34,7 +34,7 @@ export const SignInForm = ({
   },[]);  
 
   const handleHostedUI = () => {
-    window.location.href = `https://fsl-admin.auth.us-east-1.amazoncognito.com/authorize?response_type=token&client_id=${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}&redirect_uri=http://localhost:8090/auth`;
+    window.location.href = `https://fsl-admin.auth.us-east-1.amazoncognito.com/authorize?response_type=token&client_id=${process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID}&redirect_uri=${window.location.origin}/auth`;
   }
   
   return (
