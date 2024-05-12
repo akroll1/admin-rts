@@ -27,7 +27,7 @@ import { useGlobalStore } from '../stores'
 export const Forms = () => {
   const { type } = useParams();
   const { 
-    signOut,
+    signOutUser,
     user, 
   } = useGlobalStore()
 
@@ -114,7 +114,7 @@ export const Forms = () => {
               icon={FaRegBell} 
             />
             <NavLinkDashboard 
-              onClick={signOut}
+              onClick={signOutUser}
               link="#" 
               label="Logout" 
               icon={IoLogOutOutline} 

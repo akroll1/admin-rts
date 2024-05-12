@@ -22,7 +22,7 @@ export const ProfileButton = ({
 
     const handleClick = () => {
         if(user?.isLoggedIn){
-            navigate('/dashboard/account')
+            navigate('/forms/distances')
             onToggle()
             return
         }

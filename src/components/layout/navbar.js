@@ -15,6 +15,7 @@ export const Navbar = () => {
       borderBottom={["1px solid #111111"]}
       boxSizing="border-box"
       maxH="4rem"
+      maxW="1280px"
     >
       <Box 
         as="nav" 

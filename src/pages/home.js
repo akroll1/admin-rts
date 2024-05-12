@@ -4,7 +4,7 @@ import {
   Divider, 
   Flex, 
   Heading, 
-  Img, 
+  Image, 
   SimpleGrid, 
   Stack, 
   Text
@@ -17,8 +17,9 @@ import {
 import { FaHandsHelping } from 'react-icons/fa'
 import { GiTrophy } from 'react-icons/gi'
 import { EditIcon } from '@chakra-ui/icons'
+import { home_page_2 } from '../assets'
 
-const Home = () => {
+export const HomePage = () => {
 
   return (
 
@@ -104,7 +105,7 @@ const Home = () => {
             shadow="lg" 
             maxW={['xl']}
             >
-            <Img
+            <Image
               borderRadius="5"
               mt="2"
               objectFit="cover"
@@ -112,8 +113,8 @@ const Home = () => {
               h="full"
               htmlWidth="576px"
               htmlHeight="420px"
-              src="home_page_2.jpg"
-              alt="Person on phone scoring a fight"
+              src={home_page_2}
+              alt="Two boxers fighting in a boxing ring."
             />
           </Center>
         </Stack>
@@ -138,4 +139,3 @@ const Home = () => {
     </Box>
   )
 }
-export default Home
