@@ -1,41 +1,67 @@
 import { Routes, Route } from 'react-router-dom'
-import { Layout } from '../components/layout'
-import Home from './home'
+import { 
+  AuthLayout,
+  SharedOutlet,
+  UnAuthLayout, 
+} from '../components/layout'
 import { Dashboards } from './dashboards'
 import { ChakraProvider } from '@chakra-ui/react'
+import { Auth } from './auth'
 import About from '../components/content/about'
 import { Forms } from './forms'
 import { SignInPage } from '../components/signin'
-import { LearnMore, NotFound } from '../components/content'
 import theme from '../theme'
-import { BroadcastCenter } from './broadcast-center'
-import { Auth } from './auth'
 import { HelmetProvider } from 'react-helmet-async'
+import { HelmetCSP } from '../components/helmet'
+import { useGlobalStore } from '../stores'
+import { NotFound } from '../components/content'
+import { LearnMore } from '../components/content/learn-more'
+import { HomePage } from './home'
 
 const App = () => {
+
+  const { user } = useGlobalStore()
+
   return (
     <HelmetProvider>
-      <ChakraProvider theme={theme}>
-          <Layout>
-            <Routes>
-              <Route exact path="/" element={<Home />} />
-              <Route exact path="/auth" element={<Auth />} />
-              <Route exact path="/broadcast" element={<BroadcastCenter />} />
-              <Route exact path="/signin" element={<SignInPage />} />
-              <Route exact path="/dashboards/:type" element={
-                  <Dashboards /> 
-              }/>
-              <Route exact path="/forms/:type" element={
-                  <Forms /> 
-              }/>
-              <Route exact path="/about" element={<About />} />
-              <Route exact path="/learn-more" element={<LearnMore />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-      </ChakraProvider>
+      <HelmetCSP />
+        <ChakraProvider theme={theme}>
+            {user?.isLoggedIn ? <AuthedApp /> : <UnAuthedApp />}
+        </ChakraProvider>
     </HelmetProvider>
   );
+}
+
+const sharedRoutes = [
+  <Route key="0" index element={<HomePage />} />,
+  <Route key="1" exact path="about" element={<About />} />,
+  <Route key="2" exact path="auth" element={<Auth />} />,
+  <Route key="2" exact path="learn-more" element={<LearnMore />} />,
+  <Route key="3" exact path="signin" element={<SignInPage />} />,
+  <Route key="4" path="*" element={<NotFound />} />
+];
+
+const UnAuthedApp = () => {
+  return (
+    <Routes>
+      <Route path='/' element={<UnAuthLayout />}>
+        <Route path="/" children={sharedRoutes} element={<SharedOutlet />} />
+      </Route>
+    </Routes>
+  )
+}
+
+const AuthedApp = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<AuthLayout />}>
+        <Route path="/dashboards/:type?" element={<Dashboards />} />
+        <Route path="/forms/:type?" element={<Forms />} />
+        
+        <Route path="/" children={sharedRoutes} element={<SharedOutlet />} />
+      </Route>
+    </Routes>
+  )
 }
 
 export default App;
