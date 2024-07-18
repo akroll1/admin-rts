@@ -50,12 +50,11 @@ export const DistanceMetasForm = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        
-        if(fightId?.length !== 36 || f1?.length !== 36 || f2?.length !== 36) return alert("FightId and fighters must be 36 characters")
+        if(f1?.length !== 36 || f2?.length !== 36) return alert("FightId and fighters must be 36 characters")
         if(!f1Moneyline || !f2Moneyline) return alert("Moneyline must be a number")
 
         const updateObj = {
-            id: fightId,
+            id: fightId || form.id,
             props: {
                 moneyline: {
                     [f1]: f1Moneyline,

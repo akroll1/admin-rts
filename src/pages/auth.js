@@ -14,7 +14,7 @@ export const Auth = () => {
     useEffect(() => {
         if(access_token && id_token){
             const setUserAsync = async (access_token, id_token) => {
-                await setUser(access_token, id_token, true)
+                await setUser(access_token, id_token)
             }
             setUserAsync(access_token, id_token)
             navigate("/forms/distances")

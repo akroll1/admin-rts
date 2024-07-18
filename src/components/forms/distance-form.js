@@ -180,7 +180,6 @@ export const DistanceForm = () => {
             alert('Missing typeIds!')
             return
         }
-        console.log('putObj: ', putObj)
         updateDistance(putObj)
     };
     

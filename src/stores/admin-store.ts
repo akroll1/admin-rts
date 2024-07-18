@@ -1,14 +1,12 @@
 import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global.store";
 import { 
-    Distance,
-    Fighter,
-    FightProps,
-    DistanceSummary,
     DistanceMetas,
+    FightProps,
     ResolveFightDistance,
     modalsReset,
 } from './index'
+import { Distance, DistanceSummary, Fighter } from "./models/interfaces";
 
 export interface AdminStoreState {
     deleteDistance(distanceId: string): void
@@ -18,6 +16,7 @@ export interface AdminStoreState {
     fetchFighterById(id: string): void
     fetchFightProps(id: string): void
     fetchFightSummary(id: string): void
+    sendWeeklyFightsUpdateEmails(): void
     setIsSubmitting(isSubmitting: boolean): void
     setModals(modal: any, modalState: boolean, data?: Record<string, string | boolean> | null ): void
     submitFightResolution(resolutionObj: any): void
@@ -89,6 +88,10 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const selectedFightSummary = res?.data as DistanceSummary
         set({ selectedFightSummary })
     },
+    sendWeeklyFightsUpdateEmails: async () => {
+        const res = await get().axiosServiceCall(`${ADMIN_API}/jabs/weekly-fights-update`, 'post')
+        console.log('SEND_WEEKLY_EMAILS, res: ', res?.data)
+    },
     setIsSubmitting: (isSubmitting: boolean) => {
         set({ isSubmitting })
     },
@@ -131,7 +134,6 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         // get().setIsSubmitting(false)
     },
     updateFightResolution: async (options: ResolveFightDistance) => {
-        console.log('options: ', options)
         const res = await get().axiosServiceCall(`${ADMIN_API}/resolutions`, 'put', options )
         console.log('RESOLUTION put res: ', res?.data)
     }

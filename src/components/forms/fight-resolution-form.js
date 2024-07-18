@@ -17,7 +17,7 @@ import {
 import { FieldGroup } from '../../chakra'
 import { useGlobalStore } from '../../stores'
 import Datepicker from 'react-datepicker'
-import { officialResultOptions } from '../../stores'
+import { OfficialResults } from '../../stores'
 
 export const FightResolutionForm = () => {
     const [searchId, setSearchId] = useState('')    
@@ -111,8 +111,8 @@ export const FightResolutionForm = () => {
         const resolution = `${officialResultForm.winnerId}:${officialResultForm.resolution}`;
         const fighter1 = form?.typeIds[0]   
         const fighter2 = form?.typeIds[1]
-        const f1Knockdowns = knockdowns[form?.typeIds[0]]
-        const f2Knockdowns = knockdowns[form?.typeIds[1]]
+        const f1Knockdowns = knockdowns[form?.typeIds[0]] || "0"
+        const f2Knockdowns = knockdowns[form?.typeIds[1]] || "0"
         if(!fighter1 || !fighter2 || !f1Knockdowns || !f2Knockdowns) return alert('Missing fighter(s) or knockdown(s)!')
         const resolutionObj = {
             fightId: form.id,
@@ -123,6 +123,7 @@ export const FightResolutionForm = () => {
             resolution,
             rounds: form?.rounds
         }
+        console.log('RESOLUTION: ', resolutionObj)
         updateFightResolution(resolutionObj)
     }
     const handleFormChange = e => {
@@ -230,7 +231,7 @@ export const FightResolutionForm = () => {
                                         onChange={handleOfficialResultChange}
                                         placeholder="Official Result"
                                     >
-                                        {officialResultOptions.map( option => <option key={option} value={option}>{option}</option>)}
+                                        {OfficialResults.map( option => <option key={option} value={option}>{option}</option>)}
                                     </Select>
                                 </FormControl>
                                 

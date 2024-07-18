@@ -9,7 +9,6 @@ import {
 } from '@chakra-ui/react'
 import { FaEdit } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
-import { useGlobalStore } from '../stores'
 import { CornersDashboard } from '../components/dashboards'
 import { NavLinkDashboard } from '../components/navbar'
 export const Dashboards = () => {
