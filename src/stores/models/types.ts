@@ -77,6 +77,7 @@ export type Props = {
 };
   
 export type ResolveFightDistance = {
+    canceled?: boolean;
     fighter1: string;
     fighter2: string;
     fightId: string;

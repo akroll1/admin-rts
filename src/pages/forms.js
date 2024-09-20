@@ -48,7 +48,7 @@ export const Forms = () => {
     { value: "DISTANCE_METAS_FORM", label:"Distance Metas Form", type: 'Distance Metas Form', icon: FaEdit, link: '/forms/distance-metas' },
     { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/forms/fighters' },
     { value: "JABS", label:"Jabs ", type: 'Jabs', icon: FaEdit, link: '/forms/jabs' },
-    { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, lisnk: '/forms/resolutions' },
+    { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, link: '/forms/resolutions' },
   ];
 
   const userFormLinks = () => {

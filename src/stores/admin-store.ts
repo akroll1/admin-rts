@@ -134,7 +134,7 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         // get().setIsSubmitting(false)
     },
     updateFightResolution: async (options: ResolveFightDistance) => {
-        const res = await get().axiosServiceCall(`${ADMIN_API}/resolutions`, 'put', options )
+        const res = await get().axiosServiceCall(`${ADMIN_API}/resolutions`, 'put', options)
         console.log('RESOLUTION put res: ', res?.data)
     }
 })

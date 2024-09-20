@@ -15,11 +15,12 @@ import {
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { useGlobalStore } from '../../stores'
+import { Status, useGlobalStore } from '../../stores'
 import Datepicker from 'react-datepicker'
-import { OfficialResults } from '../../stores'
+import { officialResultOptions } from '../../stores'
 
 export const FightResolutionForm = () => {
+    const [isCanceledSubmitting, setIsCanceledSubmitting] = useState(false)
     const [searchId, setSearchId] = useState('')    
     const [knockdowns, setKnockdowns] = useState({})
     const [officialResultForm, setOfficialResultForm] = useState({
@@ -103,6 +104,16 @@ export const FightResolutionForm = () => {
     const handleSearchForDistance = () => {
         fetchDistanceById(searchId)
     }
+
+    const handleFightWasCanceled = async () => {
+        setIsCanceledSubmitting(true)
+        await updateFightResolution({ 
+            fightId: form.id,
+            status: Status.CANCELED,
+        })
+        setIsCanceledSubmitting(false)
+    }
+
     const handleSubmitResolution = () => {
         /**
         * @params resolution: `${officialResultForm.winnerId}:${officialResultForm.resolution}`, fightId: form.id, rounds: form.rounds 
@@ -121,13 +132,13 @@ export const FightResolutionForm = () => {
             f1Knockdowns,
             f2Knockdowns,
             resolution,
-            rounds: form?.rounds
+            rounds: form?.rounds,
+            status: Status.COMPLETE,
         }
         console.log('RESOLUTION: ', resolutionObj)
         updateFightResolution(resolutionObj)
     }
     const handleFormChange = e => {
-
         const { id, value } = e.currentTarget;
         setForm({ ...form, [id]: value });
     };
@@ -231,7 +242,7 @@ export const FightResolutionForm = () => {
                                         onChange={handleOfficialResultChange}
                                         placeholder="Official Result"
                                     >
-                                        {OfficialResults.map( option => <option key={option} value={option}>{option}</option>)}
+                                        {officialResultOptions.map( option => <option key={option} value={option}>{option}</option>)}
                                     </Select>
                                 </FormControl>
                                 
@@ -264,7 +275,8 @@ export const FightResolutionForm = () => {
                         <FieldGroup mt="8">
                             <ButtonGroup w="100%">
                                 <Button 
-                                    minW="33%"
+                                    w="33%"
+                                    mr="4"
                                     onClick={handleSubmitResolution} 
                                     type="button" 
                                     colorScheme="solid"
@@ -272,6 +284,17 @@ export const FightResolutionForm = () => {
                                     loadingText="Submitting..."
                                 >
                                    Resolve Fight
+                                </Button>
+                                <Button 
+                                    w="33%"
+                                    variant="outline"
+                                    onClick={handleFightWasCanceled} 
+                                    type="button" 
+                                    colorScheme="solid"
+                                    isLoading={isCanceledSubmitting}
+                                    loadingText="Canceling Fight..."
+                                >
+                                    Fight Canceled
                                 </Button>
                             </ButtonGroup>
                         </FieldGroup></>

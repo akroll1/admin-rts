@@ -29,10 +29,15 @@ export const DistanceMetasForm = () => {
     const [form, setForm] = useState({})
 
     useEffect(() => {
+
         if(distanceMetas?.id){
             setFightId(distanceMetas.id)
             const { props } = distanceMetas
-            const [f1, f2] = Object.keys(props.moneyline)
+            if(!props?.moneyline) {
+                alert('No moneyline found')
+                return
+            }
+            const [f1, f2] = Object.keys(props?.moneyline)
             setF1Moneyline(props.moneyline[f1])
             setF2Moneyline(props.moneyline[f2])
             setF1(f1)
@@ -73,7 +78,7 @@ export const DistanceMetasForm = () => {
             maxWidth="3xl" 
             mx="auto"
         >   
-            <form id="betting_props_form" onSubmit={(e) => {e.preventDefault()}}>
+            <form id="distance_metas_form" onSubmit={(e) => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
                         Distance Metas Form
