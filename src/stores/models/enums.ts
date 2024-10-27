@@ -39,7 +39,7 @@ export enum Networks {
   PRIME = "PRIME",
   SHOWTIME = "ShowTime",
   SHOWTIMEPPV = "ShowTime PPV",
-  TNT_SPORTS_1 = "TNT Sports 1",
+  TNT_SPORTS_1 = "TNT_SPORTS_1",
   NONE = "NONE",
 }
 

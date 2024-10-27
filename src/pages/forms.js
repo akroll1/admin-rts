@@ -1,4 +1,4 @@
-import {useState, useEffect } from 'react'
+import {useState } from 'react'
 import { 
   Box, 
   Divider, 
@@ -15,6 +15,7 @@ import { NavLinkDashboard } from '../components/navbar'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { UserInfo } from '../chakra'
 import { 
+  AddCustomJwtClaimForm,
   DistanceForm,
   DistanceMetasForm,
   FightersForm, 
@@ -44,6 +45,7 @@ export const Forms = () => {
 
   const formLinks = [
     // { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/forms/broadcast' },
+    { value: "CUSTOM_CLAIMS", label:"Custom JWT Form", type: 'Custom JWT Form', icon: FaEdit, link: '/forms/custom-jwt' },
     { value: "DISTANCE_FORM", label:"Distance Form", type: 'Distance Form', icon: FaEdit, link: '/forms/distance' },
     { value: "DISTANCE_METAS_FORM", label:"Distance Metas Form", type: 'Distance Metas Form', icon: FaEdit, link: '/forms/distance-metas' },
     { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/forms/fighters' },
@@ -135,6 +137,7 @@ export const Forms = () => {
         mt={0}
       >
         {/* { form === 'BROADCAST' && <BroadcastForm /> } */}
+        { form === 'CUSTOM_CLAIMS' && <AddCustomJwtClaimForm /> }
         { form === 'DISTANCE_FORM' && <DistanceForm /> }
         { form === 'DISTANCE_METAS_FORM' && <DistanceMetasForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
