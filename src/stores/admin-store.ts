@@ -1,14 +1,13 @@
 import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global.store";
 import { 
-    Distance,
-    Fighter,
-    FightProps,
-    DistanceSummary,
     DistanceMetas,
+    FightProps,
     ResolveFightDistance,
+    WeeklyCornerUpdateOptions,
     modalsReset,
 } from './index'
+import { Distance, DistanceSummary, Fighter } from "./models/interfaces";
 
 export interface AdminStoreState {
     deleteDistance(distanceId: string): void
@@ -18,6 +17,9 @@ export interface AdminStoreState {
     fetchFighterById(id: string): void
     fetchFightProps(id: string): void
     fetchFightSummary(id: string): void
+    sendPushNotification(): void
+    sendWeeklyCornerUpdateEmails(cornerUpdateOptions: WeeklyCornerUpdateOptions): void
+    sendWeeklyFightsUpdateEmails(): void
     setIsSubmitting(isSubmitting: boolean): void
     setModals(modal: any, modalState: boolean, data?: Record<string, string | boolean> | null ): void
     submitFightResolution(resolutionObj: any): void
@@ -53,6 +55,10 @@ const ADMIN_API = process.env.REACT_APP_ADMIN_API;
 
 export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreState> = (set, get) => ({
     ...initialAdminStoreState,
+    addCustomJwtClaim: async (uid: string, claim: string) => {
+        const res = await get().axiosServiceCall(`${ADMIN_API}/users/add-jwt-claim/`, 'put', { uid, claim });
+        console.log('ADD_CUSTOM_JWT_CLAIM, res: ', res?.data)
+    },
     deleteDistance: async (distanceId: string) => {
         const res = await get().axiosServiceCall(`${ADMIN_API}/distances/${distanceId}`, 'delete')
         console.log('DELETE_DISTANCE, RES: ', res)
@@ -88,6 +94,18 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const res = await get().axiosServiceCall(`${ADMIN_API}/summaries/${id}`, 'get' )
         const selectedFightSummary = res?.data as DistanceSummary
         set({ selectedFightSummary })
+    },
+    sendPushNotification: async () => {
+        const res = await get().axiosServiceCall(`${ADMIN_API}/jabs/push-notification`, 'post')
+        console.log('SEND_PUSH_NOTIFICATION, res: ', res?.data)
+    },
+    sendWeeklyCornerUpdateEmails: async (cornerUpdateObj: WeeklyCornerUpdateOptions) => {
+        const res = await get().axiosServiceCall(`${ADMIN_API}/jabs/weekly-corners-update`, 'post', cornerUpdateObj)
+        console.log('SEND_WEEKLY_EMAILS, res: ', res?.data)
+    },
+    sendWeeklyFightsUpdateEmails: async () => {
+        const res = await get().axiosServiceCall(`${ADMIN_API}/jabs/weekly-fights-update`, 'post')
+        console.log('SEND_WEEKLY_EMAILS, res: ', res?.data)
     },
     setIsSubmitting: (isSubmitting: boolean) => {
         set({ isSubmitting })
@@ -131,8 +149,7 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         // get().setIsSubmitting(false)
     },
     updateFightResolution: async (options: ResolveFightDistance) => {
-        console.log('options: ', options)
-        const res = await get().axiosServiceCall(`${ADMIN_API}/resolutions`, 'put', options )
+        const res = await get().axiosServiceCall(`${ADMIN_API}/resolutions`, 'put', options)
         console.log('RESOLUTION put res: ', res?.data)
     }
 })

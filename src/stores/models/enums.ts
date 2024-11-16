@@ -1,29 +1,8 @@
-export enum ChatEnums {
-  COACHES = "COACHES",
-  CORNER = "CORNER",
-  FSL = "FSL",
-  CALLING_IT = "CALLING_IT",
-}
-
-export enum ChatMessageType {
-  CALLING_IT = "CALLING_IT",
-  CORNER = "CORNER",
-  ERROR = "ERROR",
+export enum AnalyticType {
   FIGHT = "FIGHT",
-  FSL = "FSL",
-  GLOBAL = "GLOBAL",
-  SCORE_UPDATE = "SCORE_UPDATE",
-}
-
-export enum ChatPermissions {
-  SEND_MESSAGE = "SEND_MESSAGE",
-  DELETE_MESSAGE = "DELETE_MESSAGE",
-  DISCONNECT_USER = "DISCONNECT_USER",
-}
-
-export enum CookieSelectionEnum {
-  ACCEPTED = "ACCEPTED",
-  DECLINED = "DECLINED"
+  LIST = "LIST",
+  RS = "RS",
+  UP = "UP",
 }
 
 export enum DistanceType {
@@ -34,14 +13,18 @@ export enum DistanceType {
 
 export enum FightPropsEnum {
   MONEYLINE = "MONEYLINE",
-    OU = "OU"
+  OU = "OU"
 }
 
+export enum JudgeType {
+  COACH = "COACH",
+  FSL = "FSL",
+  OFFICIAL = "OFFICIAL",
+}
 
 export enum ModalsEnum {
   SIGN_IN_MODAL = "SIGN_IN_MODAL",
 }
-
 
 export enum Networks {
   BLKPRIME = "BLKPRIME",
@@ -56,8 +39,42 @@ export enum Networks {
   PRIME = "PRIME",
   SHOWTIME = "ShowTime",
   SHOWTIMEPPV = "ShowTime PPV",
+  TNT_SPORTS_1 = "TNT_SPORTS_1",
   NONE = "NONE",
 }
+
+export const officialResultOptions = [
+  "KO1",
+  "KO2",
+  "KO3",
+  "KO4",
+  "KO5",
+  "KO6",
+  "KO7",
+  "KO8",
+  "KO9",
+  "KO10",
+  "KO11",
+  "KO12",
+  "KO13",
+  "KO14",
+  "KO15",
+  "10-0",
+  "9-1",
+  "8-2",
+  "7-3",
+  "6-4",
+  "12-0", 
+  "11-1", 
+  "10-2", 
+  "9-3", 
+  "8-4", 
+  "7-5", 
+  "DRAW",
+  "DQ",
+  "NC",
+  "CANCEL"
+]
 
 export enum OfficialResults {
   CANCELED = "CANCELED",
@@ -92,60 +109,58 @@ export enum OfficialResults {
   R7 = "R7",
 }
 
-export enum ReviewType {
-  FANTASY = 'FANTASY',
-  HISTORICAL = 'HISTORICAL',
-  PREDICTION = 'PREDICTION',
-  REVIEW = 'REVIEW',
-}
-
 export const ROUND_LENGTH_ENUMS = [3,4,6,8,10,12,15];
 
-export enum ScoringNavGroupEnum {
-  ANALYTICS = "ANALYTICS",
-  BRACKETS = "BRACKETS",
-  CHAT = "CHAT",
-  FIGHT = "FIGHT",
-  MONEYLINE = "MONEYLINE",
-  PANELISTS = "PANELISTS",
-  PROPS = "PROPS",
-  ROUNDPROP = "ROUNDPROP",
+export enum RoundNote {
+  "EA" = "Effective Aggression",
+  "D" = "Defense",
+  "RG" = "Ring Generalship",
+  "CP" = "Clean Punching",
+  "DM" = "Damage",
 }
 
 export enum SeasonType {
   ANNUAL = "ANNUAL",
-  MONTH = "MONTH",
-  QUARTER = "QUARTER",
   FANTASY = "FANTASY",
   HISTORICAL = "HISTORICAL",
+  MONTH = "MONTH",
+  QUARTER = "QUARTER",
+  TRAINING = "TRAINING",
 }
-
-export enum SignInErrors {
-  EMAIL = "EMAIL",
-  USERNAME = "USERNAME",
-  PASSWORD = "PASSWORD",
-} 
 
 export enum Status {
   ACTIVE = "ACTIVE",
+  ARCHIVED = "ARCHIVED",
   CANCELED = "CANCELED",
   COMPLETE = "COMPLETE",
   PENDING = "PENDING",
   TESTING = "TESTING",
 }
 
-export enum Tabs {
-  INFO = "INFO",
-  SCORING = "SCORING",
-  ANALYTICS = "ANALYTICS",
-  BRACKET = "BRACKET",
-  FOLLOWING = "FOLLOWING",
-  ALL = "ALL",
+export enum SubscribesType {
+  ALL = "ALL", // Currently for unsubscribe only.
+  BETA = "BETA",
+  NEWSLETTER = "NEWSLETTER",
+  REMINDERS = "REMINDERS",
+  WEEKLY_FIGHTS_UPDATE = "WEEKLY_FIGHTS_UPDATE",
+  WELCOME = "WELCOME", // There should be no WELCOME subscribe type, this should be a jabs (service) type.
 }
 
 export enum Token {
   ID = "id_token",
   ACCESS = "access_token",
+}
+
+export enum UserFeedbackType {
+  REQUEST = "REQUEST",
+  SITE = "SITE",
+  SUPPORT = "SUPPORT",
+}
+
+export enum UserPickType {
+  FIGHT = "FIGHT",
+  FSL = "FSL",
+  LIST = "LIST",
 }
 
 export enum WeightClass {
@@ -170,35 +185,3 @@ export enum WeightClass {
   STRAWWEIGHT = "Strawweight",
   CATCHWEIGHT = "Catchweight",
 }
-
-export const officialResultOptions = [
-  "KO1",
-  "KO2",
-  "KO3",
-  "KO4",
-  "KO5",
-  "KO6",
-  "KO7",
-  "KO8",
-  "KO9",
-  "KO10",
-  "KO11",
-  "KO12",
-  "KO13",
-  "KO14",
-  "KO15",
-  "10-0",
-  "9-1",
-  "8-2",
-  "7-3",
-  "6-4",
-  "12-0", 
-  "11-1", 
-  "10-2", 
-  "9-3", 
-  "8-4", 
-  "7-5", 
-  "DRAW",
-  "DQ",
-  "NC",
-]

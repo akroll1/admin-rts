@@ -1,4 +1,4 @@
-import {useState, useEffect } from 'react'
+import {useState } from 'react'
 import { 
   Box, 
   Divider, 
@@ -15,17 +15,19 @@ import { NavLinkDashboard } from '../components/navbar'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { UserInfo } from '../chakra'
 import { 
-  BroadcastForm, 
+  AddCustomJwtClaimForm,
   DistanceForm,
   DistanceMetasForm,
   FightersForm, 
   FightResolutionForm,
+  JabsForm,
 } from '../components/forms'
 import { useParams } from 'react-router-dom'
 import { useGlobalStore } from '../stores'
 
 export const Forms = () => {
   const { type } = useParams();
+
   const { 
     signOutUser,
     user, 
@@ -42,11 +44,13 @@ export const Forms = () => {
   };
 
   const formLinks = [
-    { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/forms/broadcast' },
+    // { value: "BROADCAST", label:"Broadcast Form", type: 'Broadcast', icon: FaEdit, link: '/forms/broadcast' },
+    { value: "CUSTOM_CLAIMS", label:"Custom JWT Form", type: 'Custom JWT Form', icon: FaEdit, link: '/forms/custom-jwt' },
     { value: "DISTANCE_FORM", label:"Distance Form", type: 'Distance Form', icon: FaEdit, link: '/forms/distance' },
     { value: "DISTANCE_METAS_FORM", label:"Distance Metas Form", type: 'Distance Metas Form', icon: FaEdit, link: '/forms/distance-metas' },
     { value: "FIGHTERS", label:"Fighters ", type: 'Fighters', icon: FaEdit, link: '/forms/fighters' },
-    { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, lisnk: '/forms/resolutions' },
+    { value: "JABS", label:"Jabs ", type: 'Jabs', icon: FaEdit, link: '/forms/jabs' },
+    { value: "RESOLUTIONS", label:"Resolution Form", type: 'Resolution', icon: FaEdit, link: '/forms/resolutions' },
   ];
 
   const userFormLinks = () => {
@@ -79,7 +83,7 @@ export const Forms = () => {
           <Box fontSize="sm" lineHeight="tall">
             <Link  
               as="button" 
-              to="/forms/account" 
+              to="/forms/distances" 
               p="2"
               pl="0"
               w="100%" 
@@ -132,10 +136,12 @@ export const Forms = () => {
         borderRadius="md" 
         mt={0}
       >
-        { form === 'BROADCAST' && <BroadcastForm /> }
+        {/* { form === 'BROADCAST' && <BroadcastForm /> } */}
+        { form === 'CUSTOM_CLAIMS' && <AddCustomJwtClaimForm /> }
         { form === 'DISTANCE_FORM' && <DistanceForm /> }
         { form === 'DISTANCE_METAS_FORM' && <DistanceMetasForm /> }
         { form === 'FIGHTERS' && <FightersForm /> }
+        { form === 'JABS' && <JabsForm /> }
         { form === 'RESOLUTIONS' && <FightResolutionForm /> }
       </Box>
     </Flex>

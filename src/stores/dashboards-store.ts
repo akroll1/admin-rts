@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand";
 import { GlobalStoreState } from "./global.store";
 import axios from 'axios'
-import { Corner } from "./models/types";
+import { Corner } from './models'
 
 export interface DashboardsStoreState {
     fetchAllCornersBySeason(seasonId: string): void

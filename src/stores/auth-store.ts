@@ -108,7 +108,7 @@ export const authStoreSlice: StateCreator<GlobalStoreState, [], [], AuthStoreSta
             AccessToken,
         })
         
-        const user = userSession.getIdToken().payload
+        const user = await userSession.getIdToken().payload
         const isAdmin = user?.['cognito:groups']?.includes('admin')
         const isBetaA = user?.['cognito:groups']?.includes('beta_a')
 

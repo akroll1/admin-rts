@@ -15,11 +15,12 @@ import {
     VStack 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../chakra'
-import { useGlobalStore } from '../../stores'
+import { Status, useGlobalStore } from '../../stores'
 import Datepicker from 'react-datepicker'
 import { officialResultOptions } from '../../stores'
 
 export const FightResolutionForm = () => {
+    const [isCanceledSubmitting, setIsCanceledSubmitting] = useState(false)
     const [searchId, setSearchId] = useState('')    
     const [knockdowns, setKnockdowns] = useState({})
     const [officialResultForm, setOfficialResultForm] = useState({
@@ -103,6 +104,16 @@ export const FightResolutionForm = () => {
     const handleSearchForDistance = () => {
         fetchDistanceById(searchId)
     }
+
+    const handleFightWasCanceled = async () => {
+        setIsCanceledSubmitting(true)
+        await updateFightResolution({ 
+            fightId: form.id,
+            status: Status.CANCELED,
+        })
+        setIsCanceledSubmitting(false)
+    }
+
     const handleSubmitResolution = () => {
         /**
         * @params resolution: `${officialResultForm.winnerId}:${officialResultForm.resolution}`, fightId: form.id, rounds: form.rounds 
@@ -111,8 +122,8 @@ export const FightResolutionForm = () => {
         const resolution = `${officialResultForm.winnerId}:${officialResultForm.resolution}`;
         const fighter1 = form?.typeIds[0]   
         const fighter2 = form?.typeIds[1]
-        const f1Knockdowns = knockdowns[form?.typeIds[0]]
-        const f2Knockdowns = knockdowns[form?.typeIds[1]]
+        const f1Knockdowns = knockdowns[form?.typeIds[0]] || "0"
+        const f2Knockdowns = knockdowns[form?.typeIds[1]] || "0"
         if(!fighter1 || !fighter2 || !f1Knockdowns || !f2Knockdowns) return alert('Missing fighter(s) or knockdown(s)!')
         const resolutionObj = {
             fightId: form.id,
@@ -121,12 +132,13 @@ export const FightResolutionForm = () => {
             f1Knockdowns,
             f2Knockdowns,
             resolution,
-            rounds: form?.rounds
+            rounds: form?.rounds,
+            status: Status.COMPLETE,
         }
+        console.log('RESOLUTION: ', resolutionObj)
         updateFightResolution(resolutionObj)
     }
     const handleFormChange = e => {
-
         const { id, value } = e.currentTarget;
         setForm({ ...form, [id]: value });
     };
@@ -263,7 +275,8 @@ export const FightResolutionForm = () => {
                         <FieldGroup mt="8">
                             <ButtonGroup w="100%">
                                 <Button 
-                                    minW="33%"
+                                    w="33%"
+                                    mr="4"
                                     onClick={handleSubmitResolution} 
                                     type="button" 
                                     colorScheme="solid"
@@ -271,6 +284,17 @@ export const FightResolutionForm = () => {
                                     loadingText="Submitting..."
                                 >
                                    Resolve Fight
+                                </Button>
+                                <Button 
+                                    w="33%"
+                                    variant="outline"
+                                    onClick={handleFightWasCanceled} 
+                                    type="button" 
+                                    colorScheme="solid"
+                                    isLoading={isCanceledSubmitting}
+                                    loadingText="Canceling Fight..."
+                                >
+                                    Fight Canceled
                                 </Button>
                             </ButtonGroup>
                         </FieldGroup></>
