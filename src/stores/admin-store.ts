@@ -4,6 +4,7 @@ import {
     DistanceMetas,
     FightProps,
     ResolveFightDistance,
+    WeeklyCornerUpdateOptions,
     modalsReset,
 } from './index'
 import { Distance, DistanceSummary, Fighter } from "./models/interfaces";
@@ -17,7 +18,7 @@ export interface AdminStoreState {
     fetchFightProps(id: string): void
     fetchFightSummary(id: string): void
     sendPushNotification(): void
-    sendWeeklyCornerUpdateEmails(seasonId: string): void
+    sendWeeklyCornerUpdateEmails(cornerUpdateOptions: WeeklyCornerUpdateOptions): void
     sendWeeklyFightsUpdateEmails(): void
     setIsSubmitting(isSubmitting: boolean): void
     setModals(modal: any, modalState: boolean, data?: Record<string, string | boolean> | null ): void
@@ -98,8 +99,8 @@ export const adminStoreSlice: StateCreator<GlobalStoreState, [], [], AdminStoreS
         const res = await get().axiosServiceCall(`${ADMIN_API}/jabs/push-notification`, 'post')
         console.log('SEND_PUSH_NOTIFICATION, res: ', res?.data)
     },
-    sendWeeklyCornerUpdateEmails: async (seasonId: string) => {
-        const res = await get().axiosServiceCall(`${ADMIN_API}/jabs/weekly-corners-update/${seasonId}`, 'post')
+    sendWeeklyCornerUpdateEmails: async (cornerUpdateObj: WeeklyCornerUpdateOptions) => {
+        const res = await get().axiosServiceCall(`${ADMIN_API}/jabs/weekly-corners-update`, 'post', cornerUpdateObj)
         console.log('SEND_WEEKLY_EMAILS, res: ', res?.data)
     },
     sendWeeklyFightsUpdateEmails: async () => {

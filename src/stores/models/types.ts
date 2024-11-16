@@ -162,3 +162,13 @@ export type UserFeedback = {
     requestMoreFightCoins?: boolean;
     type: UserFeedbackType;
 };
+
+export type WeeklyCornerUpdateOptions = {
+    fightId: string;
+    fightTitle: string;
+    fightSummary: string; // E.g., Lewis beat Tyson by KO in the 3rd round.
+    isDraw: boolean;
+    nextWeeksFight: string;
+    seasonId: string;
+    officialResult: string;
+};
