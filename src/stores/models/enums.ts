@@ -7,6 +7,7 @@ export enum AnalyticType {
 
 export enum DistanceType {
   FIGHT = "FIGHT",
+  FIGHT_NIGHT = "FIGHT_NIGHT",
   SHOW = "SHOW",
   SEASON = "SEASON",
 }

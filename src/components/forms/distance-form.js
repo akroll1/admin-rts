@@ -162,7 +162,7 @@ export const DistanceForm = () => {
             if(form.type === "FIGHT"){
                 instance = fight;
             }
-            if(form.type === "SHOW"){
+            if(form.type === "SHOW" || form.type === "FIGHT_NIGHT"){
                 instance = show;
             }
             if(form.type === "SEASON"){
@@ -355,7 +355,7 @@ export const DistanceForm = () => {
                                     </FormControl>
                                 </>
                             }
-                            { form.type === "SHOW" && 
+                            { (form.type === "SHOW" || form.type === "FIGHT_NIGHT") &&
                                 <>
                                     <FormControl id="location">
                                         <FormLabel htmlFor="location">Location</FormLabel>
