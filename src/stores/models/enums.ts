@@ -12,6 +12,11 @@ export enum DistanceType {
   SEASON = "SEASON",
 }
 
+export enum FighterType {
+  BOXER = "BOXER",
+  MMA = "MMA",
+}
+
 export enum FightPropsEnum {
   MONEYLINE = "MONEYLINE",
   OU = "OU"
@@ -134,6 +139,7 @@ export enum Status {
   ARCHIVED = "ARCHIVED",
   CANCELED = "CANCELED",
   COMPLETE = "COMPLETE",
+  PPD = "PPD",
   PENDING = "PENDING",
   TESTING = "TESTING",
 }

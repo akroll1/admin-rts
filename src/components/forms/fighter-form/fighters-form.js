@@ -15,10 +15,10 @@ import {
     VStack, 
     Flex, 
 } from '@chakra-ui/react'
-import { FieldGroup } from '../../chakra'
-import { useGlobalStore } from '../../stores'
+import { FieldGroup } from '../../../chakra'
+import { useGlobalStore } from '../../../stores'
 
-export const FightersForm = () => {
+export const FighterForm = () => {
     const { 
         deleteFighter,
         fetchFighterById,

@@ -1,6 +1,7 @@
 import type {
     AnalyticType,
     DistanceType,
+    FighterType,
     Networks,
     SeasonType,
     Status,
@@ -58,6 +59,7 @@ import type {
   
   export interface Fighter {
     id: string;
+    type: FighterType;
     firstName: string;
     home: string | null;
     lastName: string;

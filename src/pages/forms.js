@@ -18,7 +18,7 @@ import {
   AddCustomJwtClaimForm,
   DistanceForm,
   DistanceMetasForm,
-  FightersForm, 
+  FighterForm, 
   FightResolutionForm,
   JabsForm,
 } from '../components/forms'
@@ -140,7 +140,7 @@ export const Forms = () => {
         { form === 'CUSTOM_CLAIMS' && <AddCustomJwtClaimForm /> }
         { form === 'DISTANCE_FORM' && <DistanceForm /> }
         { form === 'DISTANCE_METAS_FORM' && <DistanceMetasForm /> }
-        { form === 'FIGHTERS' && <FightersForm /> }
+        { form === 'FIGHTERS' && <FighterForm /> }
         { form === 'JABS' && <JabsForm /> }
         { form === 'RESOLUTIONS' && <FightResolutionForm /> }
       </Box>

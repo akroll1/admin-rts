@@ -14,10 +14,9 @@ import {
     Textarea,
     VStack 
 } from '@chakra-ui/react'
-import { FieldGroup } from '../../chakra'
-import { Status, useGlobalStore } from '../../stores'
+import { FieldGroup } from '../../../chakra'
+import { officialResultOptions, Status, useGlobalStore } from '../../../stores'
 import Datepicker from 'react-datepicker'
-import { officialResultOptions } from '../../stores'
 
 export const FightResolutionForm = () => {
     const [isCanceledSubmitting, setIsCanceledSubmitting] = useState(false)

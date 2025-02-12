@@ -19,7 +19,7 @@ import {
     UnorderedList,
     VStack 
 } from '@chakra-ui/react'
-import { FieldGroup } from '../../chakra'
+import { FieldGroup } from '../../../chakra'
 import Datepicker from 'react-datepicker'
 import {
     DistanceType,
@@ -29,7 +29,7 @@ import {
     Status,
     useGlobalStore,
     WeightClass,
-} from '../../stores'
+} from '../../../stores'
 
 export const DistanceForm = () => {
     const { 
