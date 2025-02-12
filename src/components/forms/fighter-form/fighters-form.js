@@ -10,13 +10,14 @@ import {
     Heading, 
     HStack, 
     Input, 
+    Select,
     Stack, 
     StackDivider, 
     VStack, 
     Flex, 
 } from '@chakra-ui/react'
 import { FieldGroup } from '../../../chakra'
-import { useGlobalStore } from '../../../stores'
+import { FighterType, useGlobalStore } from '../../../stores'
 
 export const FighterForm = () => {
     const { 
@@ -29,6 +30,7 @@ export const FighterForm = () => {
 
     const [form, setForm] = useState({
         id: '',
+        type: FighterType.BOXER,
         firstName: '',
         lastName: '',
         ringname: '',
@@ -73,7 +75,7 @@ export const FighterForm = () => {
         deleteFighter(form.id)
     }
 
-    // console.log('form: ', form)
+    console.log('form: ', form)
     return (
         <Box px={{base: '4', md: '10'}} py="16" maxWidth="3xl" mx="auto" height="auto">
             <FieldGroup title="Search for a Fight">
@@ -101,10 +103,16 @@ export const FighterForm = () => {
             <form id="fighters_form" onSubmit={e => {e.preventDefault()}}>
                 <Stack spacing="4" divider={<StackDivider />}>
                     <Heading size="lg" as="h1" paddingBottom="4">
-                    Fighter Form
+                        Fighter Form
                     </Heading>
                     <FieldGroup title="Create A Fighter">
                         <VStack width="full" spacing="6">
+                            <FormControl id="type">
+                                <FormLabel htmlFor="type">Fighter Type</FormLabel>
+                                <Select onChange={handleFormChange}>
+                                    { Object.keys(FighterType).map( type => <option key={type} value={type}>{type}</option>)}
+                                </Select>                            
+                            </FormControl>
                             <FormControl id="firstName">
                                 <FormLabel>First Name</FormLabel>
                                 <Input value={form.firstName?.toLowerCase()} required onChange={handleFormChange} type="text" maxLength={255} />
